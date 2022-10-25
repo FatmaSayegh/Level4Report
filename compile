@@ -1,0 +1,4 @@
+#!/bin/bash
+pdflatex l4proj.tex
+bibtex l4proj.aux
+pdflatex l4proj.tex

@@ -1,0 +1,2 @@
+#!/bin/bash
+zathura l4proj.pdf &
