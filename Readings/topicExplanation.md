@@ -59,9 +59,10 @@ Visualization:
 - Show the same graph with maximum independent set.
 
 ### Identification of Cliques in a graph
-A clique is a set of vertices of a graph such that all the vertices are connected to each other. This set is defined
-in such a way that there is no other vertex in the graph which can be added to the set, while preserving the property
-that all the vertices are connected to every other.
+A clique is a set of vertices of a graph such that all the vertices are
+connected to each other. This set is defined in such a way that there is no
+other vertex in the graph which can be added to the set, while preserving the
+property that all the vertices are connected to every other.
 Visualization: 
 - In a graph, a clique can be highlighted by colouring the vertices and the edges involed in the clique.
 
@@ -138,3 +139,4 @@ Therefore we must look for tree decompositions which have small pieces.
 Tree width is defined as the size of the biggest Vt - 1.
 
 Therefore tree width of G is the minimum width of any tree decomposition of G.
+  https://ict.iitk.ac.in/wp-content/uploads/CS345-Algorithms-II-Algorithm-Design-by-Jon-Kleinberg-Eva-Tardos.pdf
