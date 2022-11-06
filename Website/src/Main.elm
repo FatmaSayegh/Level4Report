@@ -9,43 +9,82 @@ import Svg.Attributes as SA exposing (..)
 main = view "hello there"
 
 view model =
-   div [] [ H.div pageStyle [graphOne, explanationOne]
-          , H.div pageStyle [explanationTwo, graphTwo]
-          , H.div pageStyle [graphThree, explanationThree]
-          , H.div pageStyle [explanationFour, graphFour]
+   div [] [ H.div pageStyle [paneOne, explanationOne]
+          , H.div pageStyle [explanationTwo, paneTwo]
+          , H.div pageStyle [paneThree, explanationThree]
+          , H.div pageStyle [explanationFour, paneFour]
           ]
 
 type alias Pos = {x : Int, y : Int}
 type alias Size = Int
 
-theSvg =
+anSvg =
     S.svg
-     [ SA.width "400"
-     , SA.height "1200"
-     , SA.viewBox "0 0 400 1200"
+     [ SA.width "100%"
+     , SA.height "auto"
+     , SA.viewBox "0 0 400 400"
      ]
-     [circle 20 {x = 200, y = 500}]
+     --[
+     --  drawEdge edge1
+     --, drawVertex ver1
+     --, drawVertex ver2
+     --]
+     (drawGraph graph1)
 
 
-graphOne = H.div leftSideStyle [ theSvg ]
-explanationOne = H.div rightSideStyle [ H.h1 [] [H.text "Graph Isomorphism"]
-                                    , p [] [ H.text isomorphismExplanation]
-                                    ]
+type alias Vertex = {name : String, pos : Pos}
+type alias Edge = {vertexOne : Vertex, vertexTwo : Vertex}
+type alias Graph = {vertices : List Vertex, edges : List Edge}
 
-graphTwo = H.div rightSideStyle [H.text "Graph"]
-explanationTwo = H.div leftSideStyle [ H.h1 [] [H.text "Hamiltonian Cycle"]
-                                    , H.p [] [ H.text hamiltonianExplanation]
-                                    ]
+ver1 : Vertex
+ver1 = { name = "a"
+       , pos = {x = 100, y = 100}
+       }
 
-graphThree = H.div leftSideStyle [H.text "Graph"]
-explanationThree = H.div rightSideStyle [ H.h1 [] [H.text "Clique"]
-                                    , H.p [] [ H.text cliqueExplanation]
-                                    ]
+ver2 : Vertex
+ver2 = { name = "b"
+       , pos = {x = 300, y = 100}
+       }
 
-graphFour = H.div leftSideStyle [H.text "Graph"]
-explanationFour = H.div rightSideStyle [ H.h1 [] [H.text "Clique"]
-                                    , H.p [] [ H.text cliqueExplanation]
-                                    ]
+ver3 : Vertex
+ver3 = { name = "c"
+       , pos = {x = 200, y = 273}
+       }
+
+edge1 : Edge
+edge1 = { vertexOne = ver1
+        , vertexTwo = ver2
+        }
+
+edge2 : Edge
+edge2 = { vertexOne = ver1
+        , vertexTwo = ver3
+        }
+
+edge3 : Edge
+edge3 = { vertexOne = ver2
+        , vertexTwo = ver3
+        }
+
+graph1 : Graph
+graph1 =
+   {
+      vertices = [ver1, ver2, ver3]
+   ,  edges = [edge1, edge2, edge3]
+   }
+
+drawVertex : Vertex -> S.Svg msg
+drawVertex v =
+   circle 10 v.pos
+
+drawEdge : Edge -> S.Svg msg
+drawEdge e =
+   line e.vertexOne.pos e.vertexTwo.pos
+
+drawGraph : Graph -> List (S.Svg msg)
+drawGraph g =
+   (List.map drawEdge g.edges) ++ (List.map drawVertex g.vertices)
+
 
 circle : Size -> Pos -> S.Svg msg
 circle size pos =
@@ -56,6 +95,38 @@ circle size pos =
         , SA.style "fill: red;"
         ]
         []
+
+line : Pos -> Pos -> S.Svg msg
+line posa posb =
+   S.line
+      [ SA.x1 (String.fromInt posa.x)
+      , SA.y1 (String.fromInt posa.y)
+      , SA.x2 (String.fromInt posb.x)
+      , SA.y2 (String.fromInt posb.y)
+      , SA.stroke "white"
+      ]
+      []
+
+paneOne = H.div leftSideStyle [ anSvg ]
+explanationOne = H.div rightSideStyle [ H.h1 [] [H.text "Graph Isomorphism"]
+                                    , p [] [ H.text isomorphismExplanation]
+                                    ]
+
+paneTwo = H.div rightSideStyle [H.text "Graph"]
+explanationTwo = H.div leftSideStyle [ H.h1 [] [H.text "Hamiltonian Cycle"]
+                                    , H.p [] [ H.text hamiltonianExplanation]
+                                    ]
+
+paneThree = H.div leftSideStyle [H.text "Graph"]
+explanationThree = H.div rightSideStyle [ H.h1 [] [H.text "Clique"]
+                                    , H.p [] [ H.text cliqueExplanation]
+                                    ]
+
+paneFour = H.div leftSideStyle [H.text "Graph"]
+explanationFour = H.div rightSideStyle [ H.h1 [] [H.text "Clique"]
+                                    , H.p [] [ H.text cliqueExplanation]
+                                    ]
+
 
 
 pageStyle =

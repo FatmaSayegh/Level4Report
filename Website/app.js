@@ -4525,7 +4525,11 @@ var $author$project$Main$explanationTwo = A2(
 					$elm$html$Html$text($author$project$Main$hamiltonianExplanation)
 				]))
 		]));
-var $author$project$Main$graphFour = A2(
+var $author$project$Main$pageStyle = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'height', '100vh')
+	]);
+var $author$project$Main$paneFour = A2(
 	$elm$html$Html$div,
 	$author$project$Main$leftSideStyle,
 	_List_fromArray(
@@ -4533,6 +4537,33 @@ var $author$project$Main$graphFour = A2(
 			$elm$html$Html$text('Graph')
 		]));
 var $elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
+var $elm$svg$Svg$line = $elm$svg$Svg$trustedNode('line');
+var $elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
+var $elm$svg$Svg$Attributes$x1 = _VirtualDom_attribute('x1');
+var $elm$svg$Svg$Attributes$x2 = _VirtualDom_attribute('x2');
+var $elm$svg$Svg$Attributes$y1 = _VirtualDom_attribute('y1');
+var $elm$svg$Svg$Attributes$y2 = _VirtualDom_attribute('y2');
+var $author$project$Main$line = F2(
+	function (posa, posb) {
+		return A2(
+			$elm$svg$Svg$line,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$x1(
+					$elm$core$String$fromInt(posa.x)),
+					$elm$svg$Svg$Attributes$y1(
+					$elm$core$String$fromInt(posa.y)),
+					$elm$svg$Svg$Attributes$x2(
+					$elm$core$String$fromInt(posb.x)),
+					$elm$svg$Svg$Attributes$y2(
+					$elm$core$String$fromInt(posb.y)),
+					$elm$svg$Svg$Attributes$stroke('white')
+				]),
+			_List_Nil);
+	});
+var $author$project$Main$drawEdge = function (e) {
+	return A2($author$project$Main$line, e.vertexOne.pos, e.vertexTwo.pos);
+};
 var $elm$svg$Svg$circle = $elm$svg$Svg$trustedNode('circle');
 var $elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
 var $elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
@@ -4554,48 +4585,136 @@ var $author$project$Main$circle = F2(
 				]),
 			_List_Nil);
 	});
+var $author$project$Main$drawVertex = function (v) {
+	return A2($author$project$Main$circle, 10, v.pos);
+};
+var $elm$core$List$foldrHelper = F4(
+	function (fn, acc, ctr, ls) {
+		if (!ls.b) {
+			return acc;
+		} else {
+			var a = ls.a;
+			var r1 = ls.b;
+			if (!r1.b) {
+				return A2(fn, a, acc);
+			} else {
+				var b = r1.a;
+				var r2 = r1.b;
+				if (!r2.b) {
+					return A2(
+						fn,
+						a,
+						A2(fn, b, acc));
+				} else {
+					var c = r2.a;
+					var r3 = r2.b;
+					if (!r3.b) {
+						return A2(
+							fn,
+							a,
+							A2(
+								fn,
+								b,
+								A2(fn, c, acc)));
+					} else {
+						var d = r3.a;
+						var r4 = r3.b;
+						var res = (ctr > 500) ? A3(
+							$elm$core$List$foldl,
+							fn,
+							acc,
+							$elm$core$List$reverse(r4)) : A4($elm$core$List$foldrHelper, fn, acc, ctr + 1, r4);
+						return A2(
+							fn,
+							a,
+							A2(
+								fn,
+								b,
+								A2(
+									fn,
+									c,
+									A2(fn, d, res))));
+					}
+				}
+			}
+		}
+	});
+var $elm$core$List$foldr = F3(
+	function (fn, acc, ls) {
+		return A4($elm$core$List$foldrHelper, fn, acc, 0, ls);
+	});
+var $elm$core$List$map = F2(
+	function (f, xs) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, acc) {
+					return A2(
+						$elm$core$List$cons,
+						f(x),
+						acc);
+				}),
+			_List_Nil,
+			xs);
+	});
+var $author$project$Main$drawGraph = function (g) {
+	return _Utils_ap(
+		A2($elm$core$List$map, $author$project$Main$drawEdge, g.edges),
+		A2($elm$core$List$map, $author$project$Main$drawVertex, g.vertices));
+};
+var $author$project$Main$ver1 = {
+	name: 'a',
+	pos: {x: 100, y: 100}
+};
+var $author$project$Main$ver2 = {
+	name: 'b',
+	pos: {x: 300, y: 100}
+};
+var $author$project$Main$edge1 = {vertexOne: $author$project$Main$ver1, vertexTwo: $author$project$Main$ver2};
+var $author$project$Main$ver3 = {
+	name: 'c',
+	pos: {x: 200, y: 273}
+};
+var $author$project$Main$edge2 = {vertexOne: $author$project$Main$ver1, vertexTwo: $author$project$Main$ver3};
+var $author$project$Main$edge3 = {vertexOne: $author$project$Main$ver2, vertexTwo: $author$project$Main$ver3};
+var $author$project$Main$graph1 = {
+	edges: _List_fromArray(
+		[$author$project$Main$edge1, $author$project$Main$edge2, $author$project$Main$edge3]),
+	vertices: _List_fromArray(
+		[$author$project$Main$ver1, $author$project$Main$ver2, $author$project$Main$ver3])
+};
 var $elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
 var $elm$svg$Svg$svg = $elm$svg$Svg$trustedNode('svg');
 var $elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
 var $elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
-var $author$project$Main$theSvg = A2(
+var $author$project$Main$anSvg = A2(
 	$elm$svg$Svg$svg,
 	_List_fromArray(
 		[
-			$elm$svg$Svg$Attributes$width('400'),
-			$elm$svg$Svg$Attributes$height('1200'),
-			$elm$svg$Svg$Attributes$viewBox('0 0 400 1200')
+			$elm$svg$Svg$Attributes$width('100%'),
+			$elm$svg$Svg$Attributes$height('auto'),
+			$elm$svg$Svg$Attributes$viewBox('0 0 400 400')
 		]),
-	_List_fromArray(
-		[
-			A2(
-			$author$project$Main$circle,
-			20,
-			{x: 200, y: 500})
-		]));
-var $author$project$Main$graphOne = A2(
+	$author$project$Main$drawGraph($author$project$Main$graph1));
+var $author$project$Main$paneOne = A2(
 	$elm$html$Html$div,
 	$author$project$Main$leftSideStyle,
 	_List_fromArray(
-		[$author$project$Main$theSvg]));
-var $author$project$Main$graphThree = A2(
+		[$author$project$Main$anSvg]));
+var $author$project$Main$paneThree = A2(
 	$elm$html$Html$div,
 	$author$project$Main$leftSideStyle,
 	_List_fromArray(
 		[
 			$elm$html$Html$text('Graph')
 		]));
-var $author$project$Main$graphTwo = A2(
+var $author$project$Main$paneTwo = A2(
 	$elm$html$Html$div,
 	$author$project$Main$rightSideStyle,
 	_List_fromArray(
 		[
 			$elm$html$Html$text('Graph')
 		]));
-var $author$project$Main$pageStyle = _List_fromArray(
-	[
-		A2($elm$html$Html$Attributes$style, 'height', '100vh')
-	]);
 var $author$project$Main$view = function (model) {
 	return A2(
 		$elm$html$Html$div,
@@ -4606,22 +4725,22 @@ var $author$project$Main$view = function (model) {
 				$elm$html$Html$div,
 				$author$project$Main$pageStyle,
 				_List_fromArray(
-					[$author$project$Main$graphOne, $author$project$Main$explanationOne])),
+					[$author$project$Main$paneOne, $author$project$Main$explanationOne])),
 				A2(
 				$elm$html$Html$div,
 				$author$project$Main$pageStyle,
 				_List_fromArray(
-					[$author$project$Main$explanationTwo, $author$project$Main$graphTwo])),
+					[$author$project$Main$explanationTwo, $author$project$Main$paneTwo])),
 				A2(
 				$elm$html$Html$div,
 				$author$project$Main$pageStyle,
 				_List_fromArray(
-					[$author$project$Main$graphThree, $author$project$Main$explanationThree])),
+					[$author$project$Main$paneThree, $author$project$Main$explanationThree])),
 				A2(
 				$elm$html$Html$div,
 				$author$project$Main$pageStyle,
 				_List_fromArray(
-					[$author$project$Main$explanationFour, $author$project$Main$graphFour]))
+					[$author$project$Main$explanationFour, $author$project$Main$paneFour]))
 			]));
 };
 var $author$project$Main$main = $author$project$Main$view('hello there');
