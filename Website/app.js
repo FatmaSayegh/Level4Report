@@ -4662,26 +4662,14 @@ var $author$project$Main$drawGraph = function (g) {
 		A2($elm$core$List$map, $author$project$Main$drawEdge, g.edges),
 		A2($elm$core$List$map, $author$project$Main$drawVertex, g.vertices));
 };
-var $author$project$Main$ver1 = {
-	name: 'a',
-	pos: {x: 100, y: 100}
+var $author$project$Main$ver4 = {
+	name: 'd',
+	pos: {x: 400, y: 400}
 };
-var $author$project$Main$ver2 = {
-	name: 'b',
-	pos: {x: 300, y: 100}
-};
-var $author$project$Main$edge1 = {vertexOne: $author$project$Main$ver1, vertexTwo: $author$project$Main$ver2};
-var $author$project$Main$ver3 = {
-	name: 'c',
-	pos: {x: 200, y: 273}
-};
-var $author$project$Main$edge2 = {vertexOne: $author$project$Main$ver1, vertexTwo: $author$project$Main$ver3};
-var $author$project$Main$edge3 = {vertexOne: $author$project$Main$ver2, vertexTwo: $author$project$Main$ver3};
-var $author$project$Main$graph1 = {
-	edges: _List_fromArray(
-		[$author$project$Main$edge1, $author$project$Main$edge2, $author$project$Main$edge3]),
+var $author$project$Main$graph2 = {
+	edges: _List_Nil,
 	vertices: _List_fromArray(
-		[$author$project$Main$ver1, $author$project$Main$ver2, $author$project$Main$ver3])
+		[$author$project$Main$ver4])
 };
 var $elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
 var $elm$svg$Svg$svg = $elm$svg$Svg$trustedNode('svg');
@@ -4695,7 +4683,7 @@ var $author$project$Main$anSvg = A2(
 			$elm$svg$Svg$Attributes$height('auto'),
 			$elm$svg$Svg$Attributes$viewBox('0 0 400 400')
 		]),
-	$author$project$Main$drawGraph($author$project$Main$graph1));
+	$author$project$Main$drawGraph($author$project$Main$graph2));
 var $author$project$Main$paneOne = A2(
 	$elm$html$Html$div,
 	$author$project$Main$leftSideStyle,

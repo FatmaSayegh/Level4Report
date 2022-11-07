@@ -29,7 +29,8 @@ anSvg =
      --, drawVertex ver1
      --, drawVertex ver2
      --]
-     (drawGraph graph1)
+     --(drawGraph graph1)
+     (drawGraph graph2)
 
 
 type alias Vertex = {name : String, pos : Pos}
@@ -49,6 +50,11 @@ ver2 = { name = "b"
 ver3 : Vertex
 ver3 = { name = "c"
        , pos = {x = 200, y = 273}
+       }
+
+ver4 : Vertex
+ver4 = { name = "d"
+       , pos = {x = 400, y = 400}
        }
 
 edge1 : Edge
@@ -71,6 +77,13 @@ graph1 =
    {
       vertices = [ver1, ver2, ver3]
    ,  edges = [edge1, edge2, edge3]
+   }
+
+graph2 : Graph
+graph2 =
+   {
+      vertices = [ver4]
+   ,  edges = []
    }
 
 drawVertex : Vertex -> S.Svg msg
