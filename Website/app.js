@@ -5774,8 +5774,61 @@ var $author$project$Main$outerListOfVertices = A2(
 		A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 120, 120, 0),
 		A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 200, 200, 0),
 		0));
+var $author$project$Main$Edge = F2(
+	function (vertexOne, vertexTwo) {
+		return {vertexOne: vertexOne, vertexTwo: vertexTwo};
+	});
+var $elm$core$List$head = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return $elm$core$Maybe$Just(x);
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
+var $elm$core$List$tail = function (list) {
+	if (list.b) {
+		var x = list.a;
+		var xs = list.b;
+		return $elm$core$Maybe$Just(xs);
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
+var $author$project$Main$shiftListCycle = function (xs) {
+	var _v0 = $elm$core$List$tail(xs);
+	if (_v0.$ === 'Just') {
+		var ys = _v0.a;
+		var _v1 = $elm$core$List$head(xs);
+		if (_v1.$ === 'Just') {
+			var h = _v1.a;
+			return _Utils_ap(
+				ys,
+				_List_fromArray(
+					[h]));
+		} else {
+			return _List_Nil;
+		}
+	} else {
+		return _List_Nil;
+	}
+};
+var $author$project$Main$outerPolygonalEdges = A3(
+	$elm$core$List$map2,
+	$author$project$Main$Edge,
+	$author$project$Main$outerListOfVertices,
+	$author$project$Main$shiftListCycle($author$project$Main$outerListOfVertices));
+var $author$project$Main$polygonalEdges = A3(
+	$elm$core$List$map2,
+	$author$project$Main$Edge,
+	$author$project$Main$listOfVertices,
+	$author$project$Main$shiftListCycle($author$project$Main$listOfVertices));
+var $author$project$Main$spokeEdges = A3($elm$core$List$map2, $author$project$Main$Edge, $author$project$Main$listOfVertices, $author$project$Main$outerListOfVertices);
 var $author$project$Main$graph3 = {
-	edges: _List_Nil,
+	edges: _Utils_ap(
+		$author$project$Main$polygonalEdges,
+		_Utils_ap($author$project$Main$outerPolygonalEdges, $author$project$Main$spokeEdges)),
 	vertices: _Utils_ap($author$project$Main$listOfVertices, $author$project$Main$outerListOfVertices)
 };
 var $elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
