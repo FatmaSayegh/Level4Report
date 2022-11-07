@@ -4,7 +4,8 @@ import Html as H exposing (div, h1, p, text)
 import Html.Attributes as HA exposing (..)
 import Svg as S exposing (..)
 import Svg.Attributes as SA exposing (..)
-
+import Math.Matrix4 as M4 exposing (..)
+import Math.Vector3 exposing (..)
 
 main = view "hello there"
 
@@ -30,61 +31,85 @@ anSvg =
      --, drawVertex ver2
      --]
      --(drawGraph graph1)
-     (drawGraph graph2)
+     (drawGraph graph3)
 
 
 type alias Vertex = {name : String, pos : Pos}
 type alias Edge = {vertexOne : Vertex, vertexTwo : Vertex}
 type alias Graph = {vertices : List Vertex, edges : List Edge}
 
-ver1 : Vertex
-ver1 = { name = "a"
-       , pos = {x = 100, y = 100}
-       }
+--vert1 : Vertex
+--vert1 = { name = "a"
+--       , pos = {x = 100, y = 100}
+--       }
+--
+--vert2 : Vertex
+--vert2 = { name = "b"
+--       , pos = {x = 300, y = 100}
+--       }
+--
+--vert3 : Vertex
+--vert3 = { name = "c"
+--       , pos = {x = 200, y = 273}
+--       }
+--
+--vert4 : Vertex
+--vert4 = { name = "d"
+--       , pos = {x = 400, y = 400}
+--       }
+--
+--edge1 : Edge
+--edge1 = { vertexOne = vert1
+--        , vertexTwo = vert2
+--        }
+--
+--edge2 : Edge
+--edge2 = { vertexOne = vert1
+--        , vertexTwo = vert3
+--        }
+--
+--edge3 : Edge
+--edge3 = { vertexOne = vert2
+--        , vertexTwo = vert3
+--        }
+--
+--graph1 : Graph
+--graph1 =
+--   {
+--      vertices = [vert1, vert2, vert3]
+--   ,  edges = [edge1, edge2, edge3]
+--   }
 
-ver2 : Vertex
-ver2 = { name = "b"
-       , pos = {x = 300, y = 100}
-       }
+vert4 = Vertex "a" (Pos 200 200)
 
-ver3 : Vertex
-ver3 = { name = "c"
-       , pos = {x = 200, y = 273}
-       }
-
-ver4 : Vertex
-ver4 = { name = "d"
-       , pos = {x = 400, y = 400}
-       }
-
-edge1 : Edge
-edge1 = { vertexOne = ver1
-        , vertexTwo = ver2
-        }
-
-edge2 : Edge
-edge2 = { vertexOne = ver1
-        , vertexTwo = ver3
-        }
-
-edge3 : Edge
-edge3 = { vertexOne = ver2
-        , vertexTwo = ver3
-        }
-
-graph1 : Graph
-graph1 =
+graph3 : Graph
+graph3 =
    {
-      vertices = [ver1, ver2, ver3]
-   ,  edges = [edge1, edge2, edge3]
+      vertices = listOfVertices ++ outerListOfVertices
+   ,  edges = polygonalEdges ++ outerPolygonalEdges ++ spokeEdges
    }
 
-graph2 : Graph
-graph2 =
-   {
-      vertices = [ver4]
-   ,  edges = []
-   }
+hexagonalVertices : List Vec3
+hexagonalVertices = parametricPolygon 6 (vec3 80 80 0) (vec3 200 200 0) 0
+
+convertGeomFormat : Vec3 -> Vertex
+convertGeomFormat v = Vertex " " (Pos (round <| getX v) (round <| getY v))
+
+listOfVertices = List.map convertGeomFormat hexagonalVertices
+outerListOfVertices = List.map convertGeomFormat <| parametricPolygon 6 (vec3 120 120 0) (vec3 200 200 0) 0
+
+
+polygonalEdges = List.map2 Edge listOfVertices (shiftListCycle listOfVertices)
+outerPolygonalEdges = List.map2 Edge outerListOfVertices (shiftListCycle outerListOfVertices)
+spokeEdges = List.map2 Edge listOfVertices outerListOfVertices
+
+shiftListCycle xs =
+   case (List.tail xs) of
+      Just ys -> case (List.head xs) of
+                      Just h -> ys ++ [h]
+                      Nothing -> []
+      Nothing -> []
+
 
 drawVertex : Vertex -> S.Svg msg
 drawVertex v =
@@ -191,3 +216,24 @@ cliqueExplanation =
    other vertex in the graph which can be added to the set, while preserving the
    property that all the vertices are connected to every other.
    """
+rotateVector v a =
+   let rotation = M4.rotate a (vec3 0 0 1) M4.identity
+   in M4.transform rotation v
+
+makePolygon : Float -> Int -> List Vec3
+makePolygon startAngle n =
+   let increment = (2*pi/ toFloat n)
+       initialVector = vec3 1 0 0
+       angles = List.range 0 (n-1) |> List.map ((+) startAngle << (*) increment << toFloat)
+   in List.map (rotateVector initialVector) angles
+
+situateShape : Vec3 -> Vec3 -> List Vec3 -> List Vec3
+situateShape center scaleVec polygon=
+   let translateTrans = M4.translate center M4.identity
+       scaleTrans = M4.scale scaleVec M4.identity
+   in
+       List.map (M4.transform translateTrans << M4.transform scaleTrans) polygon
+
+parametricPolygon : Int -> Vec3 -> Vec3 -> Float -> List Vec3
+parametricPolygon n radiusVec center startAngle =
+   situateShape center radiusVec <| makePolygon startAngle n
