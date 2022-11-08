@@ -5434,7 +5434,7 @@ var $elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 	}
 };
 var $elm$html$Html$div = _VirtualDom_node('div');
-var $author$project$Main$cliqueExplanation = '\n   A clique is a set of vertices of a graph such that all the vertices are\n   connected to each other. This set is defined in such a way that there is no\n   other vertex in the graph which can be added to the set, while preserving the\n   property that all the vertices are connected to every other.\n   ';
+var $author$project$Explanation$cliqueExplanation = '\n   A clique is a set of vertices of a graph such that all the vertices are\n   connected to each other. This set is defined in such a way that there is no\n   other vertex in the graph which can be added to the set, while preserving the\n   property that all the vertices are connected to every other.\n   ';
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
 var $elm$html$Html$p = _VirtualDom_node('p');
 var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
@@ -5466,10 +5466,10 @@ var $author$project$Main$explanationFour = A2(
 			_List_Nil,
 			_List_fromArray(
 				[
-					$elm$html$Html$text($author$project$Main$cliqueExplanation)
+					$elm$html$Html$text($author$project$Explanation$cliqueExplanation)
 				]))
 		]));
-var $author$project$Main$isomorphismExplanation = '\n   Two graphs G1 and G2 are isomorphic if there is a one-one correspondence\n   between the vertices of G1 and G2 such that the number of edges between any\n   two vertices in G1 is equal to the number of edges joining the corresponding\n   vertices of G2. Here the graphs may appear to be different in appearance and\n   the labeling of the nodes and edges. But the way one vertex is connected to\n   another in one graph is same to another. Therefore given two graphs,\n   detecting if the graphs are Isomorphic is a problem to solve.  One way to\n   explain this would be to manipulate the position of vertices and edges to be\n   appear same as it\'s isomorphic counterpart.  We want to show what\n   isomorphism is.\n   ';
+var $author$project$Explanation$isomorphismExplanation = '\n   Two graphs G1 and G2 are isomorphic if there is a one-one correspondence\n   between the vertices of G1 and G2 such that the number of edges between any\n   two vertices in G1 is equal to the number of edges joining the corresponding\n   vertices of G2. Here the graphs may appear to be different in appearance and\n   the labeling of the nodes and edges. But the way one vertex is connected to\n   another in one graph is same to another. Therefore given two graphs,\n   detecting if the graphs are Isomorphic is a problem to solve.  One way to\n   explain this would be to manipulate the position of vertices and edges to be\n   appear same as it\'s isomorphic counterpart.  We want to show what\n   isomorphism is.\n   ';
 var $author$project$Main$explanationOne = A2(
 	$elm$html$Html$div,
 	$author$project$Main$rightSideStyle,
@@ -5487,7 +5487,7 @@ var $author$project$Main$explanationOne = A2(
 			_List_Nil,
 			_List_fromArray(
 				[
-					$elm$html$Html$text($author$project$Main$isomorphismExplanation)
+					$elm$html$Html$text($author$project$Explanation$isomorphismExplanation)
 				]))
 		]));
 var $author$project$Main$explanationThree = A2(
@@ -5507,10 +5507,10 @@ var $author$project$Main$explanationThree = A2(
 			_List_Nil,
 			_List_fromArray(
 				[
-					$elm$html$Html$text($author$project$Main$cliqueExplanation)
+					$elm$html$Html$text($author$project$Explanation$cliqueExplanation)
 				]))
 		]));
-var $author$project$Main$hamiltonianExplanation = '\n   Graphs containing walks (moving from one edge to another) that include every\n   vertex exactly once, ending at initial vertex. (so we should start and end\n   in same point without repeating vertices and cover all the vertices).\n   ';
+var $author$project$Explanation$hamiltonianExplanation = '\n   Graphs containing walks (moving from one edge to another) that include every\n   vertex exactly once, ending at initial vertex. (so we should start and end\n   in same point without repeating vertices and cover all the vertices).\n   ';
 var $author$project$Main$leftSideStyle = _List_fromArray(
 	[
 		A2($elm$html$Html$Attributes$style, 'float', 'left'),
@@ -5536,7 +5536,7 @@ var $author$project$Main$explanationTwo = A2(
 			_List_Nil,
 			_List_fromArray(
 				[
-					$elm$html$Html$text($author$project$Main$hamiltonianExplanation)
+					$elm$html$Html$text($author$project$Explanation$hamiltonianExplanation)
 				]))
 		]));
 var $author$project$Main$pageStyle = _List_fromArray(
@@ -5676,6 +5676,17 @@ var $author$project$Main$drawGraph = function (g) {
 		A2($elm$core$List$map, $author$project$Main$drawEdge, g.edges),
 		A2($elm$core$List$map, $author$project$Main$drawVertex, g.vertices));
 };
+var $author$project$Main$PolygonCycle = function (a) {
+	return {$: 'PolygonCycle', a: a};
+};
+var $author$project$Main$Edge = F2(
+	function (vertexOne, vertexTwo) {
+		return {vertexOne: vertexOne, vertexTwo: vertexTwo};
+	});
+var $author$project$Main$Graph = F2(
+	function (vertices, edges) {
+		return {edges: edges, vertices: vertices};
+	});
 var $author$project$Main$Pos = F2(
 	function (x, y) {
 		return {x: x, y: y};
@@ -5697,6 +5708,25 @@ var $author$project$Main$convertGeomFormat = function (v) {
 				$elm_explorations$linear_algebra$Math$Vector3$getX(v)),
 			$elm$core$Basics$round(
 				$elm_explorations$linear_algebra$Math$Vector3$getY(v))));
+};
+var $author$project$Main$fullyConnectVertices = function (vs) {
+	if (!vs.b) {
+		return _List_Nil;
+	} else {
+		if (!vs.b.b) {
+			var x = vs.a;
+			return _List_Nil;
+		} else {
+			var x = vs.a;
+			var xs = vs.b;
+			return _Utils_ap(
+				A2(
+					$elm$core$List$map,
+					$author$project$Main$Edge(x),
+					xs),
+				$author$project$Main$fullyConnectVertices(xs));
+		}
+	}
 };
 var $elm$core$Basics$composeL = F3(
 	function (g, f, x) {
@@ -5758,26 +5788,6 @@ var $author$project$Main$parametricPolygon = F4(
 			radiusVec,
 			A2($author$project$Main$makePolygon, startAngle, n));
 	});
-var $author$project$Main$hexagonalVertices = A4(
-	$author$project$Main$parametricPolygon,
-	6,
-	A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 80, 80, 0),
-	A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 200, 200, 0),
-	0);
-var $author$project$Main$listOfVertices = A2($elm$core$List$map, $author$project$Main$convertGeomFormat, $author$project$Main$hexagonalVertices);
-var $author$project$Main$outerListOfVertices = A2(
-	$elm$core$List$map,
-	$author$project$Main$convertGeomFormat,
-	A4(
-		$author$project$Main$parametricPolygon,
-		6,
-		A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 120, 120, 0),
-		A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 200, 200, 0),
-		0));
-var $author$project$Main$Edge = F2(
-	function (vertexOne, vertexTwo) {
-		return {vertexOne: vertexOne, vertexTwo: vertexTwo};
-	});
 var $elm$core$List$head = function (list) {
 	if (list.b) {
 		var x = list.a;
@@ -5814,23 +5824,49 @@ var $author$project$Main$shiftListCycle = function (xs) {
 		return _List_Nil;
 	}
 };
-var $author$project$Main$outerPolygonalEdges = A3(
-	$elm$core$List$map2,
-	$author$project$Main$Edge,
-	$author$project$Main$outerListOfVertices,
-	$author$project$Main$shiftListCycle($author$project$Main$outerListOfVertices));
-var $author$project$Main$polygonalEdges = A3(
-	$elm$core$List$map2,
-	$author$project$Main$Edge,
-	$author$project$Main$listOfVertices,
-	$author$project$Main$shiftListCycle($author$project$Main$listOfVertices));
-var $author$project$Main$spokeEdges = A3($elm$core$List$map2, $author$project$Main$Edge, $author$project$Main$listOfVertices, $author$project$Main$outerListOfVertices);
-var $author$project$Main$graph3 = {
-	edges: _Utils_ap(
-		$author$project$Main$polygonalEdges,
-		_Utils_ap($author$project$Main$outerPolygonalEdges, $author$project$Main$spokeEdges)),
-	vertices: _Utils_ap($author$project$Main$listOfVertices, $author$project$Main$outerListOfVertices)
+var $author$project$Main$makeGraph = F4(
+	function (graphType, position, size, initialAngle) {
+		if (graphType.$ === 'PolygonCycle') {
+			var n = graphType.a;
+			var vertices = A2(
+				$elm$core$List$map,
+				$author$project$Main$convertGeomFormat,
+				A4($author$project$Main$parametricPolygon, n, size, position, initialAngle));
+			return A2(
+				$author$project$Main$Graph,
+				vertices,
+				A3(
+					$elm$core$List$map2,
+					$author$project$Main$Edge,
+					vertices,
+					$author$project$Main$shiftListCycle(vertices)));
+		} else {
+			var n = graphType.a;
+			var vertices = A2(
+				$elm$core$List$map,
+				$author$project$Main$convertGeomFormat,
+				A4($author$project$Main$parametricPolygon, n, size, position, initialAngle));
+			return A2(
+				$author$project$Main$Graph,
+				vertices,
+				$author$project$Main$fullyConnectVertices(vertices));
+		}
+	});
+var $author$project$Main$graph5 = A4(
+	$author$project$Main$makeGraph,
+	$author$project$Main$PolygonCycle(6),
+	A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 100, 200, 0),
+	A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 50, 50, 0),
+	0);
+var $author$project$Main$PolygonFullyConnected = function (a) {
+	return {$: 'PolygonFullyConnected', a: a};
 };
+var $author$project$Main$graph6 = A4(
+	$author$project$Main$makeGraph,
+	$author$project$Main$PolygonFullyConnected(6),
+	A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 300, 200, 0),
+	A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 50, 50, 0),
+	0);
 var $elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
 var $elm$svg$Svg$svg = $elm$svg$Svg$trustedNode('svg');
 var $elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
@@ -5843,7 +5879,9 @@ var $author$project$Main$anSvg = A2(
 			$elm$svg$Svg$Attributes$height('auto'),
 			$elm$svg$Svg$Attributes$viewBox('0 0 400 400')
 		]),
-	$author$project$Main$drawGraph($author$project$Main$graph3));
+	_Utils_ap(
+		$author$project$Main$drawGraph($author$project$Main$graph5),
+		$author$project$Main$drawGraph($author$project$Main$graph6)));
 var $author$project$Main$paneOne = A2(
 	$elm$html$Html$div,
 	$author$project$Main$leftSideStyle,
