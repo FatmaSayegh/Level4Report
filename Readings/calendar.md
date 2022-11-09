@@ -51,5 +51,21 @@
 - Max k-Cut
 
 ## Week 5
-### What prof says
-- Write and implement well. Do whatever you want to show the next week.
+- Researched about different technologies.
+- Learned about elm-framework.
+- A wireframe was created
+- Researched about how to draw simple shapes with svg.
+- Researched about how to move svg shapes with time.
+- Research was done about tree-width.
+
+
+## Week 6
+- Abstracted over Svg to form vertices and edges.
+- Coded to place vertices and edges together to form graphs.
+- edges defined as made up of vertices, therefore no need to define
+   their positions explicitly.
+- Linear algebra, was used to draw polygons on vertices n and define
+  edges between the vertices in various fashions. (fully connected, cycles)
+- Modified the survey for better.
+
+##Week7
