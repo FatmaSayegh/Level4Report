@@ -33,7 +33,7 @@ anSvg =
      ]
      --(drawGraph graph3)
      --(drawGraph graph4)
-     ((drawGraph graph5) ++ (drawGraph graph6))
+     ((drawGraph graph5) ++ (drawGraph graph6) ++ (drawGraph graph7) ++ (drawGraph graph8))
 
 
 type alias Vertex = {name : String, pos : Pos}
@@ -68,8 +68,12 @@ makeGraph graphType position size initialAngle=
              let vertices = List.map convertGeomFormat <| parametricPolygon n size position initialAngle
              in Graph vertices (fullyConnectVertices vertices)
 
-graph5 = makeGraph (PolygonCycle 6) (vec3 100 200 0) (vec3 50 50 0) 0
-graph6 = makeGraph (PolygonFullyConnected 6) (vec3 300 200 0) (vec3 50 50 0) 0
+graph5 = makeGraph (PolygonCycle 6) (vec3 100 100 0) (vec3 50 50 0) 0
+graph6 = makeGraph (PolygonFullyConnected 6) (vec3 300 100 0) (vec3 50 50 0) 0
+
+graph7 = makeGraph (PolygonFullyConnected 9) (vec3 300 300 0) (vec3 50 50 0) 0
+graph8 = makeGraph (PolygonFullyConnected 5) (vec3 100 300 0) (vec3 50 50 0) (3*pi/2)
+
 
 -- Will connect 1 to 3,4,5,6
 -- Then in next call 2 ot 3,4,5,6

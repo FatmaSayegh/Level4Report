@@ -5769,8 +5769,8 @@ var $author$project$Main$makePolygon = F2(
 var $elm_explorations$linear_algebra$Math$Matrix4$scale = _MJS_m4x4scale;
 var $elm_explorations$linear_algebra$Math$Matrix4$translate = _MJS_m4x4translate;
 var $author$project$Main$situateShape = F3(
-	function (center, scaleVec, polygon) {
-		var translateTrans = A2($elm_explorations$linear_algebra$Math$Matrix4$translate, center, $elm_explorations$linear_algebra$Math$Matrix4$identity);
+	function (position, scaleVec, polygon) {
+		var translateTrans = A2($elm_explorations$linear_algebra$Math$Matrix4$translate, position, $elm_explorations$linear_algebra$Math$Matrix4$identity);
 		var scaleTrans = A2($elm_explorations$linear_algebra$Math$Matrix4$scale, scaleVec, $elm_explorations$linear_algebra$Math$Matrix4$identity);
 		return A2(
 			$elm$core$List$map,
@@ -5781,11 +5781,11 @@ var $author$project$Main$situateShape = F3(
 			polygon);
 	});
 var $author$project$Main$parametricPolygon = F4(
-	function (n, radiusVec, center, startAngle) {
+	function (n, scaleVec, position, startAngle) {
 		return A3(
 			$author$project$Main$situateShape,
-			center,
-			radiusVec,
+			position,
+			scaleVec,
 			A2($author$project$Main$makePolygon, startAngle, n));
 	});
 var $elm$core$List$head = function (list) {
@@ -5855,7 +5855,7 @@ var $author$project$Main$makeGraph = F4(
 var $author$project$Main$graph5 = A4(
 	$author$project$Main$makeGraph,
 	$author$project$Main$PolygonCycle(6),
-	A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 100, 200, 0),
+	A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 100, 100, 0),
 	A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 50, 50, 0),
 	0);
 var $author$project$Main$PolygonFullyConnected = function (a) {
@@ -5864,9 +5864,21 @@ var $author$project$Main$PolygonFullyConnected = function (a) {
 var $author$project$Main$graph6 = A4(
 	$author$project$Main$makeGraph,
 	$author$project$Main$PolygonFullyConnected(6),
-	A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 300, 200, 0),
+	A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 300, 100, 0),
 	A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 50, 50, 0),
 	0);
+var $author$project$Main$graph7 = A4(
+	$author$project$Main$makeGraph,
+	$author$project$Main$PolygonFullyConnected(7),
+	A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 300, 300, 0),
+	A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 50, 50, 0),
+	0);
+var $author$project$Main$graph8 = A4(
+	$author$project$Main$makeGraph,
+	$author$project$Main$PolygonFullyConnected(5),
+	A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 100, 300, 0),
+	A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 50, 50, 0),
+	(3 * $elm$core$Basics$pi) / 2);
 var $elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
 var $elm$svg$Svg$svg = $elm$svg$Svg$trustedNode('svg');
 var $elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
@@ -5881,7 +5893,11 @@ var $author$project$Main$anSvg = A2(
 		]),
 	_Utils_ap(
 		$author$project$Main$drawGraph($author$project$Main$graph5),
-		$author$project$Main$drawGraph($author$project$Main$graph6)));
+		_Utils_ap(
+			$author$project$Main$drawGraph($author$project$Main$graph6),
+			_Utils_ap(
+				$author$project$Main$drawGraph($author$project$Main$graph7),
+				$author$project$Main$drawGraph($author$project$Main$graph8)))));
 var $author$project$Main$paneOne = A2(
 	$elm$html$Html$div,
 	$author$project$Main$leftSideStyle,

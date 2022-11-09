@@ -4,3 +4,5 @@ l4proj.log
 l4proj.out
 l4proj.toc
 l4proj.aux
+Website/elm-stuff/
+**/*.swp
