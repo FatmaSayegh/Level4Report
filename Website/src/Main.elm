@@ -72,7 +72,7 @@ graph5 = makeGraph (PolygonCycle 6) (vec3 100 100 0) (vec3 50 50 0) 0
 graph6 = makeGraph (PolygonFullyConnected 6) (vec3 300 100 0) (vec3 50 50 0) 0
 
 graph7 = makeGraph (PolygonFullyConnected 9) (vec3 300 300 0) (vec3 50 50 0) 0
-graph8 = makeGraph (PolygonFullyConnected 5) (vec3 100 300 0) (vec3 50 50 0) (3*pi/2)
+graph8 = makeGraph (PolygonFullyConnected 4) (vec3 100 300 0) (vec3 50 50 0) (pi/2)
 
 
 -- Will connect 1 to 3,4,5,6
