@@ -35,6 +35,16 @@ anSvg =
      --(drawGraph graph4)
      ((drawGraph graph5) ++ (drawGraph graph6) ++ (drawGraph graph7) ++ (drawGraph graph8))
 
+anotherSvg =
+    S.svg
+     [ SA.width "100%"
+     , SA.height "auto"
+     , SA.viewBox "0 0 400 400"
+     ]
+     --(drawGraph graph3)
+     --(drawGraph graph4)
+     (drawGraph graph9) 
+
 
 type alias Vertex = {name : String, pos : Pos}
 type alias Edge = {vertexOne : Vertex, vertexTwo : Vertex}
@@ -50,7 +60,7 @@ graph3 =
    ,  edges = polygonalEdges ++ outerPolygonalEdges ++ spokeEdges
    }
 
-type Gtype = PolygonCycle Int | PolygonFullyConnected Int
+type Gtype = PolygonCycle Int | PolygonFullyConnected Int | PolygonCycleDoll Int
 
 -- <| is like $ in haskell
 
@@ -68,11 +78,22 @@ makeGraph graphType position size initialAngle=
              let vertices = List.map convertGeomFormat <| parametricPolygon n size position initialAngle
              in Graph vertices (fullyConnectVertices vertices)
 
-graph5 = makeGraph (PolygonCycle 6) (vec3 100 100 0) (vec3 50 50 0) 0
-graph6 = makeGraph (PolygonFullyConnected 6) (vec3 300 100 0) (vec3 50 50 0) 0
+          PolygonCycleDoll n ->
+             let verticesSetA = List.map convertGeomFormat <| parametricPolygon n size position initialAngle
+                 verticesSetB = List.map convertGeomFormat <| parametricPolygon n (Math.Vector3.scale 0.5 size) position initialAngle
+                 allVertices = verticesSetA ++ verticesSetB
+                 edgesCycleSetA = List.map2 Edge verticesSetA (shiftListCycle verticesSetA)
+                 edgesCycleSetB = List.map2 Edge verticesSetB (shiftListCycle verticesSetB)
+                 spokesSetASetB = List.map2 Edge verticesSetA verticesSetB
+             in Graph (allVertices) (edgesCycleSetA ++ edgesCycleSetB ++ spokesSetASetB)
 
-graph7 = makeGraph (PolygonFullyConnected 9) (vec3 300 300 0) (vec3 50 50 0) 0
+graph5 = makeGraph (PolygonCycle 6) (vec3 100 100 0) (vec3 50 50 0) 0
+graph6 = makeGraph (PolygonFullyConnected 2) (vec3 300 100 0) (vec3 50 50 0) 0
+
+graph7 = makeGraph (PolygonFullyConnected 3) (vec3 300 300 0) (vec3 50 50 0) 0
 graph8 = makeGraph (PolygonFullyConnected 4) (vec3 100 300 0) (vec3 50 50 0) (pi/2)
+
+graph9 = makeGraph (PolygonCycleDoll 6) (vec3 200 100 0) (vec3 80 80 0) 0
 
 
 -- Will connect 1 to 3,4,5,6
@@ -156,12 +177,12 @@ line posa posb =
       ]
       []
 
-paneOne = H.div leftSideStyle [ anSvg ]
+paneOne = H.div leftSideStyle [ anotherSvg]
 explanationOne = H.div rightSideStyle [ H.h1 [] [H.text "Graph Isomorphism"]
                                     , p [] [ H.text isomorphismExplanation]
                                     ]
 
-paneTwo = H.div rightSideStyle [H.text "Graph"]
+paneTwo = H.div rightSideStyle [anSvg]
 explanationTwo = H.div leftSideStyle [ H.h1 [] [H.text "Hamiltonian Cycle"]
                                     , H.p [] [ H.text hamiltonianExplanation]
                                     ]
