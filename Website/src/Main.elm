@@ -140,9 +140,9 @@ shiftListCycle xs =
       Nothing -> []
 
 
-drawVertex : Vertex -> S.Svg msg
-drawVertex v =
-   circle 10 v.pos
+drawRedVertex : Vertex -> S.Svg msg
+drawRedVertex v =
+   redCircle 10 v.pos
 
 drawEdge : Edge -> S.Svg msg
 drawEdge e =
@@ -152,11 +152,11 @@ drawEdge e =
 -- and produces a single list
 drawGraph : Graph -> List (S.Svg msg)
 drawGraph g =
-   (List.map drawEdge g.edges) ++ (List.map drawVertex g.vertices)
+   (List.map drawEdge g.edges) ++ (List.map drawRedVertex g.vertices)
 
 
-circle : Size -> Pos -> S.Svg msg
-circle size pos =
+redCircle : Size -> Pos -> S.Svg msg
+redCircle size pos =
     S.circle
         [ SA.cx (String.fromInt pos.x)
         , SA.cy (String.fromInt pos.y)
