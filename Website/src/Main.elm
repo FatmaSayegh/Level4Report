@@ -7,6 +7,7 @@ import Svg.Attributes as SA exposing (..)
 import Math.Matrix4 as M4 exposing (..)
 import Math.Vector3 exposing (..)
 import Explanation exposing (..)
+import Color exposing (Color)
 
 main = view "hello there"
 -- main is the program
@@ -144,15 +145,25 @@ drawRedVertex : Vertex -> S.Svg msg
 drawRedVertex v =
    redCircle 10 v.pos
 
+drawVertex : Vertex -> Color -> S.Svg msg
+drawVertex v color =
+   circle 10 v.pos color
+
 drawEdge : Edge -> S.Svg msg
 drawEdge e =
    line e.vertexOne.pos e.vertexTwo.pos
 
 -- put edges first and then vertices
 -- and produces a single list
-drawGraph : Graph -> List (S.Svg msg)
-drawGraph g =
+drawRedGraph : Graph -> List (S.Svg msg)
+drawRedGraph g =
    (List.map drawEdge g.edges) ++ (List.map drawRedVertex g.vertices)
+
+drawGraph g =
+   let
+      colors = listOfColors (List.length g.vertices)
+   in
+      (List.map drawEdge g.edges) ++ (List.map2 (\v c -> drawVertex v c) g.vertices colors)
 
 
 redCircle : Size -> Pos -> S.Svg msg
@@ -162,6 +173,23 @@ redCircle size pos =
         , SA.cy (String.fromInt pos.y)
         , SA.r (String.fromInt size)
         , SA.style "fill: red;"
+        ]
+        []
+
+-- We start with a list of integers [0 .. n] then converted them to float
+-- Normalized the whole list to [0 .. 1.0]
+-- Map Color.hsl accepting hue from the list [1 .. 0]
+-- So finally we have a list of colors
+listOfColors : Int -> List Color
+listOfColors n = List.range 0 n |> List.map (toFloat) |> List.map (\x -> x / (toFloat n)) |> List.map (\h -> Color.hsl h 1 0.5)
+
+circle: Size -> Pos -> Color -> S.Svg msg
+circle size pos color =
+    S.circle
+        [ SA.cx (String.fromInt pos.x)
+        , SA.cy (String.fromInt pos.y)
+        , SA.r (String.fromInt size)
+        , SA.style ("fill: " ++ (Color.toCssString color) ++ ";")
         ]
         []
 
