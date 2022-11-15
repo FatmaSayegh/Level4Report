@@ -78,6 +78,8 @@ makeGraph graphType position size initialAngle=
              let vertices = List.map convertGeomFormat <| parametricPolygon n size position initialAngle
              in Graph vertices (fullyConnectVertices vertices)
 
+          -- PolygonCycleDoll will create polygonal Russian dolls with cycles and spokes when given the number of
+          -- vertices of the outer or inner doll. They have the same number of vertices anyway.
           PolygonCycleDoll n ->
              let verticesSetA = List.map convertGeomFormat <| parametricPolygon n size position initialAngle
                  verticesSetB = List.map convertGeomFormat <| parametricPolygon n (Math.Vector3.scale 0.5 size) position initialAngle
