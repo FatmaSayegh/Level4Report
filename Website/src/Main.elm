@@ -46,13 +46,22 @@ anotherSvg =
      --(drawGraph graph4)
      (drawGraph graph9) 
 
+type alias Name = String
+type alias Vertex = {name : String} 
+type alias ColorVertex = {name : String, color: Color} 
+type alias GeomVertex = {name : String, color : Color, position : Vec3}
 
-type alias Vertex = {name : String, pos : Pos}
 type alias Edge = {vertexOne : Vertex, vertexTwo : Vertex}
 type alias Graph = {vertices : List Vertex, edges : List Edge}
+type alias ColorGraph = {vertices : List ColorVertex, edges : List Edge}
+type alias GeomGraph = {vertices : List GeomVertex, edges : List Edge}
+type alias Grid = List Vec3
 
-
-vert4 = Vertex "a" (Pos 200 200)
+makeGeomGraph -> ColorGraph -> Grid -> GeomGraph
+makeGeomGraph cg gr =
+   let 
+      gvertices = List.map2 GeomVertex cg.vertices gr
+   in GeomGraph 
 
 graph3 : Graph
 graph3 =
@@ -116,22 +125,12 @@ graph4 =
    ,  edges = fullyConnectVertices listOfVertices
    }
 
-hexagonalVertices : List Vec3
-hexagonalVertices = parametricPolygon 6 (vec3 80 80 0) (vec3 200 200 0) 0
 
 convertGeomFormat : Vec3 -> Vertex
 convertGeomFormat v = Vertex " " (Pos (round <| getX v) (round <| getY v))
 
-listOfVertices = List.map convertGeomFormat hexagonalVertices
-outerListOfVertices = List.map convertGeomFormat <| parametricPolygon 6 (vec3 120 120 0) (vec3 200 200 0) 0
 
 
--- zipping list of vertices by Edge constructor
-polygonalEdges = List.map2 Edge listOfVertices (shiftListCycle listOfVertices)
-outerPolygonalEdges = List.map2 Edge outerListOfVertices (shiftListCycle outerListOfVertices)
-
--- zipping list of vertices by Edge constructor
-spokeEdges = List.map2 Edge listOfVertices outerListOfVertices
 
 -- The head becomes the last element
 -- and the second element becomes head
@@ -143,9 +142,6 @@ shiftListCycle xs =
       Nothing -> []
 
 
-drawRedVertex : Vertex -> S.Svg msg
-drawRedVertex v =
-   redCircle 10 v.pos
 
 drawVertex : Vertex -> Color -> S.Svg msg
 drawVertex v color =
@@ -157,10 +153,6 @@ drawEdge e =
 
 -- put edges first and then vertices
 -- and produces a single list
-drawRedGraph : Graph -> List (S.Svg msg)
-drawRedGraph g =
-   (List.map drawEdge g.edges) ++ (List.map drawRedVertex g.vertices)
-
 drawGraph g =
    let
       colors = listOfColors (List.length g.vertices)
@@ -168,15 +160,6 @@ drawGraph g =
       (List.map drawEdge g.edges) ++ (List.map2 (\v c -> drawVertex v c) g.vertices colors)
 
 
-redCircle : Size -> Pos -> S.Svg msg
-redCircle size pos =
-    S.circle
-        [ SA.cx (String.fromInt pos.x)
-        , SA.cy (String.fromInt pos.y)
-        , SA.r (String.fromInt size)
-        , SA.style "fill: red;"
-        ]
-        []
 
 -- We start with a list of integers [0 .. n] then converted them to float
 -- Normalized the whole list to [0 .. 1.0]
