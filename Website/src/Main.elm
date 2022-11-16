@@ -47,9 +47,7 @@ anotherSvg =
      (drawGraph graph9) 
 
 type alias Name = String
-type alias Vertex = {name : String} 
-type alias ColorVertex = {name : String, color: Color} 
-type alias GeomVertex = {name : String, color : Color, position : Vec3}
+type alias Vertex = {name : String, position: Vec3, color: Color} 
 
 type alias Edge = {vertexOne : Vertex, vertexTwo : Vertex}
 type alias Graph = {vertices : List Vertex, edges : List Edge}
@@ -57,11 +55,6 @@ type alias ColorGraph = {vertices : List ColorVertex, edges : List Edge}
 type alias GeomGraph = {vertices : List GeomVertex, edges : List Edge}
 type alias Grid = List Vec3
 
-makeGeomGraph -> ColorGraph -> Grid -> GeomGraph
-makeGeomGraph cg gr =
-   let 
-      gvertices = List.map2 GeomVertex cg.vertices gr
-   in GeomGraph 
 
 graph3 : Graph
 graph3 =
@@ -106,6 +99,27 @@ graph7 = makeGraph (PolygonFullyConnected 3) (vec3 300 300 0) (vec3 50 50 0) 0
 graph8 = makeGraph (PolygonFullyConnected 4) (vec3 100 300 0) (vec3 50 50 0) (pi/2)
 
 graph9 = makeGraph (PolygonCycleDoll 6) (vec3 200 100 0) (vec3 80 80 0) 0
+
+updatePositionVertex : Vertex -> Vec3 -> Vertex
+updatePositionVertex ver position =
+   Vertex ver.name position ver.color
+   
+updateEdge : Edge -> List Vertex -> Edge
+updateEdge e vs =
+   case e of
+      Edge v1 v2 -> case ((lookUpVertex v1.id vs), (lookUpVertex v2.id vs) of
+                       (Nothing, _) -> Edge v1 v2
+                       (_, Nothing) -> Edge v1 v2
+                       (Just ver1, Just ver2) -> Edge ver1 ver2
+
+lookUpVertex : String -> List Vertex -> Maybe Vertex
+lookUpVertex name vs =
+   case vs of
+      [] -> Nothing
+      (x:xs) -> if name == x.name then Just x else lookUpVertex id xs
+
+
+
 
 
 -- Will connect 1 to 3,4,5,6
