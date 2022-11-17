@@ -93,6 +93,14 @@ graph9 = makeGraph (PolygonCycleDoll 4) (vec3 200 100 0) (vec3 80 80 0) 0
 
 type alias Grid = List Vec3
 
+--## Morphing a graph using Grid.  --Topology (vertices and edges) and name
+--remain the same, display geometry changes. (That is position of the graph)
+--Vertices are reconstructed with the new positions --Edges are created between
+--the new vertices according to the original edges --All together a new graph is
+--created but it's topology is the same as the original one.  --The new graph can
+--be said to be visually morphed version of the original. But essentially the
+--same graph connection wise and vertex name and
+--vertex color wise.
 morphGraph : Graph -> Grid -> Graph
 morphGraph graph grid =
    let
@@ -119,6 +127,11 @@ updatePositionVertex : Vertex -> Vec3 -> Vertex
 updatePositionVertex ver position =
    Vertex ver.name position ver.color
    
+--## Put the Edges back.
+--We are in a way creating a new graph, but it has the vertices of the same name, color but differnt positions
+--For the edges to be the same as before 
+--updateEdge takes an (old edge) and a (new list of vertices)
+--then produces a Edge with new vertices according to the old Edge
 updateEdge : List Vertex -> Edge -> Edge
 updateEdge vs e =
       let v1 = e.vertexOne
