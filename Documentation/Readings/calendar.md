@@ -12,7 +12,6 @@
 
 ## Week 4
 ### Prof says
-- Unorganised
 - Add two more things
 	- Tree Width (Even she has problem understanding)
 	- Max k-Cut
