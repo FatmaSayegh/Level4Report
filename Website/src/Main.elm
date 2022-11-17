@@ -44,22 +44,13 @@ anotherSvg =
      ]
      --(drawGraph graph3)
      --(drawGraph graph4)
-     (drawGraph graph9) 
+     ((drawGraph graph9) ++ (drawGraph transitionWithGridGraphTwoLinear))
 
 
-type alias Vertex = {name : String, pos : Pos}
+type alias Vertex = {name : Int, pos : Vec3, color : Color}
 type alias Edge = {vertexOne : Vertex, vertexTwo : Vertex}
 type alias Graph = {vertices : List Vertex, edges : List Edge}
 
-
-vert4 = Vertex "a" (Pos 200 200)
-
-graph3 : Graph
-graph3 =
-   {
-      vertices = listOfVertices ++ outerListOfVertices
-   ,  edges = polygonalEdges ++ outerPolygonalEdges ++ spokeEdges
-   }
 
 type Gtype = PolygonCycle Int | PolygonFullyConnected Int | PolygonCycleDoll Int
 
@@ -72,18 +63,19 @@ makeGraph : Gtype -> Vec3 -> Vec3 -> Float -> Graph
 makeGraph graphType position size initialAngle=
        case graphType of
           PolygonCycle n ->
-             let vertices = List.map convertGeomFormat <| parametricPolygon n size position initialAngle
+             let vertices = List.map3 Vertex (List.range 1 n) (parametricPolygon n size position initialAngle) (listOfColors First n)
              in  Graph vertices (List.map2 Edge vertices (shiftListCycle vertices))
              
           PolygonFullyConnected n ->
-             let vertices = List.map convertGeomFormat <| parametricPolygon n size position initialAngle
+             let vertices = List.map3 Vertex (List.range 1 n) (parametricPolygon n size position initialAngle) (listOfColors First n)
              in Graph vertices (fullyConnectVertices vertices)
 
           -- PolygonCycleDoll will create polygonal Russian dolls with cycles and spokes when given the number of
           -- vertices of the outer or inner doll. They have the same number of vertices anyway.
+          -- each vertex is named Ints for simplicity.
           PolygonCycleDoll n ->
-             let verticesSetA = List.map convertGeomFormat <| parametricPolygon n size position initialAngle
-                 verticesSetB = List.map convertGeomFormat <| parametricPolygon n (Math.Vector3.scale 0.5 size) position initialAngle
+             let verticesSetA = List.map3 Vertex (List.range 1 n) (parametricPolygon n size position initialAngle) (listOfColors First n)
+                 verticesSetB = List.map3 Vertex (List.range (n+1) (2*n)) (parametricPolygon n (Math.Vector3.scale 0.5 size) position initialAngle) (listOfColors Second n)
                  allVertices = verticesSetA ++ verticesSetB
                  edgesCycleSetA = List.map2 Edge verticesSetA (shiftListCycle verticesSetA)
                  edgesCycleSetB = List.map2 Edge verticesSetB (shiftListCycle verticesSetB)
@@ -96,8 +88,51 @@ graph6 = makeGraph (PolygonFullyConnected 2) (vec3 300 100 0) (vec3 50 50 0) 0
 graph7 = makeGraph (PolygonFullyConnected 3) (vec3 300 300 0) (vec3 50 50 0) 0
 graph8 = makeGraph (PolygonFullyConnected 4) (vec3 100 300 0) (vec3 50 50 0) (pi/2)
 
-graph9 = makeGraph (PolygonCycleDoll 6) (vec3 200 100 0) (vec3 80 80 0) 0
+graph9 = makeGraph (PolygonCycleDoll 4) (vec3 200 100 0) (vec3 80 80 0) 0
 
+
+type alias Grid = List Vec3
+
+morphGraph : Graph -> Grid -> Graph
+morphGraph graph grid =
+   let
+      updatedVertices = List.map2 updatePositionVertex graph.vertices grid
+      functionn = updateEdge updatedVertices
+      updatedEdges = List.map functionn graph.edges
+   in
+      Graph updatedVertices updatedEdges
+
+newGraph = morphGraph graph9 (newGrid 4)
+transitionWithGridGraphTwoLinear = morphGraph graph9 bipartiteGrid 
+
+newGrid n =
+   let position = vec3 200 300 0
+       size = vec3 80 50 0
+       gridA = parametricPolygon n size position 0
+       gridB = parametricPolygon n (Math.Vector3.scale 0.5 size) position 0
+   in  gridA ++ gridB
+
+
+
+
+updatePositionVertex : Vertex -> Vec3 -> Vertex
+updatePositionVertex ver position =
+   Vertex ver.name position ver.color
+   
+updateEdge : List Vertex -> Edge -> Edge
+updateEdge vs e =
+      let v1 = e.vertexOne
+          v2 = e.vertexTwo
+      in case ((lookUpVertex v1.name vs), (lookUpVertex v2.name vs)) of
+          (Nothing, _) -> Edge v1 v2
+          (_, Nothing) -> Edge v1 v2
+          (Just ver1, Just ver2) -> Edge ver1 ver2
+
+lookUpVertex : Int -> List Vertex -> Maybe Vertex
+lookUpVertex name vs =
+   case vs of
+      [] -> Nothing
+      (x::xs) -> if name == x.name then Just x else lookUpVertex name xs
 
 -- Will connect 1 to 3,4,5,6
 -- Then in next call 2 ot 3,4,5,6
@@ -109,29 +144,13 @@ fullyConnectVertices vs =
       (x :: [] ) -> []
       (x :: xs) -> (List.map (Edge x) xs) ++ fullyConnectVertices xs
 
-graph4 : Graph
-graph4 =
-   {
-      vertices = listOfVertices
-   ,  edges = fullyConnectVertices listOfVertices
-   }
 
-hexagonalVertices : List Vec3
-hexagonalVertices = parametricPolygon 6 (vec3 80 80 0) (vec3 200 200 0) 0
-
-convertGeomFormat : Vec3 -> Vertex
-convertGeomFormat v = Vertex " " (Pos (round <| getX v) (round <| getY v))
-
-listOfVertices = List.map convertGeomFormat hexagonalVertices
-outerListOfVertices = List.map convertGeomFormat <| parametricPolygon 6 (vec3 120 120 0) (vec3 200 200 0) 0
-
-
--- zipping list of vertices by Edge constructor
-polygonalEdges = List.map2 Edge listOfVertices (shiftListCycle listOfVertices)
-outerPolygonalEdges = List.map2 Edge outerListOfVertices (shiftListCycle outerListOfVertices)
-
--- zipping list of vertices by Edge constructor
-spokeEdges = List.map2 Edge listOfVertices outerListOfVertices
+linearConnectVertices : List Vertex -> List Edge
+linearConnectVertices vs =
+   case vs of
+      [] -> []
+      [x] -> []
+      (x::y::xs) -> Edge x y :: linearConnectVertices (y::xs)
 
 -- The head becomes the last element
 -- and the second element becomes head
@@ -143,13 +162,10 @@ shiftListCycle xs =
       Nothing -> []
 
 
-drawRedVertex : Vertex -> S.Svg msg
-drawRedVertex v =
-   redCircle 10 v.pos
 
-drawVertex : Vertex -> Color -> S.Svg msg
-drawVertex v color =
-   circle 10 v.pos color
+drawVertex : Vertex -> S.Svg msg
+drawVertex v =
+   circle 10 v.pos v.color
 
 drawEdge : Edge -> S.Svg msg
 drawEdge e =
@@ -157,52 +173,45 @@ drawEdge e =
 
 -- put edges first and then vertices
 -- and produces a single list
-drawRedGraph : Graph -> List (S.Svg msg)
-drawRedGraph g =
-   (List.map drawEdge g.edges) ++ (List.map drawRedVertex g.vertices)
 
 drawGraph g =
-   let
-      colors = listOfColors (List.length g.vertices)
-   in
-      (List.map drawEdge g.edges) ++ (List.map2 (\v c -> drawVertex v c) g.vertices colors)
+   (List.map drawEdge g.edges) ++ (List.map drawVertex g.vertices)
 
 
-redCircle : Size -> Pos -> S.Svg msg
-redCircle size pos =
-    S.circle
-        [ SA.cx (String.fromInt pos.x)
-        , SA.cy (String.fromInt pos.y)
-        , SA.r (String.fromInt size)
-        , SA.style "fill: red;"
-        ]
-        []
 
 -- We start with a list of integers [0 .. n] then converted them to float
 -- Normalized the whole list to [0 .. 1.0]
 -- Map Color.hsl accepting hue from the list [1 .. 0]
 -- So finally we have a list of colors
-listOfColors : Int -> List Color
-listOfColors n = List.range 0 n |> List.map (toFloat) |> List.map (\x -> x / (toFloat n)) |> List.map (\h -> Color.hsl h 1 0.5)
+type ColorRegion = First | Second | Third
 
-circle: Size -> Pos -> Color -> S.Svg msg
+listOfColors : ColorRegion -> Int -> List Color
+listOfColors region n = 
+   let
+      firstRegion = List.range 0 (n-1) |> List.map (toFloat) |> List.map (\x -> x / (3 * (toFloat (n-1))))
+   in case region of
+         First -> firstRegion |> List.map (\h -> Color.hsl h 1 0.7)
+         Second -> List.map (\x -> x + 0.33) firstRegion |> List.map (\h -> Color.hsl h 1 0.5)
+         Third -> List.map (\x -> x + 0.66) firstRegion |> List.map (\h -> Color.hsl h 1 0.5)
+
+circle: Size -> Vec3 -> Color -> S.Svg msg
 circle size pos color =
     S.circle
-        [ SA.cx (String.fromInt pos.x)
-        , SA.cy (String.fromInt pos.y)
+        [ SA.cx (String.fromInt <| round <| (getX pos))
+        , SA.cy (String.fromInt <| round <| (getY pos))
         , SA.r (String.fromInt size)
         , SA.style ("fill: " ++ (Color.toCssString color) ++ ";")
         ]
         []
 
 -- takes 2 positions and draw a line
-line : Pos -> Pos -> S.Svg msg
-line posa posb =
+line : Vec3 -> Vec3 -> S.Svg msg
+line veca vecb =
    S.line
-      [ SA.x1 (String.fromInt posa.x)
-      , SA.y1 (String.fromInt posa.y)
-      , SA.x2 (String.fromInt posb.x)
-      , SA.y2 (String.fromInt posb.y)
+      [ SA.x1 (String.fromInt <| round <| (getX veca))
+      , SA.y1 (String.fromInt <| round <| (getY veca))
+      , SA.x2 (String.fromInt <| round <| (getX vecb))
+      , SA.y2 (String.fromInt <| round <| (getY vecb))
       , SA.stroke "white"
       ]
       []
@@ -264,6 +273,58 @@ makePolygon startAngle n =
        initialVector = vec3 1 0 0
        angles = List.range 0 (n-1) |> List.map ((+) startAngle << (*) increment << toFloat)
    in List.map (rotateVector initialVector) angles
+
+--makelinear : Int -> List Vec3
+--makelinear n = List.range 0 (n-1) |> List.map toFloat |> list.map (\y -> vec3 0 (y/(tofloat n) 0))
+
+makelinear : Int -> List Vec3
+makelinear n = List.range 0 (n-1) |> List.map toFloat |> List.map (\y -> vec3 0 y 0) 
+
+--lookUpVertex v1.name vs
+
+linearGridLeft = linearGrid 4 (vec3 100 250 0) (vec3 0 45 0)
+linearGridRight = linearGrid 4 (vec3 300 250 0) (vec3 0 45 0)
+
+setRight : List Int
+setRight = [1,6,8,3] 
+setLeft : List Int
+setLeft = [5,2,4,7]
+
+bipartiteGrid = 
+   let
+      leftTupled = List.map2 (\x y -> (x, y)) setRight linearGridLeft 
+      rightTupled = List.map2 (\x y -> (x, y)) setLeft linearGridRight 
+      totalGrid = leftTupled ++ rightTupled
+   in
+      List.map (\(x,y) -> y) (List.sortWith (\t1 t2 -> compare (Tuple.first t1) (Tuple.first t2)) totalGrid)
+
+  
+--totalGrid = linearGridLeft ++ linearGridRight
+
+
+
+linearGrid n position size =
+      situateShape position size (makelinear n)
+
+
+
+--linearGraph : Int -> Vec3 -> Vec3 -> Graph
+--linearGraph n position size = 
+--   let 
+--      vertices = list.map3 Vertex (list.range 1 n) (situateShape position size (makelinear n)) (listofcolors first n)
+--      edges = linearconnectvertices vertices 
+--   in
+--      graph vertices edges
+--partialgraph n = 
+--   let 
+--      vertices = list.map3 vertex (list.range 1 n) (situateshape (vec3 200 250 0) (vec3 0 40 0) (makelinear n)) (listofcolors first n)
+--      edges = linearconnectvertices vertices 
+--   in
+--      graph vertices edges
+
+
+
+
 
 --takes a centre , and places the shape there
 --takes a scaling vector, and expands according to that
