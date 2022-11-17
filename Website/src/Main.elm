@@ -88,7 +88,7 @@ graph6 = makeGraph (PolygonFullyConnected 2) (vec3 300 100 0) (vec3 50 50 0) 0
 graph7 = makeGraph (PolygonFullyConnected 3) (vec3 300 300 0) (vec3 50 50 0) 0
 graph8 = makeGraph (PolygonFullyConnected 4) (vec3 100 300 0) (vec3 50 50 0) (pi/2)
 
-graph9 = makeGraph (PolygonCycleDoll 4) (vec3 200 100 0) (vec3 80 80 0) 0
+graph9 = makeGraph (PolygonCycleDoll 4) (vec3 200 100 0) (vec3 80 80 0) (pi/4)
 
 
 type alias Grid = List Vec3
@@ -105,8 +105,8 @@ morphGraph : Graph -> Grid -> Graph
 morphGraph graph grid =
    let
       updatedVertices = List.map2 updatePositionVertex graph.vertices grid
-      functionn = updateEdge updatedVertices
-      updatedEdges = List.map functionn graph.edges
+      createEdge = updateEdge updatedVertices
+      updatedEdges = List.map createEdge graph.edges
    in
       Graph updatedVertices updatedEdges
 
@@ -123,6 +123,7 @@ newGrid n =
 
 
 
+-- a vertex is generated with the same name colour but different position.
 updatePositionVertex : Vertex -> Vec3 -> Vertex
 updatePositionVertex ver position =
    Vertex ver.name position ver.color
@@ -191,13 +192,13 @@ drawGraph g =
    (List.map drawEdge g.edges) ++ (List.map drawVertex g.vertices)
 
 
+-- To have different pallete of colour ranges
+type ColorRegion = First | Second | Third
 
 -- We start with a list of integers [0 .. n] then converted them to float
 -- Normalized the whole list to [0 .. 1.0]
 -- Map Color.hsl accepting hue from the list [1 .. 0]
 -- So finally we have a list of colors
-type ColorRegion = First | Second | Third
-
 listOfColors : ColorRegion -> Int -> List Color
 listOfColors region n = 
    let
@@ -287,12 +288,9 @@ makePolygon startAngle n =
        angles = List.range 0 (n-1) |> List.map ((+) startAngle << (*) increment << toFloat)
    in List.map (rotateVector initialVector) angles
 
---makelinear : Int -> List Vec3
---makelinear n = List.range 0 (n-1) |> List.map toFloat |> list.map (\y -> vec3 0 (y/(tofloat n) 0))
-
---makelinear : Int -> List Vec3
---makelinear n = List.range 0 (n-1) |> List.map toFloat |> List.map (\y -> vec3 0 y 0) 
-
+-- makelinear takes n : int and gives a list of 3d vecs. They are 0 in x and z, but y varies form
+-- 0 to 1.0. There are n such vectors. 
+-- * -- * -- * n times vertically
 makelinear : Int -> List Vec3
 makelinear n = 
    let
@@ -305,11 +303,14 @@ makelinear n =
 linearGridLeft = linearGrid 4 (vec3 150 250 0) (vec3 0 120 0)
 linearGridRight = linearGrid 4 (vec3 250 250 0) (vec3 0 120 0)
 
+-- So that our project does not become graph problem solving
+-- We have the answer to the isomorphism problem here
 setRight : List Int
 setRight = [1,6,8,3] 
 setLeft : List Int
 setLeft = [5,2,4,7]
 
+-- Here as 
 bipartiteGrid = 
    let
       leftTupled = List.map2 (\x y -> (x, y)) setRight linearGridLeft 
@@ -322,7 +323,8 @@ bipartiteGrid =
 --totalGrid = linearGridLeft ++ linearGridRight
 
 
-
+-- situateShape which was used to scale and locate
+-- the miniturised version of the linear set of vertices
 linearGrid n position size =
       situateShape position size (makelinear n)
 

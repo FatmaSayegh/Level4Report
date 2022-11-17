@@ -69,3 +69,18 @@
 - Modified the survey for better.
 
 ##Week7
+### Morphing a graph using Grid. 
+Topology (vertices and edges) and name remain the same, display geometry changes. (That is position of the graph)
+Vertices are reconstructed with the new positions
+Edges are created between the new vertices according to the original edges
+All together a new graph is created but it's topology is the same as the original one.
+The new graph can be said to be visually morphed version of the original. But essentially the same graph connection wise and vertex name and
+vertex color wise.
+
+### Put the Edges back.
+We are in a way creating a new graph, but it has the vertices of the same name, color but differnt positions
+For the edges to be the same as before 
+updateEdge takes an (old edge) and a (new list of vertices)
+then produces a Edge with new vertices according to the old Edge
+
+### Coloring mechanism

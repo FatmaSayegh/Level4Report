@@ -1,4 +1,3 @@
-
 ## Morphing a graph using Grid. 
 Topology (vertices and edges) and name remain the same, display geometry changes. (That is position of the graph)
 Vertices are reconstructed with the new positions
