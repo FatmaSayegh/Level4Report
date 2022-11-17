@@ -1,6 +1,7 @@
+## Format of Website
 Appropriate divs for display of SVGs (animation) and text were determined.
 
-What :
+## Making Drawing of graphs easy.
 - Data type Vertex has a name (String) and a 2D position. Data Type Edge contains two vertices.
 - Data type Graph has a list of Vertices and a list of Edges.
 - Abstracting out the details of using native functions of svg (circle and line) by functions for drawing a Vertex and an Edge.
