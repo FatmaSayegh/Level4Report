@@ -60,3 +60,30 @@ makelinear n =
    in
       List.range 0 (n-1) |> List.map (toFloat >> (\y -> y/divider)) |> List.map (\y -> vec3 0 y 0)
 ```
+## Bipartite form of grid
+### So that our project does not become graph problem solving
+We have the answer to the isomorphism problem here
+
+```
+setLeft : List Int
+setLeft = [1,6,8,3] 
+setRight : List Int
+setRight = [5,2,4,7]
+```
+
+Here as set of numbers in the left and the right are being tupled with list of vertical vector grids
+and then sorted according to index numbers
+This gives node 1 its vector at position left of bipartite graph
+This gives node 6 its vector at position left of bipartite graph
+What it does is that the vector on the second position on the left grid goes to 6th on the final grid
+Vector on the 3rd position of the left grid goes to the 8th on the final grid
+
+```
+bipartiteGrid = 
+   let
+      leftTupled = List.map2 (\x y -> (x, y)) setLeft linearGridLeft 
+      rightTupled = List.map2 (\x y -> (x, y)) setRight linearGridRight 
+      totalGrid = leftTupled ++ rightTupled
+   in
+      List.map (\(x,y) -> y) (List.sortWith (\t1 t2 -> compare (Tuple.first t1) (Tuple.first t2)) totalGrid)
+```

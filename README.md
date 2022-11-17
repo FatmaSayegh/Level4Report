@@ -4,6 +4,7 @@
 
 - [Road map](Documentation/roadmap.md)
 - [How Graph change geometry with new grid](Documentation/grid_morphing.md)
+- [Managing Color](Documentation/color.md)
 
 ## Report Writing
 - [How to Compile Latex](Documentation/latexcompile.md)
