@@ -68,7 +68,7 @@
   edges between the vertices in various fashions. (fully connected, cycles)
 - Modified the survey for better.
 
-##Week7
+## Week 7
 ### Morphing a graph using Grid. 
 Topology (vertices and edges) and name remain the same, display geometry changes. (That is position of the graph)
 Vertices are reconstructed with the new positions
