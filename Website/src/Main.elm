@@ -44,7 +44,7 @@ anotherSvg =
      ]
      --(drawGraph graph3)
      --(drawGraph graph4)
-     ((drawGraph graph9) ++ (drawGraph transitionWithGridGraphTwoLinear))
+     ((drawGraph graph9) ++ (drawGraph transitionIntoIsomorph))
 
 
 type alias Vertex = {name : Int, pos : Vec3, color : Color}
@@ -102,8 +102,8 @@ morphGraph graph grid =
    in
       Graph updatedVertices updatedEdges
 
-newGraph = morphGraph graph9 (newGrid 4)
-transitionWithGridGraphTwoLinear = morphGraph graph9 bipartiteGrid 
+-- newGraph = morphGraph graph9 (newGrid 4)
+transitionIntoIsomorph = morphGraph graph9 bipartiteGrid 
 
 newGrid n =
    let position = vec3 200 300 0
@@ -277,13 +277,20 @@ makePolygon startAngle n =
 --makelinear : Int -> List Vec3
 --makelinear n = List.range 0 (n-1) |> List.map toFloat |> list.map (\y -> vec3 0 (y/(tofloat n) 0))
 
+--makelinear : Int -> List Vec3
+--makelinear n = List.range 0 (n-1) |> List.map toFloat |> List.map (\y -> vec3 0 y 0) 
+
 makelinear : Int -> List Vec3
-makelinear n = List.range 0 (n-1) |> List.map toFloat |> List.map (\y -> vec3 0 y 0) 
+makelinear n = 
+   let
+      divider = toFloat (n-1)
+   in
+      List.range 0 (n-1) |> List.map (toFloat >> (\y -> y/divider)) |> List.map (\y -> vec3 0 y 0)
 
 --lookUpVertex v1.name vs
 
-linearGridLeft = linearGrid 4 (vec3 100 250 0) (vec3 0 45 0)
-linearGridRight = linearGrid 4 (vec3 300 250 0) (vec3 0 45 0)
+linearGridLeft = linearGrid 4 (vec3 150 250 0) (vec3 0 120 0)
+linearGridRight = linearGrid 4 (vec3 250 250 0) (vec3 0 120 0)
 
 setRight : List Int
 setRight = [1,6,8,3] 
