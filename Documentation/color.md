@@ -1,7 +1,7 @@
 # Colors
 ## To have different pallete of colour ranges
 
-```
+```Elm
 type ColorRegion = First | Second | Third
 ```
 
@@ -11,7 +11,7 @@ Normalized the whole list to [0 .. 1.0]
 Map Color.hsl accepting hue from the list [1 .. 0]
 So finally we have a list of colors
 
-```
+```Elm
 listOfColors : ColorRegion -> Int -> List Color
 listOfColors region n = 
    let

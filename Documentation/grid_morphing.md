@@ -6,7 +6,7 @@ All together a new graph is created but it's topology is the same as the origina
 The new graph can be said to be visually morphed version of the original. But essentially the same graph connection wise and vertex name and
 vertex color wise.
 
-```
+```Elm
 morphGraph : Graph -> Grid -> Graph
 morphGraph graph grid =
    let
@@ -20,7 +20,7 @@ morphGraph graph grid =
 ## Updating a Vertex with a new position
 a vertex is generated with the same name colour but different position.
 
-```
+```Elm
 updatePositionVertex : Vertex -> Vec3 -> Vertex
 updatePositionVertex ver position =
    Vertex ver.name position ver.color
@@ -33,7 +33,7 @@ For the edges to be the same as before
 updateEdge takes an (old edge) and a (new list of vertices)
 then produces a Edge with new vertices according to the old Edge
 
-```
+```Elm
 updateEdge : List Vertex -> Edge -> Edge
 updateEdge vs e =
       let v1 = e.vertexOne
@@ -52,7 +52,7 @@ lookUpVertex name vs =
 ## Creation of Linear Grids
 Grid is nothing but a list of 3d vectors Vec3
 
-```
+```Elm
 makelinear : Int -> List Vec3
 makelinear n = 
    let
@@ -64,7 +64,7 @@ makelinear n =
 ### So that our project does not become graph problem solving
 We have the answer to the isomorphism problem here
 
-```
+```Elm
 setLeft : List Int
 setLeft = [1,6,8,3] 
 setRight : List Int
@@ -78,7 +78,7 @@ This gives node 6 its vector at position left of bipartite graph
 What it does is that the vector on the second position on the left grid goes to 6th on the final grid
 Vector on the 3rd position of the left grid goes to the 8th on the final grid
 
-```
+```Elm
 bipartiteGrid = 
    let
       leftTupled = List.map2 (\x y -> (x, y)) setLeft linearGridLeft 
