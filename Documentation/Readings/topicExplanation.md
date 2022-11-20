@@ -1,6 +1,6 @@
 ## Topic Explanation
 
-### Tentative Topics Chosen:
+### Topics Chosen for the Project
 - Graph Isomorphism
 - Hamiltonian Cycle
 - Graph Colouring
