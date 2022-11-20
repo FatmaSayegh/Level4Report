@@ -9,11 +9,25 @@ import Math.Vector3 exposing (..)
 import Explanation exposing (..)
 import Color exposing (Color)
 
-main = view "hello there"
+main : Program () Model Msg
+main =
+    Browser.element
+        { init = init
+        , view = view
+        , update = update
+        , subscriptions = subscription
+        }
 -- main is the program
 -- it is nothing but a static site with no animation, 
 -- otherwise it will get a little more complicated
 -- view takes in a dummy model
+
+type alias Model =
+
+    { graphA : Graph
+    , graphB : Graph 
+    , time: Float -- in minutes
+    }
 
 view model =
    div [] [ H.div pageStyle [paneOne, explanationOne]
