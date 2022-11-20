@@ -1,0 +1,28 @@
+\hypertarget{colors}{%
+\section{Colors}\label{colors}}
+
+\hypertarget{to-have-different-pallete-of-colour-ranges}{%
+\subsection{To have different pallete of colour
+ranges}\label{to-have-different-pallete-of-colour-ranges}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{type} \DataTypeTok{ColorRegion} \OperatorTok{=} \DataTypeTok{First} \OperatorTok{|} \DataTypeTok{Second} \OperatorTok{|} \DataTypeTok{Third}
+\end{Highlighting}
+\end{Shaded}
+
+We start with a list of integers {[}0 .. n{]} then converted them to
+float Normalized the whole list to {[}0 .. 1.0{]} Map Color.hsl
+accepting hue from the list {[}1 .. 0{]} So finally we have a list of
+colors
+
+\begin{Highlighting}[]
+\FunctionTok{listOfColors}\NormalTok{ : }\DataTypeTok{ColorRegion} \OperatorTok{{-}\textgreater{}} \DataTypeTok{Int} \OperatorTok{{-}\textgreater{}} \DataTypeTok{List} \DataTypeTok{Color}
+\FunctionTok{listOfColors} \FunctionTok{region} \FunctionTok{n} \OperatorTok{=} 
+   \KeywordTok{let}
+      \FunctionTok{firstRegion} \OperatorTok{=} \DataTypeTok{List}\OperatorTok{.}\FunctionTok{range} \DecValTok{0}\NormalTok{ (}\FunctionTok{n}\OperatorTok{{-}}\DecValTok{1}\NormalTok{) }\OperatorTok{|\textgreater{}} \DataTypeTok{List}\OperatorTok{.}\FunctionTok{map}\NormalTok{ (}\FunctionTok{toFloat}\NormalTok{) }\OperatorTok{|\textgreater{}} \DataTypeTok{List}\OperatorTok{.}\FunctionTok{map}\NormalTok{ (\textbackslash{}}\FunctionTok{x} \OperatorTok{{-}\textgreater{}} \FunctionTok{x} \OperatorTok{/}\NormalTok{ (}\DecValTok{3} \OperatorTok{*}\NormalTok{ (}\FunctionTok{toFloat}\NormalTok{ (}\FunctionTok{n}\OperatorTok{{-}}\DecValTok{1}\NormalTok{))))}
+   \KeywordTok{in} \ControlFlowTok{case} \FunctionTok{region} \ControlFlowTok{of}
+         \DataTypeTok{First} \OperatorTok{{-}\textgreater{}} \FunctionTok{firstRegion} \OperatorTok{|\textgreater{}} \DataTypeTok{List}\OperatorTok{.}\FunctionTok{map}\NormalTok{ (\textbackslash{}}\FunctionTok{h} \OperatorTok{{-}\textgreater{}} \DataTypeTok{Color}\OperatorTok{.}\FunctionTok{hsl} \FunctionTok{h} \DecValTok{1} \DecValTok{0}\OperatorTok{.}\DecValTok{7}\NormalTok{)}
+         \DataTypeTok{Second} \OperatorTok{{-}\textgreater{}} \DataTypeTok{List}\OperatorTok{.}\FunctionTok{map}\NormalTok{ (\textbackslash{}}\FunctionTok{x} \OperatorTok{{-}\textgreater{}} \FunctionTok{x} \OperatorTok{+} \DecValTok{0}\OperatorTok{.}\DecValTok{33}\NormalTok{) }\FunctionTok{firstRegion} \OperatorTok{|\textgreater{}} \DataTypeTok{List}\OperatorTok{.}\FunctionTok{map}\NormalTok{ (\textbackslash{}}\FunctionTok{h} \OperatorTok{{-}\textgreater{}} \DataTypeTok{Color}\OperatorTok{.}\FunctionTok{hsl} \FunctionTok{h} \DecValTok{1} \DecValTok{0}\OperatorTok{.}\DecValTok{5}\NormalTok{)}
+         \DataTypeTok{Third} \OperatorTok{{-}\textgreater{}} \DataTypeTok{List}\OperatorTok{.}\FunctionTok{map}\NormalTok{ (\textbackslash{}}\FunctionTok{x} \OperatorTok{{-}\textgreater{}} \FunctionTok{x} \OperatorTok{+} \DecValTok{0}\OperatorTok{.}\DecValTok{66}\NormalTok{) }\FunctionTok{firstRegion} \OperatorTok{|\textgreater{}} \DataTypeTok{List}\OperatorTok{.}\FunctionTok{map}\NormalTok{ (\textbackslash{}}\FunctionTok{h} \OperatorTok{{-}\textgreater{}} \DataTypeTok{Color}\OperatorTok{.}\FunctionTok{hsl} \FunctionTok{h} \DecValTok{1} \DecValTok{0}\OperatorTok{.}\DecValTok{5}\NormalTok{)}
+\end{Highlighting}

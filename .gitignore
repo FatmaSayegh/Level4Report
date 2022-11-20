@@ -6,4 +6,10 @@ l4proj.toc
 l4proj.aux
 Website/elm-stuff/
 **/*.swp
+**/*.bbl
+**/*.blg
+**/*.log
+**/*.out
+**/*.toc
+**/*.aux
 Website/app.js
