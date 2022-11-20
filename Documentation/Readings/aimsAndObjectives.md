@@ -12,7 +12,7 @@ of the concepts can act as an aid to the practioner to enrich his understanding 
 
 
 ### Objective
-The objective of this project is to create visualization, animation and urer interaction to elucidate the following classical graph
+The objective of this project is to create visualization, animation and user interaction to elucidate the following classical graph
 problems.
 
 1. Graph Isomorphism
