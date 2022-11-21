@@ -265,6 +265,11 @@ drawVertex : Vertex -> S.Svg msg
 drawVertex v =
    circle 10 v.pos v.color
 
+
+writeVertexName : Vertex -> S.Svg msg
+writeVertexName v =
+   writeText (String.fromInt v.name) v.pos
+
 drawEdge : Edge -> S.Svg msg
 drawEdge e =
    line e.vertexOne.pos e.vertexTwo.pos
@@ -273,7 +278,7 @@ drawEdge e =
 -- and produces a single list
 
 drawGraph g =
-   (List.map drawEdge g.edges) ++ (List.map drawVertex g.vertices)
+   (List.map drawEdge g.edges) ++ (List.map drawVertex g.vertices) ++ (List.map writeVertexName g.vertices)
 
 
 -- To have different pallete of colour ranges
@@ -301,6 +306,19 @@ circle size pos color =
         , SA.style ("fill: " ++ (Color.toCssString color) ++ ";")
         ]
         []
+   
+
+writeText: String -> Vec3 -> S.Svg msg
+writeText text pos =
+    S.text_
+        [ SA.x (String.fromInt <| round <| (getX pos))
+        , SA.y (String.fromInt <| round <| (getY pos))
+        , SA.class "small"
+        , SA.fontSize "7px"
+        , SA.textAnchor "middle"
+        --, SA.stroke "white"
+        ]
+        [S.text text]
 
 -- takes 2 positions and draw a line
 line : Vec3 -> Vec3 -> S.Svg msg
@@ -408,31 +426,11 @@ bipartiteGrid =
       List.map (\(x,y) -> y) (List.sortWith (\t1 t2 -> compare (Tuple.first t1) (Tuple.first t2)) totalGrid)
 
   
---totalGrid = linearGridLeft ++ linearGridRight
-
 
 -- situateShape which was used to scale and locate
 -- the miniturised version of the linear set of vertices
 linearGrid n position size =
       situateShape position size (makelinear n)
-
-
-
---linearGraph : Int -> Vec3 -> Vec3 -> Graph
---linearGraph n position size = 
---   let 
---      vertices = list.map3 Vertex (list.range 1 n) (situateShape position size (makelinear n)) (listofcolors first n)
---      edges = linearconnectvertices vertices 
---   in
---      graph vertices edges
---partialgraph n = 
---   let 
---      vertices = list.map3 vertex (list.range 1 n) (situateshape (vec3 200 250 0) (vec3 0 40 0) (makelinear n)) (listofcolors first n)
---      edges = linearconnectvertices vertices 
---   in
---      graph vertices edges
-
-
 
 
 
