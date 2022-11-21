@@ -6,8 +6,11 @@ import Html.Events
 
 import Html as H exposing (div, h1, p, text)
 import Html.Attributes as HA exposing (..)
+
 import Svg as S exposing (..)
 import Svg.Attributes as SA exposing (..)
+import Svg.Events as SE exposing (..)
+
 import Math.Matrix4 as M4 exposing (..)
 import Math.Vector3 exposing (..)
 import Explanation exposing (..)
@@ -316,7 +319,7 @@ writeText text pos =
         , SA.class "small"
         , SA.fontSize "7px"
         , SA.textAnchor "middle"
-        --, SA.stroke "white"
+       -- , SA.stroke "dark grey"
         ]
         [S.text text]
 
