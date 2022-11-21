@@ -1,5 +1,9 @@
 module Main exposing (..)
 
+import Browser
+import Browser.Events as E
+import Html.Events
+
 import Html as H exposing (div, h1, p, text)
 import Html.Attributes as HA exposing (..)
 import Svg as S exposing (..)
@@ -9,6 +13,11 @@ import Math.Vector3 exposing (..)
 import Explanation exposing (..)
 import Color exposing (Color)
 
+-- main is the main program
+-- init will initialize the model
+-- view uses the model to populate the app
+-- update updates the model
+-- subscription subscribes to the clock
 main : Program () Model Msg
 main =
     Browser.element
@@ -17,24 +26,75 @@ main =
         , update = update
         , subscriptions = subscription
         }
--- main is the program
--- it is nothing but a static site with no animation, 
--- otherwise it will get a little more complicated
--- view takes in a dummy model
 
+-- Model has currently, has 2 graphs
+-- and a grid, graphB will transform into slowly
 type alias Model =
 
     { graphA : Graph
-    , graphB : Graph 
-    , time: Float -- in minutes
+    , graphB : Graph
+    , finalGrid : Grid
     }
 
+-- Initializing the model
+init : () -> ( Model, Cmd Msg )
+init _ =
+   let 
+     initialGraph = makeGraph (PolygonCycleDoll 4) (vec3 200 100 0) (vec3 80 80 0) (pi/4)
+     model = { graphA = initialGraph
+             , graphB = initialGraph
+             , finalGrid = bipartiteGrid 
+             }
+    in
+    ( model, Cmd.none )
+
+-- Msg has message from onAnimationFrameDelta
+type Msg
+    = TimeDelta Float
+
+-- Subscribing to Animation frame clock.
+subscription : Model -> Sub Msg
+subscription _ =
+    E.onAnimationFrameDelta TimeDelta
+
+-- updating the graphB to acquire new position
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        TimeDelta delta ->
+            ( { model
+                | graphB = moveTowards model.graphB model.finalGrid
+              }
+            , Cmd.none
+            )
+
 view model =
-   div [] [ H.div pageStyle [paneOne, explanationOne]
+   div [] [ H.div pageStyle [paneOne model.graphA model.graphB, explanationOne]
           , H.div pageStyle [explanationTwo, paneTwo]
           , H.div pageStyle [paneThree, explanationThree]
           , H.div pageStyle [explanationFour, paneFour]
           ]
+
+
+-- Will move a graph (1/100) of the distance b/w the graph and the grid
+moveTowards : Graph -> Grid -> Graph
+moveTowards graph grid =
+   let
+      intermediateGrid = calcNextGrid graph grid 100
+   in
+      morphGraph graph intermediateGrid
+
+
+calcNextGrid : Graph -> Grid -> Float -> Grid
+calcNextGrid graph grid time =
+   List.map2 (advanceVertexTowardsPosition time) graph.vertices grid
+
+advanceVertexTowardsPosition : Float -> Vertex -> Vec3 -> Vec3
+advanceVertexTowardsPosition time vertex position =
+   let
+      dif = sub position vertex.pos
+   in
+      Math.Vector3.add (vertex.pos) (Math.Vector3.scale (1/time) dif)
 
 type alias Pos = {x : Int, y : Int}
 type alias Size = Int
@@ -50,7 +110,7 @@ anSvg =
      --(drawGraph graph4)
      ((drawGraph graph5) ++ (drawGraph graph6) ++ (drawGraph graph7) ++ (drawGraph graph8))
 
-anotherSvg =
+anotherSvg graphA graphB =
     S.svg
      [ SA.width "100%"
      , SA.height "auto"
@@ -58,8 +118,17 @@ anotherSvg =
      ]
      --(drawGraph graph3)
      --(drawGraph graph4)
-     ((drawGraph graph9) ++ (drawGraph transitionIntoIsomorph))
+     ((drawGraph graphA) ++ (drawGraph graphB))
 
+--anotherSvg graph =
+--    S.svg
+--     [ SA.width "100%"
+--     , SA.height "auto"
+--     , SA.viewBox "0 0 400 400"
+--     ]
+--     --(drawGraph graph3)
+--     --(drawGraph graph4)
+--     ((drawGraph graph9) ++ (drawGraph transitionIntoIsomorph))
 
 type alias Vertex = {name : Int, pos : Vec3, color : Color}
 type alias Edge = {vertexOne : Vertex, vertexTwo : Vertex}
@@ -245,7 +314,7 @@ line veca vecb =
       ]
       []
 
-paneOne = H.div leftSideStyle [ anotherSvg]
+paneOne graphA graphB = H.div leftSideStyle [ anotherSvg graphA graphB]
 explanationOne = H.div rightSideStyle [ H.h1 [] [H.text "Graph Isomorphism"]
                                     , p [] [ H.text isomorphismExplanation]
                                     ]
