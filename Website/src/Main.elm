@@ -88,12 +88,14 @@ update msg model =
         HoverOver name ->
            ( { model
                | graphA = changeGlowVertex True name model.graphA
+               , graphB = changeGlowVertex True name model.graphB
              }
            , Cmd.none)
 
         MouseOut name ->
            ( { model
                | graphA = changeGlowVertex False name model.graphA
+               , graphB = changeGlowVertex False name model.graphB
              }
            , Cmd.none)
 
@@ -275,10 +277,10 @@ morphGraph graph grid =
       Graph updatedVertices updatedEdges
 
 
--- a vertex is generated with the same name colour but different position.
+-- a vertex is generated with the same name colour and glow but different position.
 updatePositionVertex : Vertex -> Vec3 -> Vertex
 updatePositionVertex ver position =
-   Vertex ver.name position ver.color False
+   Vertex ver.name position ver.color ver.glow
    
 --## Put the Edges back.
 --We are in a way creating a new graph, but it has the vertices of the same name, color but differnt positions
