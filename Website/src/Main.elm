@@ -16,6 +16,7 @@ import Math.Vector3 exposing (..)
 import Explanation exposing (..)
 import Color exposing (Color)
 
+-- Main Program
 -- main is the main program
 -- init will initialize the model
 -- view uses the model to populate the app
@@ -30,8 +31,10 @@ main =
         , subscriptions = subscription
         }
 
--- Model has currently, has 2 graphs
--- and a grid, graphB will transform into slowly
+-- Model of the app
+-- Model contains the data model of the app. 
+-- Model has currently has 2 graphs
+-- and a grid, graphB will transform into slowly.
 type alias Model =
 
     { graphA : Graph
@@ -40,6 +43,8 @@ type alias Model =
     }
 
 -- Initializing the model
+-- init function initializes, a model and provides
+-- an instance of the model to the elm runtime.
 init : () -> ( Model, Cmd Msg )
 init _ =
    let 
@@ -51,16 +56,25 @@ init _ =
     in
     ( model, Cmd.none )
 
--- Msg has message from onAnimationFrameDelta
+-- Msg 
+-- This data type contains the kinds of messages
+-- the html page or the or a subscriber (animation clock in this app) may give to the elm-runtime.
 type Msg
     = TimeDelta Float | HoverOver Int | MouseOut Int
 
 -- Subscribing to Animation frame clock.
+-- Generates a Msg which can be used by update function
 subscription : Model -> Sub Msg
 subscription _ =
     E.onAnimationFrameDelta TimeDelta
 
--- updating the graphB to acquire new position
+-- Update the model
+-- Update function takes in messages from the webpage or the subscriber
+-- and uses them to modify the model
+-- 1. With every animation clock tick, it changes the graph to move towards
+--    a specified grid.
+-- 2. With MouseOver a vertex it makes that vertices' incident edges glow.
+-- 3. With MouseOut from a vertex it makes that vertices' incident edges not glow.
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -83,6 +97,22 @@ update msg model =
              }
            , Cmd.none)
 
+
+
+-- View the Model
+-- This function is responsible for the actual rendering
+-- of the webpage. Any change in the model by update function is reflected in the
+-- webpage as view works with the latest model.
+view model =
+   div [] [ H.div pageStyle [paneOne model.graphA model.graphB, explanationOne]
+          , H.div pageStyle [explanationTwo, paneTwo]
+          , H.div pageStyle [paneThree, explanationThree]
+          , H.div pageStyle [explanationFour, paneFour]
+          ]
+
+-- Change the glow status of a Vertex
+-- This function changes the glow status of the Vertex to True or False
+-- depending on the input status given.
 changeGlowVertex : Bool -> Int -> Graph -> Graph
 changeGlowVertex status name graph =
    let 
@@ -96,15 +126,13 @@ changeGlowVertex status name graph =
    
    
    
-view model =
-   div [] [ H.div pageStyle [paneOne model.graphA model.graphB, explanationOne]
-          , H.div pageStyle [explanationTwo, paneTwo]
-          , H.div pageStyle [paneThree, explanationThree]
-          , H.div pageStyle [explanationFour, paneFour]
-          ]
 
 
--- Will move a graph (1/100) of the distance b/w the graph and the grid
+-- Move a graph towards grid points.
+-- This function takes as inputs a graph, and a target grid
+-- First an intermediate grid is created near the input graph, which has the placeholder for
+-- the vertices a little bit towards the final destination.
+-- then the original graph is morphed into the intermediate grid.
 moveTowards : Graph -> Grid -> Graph
 moveTowards graph grid =
    let
@@ -112,10 +140,19 @@ moveTowards graph grid =
    in
       morphGraph graph intermediateGrid
 
+
+
+-- Calculating Grid Points for Kinematics.
+-- This function takes in a graph, a grid (set of 3d vectors) and creates a grid which is
+-- in between the graph and the final destination.
 calcNextGrid : Graph -> Grid -> Float -> Grid
 calcNextGrid graph grid time =
    List.map2 (advanceVertexTowardsPosition time) graph.vertices grid
 
+-- Calculation of Intermediate Vector Grid Point.
+-- First a vector between inital Vertex and final grid point is calculated.
+-- Then it is scaled down by the number of steps.
+-- Finally it is added to the position vector of the the vertex.
 advanceVertexTowardsPosition : Float -> Vertex -> Vec3 -> Vec3
 advanceVertexTowardsPosition time vertex position =
    let
@@ -127,6 +164,7 @@ type alias Pos = {x : Int, y : Int}
 type alias Size = Int
 
 -- Scalable vector graphics
+
 anSvg =
     S.svg
      [ SA.width "100%"
@@ -157,16 +195,29 @@ anotherSvg graphA graphB =
 --     --(drawGraph graph4)
 --     ((drawGraph graph9) ++ (drawGraph transitionIntoIsomorph))
 
+-- Vertex, Edge and Graph types.
 type alias Vertex = {name : Int, pos : Vec3, color : Color, glow : Bool}
 type alias Edge = {vertexOne : Vertex, vertexTwo : Vertex}
 type alias Graph = {vertices : List Vertex, edges : List Edge}
 
 
+-- Polygonal Graph Types
+-- Type created to aid creation of simple shapes
+-- used by makeGrah function.
+-- Even though a Graph can be created just by invoking the data constructor
+-- Graph, without the need of Gtype or makeGraph function.
+-- A graphs shape can be Polygon Cycle, in which it is created as cyclical graph with vertices
+-- taking the place of vertices of a geometric polygon. 
+-- PolygonFullyConnected is the same as the previous one, but it is a fully connected graph. i.e. all the vertices
+-- of this graph is connected to each other
+-- PolygonCycleDoll will create polygonal Russian dolls with cycles and spokes when given the number of
+-- vertices of the outer or inner doll. They have the same number of vertices anyway.
+-- each vertex is named Ints for simplicity.
 type Gtype = PolygonCycle Int | PolygonFullyConnected Int | PolygonCycleDoll Int
 
--- <| is like $ in haskell
 
-
+-- Make Polygonal Graphs.
+-- Symplifying the creation of makeing polygonal graphs.
 -- makeGraph takes a Gtype, position of the graph, size of the graph (radius of
 -- the circumcribing circle), and inital orientation of the first vertex.
 makeGraph : Gtype -> Vec3 -> Vec3 -> Float -> Graph
@@ -180,9 +231,6 @@ makeGraph graphType position size initialAngle=
              let vertices = List.map3 (\name g c -> Vertex name g c False) (List.range 1 n) (parametricPolygon n size position initialAngle) (listOfColors First n)
              in Graph vertices (fullyConnectVertices vertices)
 
-          -- PolygonCycleDoll will create polygonal Russian dolls with cycles and spokes when given the number of
-          -- vertices of the outer or inner doll. They have the same number of vertices anyway.
-          -- each vertex is named Ints for simplicity.
           PolygonCycleDoll n ->
              let verticesSetA = List.map3 (\name g c -> Vertex name g c False) (List.range 1 n) (parametricPolygon n size position initialAngle) (listOfColors First n)
 
@@ -206,18 +254,17 @@ graph8 = makeGraph (PolygonFullyConnected 4) (vec3 100 300 0) (vec3 50 50 0) (pi
 
 graph9 = makeGraph (PolygonCycleDoll 4) (vec3 200 100 0) (vec3 80 80 0) (pi/4)
 
-
+-- Grid.
+-- A grid is a list of positions. This type is used to provide positions for vertices
+-- for graph formation or a geometry a graph can morph into by situating it's vertices on
+-- the positions contained in the grid.
 type alias Grid = List Vec3
 
 --## Morphing a graph using Grid.  
---Topology (vertices and edges) and name
---remain the same, display geometry changes. (That is position of the graph)
---Vertices are reconstructed with the new positions --Edges are created between
---the new vertices according to the original edges --All together a new graph is
---created but it's topology is the same as the original one.  --The new graph can
---be said to be visually morphed version of the original. But essentially the
---same graph connection wise and vertex name and
---vertex color wise.
+-- This function changes display geometry of a graph according to an input grid (list of vector positions).
+-- while preserving the topology.
+-- Vertices are reconstructed with the new positions. Edges are created between
+-- the new vertices according to the incidence of original edges.
 morphGraph : Graph -> Grid -> Graph
 morphGraph graph grid =
    let
@@ -226,18 +273,6 @@ morphGraph graph grid =
       updatedEdges = List.map createEdge graph.edges
    in
       Graph updatedVertices updatedEdges
-
--- newGraph = morphGraph graph9 (newGrid 4)
-transitionIntoIsomorph = morphGraph graph9 bipartiteGrid 
-
-newGrid n =
-   let position = vec3 200 300 0
-       size = vec3 80 50 0
-       gridA = parametricPolygon n size position 0
-       gridB = parametricPolygon n (Math.Vector3.scale 0.5 size) position 0
-   in  gridA ++ gridB
-
-
 
 
 -- a vertex is generated with the same name colour but different position.
@@ -259,11 +294,28 @@ updateEdge vs e =
           (_, Nothing) -> Edge v1 v2
           (Just ver1, Just ver2) -> Edge ver1 ver2
 
+
 lookUpVertex : Int -> List Vertex -> Maybe Vertex
 lookUpVertex name vs =
    case vs of
       [] -> Nothing
       (x::xs) -> if name == x.name then Just x else lookUpVertex name xs
+
+-- newGraph = morphGraph graph9 (newGrid 4)
+
+transitionIntoIsomorph = morphGraph graph9 bipartiteGrid 
+
+newGrid n =
+   let position = vec3 200 300 0
+       size = vec3 80 50 0
+       gridA = parametricPolygon n size position 0
+       gridB = parametricPolygon n (Math.Vector3.scale 0.5 size) position 0
+   in  gridA ++ gridB
+
+
+
+
+
 
 -- Will connect 1 to 3,4,5,6
 -- Then in next call 2 ot 3,4,5,6

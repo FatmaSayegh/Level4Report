@@ -12,4 +12,6 @@ Website/elm-stuff/
 **/*.out
 **/*.toc
 **/*.aux
+**/*.hi
+**/*.o
 Website/app.js
