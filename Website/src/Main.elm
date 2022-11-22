@@ -124,7 +124,7 @@ update msg model =
 -- of the webpage. Any change in the model by update function is reflected in the
 -- webpage as view works with the latest model.
 view model =
-   div [] [ H.div pageStyle [paneOne model.graphA model.graphB, explanationOne]
+   div [] [ H.div pageStyle [paneOne model.graphA model.graphB, explanationOne model.animationOn]
           , H.div pageStyle [explanationTwo, paneTwo]
           , H.div pageStyle [paneThree, explanationThree]
           , H.div pageStyle [explanationFour, paneFour]
@@ -506,9 +506,20 @@ lline veca vecb =
       []
 
 paneOne graphA graphB = H.div leftSideStyle [ anotherSvg graphA graphB]
-explanationOne = H.div rightSideStyle [ H.h1 [] [H.text "Graph Isomorphism"]
+
+explanationOne : Bool -> H.Html Msg
+explanationOne animationOn = H.div rightSideStyle [ H.h1 [] [H.text "Graph Isomorphism"]
                                     , p [] [ H.text isomorphismExplanation ]
-                                    , p [] [ H.button [ HE.onClick AnimationToggle ] [ H.text "Animation On/Off" ] ]
+                                    , p [] 
+                                          [ H.button 
+                                              [ HE.onClick AnimationToggle ] 
+                                              [ H.text ((\switch ->
+                                                       if switch then
+                                                           "Pause Animation"
+                                                        else "Play Animation") animationOn)
+                                              ] 
+                                          ]
+
                                     , p [] [ H.button [ HE.onClick AnimationStartOver ] [ H.text "Animation Restart" ] ]
                                     ]
 
