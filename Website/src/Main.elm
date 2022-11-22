@@ -5,6 +5,7 @@ import Browser.Events as E
 import Html.Events
 
 import Html as H exposing (div, h1, p, text)
+import Html.Events as HE exposing (..)
 import Html.Attributes as HA exposing (..)
 
 import Svg as S exposing (..)
@@ -40,6 +41,7 @@ type alias Model =
     { graphA : Graph
     , graphB : Graph
     , finalGrid : Grid
+    , animationOn : Bool
     }
 
 -- Initializing the model
@@ -52,6 +54,7 @@ init _ =
      model = { graphA = initialGraph
              , graphB = initialGraph
              , finalGrid = bipartiteGrid 
+             , animationOn = False
              }
     in
     ( model, Cmd.none )
@@ -60,7 +63,7 @@ init _ =
 -- This data type contains the kinds of messages
 -- the html page or the or a subscriber (animation clock in this app) may give to the elm-runtime.
 type Msg
-    = TimeDelta Float | HoverOver Int | MouseOut Int
+    = TimeDelta Float | HoverOver Int | MouseOut Int | AnimationToggle | AnimationStartOver
 
 -- Subscribing to Animation frame clock.
 -- Generates a Msg which can be used by update function
@@ -79,11 +82,15 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         TimeDelta delta ->
-            ( { model
-                | graphB = moveTowards model.graphB model.finalGrid
-              }
-            , Cmd.none
-            )
+            case model.animationOn of
+               True ->
+                  ( { model
+                      | graphB = moveTowards model.graphB model.finalGrid
+                    }
+                  , Cmd.none
+                  )
+               False ->
+                  (model, Cmd.none)
 
         HoverOver name ->
            ( { model
@@ -99,6 +106,17 @@ update msg model =
              }
            , Cmd.none)
 
+        AnimationToggle ->
+           ( { model
+               | animationOn = not (model.animationOn)
+             }
+           , Cmd.none)
+
+        AnimationStartOver ->
+           ( { model
+             | graphB = model.graphA
+             }
+           , Cmd.none)
 
 
 -- View the Model
@@ -352,6 +370,9 @@ drawVertex : Vertex -> S.Svg Msg
 drawVertex v =
    circle 10 v.pos v.color v.name
 
+drawGoldenCircle  : Vertex -> S.Svg Msg
+drawGoldenCircle v =
+   ccircle 15 v.pos "#BF8915" v.name
 
 writeVertexName : Vertex -> S.Svg msg
 writeVertexName v =
@@ -371,9 +392,23 @@ drawSpecialEdge e =
 drawGraph g =
    let
       (specialEdges, normalEdges) = seperateEdges g
+      haloVertices = getHaloVertices g specialEdges
    in
-      (List.map drawEdge normalEdges) ++ (List.map drawSpecialEdge specialEdges) ++ (List.map drawVertex g.vertices) ++ (List.map writeVertexName g.vertices)
+      (List.map drawEdge normalEdges) 
+      ++ (List.map drawSpecialEdge specialEdges)
+      ++ (List.map drawGoldenCircle haloVertices)
+      ++ (List.map drawVertex g.vertices) 
+      ++ (List.map writeVertexName g.vertices)
 
+getHaloVertices : Graph -> List Edge -> List Vertex
+getHaloVertices g es =
+   List.filter (\v -> isVertexInEdges v es) g.vertices
+
+isVertexInEdges : Vertex -> List Edge -> Bool
+isVertexInEdges v es =
+  case es of
+      [] -> False
+      (x::xs) -> if (v.name == x.vertexOne.name || v.name == x.vertexTwo.name) then True else (isVertexInEdges v xs)
 
 seperateEdges : Graph -> (List Edge, List Edge)
 seperateEdges g =
@@ -420,6 +455,18 @@ circle size pos color name =
         , SE.onMouseOut (MouseOut name)
         ]
         []
+
+ccircle: Size -> Vec3 -> String -> Int -> S.Svg Msg
+ccircle size pos color name =
+    S.circle
+        [ SA.cx (String.fromInt <| round <| (getX pos))
+        , SA.cy (String.fromInt <| round <| (getY pos))
+        , SA.r (String.fromInt size)
+        , SA.style ("fill: " ++ color ++ ";")
+        , SE.onMouseOver (HoverOver name)
+        , SE.onMouseOut (MouseOut name)
+        ]
+        []
    
 
 writeText: String -> Vec3 -> S.Svg msg
@@ -460,7 +507,9 @@ lline veca vecb =
 
 paneOne graphA graphB = H.div leftSideStyle [ anotherSvg graphA graphB]
 explanationOne = H.div rightSideStyle [ H.h1 [] [H.text "Graph Isomorphism"]
-                                    , p [] [ H.text isomorphismExplanation]
+                                    , p [] [ H.text isomorphismExplanation ]
+                                    , p [] [ H.button [ HE.onClick AnimationToggle ] [ H.text "Animation On/Off" ] ]
+                                    , p [] [ H.button [ HE.onClick AnimationStartOver ] [ H.text "Animation Restart" ] ]
                                     ]
 
 paneTwo = H.div rightSideStyle [anSvg]
@@ -533,9 +582,9 @@ linearGridRight = linearGrid 4 (vec3 250 250 0) (vec3 0 120 0)
 -- So that our project does not become graph problem solving
 -- We have the answer to the isomorphism problem here
 setLeft : List Int
-setLeft = [1,6,8,3] 
+setLeft = [3,8,6,1] 
 setRight : List Int
-setRight = [5,2,4,7]
+setRight = [7,4,2,5]
 
 -- Here as set of numbers in the left and the right are being tupled with list of vertical vector grids
 -- and then sorted according to index numbers
