@@ -53,7 +53,7 @@ init _ =
 
 -- Msg has message from onAnimationFrameDelta
 type Msg
-    = TimeDelta Float
+    = TimeDelta Float | HoverOver Int | MouseOut Int
 
 -- Subscribing to Animation frame clock.
 subscription : Model -> Sub Msg
@@ -71,6 +71,31 @@ update msg model =
             , Cmd.none
             )
 
+        HoverOver name ->
+           ( { model
+               | graphA = changeGlowVertex True name model.graphA
+             }
+           , Cmd.none)
+
+        MouseOut name ->
+           ( { model
+               | graphA = changeGlowVertex False name model.graphA
+             }
+           , Cmd.none)
+
+changeGlowVertex : Bool -> Int -> Graph -> Graph
+changeGlowVertex status name graph =
+   let 
+      new_vertices vs =
+         case vs of
+            [] -> []
+            (x::xs) -> (if x.name == name then { x | glow = status } else x) :: (new_vertices xs)
+   in
+      Graph (new_vertices graph.vertices) graph.edges
+                  
+   
+   
+   
 view model =
    div [] [ H.div pageStyle [paneOne model.graphA model.graphB, explanationOne]
           , H.div pageStyle [explanationTwo, paneTwo]
@@ -86,7 +111,6 @@ moveTowards graph grid =
       intermediateGrid = calcNextGrid graph grid 100
    in
       morphGraph graph intermediateGrid
-
 
 calcNextGrid : Graph -> Grid -> Float -> Grid
 calcNextGrid graph grid time =
@@ -133,7 +157,7 @@ anotherSvg graphA graphB =
 --     --(drawGraph graph4)
 --     ((drawGraph graph9) ++ (drawGraph transitionIntoIsomorph))
 
-type alias Vertex = {name : Int, pos : Vec3, color : Color}
+type alias Vertex = {name : Int, pos : Vec3, color : Color, glow : Bool}
 type alias Edge = {vertexOne : Vertex, vertexTwo : Vertex}
 type alias Graph = {vertices : List Vertex, edges : List Edge}
 
@@ -149,19 +173,25 @@ makeGraph : Gtype -> Vec3 -> Vec3 -> Float -> Graph
 makeGraph graphType position size initialAngle=
        case graphType of
           PolygonCycle n ->
-             let vertices = List.map3 Vertex (List.range 1 n) (parametricPolygon n size position initialAngle) (listOfColors First n)
+             let vertices = List.map3 (\name g c -> Vertex name g c False) (List.range 1 n) (parametricPolygon n size position initialAngle) (listOfColors First n)
              in  Graph vertices (List.map2 Edge vertices (shiftListCycle vertices))
              
           PolygonFullyConnected n ->
-             let vertices = List.map3 Vertex (List.range 1 n) (parametricPolygon n size position initialAngle) (listOfColors First n)
+             let vertices = List.map3 (\name g c -> Vertex name g c False) (List.range 1 n) (parametricPolygon n size position initialAngle) (listOfColors First n)
              in Graph vertices (fullyConnectVertices vertices)
 
           -- PolygonCycleDoll will create polygonal Russian dolls with cycles and spokes when given the number of
           -- vertices of the outer or inner doll. They have the same number of vertices anyway.
           -- each vertex is named Ints for simplicity.
           PolygonCycleDoll n ->
-             let verticesSetA = List.map3 Vertex (List.range 1 n) (parametricPolygon n size position initialAngle) (listOfColors First n)
-                 verticesSetB = List.map3 Vertex (List.range (n+1) (2*n)) (parametricPolygon n (Math.Vector3.scale 0.5 size) position initialAngle) (listOfColors Second n)
+             let verticesSetA = List.map3 (\name g c -> Vertex name g c False) (List.range 1 n) (parametricPolygon n size position initialAngle) (listOfColors First n)
+
+                 verticesSetB = 
+                     List.map3 (\name g c -> Vertex name g c False) 
+                     (List.range (n+1) (2*n)) 
+                     (parametricPolygon n (Math.Vector3.scale 0.5 size) position initialAngle) 
+                     (listOfColors Second n)
+
                  allVertices = verticesSetA ++ verticesSetB
                  edgesCycleSetA = List.map2 Edge verticesSetA (shiftListCycle verticesSetA)
                  edgesCycleSetB = List.map2 Edge verticesSetB (shiftListCycle verticesSetB)
@@ -213,7 +243,7 @@ newGrid n =
 -- a vertex is generated with the same name colour but different position.
 updatePositionVertex : Vertex -> Vec3 -> Vertex
 updatePositionVertex ver position =
-   Vertex ver.name position ver.color
+   Vertex ver.name position ver.color False
    
 --## Put the Edges back.
 --We are in a way creating a new graph, but it has the vertices of the same name, color but differnt positions
@@ -264,9 +294,9 @@ shiftListCycle xs =
 
 
 
-drawVertex : Vertex -> S.Svg msg
+drawVertex : Vertex -> S.Svg Msg
 drawVertex v =
-   circle 10 v.pos v.color
+   circle 10 v.pos v.color v.name
 
 
 writeVertexName : Vertex -> S.Svg msg
@@ -277,12 +307,37 @@ drawEdge : Edge -> S.Svg msg
 drawEdge e =
    line e.vertexOne.pos e.vertexTwo.pos
 
+drawSpecialEdge : Edge -> S.Svg msg
+drawSpecialEdge e =
+   lline e.vertexOne.pos e.vertexTwo.pos
+
 -- put edges first and then vertices
 -- and produces a single list
 
 drawGraph g =
-   (List.map drawEdge g.edges) ++ (List.map drawVertex g.vertices) ++ (List.map writeVertexName g.vertices)
+   let
+      (specialEdges, normalEdges) = seperateEdges g
+   in
+      (List.map drawEdge normalEdges) ++ (List.map drawSpecialEdge specialEdges) ++ (List.map drawVertex g.vertices) ++ (List.map writeVertexName g.vertices)
 
+
+seperateEdges : Graph -> (List Edge, List Edge)
+seperateEdges g =
+   let
+      specialVertices = List.filter (\ver -> ver.glow) g.vertices
+      specialEdges = List.filter (\edge -> isEdgeIn edge specialVertices) g.edges
+      normalEdges = List.filter (\edge -> not (isEdgeIn edge specialVertices)) g.edges
+   in
+      (specialEdges, normalEdges)
+
+
+isEdgeIn : Edge -> List Vertex -> Bool
+isEdgeIn e vs =
+   let v1 = e.vertexOne
+       v2 = e.vertexTwo
+   in case ((lookUpVertex v1.name vs), (lookUpVertex v2.name vs)) of
+      (Nothing, Nothing) -> False
+      (_, _) -> True
 
 -- To have different pallete of colour ranges
 type ColorRegion = First | Second | Third
@@ -300,13 +355,15 @@ listOfColors region n =
          Second -> List.map (\x -> x + 0.33) firstRegion |> List.map (\h -> Color.hsl h 1 0.5)
          Third -> List.map (\x -> x + 0.66) firstRegion |> List.map (\h -> Color.hsl h 1 0.5)
 
-circle: Size -> Vec3 -> Color -> S.Svg msg
-circle size pos color =
+circle: Size -> Vec3 -> Color -> Int -> S.Svg Msg
+circle size pos color name =
     S.circle
         [ SA.cx (String.fromInt <| round <| (getX pos))
         , SA.cy (String.fromInt <| round <| (getY pos))
         , SA.r (String.fromInt size)
         , SA.style ("fill: " ++ (Color.toCssString color) ++ ";")
+        , SE.onMouseOver (HoverOver name)
+        , SE.onMouseOut (MouseOut name)
         ]
         []
    
@@ -332,6 +389,18 @@ line veca vecb =
       , SA.x2 (String.fromInt <| round <| (getX vecb))
       , SA.y2 (String.fromInt <| round <| (getY vecb))
       , SA.stroke "white"
+      ]
+      []
+
+lline : Vec3 -> Vec3 -> S.Svg msg
+lline veca vecb =
+   S.line
+      [ SA.x1 (String.fromInt <| round <| (getX veca))
+      , SA.y1 (String.fromInt <| round <| (getY veca))
+      , SA.x2 (String.fromInt <| round <| (getX vecb))
+      , SA.y2 (String.fromInt <| round <| (getY vecb))
+      , SA.stroke "#BF8915"
+      , SA.strokeWidth "3"
       ]
       []
 
