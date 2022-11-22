@@ -4,6 +4,8 @@ import Browser
 import Browser.Events as E
 import Html.Events
 
+import Json.Decode as Decode
+
 import Html as H exposing (div, h1, p, text)
 import Html.Events as HE exposing (..)
 import Html.Attributes as HA exposing (..)
@@ -63,13 +65,16 @@ init _ =
 -- This data type contains the kinds of messages
 -- the html page or the or a subscriber (animation clock in this app) may give to the elm-runtime.
 type Msg
-    = TimeDelta Float | HoverOver Int | MouseOut Int | AnimationToggle | AnimationStartOver
+    = TimeDelta Float | HoverOver Int | MouseOut Int | AnimationToggle | AnimationStartOver | KeyPressed
 
 -- Subscribing to Animation frame clock.
 -- Generates a Msg which can be used by update function
 subscription : Model -> Sub Msg
 subscription _ =
-    E.onAnimationFrameDelta TimeDelta
+    Sub.batch
+    [ E.onAnimationFrameDelta TimeDelta
+    , E.onKeyPress (Decode.succeed KeyPressed)
+    ]
 
 -- Update the model
 -- Update function takes in messages from the webpage or the subscriber
@@ -118,6 +123,12 @@ update msg model =
              }
            , Cmd.none)
 
+        KeyPressed ->
+           ( { model
+               | animationOn = not (model.animationOn)
+             }
+           , Cmd.none)
+
 
 -- View the Model
 -- This function is responsible for the actual rendering
@@ -129,6 +140,10 @@ view model =
           , H.div pageStyle [paneThree, explanationThree]
           , H.div pageStyle [explanationFour, paneFour]
           ]
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    E.onKeyPress (Decode.succeed KeyPressed)
 
 -- Change the glow status of a Vertex
 -- This function changes the glow status of the Vertex to True or False
