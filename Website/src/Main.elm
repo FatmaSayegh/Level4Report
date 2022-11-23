@@ -164,8 +164,8 @@ update msg model =
 
         HoverOver name ->
             ( { model
-                | graphA = changeGlowVertex True name model.graphA
-                , graphB = changeGlowVertex True name model.graphB
+                | graphA = changeGlowVertex True name <| makeUnglowAllVertices model.graphA
+                , graphB = changeGlowVertex True name <| makeUnglowAllVertices model.graphB
               }
             , Cmd.none
             )
@@ -260,6 +260,19 @@ makeUnglowAllVerticesBut name graph =
                         { x | glow = False}
                     )
                         :: new_vertices xs
+    in
+    Graph (new_vertices graph.vertices) graph.edges
+
+makeUnglowAllVertices : Graph -> Graph
+makeUnglowAllVertices graph =
+    let
+        new_vertices vs =
+            case vs of
+                [] ->
+                    []
+
+                x :: xs ->
+                        { x | glow = False} :: new_vertices xs
     in
     Graph (new_vertices graph.vertices) graph.edges
 
