@@ -786,7 +786,6 @@ explanationOne model =
     H.div rightSideStyle
         [ H.h1 [] [ H.text "Graph Isomorphism" ]
         , p [] [ H.text isomorphismExplanation ]
-        , p [] [ H.text <| makeStory model ]
         , p []
             [ H.button
                 [ HE.onClick AnimationToggle ]
@@ -803,13 +802,14 @@ explanationOne model =
                 ]
             ]
         , p [] [ H.button [ HE.onClick AnimationStartOver ] [ H.text "Animation Restart" ] ]
+        , p [] [ H.text <| makeStory model ]
         ]
 
 makeStory : Model -> String
 makeStory model =
    let
       glowing_vertices = List.filter (\ver -> ver.glow) model.graphB.vertices
-      putYourMouse = "Go ahead and put your mouse over a vertex of the graph."
+      putYourMouse = "Go ahead and put your mouse over a vertex of the graph. "
       ( specialEdges, _ ) = seperateEdges model.graphB
       relatedVertices = getHaloVertices model.graphB specialEdges
 
