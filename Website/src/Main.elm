@@ -13,6 +13,7 @@ import Math.Vector3 exposing (..)
 import Svg as S exposing (..)
 import Svg.Attributes as SA exposing (..)
 import Svg.Events as SE exposing (..)
+import String.Format
 
 
 
@@ -83,6 +84,7 @@ type Msg
     | MouseOut Int
     | AnimationToggle
     | AnimationStartOver
+    | ToggleVertexStatus Int
     | Other
 
 
@@ -108,18 +110,31 @@ keyToMsg : String -> Msg
 keyToMsg value =
     case String.uncons value of
         Just ( char, "" ) ->
-            case char of
-                'r' ->
-                    AnimationStartOver
+            case (Char.isDigit char) of
+               True ->
+                  String.cons char "" |> String.toInt |> chooseVertexFromInt
+               False ->
+                  case char of
+                     'r' ->
+                         AnimationStartOver
 
-                'p' ->
-                    AnimationToggle
+                     'p' ->
+                         AnimationToggle
 
-                _ ->
-                    Other
+                     _ ->
+                         Other
 
         _ ->
             Other
+
+
+chooseVertexFromInt : Maybe Int -> Msg
+chooseVertexFromInt x =
+   case x of
+      Nothing
+         -> Other
+      Just name
+         -> ToggleVertexStatus name
 
 
 
@@ -159,6 +174,14 @@ update msg model =
             ( { model
                 | graphA = changeGlowVertex False name model.graphA
                 , graphB = changeGlowVertex False name model.graphB
+              }
+            , Cmd.none
+            )
+
+        ToggleVertexStatus name ->
+            ( { model
+                | graphA = toggleGlowVertex name <| makeUnglowAllVerticesBut name model.graphA
+                , graphB = toggleGlowVertex name <| makeUnglowAllVerticesBut name model.graphB
               }
             , Cmd.none
             )
@@ -222,6 +245,42 @@ changeGlowVertex status name graph =
     in
     Graph (new_vertices graph.vertices) graph.edges
 
+makeUnglowAllVerticesBut : Int -> Graph -> Graph
+makeUnglowAllVerticesBut name graph =
+    let
+        new_vertices vs =
+            case vs of
+                [] ->
+                    []
+
+                x :: xs ->
+                    (if x.name == name then
+                        x
+                     else
+                        { x | glow = False}
+                    )
+                        :: new_vertices xs
+    in
+    Graph (new_vertices graph.vertices) graph.edges
+
+toggleGlowVertex : Int -> Graph -> Graph
+toggleGlowVertex  name graph =
+    let
+        new_vertices vs =
+            case vs of
+                [] ->
+                    []
+
+                x :: xs ->
+                    (if x.name == name then
+                        { x | glow = not (x.glow) }
+
+                     else
+                        x
+                    )
+                        :: new_vertices xs
+    in
+    Graph (new_vertices graph.vertices) graph.edges
 
 
 -- Move a graph towards grid points.
@@ -588,6 +647,10 @@ drawGoldenCircle v =
     ccircle 15 v.pos "#BF8915" v.name
 
 
+drawSelectedVertex : Vertex -> S.Svg Msg
+drawSelectedVertex  v =
+    ccircle 13 v.pos "#BF8915" v.name
+
 writeVertexName : Vertex -> S.Svg msg
 writeVertexName v =
     writeText (String.fromInt v.name) v.pos
@@ -615,17 +678,33 @@ drawGraph g =
 
         haloVertices =
             getHaloVertices g specialEdges
+
+        selectedVertices =
+            List.filter (\ver -> ver.glow) g.vertices
+         
     in
     List.map drawEdge normalEdges
         ++ List.map drawSpecialEdge specialEdges
         ++ List.map drawGoldenCircle haloVertices
         ++ List.map drawVertex g.vertices
+        ++ List.map drawSelectedVertex selectedVertices
         ++ List.map writeVertexName g.vertices
 
 
 getHaloVertices : Graph -> List Edge -> List Vertex
 getHaloVertices g es =
-    List.filter (\v -> isVertexInEdges v es) g.vertices
+   let
+      glowingVertices = List.filter (\ver -> ver.glow) g.vertices
+   in
+      List.filter (\v -> not (isVertexInList v glowingVertices)) <| List.filter (\v -> isVertexInEdges v es) g.vertices
+
+isVertexInList : Vertex -> List Vertex -> Bool
+isVertexInList v vs =
+   case (lookUpVertex v.name vs) of
+      Just _ ->
+         True
+      Nothing ->
+         False
 
 
 isVertexInEdges : Vertex -> List Edge -> Bool
@@ -784,55 +863,107 @@ paneOne graphA graphB =
 explanationOne : Model -> H.Html Msg
 explanationOne model =
     H.div rightSideStyle
-        [ H.h1 [] [ H.text "Graph Isomorphism" ]
-        , p [] [ H.text isomorphismExplanation ]
-        , p []
-            [ H.button
-                [ HE.onClick AnimationToggle ]
-                [ H.text
-                    ((\switch ->
-                        if switch then
-                            "Pause Animation"
+       (  [ H.h1 [] [ H.text "Graph Isomorphism" ]
+          , p [] [ H.text isomorphismExplanation ]
+          , p []
+              [ H.button
+                  [ HE.onClick AnimationToggle ]
+                  [ H.text
+                      ((\switch ->
+                          if switch then
+                              "Pause Animation"
 
-                        else
-                            "Play Animation"
-                     )
-                        model.animationOn
-                    )
-                ]
-            ]
-        , p [] [ H.button [ HE.onClick AnimationStartOver ] [ H.text "Animation Restart" ] ]
-        , p [] [ H.text <| makeStory model ]
-        ]
+                          else
+                              "Play Animation"
+                       )
+                          model.animationOn
+                      )
+                  ]
+              ]
+          , p [] [ H.button [ HE.onClick AnimationStartOver ] [ H.text "Animation Restart" ] ]
+          , p [] [H.text 
+                         """
+                         Go ahead and put your mouse over a vertex of the graph.
+                         Or press a number on the keyboard corresponding to a Vertex number.
+                         """
+                 ]
+          ] 
+          ++ (makeStory model)
+       )
 
-makeStory : Model -> String
+
+makeStory : Model -> List (H.Html Msg)
 makeStory model =
-   let
-      glowing_vertices = List.filter (\ver -> ver.glow) model.graphB.vertices
-      putYourMouse = "Go ahead and put your mouse over a vertex of the graph. "
-      ( specialEdges, _ ) = seperateEdges model.graphB
-      relatedVertices = getHaloVertices model.graphB specialEdges
+    let
+        glowing_vertices =
+            List.filter (\ver -> ver.glow) model.graphB.vertices
 
-      connectedToThis = ". And connected to this are the vertices "
-      whichYouCanSee = " Which you can see is true for both graphs."
-   in
-      case glowing_vertices of
-         [] -> putYourMouse
-         x :: xs -> 
-            putYourMouse 
-            ++ "You have selected " 
-            ++ String.fromInt x.name 
-            ++ connectedToThis
-            ++ (getStringFromVertices relatedVertices)
-            ++ whichYouCanSee
+        putyourmouse =
+            """
+            Go ahead and put your mouse over a vertex of the graph.
+            Or press a number on the keyboard corresponding to a Vertex number.
+            """
+
+        ( specialEdges, _ ) =
+            seperateEdges model.graphB
+
+        relatedVertices =
+            getHaloVertices model.graphB specialEdges
+
+        connectedToThis v =
+            "And connected to vertex {{ }} are the vertices " |> String.Format.value (String.fromInt <| v.name)
+
+        whichYouCanSee =
+            " Which you can see is true for both graphs."
+
+        listOfStories =
+            case glowing_vertices of
+                [] ->
+                    []
+
+                x :: xs ->
+                    [ "You have selected Vertex "
+                        ++ String.fromInt x.name
+                    , (connectedToThis x)
+                        ++ getStringFromVertices relatedVertices
+                    , whichYouCanSee
+                    ]
+
+        storyPara =
+            List.intersperse (H.br [] [])
+                (List.map H.text
+                    listOfStories
+                )
+
+        footer =
+            case glowing_vertices of
+               [] -> ""
+               x :: xs -> 
+                  """
+                  You may want to visit other vertices to see that, each vertex
+                  is connected to the same vertices in both graphs.
+                  """
+    in
+      [ p [] storyPara
+      , p [] [H.text footer]
+      ]
+
 
 getStringFromVertices : List Vertex -> String
 getStringFromVertices vs =
-   case vs of
-      [] -> ""
-      x :: [] -> String.fromInt x.name
-      x :: [y] -> String.fromInt x.name ++ " and " ++ getStringFromVertices [y]
-      x :: xs -> String.fromInt x.name ++ ", " ++ getStringFromVertices xs
+    case vs of
+        [] ->
+            ""
+
+        x :: [] ->
+            String.fromInt x.name
+
+        x :: [ y ] ->
+            String.fromInt x.name ++ " and " ++ getStringFromVertices [ y ]
+
+        x :: xs ->
+            String.fromInt x.name ++ ", " ++ getStringFromVertices xs
+
 
 paneTwo =
     H.div rightSideStyle [ anSvg ]
