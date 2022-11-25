@@ -262,7 +262,7 @@ view model =
              ]
       MaxCut shapeTransition ->
          div []
-             [ H.div pageStyle [ explanationTwo, paneOne shapeTransition.graphA shapeTransion.graphB]
+             [ H.div pageStyle [ explanationTwo, paneOne shapeTransition.graphA shapeTransition.graphB]
              --, H.div pageStyle [ paneThree, explanationThree ]
              --, H.div pageStyle [ explanationFour, paneFour ]
              ]
