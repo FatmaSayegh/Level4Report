@@ -66,6 +66,7 @@ init _ =
             { graphA = initialGraph
             , graphB = initialGraph
             , finalGrid = bipartiteGrid
+            --, finalGrid = starGrid
             , animationOn = False
             }
     in
@@ -153,12 +154,7 @@ update msg model =
         TimeDelta delta ->
             case model.animationOn of
                 True ->
-                    ( { model
-                        | graphB = moveTowards model.graphB model.finalGrid
-                      }
-                    , Cmd.none
-                    )
-
+                    ( animateModel model, Cmd.none )
                 False ->
                     ( model, Cmd.none )
 
@@ -209,6 +205,26 @@ update msg model =
 -- This function is responsible for the actual rendering
 -- of the webpage. Any change in the model by update function is reflected in the
 -- webpage as view works with the latest model.
+
+animateModel : Model -> Model
+animateModel model =
+   if (distanceBetweenGraphAndGrid model.graphB model.finalGrid < 10)
+   then { model 
+            | animationOn = False
+            , graphB = morphGraph model.graphB model.finalGrid
+        }
+   else { model 
+            | graphB = moveTowards model.graphB model.finalGrid
+        }
+
+distanceBetweenGraphAndGrid : Graph -> Grid -> Float
+distanceBetweenGraphAndGrid graph grid =
+   let
+      listOfDistances =
+         List.map2 (\ver pos -> distance pos ver.pos) graph.vertices grid
+   in
+      List.sum listOfDistances
+
 
 
 view model =
@@ -336,7 +352,7 @@ advanceVertexTowardsPosition time vertex position =
         dif =
             sub position vertex.pos
     in
-    Math.Vector3.add vertex.pos (Math.Vector3.scale (1 / time) dif)
+      Math.Vector3.add vertex.pos (Math.Vector3.scale (1 / time) dif)
 
 
 type alias Pos =
@@ -935,8 +951,7 @@ makeStory model =
                     []
 
                 x :: xs ->
-                    [ "You have selected Vertex "
-                        ++ String.fromInt x.name
+                    [ "You have selected Vertex {{}}." |> String.Format.value (String.fromInt x.name)
                     , (connectedToThis x)
                         ++ getStringFromVertices relatedVertices
                     , whichYouCanSee
@@ -955,6 +970,8 @@ makeStory model =
                   """
                   You may want to visit other vertices to see that, each vertex
                   is connected to the same vertices in both graphs.
+                  Inspecting each vertices connectivity with other vertices, in both graphs you can 
+                  convince your self that the graphs are isomorphic to each other.
                   """
     in
       [ p [] storyPara
@@ -1103,11 +1120,17 @@ setLeft : List Int
 setLeft =
     [ 3, 8, 6, 1 ]
 
+setInner : List Int
+setInner =
+    [3, 1,6,8 ]
 
 setRight : List Int
 setRight =
     [ 7, 4, 2, 5 ]
 
+setOuter : List Int
+setOuter =
+    [7,4,2,5]
 
 
 -- Here as set of numbers in the left and the right are being tupled with list of vertical vector grids
@@ -1130,6 +1153,16 @@ bipartiteGrid =
             leftTupled ++ rightTupled
     in
     List.map (\( x, y ) -> y) (List.sortWith (\t1 t2 -> compare (Tuple.first t1) (Tuple.first t2)) totalGrid)
+
+innerPolygon = parametricPolygon 4 (vec3 40 40 0) (vec3 200 300 0) (pi/2)
+outerPolygon = parametricPolygon 4 (vec3 80 80 0) (vec3 200 300 0) 0
+
+starGrid =
+   let
+      positionsTupled =
+         List.map2 (\x y -> (x,y)) (setInner ++ setOuter) (innerPolygon ++ outerPolygon )
+   in
+   List.map (\(x,y) -> y) (List.sortWith (\t1 t2 -> compare (Tuple.first t1) (Tuple.first t2)) positionsTupled)
 
 
 
@@ -1163,3 +1196,4 @@ situateShape position scaleVec polygon =
 parametricPolygon : Int -> Vec3 -> Vec3 -> Float -> List Vec3
 parametricPolygon n scaleVec position startAngle =
     situateShape position scaleVec <| makePolygon startAngle n
+

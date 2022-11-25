@@ -5,14 +5,16 @@ isomorphismExplanation =
    Two graphs G1 and G2 are isomorphic if there is a one-one correspondence
    between the vertices of G1 and G2 such that the number of edges between any
    two vertices in G1 is equal to the number of edges joining the corresponding
-   vertices of G2. Although the graphs may appear to be different in appearance and in
+   vertices of G2. 
+   Although the graphs may appear to be different in appearance and in
    the labeling of the nodes and edges. But the way one vertex is connected to
    another in one graph is same as another. 
 
-   Animation
-
-   The animation shown here takes a graph and changes the positions of the vertices
-   without changing the edges which still connect the same vertices throughout the motion. 
+   The animation shown here takes a graph and changes the positions of the
+   vertices without changing the edges which still connect the same vertices
+   throughout the motion. In the animation if there is an edge between any two
+   vertices in a graph, then there is a edge between the corresponding vertices
+   in the other graphs as well.
    """
 hamiltonianExplanation =
    """
