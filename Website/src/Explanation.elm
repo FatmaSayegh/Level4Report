@@ -31,6 +31,12 @@ cliqueExplanation =
    other vertex in the graph which can be added to the set, while preserving the
    property that all the vertices are connected to every other.
    """
+
+maxCutExplanation =
+   """
+   A maximum cut, is partioning the vertices of a graph in two groups such that the number of edges between these two
+   groups is maximum.
+   """
 -- Just Like that!!!
 --vert1 : Vertex
 --vert1 = { name = "a"

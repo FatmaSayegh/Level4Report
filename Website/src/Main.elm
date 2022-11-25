@@ -70,6 +70,32 @@ someTransition =
         , animationOn = False
         }
 
+maxKCutTransition : ShapeTransition
+maxKCutTransition =
+    let
+        initialGraph =
+            makeGraph (PolygonCycleDoll 4) (vec3 200 100 0) (vec3 80 80 0) (pi / 4)
+    in
+        { graphA = initialGraph
+        , graphB = initialGraph
+        , finalGrid = bipartiteGrid
+        , animationOn = False
+        }
+
+
+makeEdgeWithTuple : (Int, Int) -> List Vertex -> Maybe Edge
+makeEdgeWithTuple tu vs =
+   case tu of
+      (name1, name2) ->
+         case (lookUpVertex name1 vs, lookUpVertex name2 vs) of
+            (Nothing, _ ) ->
+               Nothing
+            ( _, Nothing ) ->
+               Nothing
+            (Just vertexOne, Just vertexTwo) ->
+               Just (Edge vertexOne vertexTwo)
+   
+
 init : () -> ( Model, Cmd Msg )
 init _ =
     let
@@ -262,7 +288,7 @@ view model =
              ]
       MaxCut shapeTransition ->
          div []
-             [ H.div pageStyle [ explanationTwo, paneOne shapeTransition.graphA shapeTransion.graphB]
+             [ H.div pageStyle [ explanationTwo, paneOne shapeTransition.graphA shapeTransition.graphB]
              --, H.div pageStyle [ paneThree, explanationThree ]
              --, H.div pageStyle [ explanationFour, paneFour ]
              ]
@@ -1033,8 +1059,8 @@ paneTwo =
 
 explanationTwo =
     H.div leftSideStyle
-        [ H.h1 [] [ H.text "Hamiltonian Cycle" ]
-        , H.p [] [ H.text hamiltonianExplanation ]
+        [ H.h1 [] [ H.text "Max Cut" ]
+        , H.p [] [ H.text maxCutExplanation ]
         ]
 
 
