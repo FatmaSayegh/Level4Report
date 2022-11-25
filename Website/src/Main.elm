@@ -42,19 +42,33 @@ main =
 -- and a grid, graphB will transform into slowly.
 
 
-type alias Model =
+type Model =
+   Isomorphic ShapeTransition
+   | MaxCut ShapeTransition
+
+type alias ShapeTransition =
     { graphA : Graph
     , graphB : Graph
     , finalGrid : Grid
     , animationOn : Bool
     }
 
-
-
 -- Initializing the model
 -- init function initializes, a model and provides
 -- an instance of the model to the elm runtime.
 
+
+someTransition : ShapeTransition
+someTransition =
+    let
+        initialGraph =
+            makeGraph (PolygonCycleDoll 4) (vec3 200 100 0) (vec3 80 80 0) (pi / 4)
+    in
+        { graphA = initialGraph
+        , graphB = initialGraph
+        , finalGrid = bipartiteGrid
+        , animationOn = False
+        }
 
 init : () -> ( Model, Cmd Msg )
 init _ =
@@ -62,15 +76,14 @@ init _ =
         initialGraph =
             makeGraph (PolygonCycleDoll 4) (vec3 200 100 0) (vec3 80 80 0) (pi / 4)
 
-        model =
+        shapeTransition =
             { graphA = initialGraph
             , graphB = initialGraph
             , finalGrid = bipartiteGrid
-            --, finalGrid = starGrid
             , animationOn = False
             }
     in
-    ( model, Cmd.none )
+    ( Isomorphic shapeTransition, Cmd.none )
 
 
 
@@ -86,6 +99,7 @@ type Msg
     | AnimationToggle
     | AnimationStartOver
     | ToggleVertexStatus Int
+    | ToggleTopic
     | Other
 
 
@@ -122,6 +136,8 @@ keyToMsg value =
                      'p' ->
                          AnimationToggle
 
+                     't' ->
+                         ToggleTopic
                      _ ->
                          Other
 
@@ -151,70 +167,77 @@ chooseVertexFromInt x =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        TimeDelta delta ->
-            case model.animationOn of
-                True ->
-                    ( animateModel model, Cmd.none )
-                False ->
-                    ( model, Cmd.none )
-
-        HoverOver name ->
-            ( { model
-                | graphA = changeGlowVertex True name <| makeUnglowAllVertices model.graphA
-                , graphB = changeGlowVertex True name <| makeUnglowAllVertices model.graphB
-              }
-            , Cmd.none
-            )
-
-        MouseOut name ->
-            ( { model
-                | graphA = changeGlowVertex False name model.graphA
-                , graphB = changeGlowVertex False name model.graphB
-              }
-            , Cmd.none
-            )
-
-        ToggleVertexStatus name ->
-            ( { model
-                | graphA = toggleGlowVertex name <| makeUnglowAllVerticesBut name model.graphA
-                , graphB = toggleGlowVertex name <| makeUnglowAllVerticesBut name model.graphB
-              }
-            , Cmd.none
-            )
-
-        AnimationToggle ->
-            ( { model
-                | animationOn = not model.animationOn
-              }
-            , Cmd.none
-            )
-
-        AnimationStartOver ->
-            ( { model
-                | graphB = model.graphA
-              }
-            , Cmd.none
-            )
-
-        Other ->
-            ( model, Cmd.none )
+      ToggleTopic ->
+         case model of
+            Isomorphic x ->
+               ( MaxCut someTransition, Cmd.none)
+            MaxCut x ->
+               ( Isomorphic someTransition, Cmd.none)
+      _ ->
+         case model of
+           Isomorphic shapeTransition ->
+              ( Isomorphic (animateTransitionOfGraph msg shapeTransition), Cmd.none )
+           MaxCut shapeTransition ->
+              ( MaxCut (animateTransitionOfGraph msg shapeTransition), Cmd.none )
 
 
 
--- View the Model
--- This function is responsible for the actual rendering
--- of the webpage. Any change in the model by update function is reflected in the
--- webpage as view works with the latest model.
+animateTransitionOfGraph : Msg -> ShapeTransition -> ShapeTransition
+animateTransitionOfGraph msg shapeTransition =
+   case msg of
+       TimeDelta delta ->
+           case shapeTransition.animationOn of
+               True ->
+                   executeShapeTransition shapeTransition
+               False ->
+                   shapeTransition
+   
+       HoverOver name ->
+           { shapeTransition
+               | graphA = changeGlowVertex True name <| makeUnglowAllVertices shapeTransition.graphA
+               , graphB = changeGlowVertex True name <| makeUnglowAllVertices shapeTransition.graphB
+           }
+   
+       MouseOut name ->
+           { shapeTransition
+             | graphA = changeGlowVertex False name shapeTransition.graphA
+             , graphB = changeGlowVertex False name shapeTransition.graphB
+           }
+   
+       ToggleVertexStatus name ->
+           { shapeTransition
+               | graphA = toggleGlowVertex name <| makeUnglowAllVerticesBut name shapeTransition.graphA
+               , graphB = toggleGlowVertex name <| makeUnglowAllVerticesBut name shapeTransition.graphB
+           }
+   
+       AnimationToggle ->
+           { shapeTransition
+               | animationOn = not shapeTransition.animationOn
+           }
+   
+       AnimationStartOver ->
+           { shapeTransition
+               | graphB = shapeTransition.graphA
+           }
 
-animateModel : Model -> Model
-animateModel model =
-   if (distanceBetweenGraphAndGrid model.graphB model.finalGrid < 10)
-   then { model 
+       Other ->
+           shapeTransition
+
+       ToggleTopic ->
+           shapeTransition
+
+
+
+
+executeShapeTransition : ShapeTransition -> ShapeTransition
+executeShapeTransition shapeTransition =
+   if (distanceBetweenGraphAndGrid shapeTransition.graphB shapeTransition.finalGrid < 10)
+   then { shapeTransition 
             | animationOn = False
-            , graphB = morphGraph model.graphB model.finalGrid
+            , graphB = morphGraph shapeTransition.graphB shapeTransition.finalGrid
         }
-   else { model 
-            | graphB = moveTowards model.graphB model.finalGrid
+   else { shapeTransition 
+            | graphB = moveTowards shapeTransition.graphB shapeTransition.finalGrid
         }
 
 distanceBetweenGraphAndGrid : Graph -> Grid -> Float
@@ -226,14 +249,23 @@ distanceBetweenGraphAndGrid graph grid =
       List.sum listOfDistances
 
 
+-- View the Model
+-- This function is responsible for the actual rendering
+-- of the webpage. Any change in the model by update function is reflected in the
+-- webpage as view works with the latest model.
 
 view model =
-    div []
-        [ H.div pageStyle [ paneOne model.graphA model.graphB, explanationOne model ]
-        , H.div pageStyle [ explanationTwo, paneTwo ]
-        , H.div pageStyle [ paneThree, explanationThree ]
-        , H.div pageStyle [ explanationFour, paneFour ]
-        ]
+   case model of
+      Isomorphic shapeTransition ->
+         div []
+             [ H.div pageStyle [ paneOne shapeTransition.graphA shapeTransition.graphB, explanationOne shapeTransition ]
+             ]
+      MaxCut shapeTransition ->
+         div []
+             [ H.div pageStyle [ explanationTwo, paneOne shapeTransition.graphA shapeTransion.graphB]
+             --, H.div pageStyle [ paneThree, explanationThree ]
+             --, H.div pageStyle [ explanationFour, paneFour ]
+             ]
 
 
 
@@ -889,8 +921,8 @@ paneOne graphA graphB =
     H.div leftSideStyle [ anotherSvg graphA graphB ]
 
 
-explanationOne : Model -> H.Html Msg
-explanationOne model =
+explanationOne : ShapeTransition -> H.Html Msg
+explanationOne shapeTransition =
     H.div rightSideStyle
        (  [ H.h1 [] [ H.text "Graph Isomorphism" ]
           , p [] [ H.text isomorphismExplanation ]
@@ -905,7 +937,7 @@ explanationOne model =
                           else
                               "Play Animation"
                        )
-                          model.animationOn
+                          shapeTransition.animationOn
                       )
                   ]
               ]
@@ -917,15 +949,15 @@ explanationOne model =
                          """
                  ]
           ] 
-          ++ (makeStory model)
+          ++ (makeStory shapeTransition)
        )
 
 
-makeStory : Model -> List (H.Html Msg)
-makeStory model =
+makeStory : ShapeTransition -> List (H.Html Msg)
+makeStory shapeTransition =
     let
         glowing_vertices =
-            List.filter (\ver -> ver.glow) model.graphB.vertices
+            List.filter (\ver -> ver.glow) shapeTransition.graphB.vertices
 
         putyourmouse =
             """
@@ -934,10 +966,10 @@ makeStory model =
             """
 
         ( specialEdges, _ ) =
-            seperateEdges model.graphB
+            seperateEdges shapeTransition.graphB
 
         relatedVertices =
-            getHaloVertices model.graphB specialEdges
+            getHaloVertices shapeTransition.graphB specialEdges
 
         connectedToThis v =
             "And connected to vertex {{ }} are the vertices " |> String.Format.value (String.fromInt <| v.name)
