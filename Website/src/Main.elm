@@ -47,9 +47,9 @@ type Model =
    | MaxCut ShapeTransition
 
 type alias ShapeTransition =
-    { graphA : Graph
-    , graphB : Graph
-    , finalGrid : Grid
+    { graphA : Graph -- Will remain static
+    , graphB : Graph  -- Will move towards final Grid when animationOn is True
+    , finalGrid : Grid 
     , animationOn : Bool
     }
 
@@ -58,8 +58,8 @@ type alias ShapeTransition =
 -- an instance of the model to the elm runtime.
 
 
-someTransition : ShapeTransition
-someTransition =
+isomorphicTransition : ShapeTransition
+isomorphicTransition =
     let
         initialGraph =
             makeGraph (PolygonCycleDoll 4) (vec3 200 100 0) (vec3 80 80 0) (pi / 4)
@@ -70,18 +70,58 @@ someTransition =
         , animationOn = False
         }
 
-maxKCutTransition : ShapeTransition
-maxKCutTransition =
+maxcutTransition : ShapeTransition
+maxcutTransition =
     let
-        initialGraph =
-            makeGraph (PolygonCycleDoll 4) (vec3 200 100 0) (vec3 80 80 0) (pi / 4)
+        (initialGraph, finalGrid) =
+            maxCutGeometry
     in
         { graphA = initialGraph
         , graphB = initialGraph
-        , finalGrid = bipartiteGrid
+        , finalGrid = finalGrid
         , animationOn = False
         }
 
+maxCutGeometry : (Graph, Grid)
+maxCutGeometry =
+   let
+      position = (vec3 100 200 0) -- left center
+      verticalShift = (vec3 0 50 0)
+      verticalShiftGrid = (vec3 0 90 0)
+      horizontalShiftGrid = (vec3 200 0 0)
+      setA = [1,2,3,4]
+      setB = [5,6,7,8]
+      edgeTuples = [ (1, 8), (1, 7), (1, 6), (2, 5), (2, 6), (2, 7), (3, 7), (3, 8), (3, 6), (3, 4), (4, 5)]
+      setAGrid = parametricPolygon 4 (vec3 50 30 0) (sub position  verticalShift) (pi/3)
+      setBGrid = parametricPolygon 4 (vec3 50 30 0) (add position verticalShift) (pi/6)
+      setAGridPosition = (add (sub (sub position verticalShift) verticalShiftGrid) horizontalShiftGrid)
+      setBGridPosition = (add (add (add position verticalShift) verticalShiftGrid) horizontalShiftGrid)
+      setAFinalGrid = parametricPolygon 4 (vec3 30 20 0) setAGridPosition (pi/3)
+      setBFinalGrid = parametricPolygon 4 (vec3 30 20 0) setBGridPosition (pi/3)
+      vertices = 
+         List.map3 (\name g c -> Vertex name g c False) 
+            (setA ++ setB)
+            (setAGrid ++ setBGrid)
+            (listOfColors First 8)
+      edges =
+         makeEdgesWithTuples edgeTuples vertices
+
+      in
+      (Graph vertices edges, setAFinalGrid ++ setBFinalGrid)
+         
+
+
+makeEdgesWithTuples : List (Int, Int) -> List Vertex -> List Edge
+makeEdgesWithTuples tuples vertices =
+   case tuples of
+      [] ->
+         []
+      (tu::tus) ->
+         case (makeEdgeWithTuple tu vertices) of 
+            Nothing ->
+               makeEdgesWithTuples tus vertices
+            (Just edge) ->
+               edge :: makeEdgesWithTuples tus vertices
 
 makeEdgeWithTuple : (Int, Int) -> List Vertex -> Maybe Edge
 makeEdgeWithTuple tu vs =
@@ -94,7 +134,7 @@ makeEdgeWithTuple tu vs =
                Nothing
             (Just vertexOne, Just vertexTwo) ->
                Just (Edge vertexOne vertexTwo)
-   
+
 
 init : () -> ( Model, Cmd Msg )
 init _ =
@@ -196,9 +236,9 @@ update msg model =
       ToggleTopic ->
          case model of
             Isomorphic x ->
-               ( MaxCut someTransition, Cmd.none)
+               ( MaxCut maxcutTransition, Cmd.none)
             MaxCut x ->
-               ( Isomorphic someTransition, Cmd.none)
+               ( Isomorphic isomorphicTransition, Cmd.none)
       _ ->
          case model of
            Isomorphic shapeTransition ->
@@ -424,18 +464,6 @@ type alias Size =
 
 -- Scalable vector graphics
 
-
-anSvg =
-    S.svg
-        [ SA.width "100%"
-        , SA.height "auto"
-        , SA.viewBox "0 0 400 400"
-        ]
-        --(drawGraph graph3)
-        --(drawGraph graph4)
-        (drawGraph graph5 ++ drawGraph graph6 ++ drawGraph graph7 ++ drawGraph graph8)
-
-
 anotherSvg graphA graphB =
     S.svg
         [ SA.width "100%"
@@ -543,26 +571,6 @@ makeGraph graphType position size initialAngle =
             Graph allVertices (edgesCycleSetA ++ edgesCycleSetB ++ spokesSetASetB)
 
 
-graph5 =
-    makeGraph (PolygonCycle 6) (vec3 100 100 0) (vec3 50 50 0) 0
-
-
-graph6 =
-    makeGraph (PolygonFullyConnected 2) (vec3 300 100 0) (vec3 50 50 0) 0
-
-
-graph7 =
-    makeGraph (PolygonFullyConnected 3) (vec3 300 300 0) (vec3 50 50 0) 0
-
-
-graph8 =
-    makeGraph (PolygonFullyConnected 4) (vec3 100 300 0) (vec3 50 50 0) (pi / 2)
-
-
-graph9 =
-    makeGraph (PolygonCycleDoll 4) (vec3 200 100 0) (vec3 80 80 0) (pi / 4)
-
-
 
 -- Grid.
 -- A grid is a list of positions. This type is used to provide positions for vertices
@@ -647,30 +655,6 @@ lookUpVertex name vs =
             else
                 lookUpVertex name xs
 
-
-
--- newGraph = morphGraph graph9 (newGrid 4)
-
-
-transitionIntoIsomorph =
-    morphGraph graph9 bipartiteGrid
-
-
-newGrid n =
-    let
-        position =
-            vec3 200 300 0
-
-        size =
-            vec3 80 50 0
-
-        gridA =
-            parametricPolygon n size position 0
-
-        gridB =
-            parametricPolygon n (Math.Vector3.scale 0.5 size) position 0
-    in
-    gridA ++ gridB
 
 
 
@@ -1051,10 +1035,6 @@ getStringFromVertices vs =
 
         x :: xs ->
             String.fromInt x.name ++ ", " ++ getStringFromVertices xs
-
-
-paneTwo =
-    H.div rightSideStyle [ anSvg ]
 
 
 explanationTwo =
