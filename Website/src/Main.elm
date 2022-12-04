@@ -14,6 +14,9 @@ import Svg as S exposing (..)
 import Svg.Attributes as SA exposing (..)
 import Svg.Events as SE exposing (..)
 import String.Format
+import Point2d as Pt
+import LineSegment2d as Ln
+import Length as Len
 
 
 
@@ -46,11 +49,16 @@ type Model =
    Isomorphic ShapeTransition
    | MaxCut ShapeTransition
 
+type Token =
+   MakeKCut
+   | NoToken
+
 type alias ShapeTransition =
     { graphA : Graph -- Will remain static
     , graphB : Graph  -- Will move towards final Grid when animationOn is True
     , finalGrid : Grid 
     , animationOn : Bool
+    , specialToken : Token
     }
 
 -- Initializing the model
@@ -68,6 +76,7 @@ isomorphicTransition =
         , graphB = initialGraph
         , finalGrid = bipartiteGrid
         , animationOn = False
+        , specialToken = NoToken
         }
 
 maxcutTransition : ShapeTransition
@@ -80,6 +89,7 @@ maxcutTransition =
         , graphB = initialGraph
         , finalGrid = finalGrid
         , animationOn = False
+        , specialToken = NoToken
         }
 
 maxCutGeometry : (Graph, Grid)
@@ -91,13 +101,14 @@ maxCutGeometry =
       horizontalShiftGrid = (vec3 200 0 0)
       setA = [1,2,3,4]
       setB = [5,6,7,8]
-      edgeTuples = [ (1, 8), (1, 7), (1, 6), (2, 5), (2, 6), (2, 7), (3, 7), (3, 8), (3, 6), (3, 4), (4, 5)]
+      --edgeTuples = [ (1, 8), (1, 7), (1, 6), (2, 5), (2, 6), (2, 7), (3, 7), (3, 8), (3, 6), (3, 4), (4, 5)]
+      edgeTuples = [ (1, 8), (1, 7), (2, 6), (2, 7), (3, 5), (3, 7), (3, 8), (3, 6), (3, 4), (4, 5)]
       setAGrid = parametricPolygon 4 (vec3 50 30 0) (sub position  verticalShift) (pi/3)
       setBGrid = parametricPolygon 4 (vec3 50 30 0) (add position verticalShift) (pi/6)
       setAGridPosition = (add (sub (sub position verticalShift) verticalShiftGrid) horizontalShiftGrid)
       setBGridPosition = (add (add (add position verticalShift) verticalShiftGrid) horizontalShiftGrid)
-      setAFinalGrid = parametricPolygon 4 (vec3 30 20 0) setAGridPosition (pi/3)
-      setBFinalGrid = parametricPolygon 4 (vec3 30 20 0) setBGridPosition (pi/3)
+      setAFinalGrid = parametricPolygon 4 (vec3 60 10 0) setAGridPosition (pi/3)
+      setBFinalGrid = parametricPolygon 4 (vec3 60 10 0) setBGridPosition (pi/3)
       vertices = 
          List.map3 (\name g c -> Vertex name g c False) 
             (setA ++ setB)
@@ -147,6 +158,7 @@ init _ =
             , graphB = initialGraph
             , finalGrid = bipartiteGrid
             , animationOn = False
+            , specialToken = NoToken
             }
     in
     ( Isomorphic shapeTransition, Cmd.none )
@@ -166,6 +178,7 @@ type Msg
     | AnimationStartOver
     | ToggleVertexStatus Int
     | ToggleTopic
+    | MaxCutLine
     | Other
 
 
@@ -204,9 +217,12 @@ keyToMsg value =
 
                      't' ->
                          ToggleTopic
+
+                     'l' ->
+                         MaxCutLine 
+
                      _ ->
                          Other
-
         _ ->
             Other
 
@@ -242,14 +258,50 @@ update msg model =
       _ ->
          case model of
            Isomorphic shapeTransition ->
-              ( Isomorphic (animateTransitionOfGraph msg shapeTransition), Cmd.none )
+              ( Isomorphic (animateIsomorphicTransition msg shapeTransition), Cmd.none )
            MaxCut shapeTransition ->
-              ( MaxCut (animateTransitionOfGraph msg shapeTransition), Cmd.none )
+              ( MaxCut (animateMaxCutTransition msg shapeTransition), Cmd.none )
 
 
+animateMaxCutTransition : Msg -> ShapeTransition -> ShapeTransition
+animateMaxCutTransition  msg shapeTransition =
+   case msg of
+       TimeDelta delta ->
+           case shapeTransition.animationOn of
+               True ->
+                   executeShapeTransition shapeTransition
+               False ->
+                   shapeTransition
 
-animateTransitionOfGraph : Msg -> ShapeTransition -> ShapeTransition
-animateTransitionOfGraph msg shapeTransition =
+       AnimationToggle ->
+           { shapeTransition
+               | animationOn = not shapeTransition.animationOn
+           }
+
+       AnimationStartOver ->
+           { shapeTransition
+               | graphB = shapeTransition.graphA
+           }
+
+       MaxCutLine ->
+           { shapeTransition
+               | specialToken = toggleToken shapeTransition.specialToken
+           }
+
+
+       _ ->
+           shapeTransition
+
+toggleToken : Token -> Token
+toggleToken token =
+   case token of
+      MakeKCut ->
+         NoToken
+      NoToken ->
+         MakeKCut
+
+animateIsomorphicTransition : Msg -> ShapeTransition -> ShapeTransition
+animateIsomorphicTransition msg shapeTransition =
    case msg of
        TimeDelta delta ->
            case shapeTransition.animationOn of
@@ -291,6 +343,8 @@ animateTransitionOfGraph msg shapeTransition =
 
        ToggleTopic ->
            shapeTransition
+       _ ->
+           shapeTransition
 
 
 
@@ -305,6 +359,7 @@ executeShapeTransition shapeTransition =
    else { shapeTransition 
             | graphB = moveTowards shapeTransition.graphB shapeTransition.finalGrid
         }
+
 
 distanceBetweenGraphAndGrid : Graph -> Grid -> Float
 distanceBetweenGraphAndGrid graph grid =
@@ -328,7 +383,7 @@ view model =
              ]
       MaxCut shapeTransition ->
          div []
-             [ H.div pageStyle [ explanationTwo, paneOne shapeTransition.graphA shapeTransition.graphB]
+             [ H.div pageStyle [ explanationTwo shapeTransition, paneTwo shapeTransition]
              --, H.div pageStyle [ paneThree, explanationThree ]
              --, H.div pageStyle [ explanationFour, paneFour ]
              ]
@@ -464,28 +519,16 @@ type alias Size =
 
 -- Scalable vector graphics
 
-anotherSvg graphA graphB =
+displaySvg elements =
     S.svg
         [ SA.width "100%"
         , SA.height "auto"
         , SA.viewBox "0 0 400 400"
         ]
-        --(drawGraph graph3)
-        --(drawGraph graph4)
-        (drawGraph graphA ++ drawGraph graphB)
+        elements
 
 
 
---anotherSvg graph =
---    S.svg
---     [ SA.width "100%"
---     , SA.height "auto"
---     , SA.viewBox "0 0 400 400"
---     ]
---     --(drawGraph graph3)
---     --(drawGraph graph4)
---     ((drawGraph graph9) ++ (drawGraph transitionIntoIsomorph))
--- Vertex, Edge and Graph types.
 
 
 type alias Vertex =
@@ -883,6 +926,16 @@ ccircle size pos color name =
         ]
         []
 
+drawIntersectionPoint : Size -> Vec3 -> S.Svg Msg
+drawIntersectionPoint size pos =
+    S.circle
+        [ SA.cx (String.fromInt <| round <| getX pos)
+        , SA.cy (String.fromInt <| round <| getY pos)
+        , SA.r (String.fromInt size)
+        , SA.style ("fill: " ++ "blue" ++ ";")
+        ]
+        []
+
 
 writeText : String -> Vec3 -> S.Svg msg
 writeText text pos =
@@ -928,8 +981,162 @@ lline veca vecb =
 
 
 paneOne graphA graphB =
-    H.div leftSideStyle [ anotherSvg graphA graphB ]
+    H.div leftSideStyle [ displaySvg ((drawGraph graphA) ++ (drawGraph graphB)) ]
 
+paneTwo shapeTransition =
+   let
+      graphA = shapeTransition.graphA
+      graphB = shapeTransition.graphB
+   in
+   case shapeTransition.specialToken of
+      MakeKCut ->
+         let
+            cutLine = makeCutLine shapeTransition
+         in
+         H.div leftSideStyle [ displaySvg ((drawGraph graphA) ++ (drawGraph graphB) ++ (drawCutLine cutLine)) ]
+
+      NoToken ->
+         H.div leftSideStyle [ displaySvg ((drawGraph graphA) ++ (drawGraph graphB)) ]
+
+
+
+makeCutLine shapeTransition =
+   let
+      start
+         = vec3 230 155 0
+      end
+         = vec3 370 155 0
+
+      setA = [1,2,3,4]
+
+      setB = [5,6,7,8]
+
+      edgeLines =
+         findEdgeLines shapeTransition.graphB.edges
+
+      intersectionPoints = 
+         List.filterMap (findIntersection (start, end)) edgeLines
+
+   in
+   CutLine start end (intersectionPoints)
+
+findEdgeLines : List Edge -> List (Vec3, Vec3)
+findEdgeLines edges =
+   case edges of
+      (x::xs) ->
+         (x.vertexOne.pos, x.vertexTwo.pos) :: findEdgeLines xs
+      [] ->
+         []
+
+findIntersection : (Vec3, Vec3) -> (Vec3, Vec3) -> Maybe Vec3
+findIntersection lineOne lineTwo =
+   let
+      (p11, p12) = 
+         lineOne
+      point1 =
+         Pt.meters (getX p11) (getY p11)
+      point2 =
+         Pt.meters (getX p12) (getY p12)
+      line1 =
+         Ln.fromEndpoints (point1, point2)
+
+      (p21, p22) =
+         lineTwo
+      point3 =
+         Pt.meters (getX p21) (getY p21)
+      point4 =
+         Pt.meters (getX p22) (getY p22)
+      line2 =
+         Ln.fromEndpoints (point3, point4)
+
+   in
+   case (Ln.intersectionPoint line1 line2) of
+      Nothing ->
+         Nothing
+      Just poinIn ->
+           let 
+               x = poinIn |> Pt.xCoordinate |> Len.inMeters
+
+               y = poinIn |> Pt.yCoordinate |> Len.inMeters
+           in
+           Just (vec3 x y 0)
+         
+
+      
+
+
+
+type CutLine =
+   CutLine Vec3 Vec3 (List Vec3)
+
+drawCutLine cutLine =
+    case cutLine of
+    CutLine start end l ->
+      [(line start end)] ++ (drawIntersectionPoints l)
+
+drawIntersectionPoints points =
+   List.map (drawIntersectionPoint 3) points
+
+explanationTwo shapeTransition=
+    H.div leftSideStyle
+        [ H.h1 [] [ H.text "Max Cut" ]
+        , H.p [] [ H.text maxCutExplanation ]
+        , p []
+            [ H.button
+                [ HE.onClick AnimationToggle ]
+                  [ H.text
+                      ((\switch ->
+                          if switch then
+                              "Pause Animation"
+
+                          else
+                              "Play Animation"
+                       )
+                          shapeTransition.animationOn
+                      )
+                  ]
+            ]
+        , p [] [ H.button [ HE.onClick AnimationStartOver ] [ H.text "Animation Restart" ] ]
+        , p [] [H.text 
+                       """
+                       In the animation, the vertices are being segregated into
+                       two sets, such that the number of edges passing from
+                       vertices in one set to the vertices in another set is
+                       more than any other way the vertices of the graph could
+                       have been segregated.  In other words the problem of max
+                       cut is to identify such partition of the vertices of the
+                       graph that the above objective is satisfied.
+                       """
+               ]
+        , p []
+            [ H.button
+                [ HE.onClick MaxCutLine ]
+                [ H.text
+                    ((\token ->
+                        if token == MakeKCut then
+                            "Remove Max Cut Line"
+
+                        else
+                            "Put Max Cut Line "
+                     )
+                        shapeTransition.specialToken
+                     ) 
+                ]
+            ]
+         , p [] [ H.text (if shapeTransition.specialToken == MakeKCut
+                           then
+                              """
+                              The Max cut line, seperates the two sets of vertices. The intersection
+                              between the cut line and the edges are shown as blue dots. As you should
+                              verify, they are 9 in number. This number is equal to number of edges from
+                              the set of vertices at the top going to the vertices at the bottom.
+                              """
+                           else
+                              ""
+                        )
+                ]
+        ]
+   
 
 explanationOne : ShapeTransition -> H.Html Msg
 explanationOne shapeTransition =
@@ -1037,11 +1244,6 @@ getStringFromVertices vs =
             String.fromInt x.name ++ ", " ++ getStringFromVertices xs
 
 
-explanationTwo =
-    H.div leftSideStyle
-        [ H.h1 [] [ H.text "Max Cut" ]
-        , H.p [] [ H.text maxCutExplanation ]
-        ]
 
 
 paneThree =
