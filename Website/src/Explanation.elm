@@ -37,45 +37,18 @@ maxCutExplanation =
    A maximum cut, is partioning the vertices of a graph in two groups such that the number of edges between these two
    groups is maximum.
    """
--- Just Like that!!!
---vert1 : Vertex
---vert1 = { name = "a"
---       , pos = {x = 100, y = 100}
---       }
---
---vert2 : Vertex
---vert2 = { name = "b"
---       , pos = {x = 300, y = 100}
---       }
---
---vert3 : Vertex
---vert3 = { name = "c"
---       , pos = {x = 200, y = 273}
---       }
---
---vert4 : Vertex
---vert4 = { name = "d"
---       , pos = {x = 400, y = 400}
---       }
---
---edge1 : Edge
---edge1 = { vertexOne = vert1
---        , vertexTwo = vert2
---        }
---
---edge2 : Edge
---edge2 = { vertexOne = vert1
---        , vertexTwo = vert3
---        }
---
---edge3 : Edge
---edge3 = { vertexOne = vert2
---        , vertexTwo = vert3
---        }
---
---graph1 : Graph
---graph1 =
---   {
---      vertices = [vert1, vert2, vert3]
---   ,  edges = [edge1, edge2, edge3]
---   }
+
+
+coloringExplanation =
+   """
+   The graph coloring problems objective is to assign colors to the vertices of a graph such that no to adjacent
+   vertices have the same color such that the number of colors utilized are kept at minimum.
+   The graph shown in the picture, needs three colors to color it properly.
+   """
+
+howToColor =
+   """
+   Choose a color from the color palette by clicking on one of the colors and apply it to one of the vertices.
+   While coloring the graph make sure that no two adjacent vertices are colored the same. For if they are, the
+   edges connecting them will be displayed differently to let you know of the mistake.
+   """

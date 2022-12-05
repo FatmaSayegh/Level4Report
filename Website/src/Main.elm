@@ -48,6 +48,13 @@ main =
 type Model =
    Isomorphic ShapeTransition
    | MaxCut ShapeTransition
+   | GraphColoring ColorDisplay
+
+type alias ColorDisplay =
+   { graphA : Graph
+   , chosenColor : Color
+   , defaultColor : Color
+   }
 
 type Token =
    MakeKCut
@@ -174,11 +181,14 @@ type Msg
     = TimeDelta Float
     | HoverOver Int
     | MouseOut Int
+    | VertexClicked Int
     | AnimationToggle
     | AnimationStartOver
     | ToggleVertexStatus Int
     | ToggleTopic
     | MaxCutLine
+    | ColoringSelectColor Color
+    | VertexNonColor
     | Other
 
 
@@ -215,12 +225,13 @@ keyToMsg value =
                      'p' ->
                          AnimationToggle
 
-                     't' ->
+                     'n' ->
                          ToggleTopic
 
                      'l' ->
                          MaxCutLine 
-
+                     'w' ->
+                         VertexNonColor
                      _ ->
                          Other
         _ ->
@@ -254,6 +265,8 @@ update msg model =
             Isomorphic x ->
                ( MaxCut maxcutTransition, Cmd.none)
             MaxCut x ->
+               (GraphColoring colorDisplay, Cmd.none)
+            GraphColoring x ->
                ( Isomorphic isomorphicTransition, Cmd.none)
       _ ->
          case model of
@@ -261,7 +274,95 @@ update msg model =
               ( Isomorphic (animateIsomorphicTransition msg shapeTransition), Cmd.none )
            MaxCut shapeTransition ->
               ( MaxCut (animateMaxCutTransition msg shapeTransition), Cmd.none )
+           GraphColoring display ->
+              ( goColor display msg, Cmd.none)
 
+goColor : ColorDisplay -> Msg -> Model
+goColor display msg =
+   case msg of
+      ColoringSelectColor color ->
+         let
+            newDisplay = 
+               {display |
+                  chosenColor = color
+               }
+         in
+         GraphColoring newDisplay
+
+      VertexClicked name ->
+         let
+            newGraph = changeColorOfVertex name display.chosenColor display.graphA 
+            newDisplay = {display |
+                              graphA = newGraph }
+         in
+         GraphColoring newDisplay
+
+      VertexNonColor ->
+         let
+            whiteVertices = 
+               List.map (\v ->
+                  {v | color = (Color.rgb 1 1 1)})
+                  display.graphA.vertices
+
+            createEdge =
+               updateEdge whiteVertices
+
+            newGraph = Graph whiteVertices (List.map createEdge display.graphA.edges)
+
+            newDisplay = {display |
+                              graphA = newGraph }
+         in
+         GraphColoring newDisplay
+
+      _ ->
+         GraphColoring display
+             
+
+changeColorOfVertex : Int -> Color -> Graph -> Graph
+changeColorOfVertex name color graph =
+   let 
+      newVertices =
+         List.map (\v ->
+                     if v.name == name
+                     then
+                        {v | color = color } 
+                     else
+                        v)
+                  graph.vertices
+
+      createEdge =
+         updateEdge newVertices
+   in
+   Graph newVertices (List.map createEdge graph.edges)
+
+      
+colorDisplay : ColorDisplay
+colorDisplay = 
+   let
+      initialGraph =
+         makeGraph (PolygonCycleDoll 5) (vec3 200 100 0) (vec3 80 80 0) (pi /4)
+      whiteVertices = 
+         List.map (\v ->
+            {v | color = (Color.rgb 1 1 1)})
+            initialGraph.vertices
+      createEdge =
+         updateEdge whiteVertices
+      newGraph = Graph whiteVertices (List.map createEdge initialGraph.edges)
+   in
+      ColorDisplay newGraph (Color.rgb 1 1 1) (Color.rgb 1 1 1)
+
+--isomorphicTransition : ShapeTransition
+--isomorphicTransition =
+--    let
+--        initialGraph =
+--            makeGraph (PolygonCycleDoll 4) (vec3 200 100 0) (vec3 80 80 0) (pi / 4)
+--    in
+--        { graphA = initialGraph
+--        , graphB = initialGraph
+--        , finalGrid = bipartiteGrid
+--        , animationOn = False
+--        , specialToken = NoToken
+--        }
 
 animateMaxCutTransition : Msg -> ShapeTransition -> ShapeTransition
 animateMaxCutTransition  msg shapeTransition =
@@ -381,11 +482,17 @@ view model =
          div []
              [ H.div pageStyle [ paneOne shapeTransition.graphA shapeTransition.graphB, explanationOne shapeTransition ]
              ]
+
       MaxCut shapeTransition ->
          div []
              [ H.div pageStyle [ explanationTwo shapeTransition, paneTwo shapeTransition]
-             --, H.div pageStyle [ paneThree, explanationThree ]
-             --, H.div pageStyle [ explanationFour, paneFour ]
+             ]
+
+      GraphColoring display ->
+         div []
+             [ H.div pageStyle [ paneThree display, 
+                                 explanationColoring display 
+                               ]
              ]
 
 
@@ -765,9 +872,9 @@ drawSelectedVertex : Vertex -> S.Svg Msg
 drawSelectedVertex  v =
     ccircle 13 v.pos "#BF8915" v.name
 
-writeVertexName : Vertex -> S.Svg msg
+writeVertexName : Vertex -> S.Svg Msg
 writeVertexName v =
-    writeText (String.fromInt v.name) v.pos
+    writeName v.name v.pos
 
 
 drawEdge : Edge -> S.Svg msg
@@ -804,6 +911,19 @@ drawGraph g =
         ++ List.map drawSelectedVertex selectedVertices
         ++ List.map writeVertexName g.vertices
 
+drawGraphForColoring g =
+    let
+      verticesOfSameColor edge =
+         edge.vertexOne.color == edge.vertexTwo.color && edge.vertexOne.color /= (Color.rgb 1 1 1)
+
+      normalEdges = List.filter (\e -> not (verticesOfSameColor e)) g.edges 
+
+      miscoloredEdges = List.filter (\e -> verticesOfSameColor e) g.edges 
+    in
+    List.map drawEdge normalEdges
+        ++ List.map drawSpecialEdge miscoloredEdges
+        ++ List.map drawVertex g.vertices
+        ++ List.map writeVertexName g.vertices
 
 getHaloVertices : Graph -> List Edge -> List Vertex
 getHaloVertices g es =
@@ -910,6 +1030,7 @@ circle size pos color name =
         , SA.style ("fill: " ++ Color.toCssString color ++ ";")
         , SE.onMouseOver (HoverOver name)
         , SE.onMouseOut (MouseOut name)
+        , SE.onClick (VertexClicked name)
         ]
         []
 
@@ -937,18 +1058,19 @@ drawIntersectionPoint size pos =
         []
 
 
-writeText : String -> Vec3 -> S.Svg msg
-writeText text pos =
+writeName : Int -> Vec3 -> S.Svg Msg
+writeName name pos =
     S.text_
         [ SA.x (String.fromInt <| round <| getX pos)
         , SA.y (String.fromInt <| round <| getY pos)
         , SA.class "small"
         , SA.fontSize "7px"
         , SA.textAnchor "middle"
+        , SE.onClick (VertexClicked name)
 
         -- , SA.stroke "dark grey"
         ]
-        [ S.text text ]
+        [ S.text (String.fromInt name) ]
 
 
 
@@ -998,7 +1120,39 @@ paneTwo shapeTransition =
       NoToken ->
          H.div leftSideStyle [ displaySvg ((drawGraph graphA) ++ (drawGraph graphB)) ]
 
+paneThree display =
+   H.div leftSideStyle [ displaySvg ((drawGraphForColoring display.graphA) ++ (colorPallete display)) ]
 
+
+colorPallete : ColorDisplay -> List (S.Svg Msg)
+colorPallete display=
+   let
+      sizeBig = (vec3 35 20 0)
+      sizeSmall = (vec3 20 20 0)
+      sizeOfColor color = if display.chosenColor == color
+                then sizeBig
+                else sizeSmall
+      red = (Color.rgb 1 0 0)
+      green = (Color.rgb 0 1 0)
+      blue = (Color.rgb 0 0 1)
+      squareRed = makeSquare (vec3 100 300 0) (sizeOfColor red) red
+      squareGreen = makeSquare (vec3 100 330 0) (sizeOfColor green) green 
+      squareBlue = makeSquare (vec3 100 360 0) (sizeOfColor blue) blue 
+   in
+   [squareRed, squareGreen, squareBlue]
+
+
+makeSquare : Vec3 -> Vec3 -> Color -> S.Svg Msg
+makeSquare pos size color =
+   S.rect
+      [ SA.x (String.fromInt <| round <| getX pos)
+      , SA.y (String.fromInt <| round <| getY pos)
+      , SA.width (String.fromInt <| round <| getX size)
+      , SA.height (String.fromInt <| round <| getY size)
+      , SA.style ("fill: " ++ Color.toCssString color ++ ";")
+      , SE.onClick (ColoringSelectColor color)
+      ]
+      []
 
 makeCutLine shapeTransition =
    let
@@ -1137,6 +1291,70 @@ explanationTwo shapeTransition=
                 ]
         ]
    
+explanationColoring : ColorDisplay -> H.Html Msg
+explanationColoring colorDisp =
+    let
+      verticesOfSameColor edge =
+         edge.vertexOne.color == edge.vertexTwo.color 
+                              && edge.vertexOne.color /= (Color.rgb 1 1 1)
+
+      miscoloredEdges = List.filter 
+                           (\e -> verticesOfSameColor e) colorDisp.graphA.edges 
+      coloredVertices = List.filter  
+                              (\v -> v.color /= Color.rgb 1 1 1 ) 
+                              colorDisp.graphA.vertices
+
+    in
+    H.div rightSideStyle
+       (  [ H.h1 [] [ H.text "Graph Coloring" ]
+          , p [] [ H.text coloringExplanation  ]
+          , p [] [ H.text howToColor ]
+          , p [] [ H.text
+                     """
+                     As a challenge you may try to color
+                     the graph with only two colors and see if
+                     it is feasible.
+                     """
+                 ]
+          , p [] [ H.button
+                     [ HE.onClick VertexNonColor ]
+                     [ H.text "Reset Colors" ]
+                 ] 
+          , p [] [ H.text <|
+                           if (List.isEmpty coloredVertices)
+                           then 
+                              "" 
+                           else
+                              "Coloring has started."
+                              
+                 ]
+          , p [] [ H.text <|
+                           if (List.isEmpty miscoloredEdges)
+                           then
+                              ""
+                           else
+                              String.join " "  <| List.map miscolorText miscoloredEdges
+                 ]
+          , p [] [ H.text <|
+                           if (List.isEmpty miscoloredEdges)
+                           then
+                              ""
+                           else
+                              """
+                              Try another color combination.
+                              Remember the rule; No two adjacent
+                              vertices must have the same color!
+                              """
+                 ]
+          ]
+       )
+miscolorText : Edge -> String
+miscolorText e =
+   "Vertex " ++ (String.fromInt e.vertexOne.name) 
+             ++ " and vertex "
+             ++ (String.fromInt e.vertexTwo.name)
+             ++ " which are adjacent to each other are colored with the same color."
+
 
 explanationOne : ShapeTransition -> H.Html Msg
 explanationOne shapeTransition =
@@ -1246,8 +1464,8 @@ getStringFromVertices vs =
 
 
 
-paneThree =
-    H.div leftSideStyle [ H.text "Graph" ]
+--paneThree =
+ --   H.div leftSideStyle [ H.text "Graph" ]
 
 
 explanationThree =
