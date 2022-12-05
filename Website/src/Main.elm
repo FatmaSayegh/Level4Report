@@ -1346,6 +1346,19 @@ explanationColoring colorDisp =
                               vertices must have the same color!
                               """
                  ]
+
+          , p [] [ H.text <|
+                           if (List.isEmpty miscoloredEdges
+                                 && List.length coloredVertices 
+                                    == List.length colorDisp.graphA.vertices)
+                           then
+                              """
+                              Congratulations! Graph has been colored fully and correctly.
+                              i.e. No two adjacent vertices have the same color.
+                              """
+                           else
+                              ""
+                 ]
           ]
        )
 miscolorText : Edge -> String
