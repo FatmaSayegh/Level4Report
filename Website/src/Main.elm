@@ -49,11 +49,16 @@ type Model =
    Isomorphic ShapeTransition
    | MaxCut ShapeTransition
    | GraphColoring ColorDisplay
+   | VertexCover VertexCoverDisplay
 
 type alias ColorDisplay =
    { graphA : Graph
    , chosenColor : Color
    , defaultColor : Color
+   }
+
+type alias VertexCoverDisplay =
+   { graphA : Graph
    }
 
 type Token =
@@ -114,8 +119,8 @@ maxCutGeometry =
       setBGrid = parametricPolygon 4 (vec3 50 30 0) (add position verticalShift) (pi/6)
       setAGridPosition = (add (sub (sub position verticalShift) verticalShiftGrid) horizontalShiftGrid)
       setBGridPosition = (add (add (add position verticalShift) verticalShiftGrid) horizontalShiftGrid)
-      setAFinalGrid = parametricPolygon 4 (vec3 60 10 0) setAGridPosition (pi/3)
-      setBFinalGrid = parametricPolygon 4 (vec3 60 10 0) setBGridPosition (pi/3)
+      setAFinalGrid = parametricPolygon 4 (vec3 70 10 0) setAGridPosition (pi/3)
+      setBFinalGrid = parametricPolygon 4 (vec3 70 10 0) setBGridPosition (pi/3)
       vertices = 
          List.map3 (\name g c -> Vertex name g c False) 
             (setA ++ setB)
@@ -267,6 +272,8 @@ update msg model =
             MaxCut x ->
                (GraphColoring colorDisplay, Cmd.none)
             GraphColoring x ->
+               ( VertexCover vertexCoverDisplay, Cmd.none)
+            VertexCover x ->
                ( Isomorphic isomorphicTransition, Cmd.none)
       _ ->
          case model of
@@ -276,6 +283,34 @@ update msg model =
               ( MaxCut (animateMaxCutTransition msg shapeTransition), Cmd.none )
            GraphColoring display ->
               ( goColor display msg, Cmd.none)
+           VertexCover display ->
+              ( goCover display msg, Cmd.none)
+
+goCover : VertexCoverDisplay -> Msg -> Model
+goCover display msg =
+   case msg of
+       ToggleVertexStatus name ->
+           let
+               newDisplay =
+                  { display
+                      | graphA = toggleGlowVertex name display.graphA
+                  }
+            in
+            VertexCover newDisplay
+
+       VertexClicked name ->
+           let
+               newDisplay =
+                  { display
+                      | graphA = toggleGlowVertex name display.graphA
+                  }
+            in
+            VertexCover newDisplay
+
+       _ ->
+            VertexCover display
+
+
 
 goColor : ColorDisplay -> Msg -> Model
 goColor display msg =
@@ -335,7 +370,15 @@ changeColorOfVertex name color graph =
    in
    Graph newVertices (List.map createEdge graph.edges)
 
-      
+
+vertexCoverDisplay : VertexCoverDisplay     
+vertexCoverDisplay = 
+   let
+        initialGraph =
+            makeGraph (PolygonCycleDoll 4) (vec3 200 100 0) (vec3 80 80 0) (pi / 4)
+   in
+      VertexCoverDisplay initialGraph
+
 colorDisplay : ColorDisplay
 colorDisplay = 
    let
@@ -492,6 +535,12 @@ view model =
          div []
              [ H.div pageStyle [ paneThree display, 
                                  explanationColoring display 
+                               ]
+             ]
+      VertexCover display ->
+         div []
+             [ H.div pageStyle [ explanationCover display 
+                               , paneFour display
                                ]
              ]
 
@@ -911,6 +960,25 @@ drawGraph g =
         ++ List.map drawSelectedVertex selectedVertices
         ++ List.map writeVertexName g.vertices
 
+drawGraphForCover g =
+    let
+        ( specialEdges, normalEdges ) =
+            seperateEdges g
+
+        haloVertices =
+            getHaloVertices g specialEdges
+
+        selectedVertices =
+            List.filter (\ver -> ver.glow) g.vertices
+         
+    in
+    List.map drawEdge normalEdges
+        ++ List.map drawSpecialEdge specialEdges
+    --    ++ List.map drawGoldenCircle haloVertices
+        ++ List.map drawVertex g.vertices
+        ++ List.map drawSelectedVertex selectedVertices
+        ++ List.map writeVertexName g.vertices
+
 drawGraphForColoring g =
     let
       verticesOfSameColor edge =
@@ -1124,6 +1192,10 @@ paneThree display =
    H.div leftSideStyle [ displaySvg ((drawGraphForColoring display.graphA) ++ (colorPallete display)) ]
 
 
+paneFour display =
+   H.div leftSideStyle 
+         [ displaySvg (drawGraphForCover display.graphA) ]
+  
 colorPallete : ColorDisplay -> List (S.Svg Msg)
 colorPallete display=
    let
@@ -1157,7 +1229,7 @@ makeSquare pos size color =
 makeCutLine shapeTransition =
    let
       start
-         = vec3 230 155 0
+         = vec3 210 155 0
       end
          = vec3 370 155 0
 
@@ -1291,6 +1363,98 @@ explanationTwo shapeTransition=
                 ]
         ]
    
+explanationCover : VertexCoverDisplay -> H.Html Msg
+explanationCover display =
+    let
+        selected_vertices =
+            List.filter (\ver -> ver.glow) display.graphA.vertices
+
+        noOfSelectedVertices =
+            List.length selected_vertices
+
+        ( coveredEdges, _ ) =
+            seperateEdges display.graphA
+
+        noCoveredEdges =
+            List.length coveredEdges
+
+
+        totalEdges =
+            List.length display.graphA.edges
+
+        totalVertices =
+            List.length display.graphA.vertices
+
+        edgesRemainig = 
+            totalEdges - noCoveredEdges
+        
+    in
+    H.div rightSideStyle
+       [ H.h1 [] [ H.text "Vertex Cover" ]
+       , p [] [ H.text vertexCoverExplanation ]
+       , p [] [ H.text
+                  """
+                  In the task on the right, selecting a vertex will cover all
+                  the edges incident on it. Your objective is to select the
+                  minimum number of vertices such that, all the edges of the
+                  graph are covered.
+                  """
+              ]
+       , p [] [ H.text
+                  """
+                  To select a vertex you can press, the vertex number
+                  on the keyboard. To de-select, do the same again.
+                  """
+              ]
+
+       , p [] [ H.text 
+                  (if noOfSelectedVertices == 0
+                  then
+                     ""
+                  else
+                     "You have selected a total of "
+                     ++ (String.fromInt noOfSelectedVertices)
+                     ++ " vertices out of "
+                     ++ (String.fromInt totalVertices)
+                     ++ " vertices. "
+                  )
+              ]
+       , p [] [ H.text 
+                  (if noCoveredEdges == 0
+                  then
+                     ""
+                  else
+                     "You have covered a total of "
+                     ++ (String.fromInt noCoveredEdges)
+                     ++ " edges out of a total of "
+                     ++ (String.fromInt totalEdges)
+                     ++ " edges. "
+                  )
+              ]
+       , p [] [ H.text
+                  (if edgesRemainig == 0
+                  then
+                     "Congratulations, you have covered all "
+                     ++ (String.fromInt noCoveredEdges)
+                     ++ " edges. "
+                     ++ "You have done so by selecting the vertices "
+                     ++ getStringFromVertices selected_vertices
+                     ++ "."
+                     ++ " Therefore a vertex cover of this graph is the set vertices "
+                     ++ getStringFromVertices selected_vertices
+                     ++ "."
+
+                  else
+                     if edgesRemainig == totalEdges
+                     then
+                        ""
+                     else
+                        (String.fromInt edgesRemainig)
+                        ++ " edges more to be covered!"
+                  )
+              ]
+       ]
+
 explanationColoring : ColorDisplay -> H.Html Msg
 explanationColoring colorDisp =
     let
@@ -1407,6 +1571,7 @@ makeStory shapeTransition =
         glowing_vertices =
             List.filter (\ver -> ver.glow) shapeTransition.graphB.vertices
 
+
         putyourmouse =
             """
             Go ahead and put your mouse over a vertex of the graph.
@@ -1488,8 +1653,6 @@ explanationThree =
         ]
 
 
-paneFour =
-    H.div leftSideStyle [ H.text "Graph" ]
 
 
 explanationFour =

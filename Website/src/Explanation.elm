@@ -52,3 +52,10 @@ howToColor =
    While coloring the graph make sure that no two adjacent vertices are colored the same. For if they are, the
    edges connecting them will be displayed differently to let you know of the mistake.
    """
+
+vertexCoverExplanation =
+   """
+   Minimum Vertex cover of a graph is the minimum amount of vertices such that,
+   all the edges in the graph must have one of such vertices as at least one of
+   their endpoints.
+   """
