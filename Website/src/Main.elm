@@ -17,6 +17,16 @@ import String.Format
 import Point2d as Pt
 import LineSegment2d as Ln
 import Length as Len
+import Element as ELE
+import Element.Background as Background
+import Element.Border as Border
+import Element.Font as Font
+import Element.Region as Region
+import Element.Input as Input
+import Ant.Icon as Ant
+import Ant.Icons as Icons
+
+
 
 
 
@@ -522,9 +532,30 @@ distanceBetweenGraphAndGrid graph grid =
 view model =
    case model of
       Isomorphic shapeTransition ->
-         div []
-             [ H.div pageStyle [ paneOne shapeTransition.graphA shapeTransition.graphB, explanationOne shapeTransition ]
-             ]
+         ELE.layoutWith 
+            { options =
+               [ ELE.focusStyle
+                  { borderColor = Nothing
+                  , backgroundColor = Nothing
+                  , shadow = Nothing
+                  }
+                ]
+            } 
+            [ELE.width ELE.fill, ELE.height ELE.fill]
+            ( ELE.row
+                  [ ELE.width ELE.fill
+                  ]
+
+                  [ ELE.html (paneOne shapeTransition.graphA shapeTransition.graphB) 
+--                  , ELE.html (explanationOne shapeTransition)
+                  , explanationOne shapeTransition
+                  ]
+            )
+
+      --Isomorphic shapeTransition ->
+      --   div []
+      --       [ H.div pageStyle [ paneOne shapeTransition.graphA shapeTransition.graphB, addFooterTo <| explanationOne shapeTransition ]
+      --       ]
 
       MaxCut shapeTransition ->
          div []
@@ -1532,40 +1563,87 @@ miscolorText e =
              ++ (String.fromInt e.vertexTwo.name)
              ++ " which are adjacent to each other are colored with the same color."
 
+rowButtons : ShapeTransition -> ELE.Element Msg
+rowButtons shapeTransition =
+   ELE.row
+      [ELE.spacing 90, ELE.paddingXY 300 40]
+      [  playButton shapeTransition.animationOn
+      ,  resetButton
+      ]
 
-explanationOne : ShapeTransition -> H.Html Msg
+
+playButton : Bool -> ELE.Element Msg
+playButton animationOn =
+   Input.button
+      []
+      {  onPress = Just AnimationToggle  
+      ,  label = if animationOn  
+                 then   Icons.pauseOutlined [ Ant.width 50, Ant.height 50 ]
+                 else   Icons.caretRightOutlined [ Ant.width 50, Ant.height 50 ]
+      }
+
+resetButton : ELE.Element Msg
+resetButton =
+   Input.button
+         []
+         {  onPress = Just AnimationStartOver
+         ,  label = Icons.rollbackOutlined [ Ant.width 50, Ant.height 50 ]
+ 
+         }
+                        
+--explanationOne : ShapeTransition -> H.Html Msg
+explanationOne : ShapeTransition -> ELE.Element Msg
 explanationOne shapeTransition =
-    H.div rightSideStyle
-       (  [ H.h1 [] [ H.text "Graph Isomorphism" ]
-          , p [] [ H.text isomorphismExplanation ]
-          , p []
-              [ H.button
-                  [ HE.onClick AnimationToggle ]
-                  [ H.text
-                      ((\switch ->
-                          if switch then
-                              "Pause Animation"
+      ELE.column
+         [ Font.color (ELE.rgb 1 1 1)
+         , ELE.height ELE.fill
+         , ELE.spacing 20
+         , ELE.padding 40
+         , ELE.height (ELE.fill |> ELE.minimum 970)
+         , ELE.width ELE.fill
+         ]
+         <|
+         [  ELE.el
+               [Font.size 30, Font.heavy] 
+               (ELE.text "Graph Isomorphism")
+         ,  ELE.paragraph
+               [] 
+               [ELE.text isomorphismExplanation]
 
-                          else
-                              "Play Animation"
-                       )
-                          shapeTransition.animationOn
-                      )
-                  ]
-              ]
-          , p [] [ H.button [ HE.onClick AnimationStartOver ] [ H.text "Animation Restart" ] ]
-          , p [] [H.text 
-                         """
-                         Go ahead and put your mouse over a vertex of the graph.
-                         Or press a number on the keyboard corresponding to a Vertex number.
-                         """
-                 ]
-          ] 
-          ++ (makeStory shapeTransition)
-       )
+         , rowButtons shapeTransition
 
 
-makeStory : ShapeTransition -> List (H.Html Msg)
+         , ELE.paragraph
+               []
+               [ ELE.text 
+                     """
+                     Go ahead and put your mouse over a vertex of the graph. 
+                     Or press a number on the keyboard corresponding to a Vertex number.
+                     """
+               ]
+
+         ]
+
+         ++  
+            (makeStory shapeTransition)
+         ++
+
+         [  Input.button
+            [
+               Border.rounded 100
+            ,  ELE.alignBottom
+            ,  ELE.alignRight
+            ] 
+            { onPress = Just ToggleTopic
+            , label = Icons.rightOutlined [ Ant.width 50, Ant.height 50 ]
+            }
+
+         ]
+               
+
+
+--explanationOne : ShapeTransition -> ELE.Element Msg
+makeStory : ShapeTransition -> List (ELE.Element Msg)
 makeStory shapeTransition =
     let
         glowing_vertices =
@@ -1603,8 +1681,8 @@ makeStory shapeTransition =
                     ]
 
         storyPara =
-            List.intersperse (H.br [] [])
-                (List.map H.text
+            List.intersperse (ELE.html <| H.br [] [])
+                (List.map ELE.text
                     listOfStories
                 )
 
@@ -1619,9 +1697,67 @@ makeStory shapeTransition =
                   convince your self that the graphs are isomorphic to each other.
                   """
     in
-      [ p [] storyPara
-      , p [] [H.text footer]
+      [ ELE.paragraph [] storyPara
+      , ELE.paragraph [] [ELE.text footer]
       ]
+
+--makeStory : ShapeTransition -> List (H.Html Msg)
+--makeStory shapeTransition =
+--    let
+--        glowing_vertices =
+--            List.filter (\ver -> ver.glow) shapeTransition.graphB.vertices
+--
+--
+--        putyourmouse =
+--            """
+--            Go ahead and put your mouse over a vertex of the graph.
+--            Or press a number on the keyboard corresponding to a Vertex number.
+--            """
+--
+--        ( specialEdges, _ ) =
+--            seperateEdges shapeTransition.graphB
+--
+--        relatedVertices =
+--            getHaloVertices shapeTransition.graphB specialEdges
+--
+--        connectedToThis v =
+--            "And connected to vertex {{ }} are the vertices " |> String.Format.value (String.fromInt <| v.name)
+--
+--        whichYouCanSee =
+--            " Which you can see is true for both graphs."
+--
+--        listOfStories =
+--            case glowing_vertices of
+--                [] ->
+--                    []
+--
+--                x :: xs ->
+--                    [ "You have selected Vertex {{}}." |> String.Format.value (String.fromInt x.name)
+--                    , (connectedToThis x)
+--                        ++ getStringFromVertices relatedVertices
+--                    , whichYouCanSee
+--                    ]
+--
+--        storyPara =
+--            List.intersperse (H.br [] [])
+--                (List.map H.text
+--                    listOfStories
+--                )
+--
+--        footer =
+--            case glowing_vertices of
+--               [] -> ""
+--               x :: xs -> 
+--                  """
+--                  You may want to visit other vertices to see that, each vertex
+--                  is connected to the same vertices in both graphs.
+--                  Inspecting each vertices connectivity with other vertices, in both graphs you can 
+--                  convince your self that the graphs are isomorphic to each other.
+--                  """
+--    in
+--      [ p [] storyPara
+--      , p [] [H.text footer]
+--      ]
 
 
 getStringFromVertices : List Vertex -> String
@@ -1677,11 +1813,20 @@ leftSideStyle =
     , HA.style "margin" "10px"
     ]
 
+goBottomStyle =
+   [ HA.style "position" "absolute"
+   , HA.style "bottom" "10px"
+   ]
+
+explanationStyle  = 
+   [ HA.style "position" "relative"
+   ]
 
 rightSideStyle =
     [ HA.style "float" "right"
 
     --, HA.style "background" "Blue"
+--    , HA.style "postion" "relative"
     , HA.style "width" "45%"
     , HA.style "height" "100%"
     , HA.style "padding" "30px"
