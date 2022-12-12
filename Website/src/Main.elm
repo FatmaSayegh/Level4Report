@@ -1427,13 +1427,14 @@ explanationTwo shapeTransition=
                               else
                                  ""
                ]
-          , Input.button
-               [ ELE.alignBottom
-               , ELE.alignRight
-               ]
-               { onPress = Just NextTopic
-               , label = Icons.verticalLeftOutlined [ Ant.width 50, Ant.height 50 ]
-               }
+          , lowerNavigation "Isomporphism" "Graph Coloring"
+          --, Input.button
+          --     [ ELE.alignBottom
+          --     , ELE.alignRight
+          --     ]
+          --     { onPress = Just NextTopic
+          --     , label = Icons.verticalLeftOutlined [ Ant.width 50, Ant.height 50 ]
+          --     }
           ]
    
 explanationCover : VertexCoverDisplay -> ELE.Element Msg
@@ -1548,13 +1549,14 @@ explanationCover display =
                                     ++ " edges more to be covered!"
               ]
 
-          , Input.button
-               [ ELE.alignBottom
-               , ELE.alignRight
-               ]
-               { onPress = Just NextTopic
-               , label = Icons.verticalLeftOutlined [ Ant.width 50, Ant.height 50 ]
-               }
+          , lowerNavigation "Graph Coloring" "Isomporphism"
+          --, Input.button
+          --     [ ELE.alignBottom
+          --     , ELE.alignRight
+          --     ]
+          --     { onPress = Just NextTopic
+          --     , label = Icons.verticalLeftOutlined [ Ant.width 50, Ant.height 50 ]
+          --     }
        ]
 
 explanationColoring : ColorDisplay -> ELE.Element Msg
@@ -1654,13 +1656,14 @@ explanationColoring colorDisp =
                                    ""
               ]
 
-          , Input.button
-               [ ELE.alignBottom
-               , ELE.alignRight
-               ]
-               { onPress = Just NextTopic
-               , label = Icons.verticalLeftOutlined [ Ant.width 50, Ant.height 50 ]
-               }
+          , lowerNavigation "Max Cut" "Vertex Cover"
+          --, Input.button
+          --     [ ELE.alignBottom
+          --     , ELE.alignRight
+          --     ]
+          --     { onPress = Just NextTopic
+          --     , label = Icons.verticalLeftOutlined [ Ant.width 50, Ant.height 50 ]
+          --     }
           ]
 
 --explanationColoring : ColorDisplay -> H.Html Msg
@@ -1804,21 +1807,41 @@ explanationOne shapeTransition =
             (makeStory shapeTransition)
          ++
 
-         [  Input.button
-            [
-               Border.rounded 100
-            ,  ELE.alignBottom
-            ,  ELE.alignRight
-            ] 
-            { onPress = Just NextTopic
-            --, label = Icons.rightOutlined [ Ant.width 50, Ant.height 50 ]
-            , label = Icons.verticalLeftOutlined [ Ant.width 50, Ant.height 50 ]
-            }
 
-         ]
+         [ lowerNavigation "Vertex Cover" "Max Cut" ]
                
 
+lowerNavigation : String -> String -> ELE.Element Msg
+lowerNavigation leftTitle rightTitle =
+   ELE.row
+      [ ELE.alignBottom 
+      , ELE.width ELE.fill
+      , ELE.padding 20
+      , ELE.spacing 20
+      ]
+      [
+         Input.button
+         [
+            Border.rounded 100
+         ,  ELE.alignLeft
+         ] 
+         { onPress = Just PreviousTopic
+         , label = Icons.verticalRightOutlined [ Ant.width 40, Ant.height 40 ]
+         }
+         
+     ,  ELE.el [ ELE.alignLeft ] <| ELE.text leftTitle    
 
+     ,  ELE.el [ ELE.alignRight ] <| ELE.text rightTitle    
+     ,
+         Input.button
+         [
+            Border.rounded 100
+         ,  ELE.alignRight
+         ] 
+         { onPress = Just NextTopic
+         , label = Icons.verticalLeftOutlined [ Ant.width 40, Ant.height 40 ]
+         }
+     ]
 --explanationOne : ShapeTransition -> ELE.Element Msg
 makeStory : ShapeTransition -> List (ELE.Element Msg)
 makeStory shapeTransition =
