@@ -200,7 +200,8 @@ type Msg
     | AnimationToggle
     | AnimationStartOver
     | ToggleVertexStatus Int
-    | ToggleTopic
+    | NextTopic
+    | PreviousTopic
     | MaxCutLine
     | ColoringSelectColor Color
     | VertexNonColor
@@ -241,7 +242,10 @@ keyToMsg value =
                          AnimationToggle
 
                      'n' ->
-                         ToggleTopic
+                         NextTopic
+
+                     'N' ->
+                         PreviousTopic
 
                      'l' ->
                          MaxCutLine 
@@ -275,7 +279,7 @@ chooseVertexFromInt x =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-      ToggleTopic ->
+      NextTopic ->
          case model of
             Isomorphic x ->
                ( MaxCut maxcutTransition, Cmd.none)
@@ -285,6 +289,17 @@ update msg model =
                ( VertexCover vertexCoverDisplay, Cmd.none)
             VertexCover x ->
                ( Isomorphic isomorphicTransition, Cmd.none)
+
+      PreviousTopic ->
+         case model of
+            Isomorphic x ->
+               ( VertexCover vertexCoverDisplay, Cmd.none)
+            MaxCut x ->
+               ( Isomorphic isomorphicTransition, Cmd.none)
+            GraphColoring x ->
+               ( MaxCut maxcutTransition, Cmd.none)
+            VertexCover x ->
+               (GraphColoring colorDisplay, Cmd.none)
       _ ->
          case model of
            Isomorphic shapeTransition ->
@@ -495,7 +510,7 @@ animateIsomorphicTransition msg shapeTransition =
        Other ->
            shapeTransition
 
-       ToggleTopic ->
+       NextTopic ->
            shapeTransition
        _ ->
            shapeTransition
@@ -529,51 +544,73 @@ distanceBetweenGraphAndGrid graph grid =
 -- of the webpage. Any change in the model by update function is reflected in the
 -- webpage as view works with the latest model.
 
+layOutOptions =
+   { options =
+      [ ELE.focusStyle
+         { borderColor = Nothing
+         , backgroundColor = Nothing
+         , shadow = Nothing
+         }
+       ]
+   } 
+
+layOutAttributes = [ELE.width ELE.fill, ELE.height ELE.fill]
+
 view model =
    case model of
       Isomorphic shapeTransition ->
          ELE.layoutWith 
-            { options =
-               [ ELE.focusStyle
-                  { borderColor = Nothing
-                  , backgroundColor = Nothing
-                  , shadow = Nothing
-                  }
-                ]
-            } 
-            [ELE.width ELE.fill, ELE.height ELE.fill]
+            layOutOptions
+            layOutAttributes
             ( ELE.row
-                  [ ELE.width ELE.fill
-                  ]
+                  [ ELE.width ELE.fill]
 
                   [ ELE.html (paneOne shapeTransition.graphA shapeTransition.graphB) 
---                  , ELE.html (explanationOne shapeTransition)
                   , explanationOne shapeTransition
                   ]
             )
 
-      --Isomorphic shapeTransition ->
-      --   div []
-      --       [ H.div pageStyle [ paneOne shapeTransition.graphA shapeTransition.graphB, addFooterTo <| explanationOne shapeTransition ]
-      --       ]
 
       MaxCut shapeTransition ->
-         div []
-             [ H.div pageStyle [ explanationTwo shapeTransition, paneTwo shapeTransition]
-             ]
+         ELE.layoutWith 
+            layOutOptions
+            layOutAttributes
+            ( ELE.row
+                  [ ELE.width ELE.fill]
+
+                  [ ELE.html (paneTwo shapeTransition) 
+                  , explanationTwo shapeTransition
+                  ]
+            )
 
       GraphColoring display ->
-         div []
-             [ H.div pageStyle [ paneThree display, 
-                                 explanationColoring display 
-                               ]
-             ]
+         ELE.layoutWith 
+            layOutOptions
+            layOutAttributes
+            ( ELE.row
+                  [ ELE.width ELE.fill]
+
+                  [ ELE.html (paneThree display) 
+                  , explanationColoring display
+                  ]
+            )
+
       VertexCover display ->
-         div []
-             [ H.div pageStyle [ explanationCover display 
-                               , paneFour display
-                               ]
-             ]
+         ELE.layoutWith 
+            layOutOptions
+            layOutAttributes
+            ( ELE.row
+                  [ ELE.width ELE.fill]
+
+                  [ ELE.html (paneFour display) 
+                  , explanationCover display
+                  ]
+            )
+         --div []
+         --    [ H.div pageStyle [ explanationCover display 
+         --                      , paneFour display
+         --                      ]
+         --    ]
 
 
 
@@ -1334,67 +1371,72 @@ drawCutLine cutLine =
 drawIntersectionPoints points =
    List.map (drawIntersectionPoint 3) points
 
+explanationTwo : ShapeTransition -> ELE.Element Msg
 explanationTwo shapeTransition=
-    H.div leftSideStyle
-        [ H.h1 [] [ H.text "Max Cut" ]
-        , H.p [] [ H.text maxCutExplanation ]
-        , p []
-            [ H.button
-                [ HE.onClick AnimationToggle ]
-                  [ H.text
-                      ((\switch ->
-                          if switch then
-                              "Pause Animation"
+      ELE.column
+         [ Font.color (ELE.rgb 1 1 1)
+         , ELE.height ELE.fill
+         , ELE.spacing 20
+         , ELE.padding 40
+         , ELE.height (ELE.fill |> ELE.minimum 970)
+         , ELE.width ELE.fill
+         ]
+         <|
+         [  ELE.el
+               [Font.size 30, Font.heavy] 
+               (ELE.text "Max Cut")
+         ,  ELE.paragraph
+               [ELE.spacing 8] 
+               [ELE.text maxCutExplanation]
 
-                          else
-                              "Play Animation"
-                       )
-                          shapeTransition.animationOn
-                      )
-                  ]
-            ]
-        , p [] [ H.button [ HE.onClick AnimationStartOver ] [ H.text "Animation Restart" ] ]
-        , p [] [H.text 
-                       """
-                       In the animation, the vertices are being segregated into
-                       two sets, such that the number of edges passing from
-                       vertices in one set to the vertices in another set is
-                       more than any other way the vertices of the graph could
-                       have been segregated.  In other words the problem of max
-                       cut is to identify such partition of the vertices of the
-                       graph that the above objective is satisfied.
-                       """
+         ,  mediaButtons shapeTransition
+
+         , ELE.paragraph
+               []
+               [ ELE.text 
+                     """
+                     In the animation, the vertices are being segregated into
+                     two sets, such that the number of edges passing from
+                     vertices in one set to the vertices in another set is
+                     more than any other way the vertices of the graph could
+                     have been segregated.  In other words the problem of max
+                     cut is to identify such partition of the vertices of the
+                     graph that the above objective is satisfied.
+                     """
                ]
-        , p []
-            [ H.button
-                [ HE.onClick MaxCutLine ]
-                [ H.text
-                    ((\token ->
-                        if token == MakeKCut then
-                            "Remove Max Cut Line"
+           
+        , Input.button
+            [
+              ELE.centerX
+            ] 
+            { onPress = Just MaxCutLine
+            , label = Icons.minusOutlined [ Ant.width 70, Ant.height 50 ]
+            }
 
-                        else
-                            "Put Max Cut Line "
-                     )
-                        shapeTransition.specialToken
-                     ) 
-                ]
-            ]
-         , p [] [ H.text (if shapeTransition.specialToken == MakeKCut
-                           then
-                              """
-                              The Max cut line, seperates the two sets of vertices. The intersection
-                              between the cut line and the edges are shown as blue dots. As you should
-                              verify, they are 9 in number. This number is equal to number of edges from
-                              the set of vertices at the top going to the vertices at the bottom.
-                              """
-                           else
-                              ""
-                        )
-                ]
-        ]
+        , ELE.paragraph
+               []
+               [ELE.text <| if shapeTransition.specialToken == MakeKCut 
+                              then
+                         
+                                 """
+                                 The Max cut line, seperates the two sets of vertices. The intersection
+                                 between the cut line and the edges are shown as blue dots. As you should
+                                 verify, they are 9 in number. This number is equal to number of edges from
+                                 the set of vertices at the top going to the vertices at the bottom.
+                                 """
+                              else
+                                 ""
+               ]
+          , Input.button
+               [ ELE.alignBottom
+               , ELE.alignRight
+               ]
+               { onPress = Just NextTopic
+               , label = Icons.verticalLeftOutlined [ Ant.width 50, Ant.height 50 ]
+               }
+          ]
    
-explanationCover : VertexCoverDisplay -> H.Html Msg
+explanationCover : VertexCoverDisplay -> ELE.Element Msg
 explanationCover display =
     let
         selected_vertices =
@@ -1420,73 +1462,102 @@ explanationCover display =
             totalEdges - noCoveredEdges
         
     in
-    H.div rightSideStyle
-       [ H.h1 [] [ H.text "Vertex Cover" ]
-       , p [] [ H.text vertexCoverExplanation ]
-       , p [] [ H.text
-                  """
-                  In the task on the right, selecting a vertex will cover all
-                  the edges incident on it. Your objective is to select the
-                  minimum number of vertices such that, all the edges of the
-                  graph are covered.
-                  """
-              ]
-       , p [] [ H.text
-                  """
-                  To select a vertex you can press, the vertex number
-                  on the keyboard. To de-select, do the same again.
-                  """
-              ]
+    ELE.column
+         [ Font.color (ELE.rgb 1 1 1)
+         , ELE.height ELE.fill
+         , ELE.spacing 20
+         , ELE.padding 40
+         , ELE.height (ELE.fill |> ELE.minimum 970)
+         , ELE.width ELE.fill
+         ]
+         <|
+         [  ELE.el
+               [Font.size 30, Font.heavy] 
+               (ELE.text "Vertex Cover")
 
-       , p [] [ H.text 
-                  (if noOfSelectedVertices == 0
-                  then
-                     ""
-                  else
-                     "You have selected a total of "
-                     ++ (String.fromInt noOfSelectedVertices)
-                     ++ " vertices out of "
-                     ++ (String.fromInt totalVertices)
-                     ++ " vertices. "
-                  )
-              ]
-       , p [] [ H.text 
-                  (if noCoveredEdges == 0
-                  then
-                     ""
-                  else
-                     "You have covered a total of "
-                     ++ (String.fromInt noCoveredEdges)
-                     ++ " edges out of a total of "
-                     ++ (String.fromInt totalEdges)
-                     ++ " edges. "
-                  )
-              ]
-       , p [] [ H.text
-                  (if edgesRemainig == 0
-                  then
-                     "Congratulations, you have covered all "
-                     ++ (String.fromInt noCoveredEdges)
-                     ++ " edges. "
-                     ++ "You have done so by selecting the vertices "
-                     ++ getStringFromVertices selected_vertices
-                     ++ "."
-                     ++ " Therefore a vertex cover of this graph is the set vertices "
-                     ++ getStringFromVertices selected_vertices
-                     ++ "."
+         ,  ELE.paragraph
+               [ ELE.spacing 8 ] 
+               [ ELE.text vertexCoverExplanation ]
 
-                  else
-                     if edgesRemainig == totalEdges
+         , ELE.paragraph
+               []
+               [ ELE.text 
+                     """
+                     In the task on the right, selecting a vertex will cover all
+                     the edges incident on it. Your objective is to select the
+                     minimum number of vertices such that, all the edges of the
+                     graph are covered.
+                     """
+               ]
+
+         , ELE.paragraph
+               []
+               [ ELE.text 
+                     """
+                     To select a vertex you can press, the vertex number
+                     on the keyboard. To de-select, do the same again.
+                     """
+               ]
+
+        , ELE.paragraph
+               []
+               [ ELE.text <| if noOfSelectedVertices  == 0
+                                then
+                                   ""
+                                else
+                                   "You have selected a total of "
+                                   ++ (String.fromInt noOfSelectedVertices)
+                                   ++ " vertices out of "
+                                   ++ (String.fromInt totalVertices)
+                                   ++ " vertices. "
+               ]
+
+        , ELE.paragraph
+               []
+               [ ELE.text <| if noCoveredEdges == 0
                      then
                         ""
                      else
-                        (String.fromInt edgesRemainig)
-                        ++ " edges more to be covered!"
-                  )
+                        "You have covered a total of "
+                        ++ (String.fromInt noCoveredEdges)
+                        ++ " edges out of a total of "
+                        ++ (String.fromInt totalEdges)
+                        ++ " edges. "
+               ]
+
+        , ELE.paragraph
+               []
+               [ ELE.text <| if edgesRemainig == 0
+                              then
+                                 "Congratulations, you have covered all "
+                                 ++ (String.fromInt noCoveredEdges)
+                                 ++ " edges. "
+                                 ++ "You have done so by selecting the vertices "
+                                 ++ getStringFromVertices selected_vertices
+                                 ++ "."
+                                 ++ " Therefore a vertex cover of this graph is the set vertices "
+                                 ++ getStringFromVertices selected_vertices
+                                 ++ "."
+
+                              else
+                                 if edgesRemainig == totalEdges
+                                 then
+                                    ""
+                                 else
+                                    (String.fromInt edgesRemainig)
+                                    ++ " edges more to be covered!"
               ]
+
+          , Input.button
+               [ ELE.alignBottom
+               , ELE.alignRight
+               ]
+               { onPress = Just NextTopic
+               , label = Icons.verticalLeftOutlined [ Ant.width 50, Ant.height 50 ]
+               }
        ]
 
-explanationColoring : ColorDisplay -> H.Html Msg
+explanationColoring : ColorDisplay -> ELE.Element Msg
 explanationColoring colorDisp =
     let
       verticesOfSameColor edge =
@@ -1500,62 +1571,168 @@ explanationColoring colorDisp =
                               colorDisp.graphA.vertices
 
     in
-    H.div rightSideStyle
-       (  [ H.h1 [] [ H.text "Graph Coloring" ]
-          , p [] [ H.text coloringExplanation  ]
-          , p [] [ H.text howToColor ]
-          , p [] [ H.text
+    ELE.column
+         [ Font.color (ELE.rgb 1 1 1)
+         , ELE.height ELE.fill
+         , ELE.spacing 20
+         , ELE.padding 40
+         , ELE.height (ELE.fill |> ELE.minimum 970)
+         , ELE.width ELE.fill
+         ]
+         <|
+         [  ELE.el
+               [Font.size 30, Font.heavy] 
+               (ELE.text "Graph Coloring")
+         ,  ELE.paragraph
+               [ ELE.spacing 8 ] 
+               [ ELE.text coloringExplanation ]
+
+         ,  ELE.paragraph
+               [ ELE.spacing 8 ] 
+               [ ELE.text howToColor ]
+         , ELE.paragraph
+               []
+               [ ELE.text 
                      """
                      As a challenge you may try to color
                      the graph with only two colors and see if
                      it is feasible.
                      """
-                 ]
-          , p [] [ H.button
-                     [ HE.onClick VertexNonColor ]
-                     [ H.text "Reset Colors" ]
-                 ] 
-          , p [] [ H.text <|
-                           if (List.isEmpty coloredVertices)
-                           then 
-                              "" 
-                           else
-                              "Coloring has started."
-                              
-                 ]
-          , p [] [ H.text <|
-                           if (List.isEmpty miscoloredEdges)
-                           then
-                              ""
-                           else
-                              String.join " "  <| List.map miscolorText miscoloredEdges
-                 ]
-          , p [] [ H.text <|
-                           if (List.isEmpty miscoloredEdges)
-                           then
-                              ""
-                           else
-                              """
-                              Try another color combination.
-                              Remember the rule; No two adjacent
-                              vertices must have the same color!
-                              """
-                 ]
+               ]
+        , Input.button
+            [
+              ELE.centerX
+            ] 
+            { onPress = Just VertexNonColor
+            , label = Icons.minusOutlined [ Ant.width 70, Ant.height 50 ]
+            }
 
-          , p [] [ H.text <|
-                           if (List.isEmpty miscoloredEdges
+        , ELE.paragraph
+               []
+               [ ELE.text <| if List.isEmpty coloredVertices
+                                then
+                                   ""
+                                else
+                                   """
+                                   Coloring has started.
+                                   """
+               ]
+
+        , ELE.paragraph
+               []
+               [ ELE.text <| if List.isEmpty miscoloredEdges
+                                then
+                                    ""
+                                else
+                                    String.join " "  <| List.map miscolorText miscoloredEdges
+               ]
+
+        , ELE.paragraph
+               []
+               [ ELE.text <| if List.isEmpty miscoloredEdges
+                                then
+                                    ""
+                                else
+                                   """
+                                   Try another color combination.
+                                   Remember the rule; No two adjacent
+                                   vertices must have the same color!
+                                   """
+               ]
+
+        , ELE.paragraph
+               []
+               [ ELE.text <| if (List.isEmpty miscoloredEdges
                                  && List.length coloredVertices 
                                     == List.length colorDisp.graphA.vertices)
-                           then
-                              """
-                              Congratulations! Graph has been colored fully and correctly.
-                              i.e. No two adjacent vertices have the same color.
-                              """
-                           else
-                              ""
-                 ]
+                                then
+                                   """
+                                   Congratulations! Graph has been colored fully and correctly.
+                                   i.e. No two adjacent vertices have the same color.
+                                   """
+                                else
+                                   ""
+              ]
+
+          , Input.button
+               [ ELE.alignBottom
+               , ELE.alignRight
+               ]
+               { onPress = Just NextTopic
+               , label = Icons.verticalLeftOutlined [ Ant.width 50, Ant.height 50 ]
+               }
           ]
-       )
+
+--explanationColoring : ColorDisplay -> H.Html Msg
+--explanationColoring colorDisp =
+--    let
+--      verticesOfSameColor edge =
+--         edge.vertexOne.color == edge.vertexTwo.color 
+--                              && edge.vertexOne.color /= (Color.rgb 1 1 1)
+--
+--      miscoloredEdges = List.filter 
+--                           (\e -> verticesOfSameColor e) colorDisp.graphA.edges 
+--      coloredVertices = List.filter  
+--                              (\v -> v.color /= Color.rgb 1 1 1 ) 
+--                              colorDisp.graphA.vertices
+--
+--    in
+--    H.div rightSideStyle
+--       (  [ H.h1 [] [ H.text "Graph Coloring" ]
+--          , p [] [ H.text coloringExplanation  ]
+--          , p [] [ H.text howToColor ]
+--          , p [] [ H.text
+--                     """
+--                     As a challenge you may try to color
+--                     the graph with only two colors and see if
+--                     it is feasible.
+--                     """
+--                 ]
+--          , p [] [ H.button
+--                     [ HE.onClick VertexNonColor ]
+--                     [ H.text "Reset Colors" ]
+--                 ] 
+--          , p [] [ H.text <|
+--                           if (List.isEmpty coloredVertices)
+--                           then 
+--                              "" 
+--                           else
+--                              "Coloring has started."
+--                              
+--                 ]
+--          , p [] [ H.text <|
+--                           if (List.isEmpty miscoloredEdges)
+--                           then
+--                              ""
+--                           else
+--                              String.join " "  <| List.map miscolorText miscoloredEdges
+--                 ]
+--          , p [] [ H.text <|
+--                           if (List.isEmpty miscoloredEdges)
+--                           then
+--                              ""
+--                           else
+--                              """
+--                              Try another color combination.
+--                              Remember the rule; No two adjacent
+--                              vertices must have the same color!
+--                              """
+--                 ]
+--
+--          , p [] [ H.text <|
+--                           if (List.isEmpty miscoloredEdges
+--                                 && List.length coloredVertices 
+--                                    == List.length colorDisp.graphA.vertices)
+--                           then
+--                              """
+--                              Congratulations! Graph has been colored fully and correctly.
+--                              i.e. No two adjacent vertices have the same color.
+--                              """
+--                           else
+--                              ""
+--                 ]
+--          ]
+--       )
 miscolorText : Edge -> String
 miscolorText e =
    "Vertex " ++ (String.fromInt e.vertexOne.name) 
@@ -1563,8 +1740,8 @@ miscolorText e =
              ++ (String.fromInt e.vertexTwo.name)
              ++ " which are adjacent to each other are colored with the same color."
 
-rowButtons : ShapeTransition -> ELE.Element Msg
-rowButtons shapeTransition =
+mediaButtons : ShapeTransition -> ELE.Element Msg
+mediaButtons shapeTransition =
    ELE.row
       [ELE.spacing 90, ELE.paddingXY 300 40]
       [  playButton shapeTransition.animationOn
@@ -1591,7 +1768,6 @@ resetButton =
  
          }
                         
---explanationOne : ShapeTransition -> H.Html Msg
 explanationOne : ShapeTransition -> ELE.Element Msg
 explanationOne shapeTransition =
       ELE.column
@@ -1607,10 +1783,10 @@ explanationOne shapeTransition =
                [Font.size 30, Font.heavy] 
                (ELE.text "Graph Isomorphism")
          ,  ELE.paragraph
-               [] 
+               [ELE.spacing 8] 
                [ELE.text isomorphismExplanation]
 
-         , rowButtons shapeTransition
+         , mediaButtons shapeTransition
 
 
          , ELE.paragraph
@@ -1634,8 +1810,9 @@ explanationOne shapeTransition =
             ,  ELE.alignBottom
             ,  ELE.alignRight
             ] 
-            { onPress = Just ToggleTopic
-            , label = Icons.rightOutlined [ Ant.width 50, Ant.height 50 ]
+            { onPress = Just NextTopic
+            --, label = Icons.rightOutlined [ Ant.width 50, Ant.height 50 ]
+            , label = Icons.verticalLeftOutlined [ Ant.width 50, Ant.height 50 ]
             }
 
          ]
@@ -1701,63 +1878,6 @@ makeStory shapeTransition =
       , ELE.paragraph [] [ELE.text footer]
       ]
 
---makeStory : ShapeTransition -> List (H.Html Msg)
---makeStory shapeTransition =
---    let
---        glowing_vertices =
---            List.filter (\ver -> ver.glow) shapeTransition.graphB.vertices
---
---
---        putyourmouse =
---            """
---            Go ahead and put your mouse over a vertex of the graph.
---            Or press a number on the keyboard corresponding to a Vertex number.
---            """
---
---        ( specialEdges, _ ) =
---            seperateEdges shapeTransition.graphB
---
---        relatedVertices =
---            getHaloVertices shapeTransition.graphB specialEdges
---
---        connectedToThis v =
---            "And connected to vertex {{ }} are the vertices " |> String.Format.value (String.fromInt <| v.name)
---
---        whichYouCanSee =
---            " Which you can see is true for both graphs."
---
---        listOfStories =
---            case glowing_vertices of
---                [] ->
---                    []
---
---                x :: xs ->
---                    [ "You have selected Vertex {{}}." |> String.Format.value (String.fromInt x.name)
---                    , (connectedToThis x)
---                        ++ getStringFromVertices relatedVertices
---                    , whichYouCanSee
---                    ]
---
---        storyPara =
---            List.intersperse (H.br [] [])
---                (List.map H.text
---                    listOfStories
---                )
---
---        footer =
---            case glowing_vertices of
---               [] -> ""
---               x :: xs -> 
---                  """
---                  You may want to visit other vertices to see that, each vertex
---                  is connected to the same vertices in both graphs.
---                  Inspecting each vertices connectivity with other vertices, in both graphs you can 
---                  convince your self that the graphs are isomorphic to each other.
---                  """
---    in
---      [ p [] storyPara
---      , p [] [H.text footer]
---      ]
 
 
 getStringFromVertices : List Vertex -> String
