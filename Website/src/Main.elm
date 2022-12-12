@@ -14,6 +14,19 @@ import Svg as S exposing (..)
 import Svg.Attributes as SA exposing (..)
 import Svg.Events as SE exposing (..)
 import String.Format
+import Point2d as Pt
+import LineSegment2d as Ln
+import Length as Len
+import Element as ELE
+import Element.Background as Background
+import Element.Border as Border
+import Element.Font as Font
+import Element.Region as Region
+import Element.Input as Input
+import Ant.Icon as Ant
+import Ant.Icons as Icons
+
+
 
 
 
@@ -45,12 +58,29 @@ main =
 type Model =
    Isomorphic ShapeTransition
    | MaxCut ShapeTransition
+   | GraphColoring ColorDisplay
+   | VertexCover VertexCoverDisplay
+
+type alias ColorDisplay =
+   { graphA : Graph
+   , chosenColor : Color
+   , defaultColor : Color
+   }
+
+type alias VertexCoverDisplay =
+   { graphA : Graph
+   }
+
+type Token =
+   MakeKCut
+   | NoToken
 
 type alias ShapeTransition =
-    { graphA : Graph
-    , graphB : Graph
-    , finalGrid : Grid
+    { graphA : Graph -- Will remain static
+    , graphB : Graph  -- Will move towards final Grid when animationOn is True
+    , finalGrid : Grid 
     , animationOn : Bool
+    , specialToken : Token
     }
 
 -- Initializing the model
@@ -58,8 +88,8 @@ type alias ShapeTransition =
 -- an instance of the model to the elm runtime.
 
 
-someTransition : ShapeTransition
-someTransition =
+isomorphicTransition : ShapeTransition
+isomorphicTransition =
     let
         initialGraph =
             makeGraph (PolygonCycleDoll 4) (vec3 200 100 0) (vec3 80 80 0) (pi / 4)
@@ -68,7 +98,76 @@ someTransition =
         , graphB = initialGraph
         , finalGrid = bipartiteGrid
         , animationOn = False
+        , specialToken = NoToken
         }
+
+maxcutTransition : ShapeTransition
+maxcutTransition =
+    let
+        (initialGraph, finalGrid) =
+            maxCutGeometry
+    in
+        { graphA = initialGraph
+        , graphB = initialGraph
+        , finalGrid = finalGrid
+        , animationOn = False
+        , specialToken = NoToken
+        }
+
+maxCutGeometry : (Graph, Grid)
+maxCutGeometry =
+   let
+      position = (vec3 100 200 0) -- left center
+      verticalShift = (vec3 0 50 0)
+      verticalShiftGrid = (vec3 0 90 0)
+      horizontalShiftGrid = (vec3 200 0 0)
+      setA = [1,2,3,4]
+      setB = [5,6,7,8]
+      --edgeTuples = [ (1, 8), (1, 7), (1, 6), (2, 5), (2, 6), (2, 7), (3, 7), (3, 8), (3, 6), (3, 4), (4, 5)]
+      edgeTuples = [ (1, 8), (1, 7), (2, 6), (2, 7), (3, 5), (3, 7), (3, 8), (3, 6), (3, 4), (4, 5)]
+      setAGrid = parametricPolygon 4 (vec3 50 30 0) (sub position  verticalShift) (pi/3)
+      setBGrid = parametricPolygon 4 (vec3 50 30 0) (add position verticalShift) (pi/6)
+      setAGridPosition = (add (sub (sub position verticalShift) verticalShiftGrid) horizontalShiftGrid)
+      setBGridPosition = (add (add (add position verticalShift) verticalShiftGrid) horizontalShiftGrid)
+      setAFinalGrid = parametricPolygon 4 (vec3 70 10 0) setAGridPosition (pi/3)
+      setBFinalGrid = parametricPolygon 4 (vec3 70 10 0) setBGridPosition (pi/3)
+      vertices = 
+         List.map3 (\name g c -> Vertex name g c False) 
+            (setA ++ setB)
+            (setAGrid ++ setBGrid)
+            (listOfColors First 8)
+      edges =
+         makeEdgesWithTuples edgeTuples vertices
+
+      in
+      (Graph vertices edges, setAFinalGrid ++ setBFinalGrid)
+         
+
+
+makeEdgesWithTuples : List (Int, Int) -> List Vertex -> List Edge
+makeEdgesWithTuples tuples vertices =
+   case tuples of
+      [] ->
+         []
+      (tu::tus) ->
+         case (makeEdgeWithTuple tu vertices) of 
+            Nothing ->
+               makeEdgesWithTuples tus vertices
+            (Just edge) ->
+               edge :: makeEdgesWithTuples tus vertices
+
+makeEdgeWithTuple : (Int, Int) -> List Vertex -> Maybe Edge
+makeEdgeWithTuple tu vs =
+   case tu of
+      (name1, name2) ->
+         case (lookUpVertex name1 vs, lookUpVertex name2 vs) of
+            (Nothing, _ ) ->
+               Nothing
+            ( _, Nothing ) ->
+               Nothing
+            (Just vertexOne, Just vertexTwo) ->
+               Just (Edge vertexOne vertexTwo)
+
 
 init : () -> ( Model, Cmd Msg )
 init _ =
@@ -81,6 +180,7 @@ init _ =
             , graphB = initialGraph
             , finalGrid = bipartiteGrid
             , animationOn = False
+            , specialToken = NoToken
             }
     in
     ( Isomorphic shapeTransition, Cmd.none )
@@ -96,10 +196,15 @@ type Msg
     = TimeDelta Float
     | HoverOver Int
     | MouseOut Int
+    | VertexClicked Int
     | AnimationToggle
     | AnimationStartOver
     | ToggleVertexStatus Int
-    | ToggleTopic
+    | NextTopic
+    | PreviousTopic
+    | MaxCutLine
+    | ColoringSelectColor Color
+    | VertexNonColor
     | Other
 
 
@@ -136,11 +241,18 @@ keyToMsg value =
                      'p' ->
                          AnimationToggle
 
-                     't' ->
-                         ToggleTopic
+                     'n' ->
+                         NextTopic
+
+                     'N' ->
+                         PreviousTopic
+
+                     'l' ->
+                         MaxCutLine 
+                     'w' ->
+                         VertexNonColor
                      _ ->
                          Other
-
         _ ->
             Other
 
@@ -167,23 +279,198 @@ chooseVertexFromInt x =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-      ToggleTopic ->
+      NextTopic ->
          case model of
             Isomorphic x ->
-               ( MaxCut someTransition, Cmd.none)
+               ( MaxCut maxcutTransition, Cmd.none)
             MaxCut x ->
-               ( Isomorphic someTransition, Cmd.none)
+               (GraphColoring colorDisplay, Cmd.none)
+            GraphColoring x ->
+               ( VertexCover vertexCoverDisplay, Cmd.none)
+            VertexCover x ->
+               ( Isomorphic isomorphicTransition, Cmd.none)
+
+      PreviousTopic ->
+         case model of
+            Isomorphic x ->
+               ( VertexCover vertexCoverDisplay, Cmd.none)
+            MaxCut x ->
+               ( Isomorphic isomorphicTransition, Cmd.none)
+            GraphColoring x ->
+               ( MaxCut maxcutTransition, Cmd.none)
+            VertexCover x ->
+               (GraphColoring colorDisplay, Cmd.none)
       _ ->
          case model of
            Isomorphic shapeTransition ->
-              ( Isomorphic (animateTransitionOfGraph msg shapeTransition), Cmd.none )
+              ( Isomorphic (animateIsomorphicTransition msg shapeTransition), Cmd.none )
            MaxCut shapeTransition ->
-              ( MaxCut (animateTransitionOfGraph msg shapeTransition), Cmd.none )
+              ( MaxCut (animateMaxCutTransition msg shapeTransition), Cmd.none )
+           GraphColoring display ->
+              ( goColor display msg, Cmd.none)
+           VertexCover display ->
+              ( goCover display msg, Cmd.none)
+
+goCover : VertexCoverDisplay -> Msg -> Model
+goCover display msg =
+   case msg of
+       ToggleVertexStatus name ->
+           let
+               newDisplay =
+                  { display
+                      | graphA = toggleGlowVertex name display.graphA
+                  }
+            in
+            VertexCover newDisplay
+
+       VertexClicked name ->
+           let
+               newDisplay =
+                  { display
+                      | graphA = toggleGlowVertex name display.graphA
+                  }
+            in
+            VertexCover newDisplay
+
+       _ ->
+            VertexCover display
 
 
 
-animateTransitionOfGraph : Msg -> ShapeTransition -> ShapeTransition
-animateTransitionOfGraph msg shapeTransition =
+goColor : ColorDisplay -> Msg -> Model
+goColor display msg =
+   case msg of
+      ColoringSelectColor color ->
+         let
+            newDisplay = 
+               {display |
+                  chosenColor = color
+               }
+         in
+         GraphColoring newDisplay
+
+      VertexClicked name ->
+         let
+            newGraph = changeColorOfVertex name display.chosenColor display.graphA 
+            newDisplay = {display |
+                              graphA = newGraph }
+         in
+         GraphColoring newDisplay
+
+      VertexNonColor ->
+         let
+            whiteVertices = 
+               List.map (\v ->
+                  {v | color = (Color.rgb 1 1 1)})
+                  display.graphA.vertices
+
+            createEdge =
+               updateEdge whiteVertices
+
+            newGraph = Graph whiteVertices (List.map createEdge display.graphA.edges)
+
+            newDisplay = {display |
+                              graphA = newGraph }
+         in
+         GraphColoring newDisplay
+
+      _ ->
+         GraphColoring display
+             
+
+changeColorOfVertex : Int -> Color -> Graph -> Graph
+changeColorOfVertex name color graph =
+   let 
+      newVertices =
+         List.map (\v ->
+                     if v.name == name
+                     then
+                        {v | color = color } 
+                     else
+                        v)
+                  graph.vertices
+
+      createEdge =
+         updateEdge newVertices
+   in
+   Graph newVertices (List.map createEdge graph.edges)
+
+
+vertexCoverDisplay : VertexCoverDisplay     
+vertexCoverDisplay = 
+   let
+        initialGraph =
+            makeGraph (PolygonCycleDoll 4) (vec3 200 100 0) (vec3 80 80 0) (pi / 4)
+   in
+      VertexCoverDisplay initialGraph
+
+colorDisplay : ColorDisplay
+colorDisplay = 
+   let
+      initialGraph =
+         makeGraph (PolygonCycleDoll 5) (vec3 200 100 0) (vec3 80 80 0) (pi /4)
+      whiteVertices = 
+         List.map (\v ->
+            {v | color = (Color.rgb 1 1 1)})
+            initialGraph.vertices
+      createEdge =
+         updateEdge whiteVertices
+      newGraph = Graph whiteVertices (List.map createEdge initialGraph.edges)
+   in
+      ColorDisplay newGraph (Color.rgb 1 1 1) (Color.rgb 1 1 1)
+
+--isomorphicTransition : ShapeTransition
+--isomorphicTransition =
+--    let
+--        initialGraph =
+--            makeGraph (PolygonCycleDoll 4) (vec3 200 100 0) (vec3 80 80 0) (pi / 4)
+--    in
+--        { graphA = initialGraph
+--        , graphB = initialGraph
+--        , finalGrid = bipartiteGrid
+--        , animationOn = False
+--        , specialToken = NoToken
+--        }
+
+animateMaxCutTransition : Msg -> ShapeTransition -> ShapeTransition
+animateMaxCutTransition  msg shapeTransition =
+   case msg of
+       TimeDelta delta ->
+           case shapeTransition.animationOn of
+               True ->
+                   executeShapeTransition shapeTransition
+               False ->
+                   shapeTransition
+
+       AnimationToggle ->
+           { shapeTransition
+               | animationOn = not shapeTransition.animationOn
+           }
+
+       AnimationStartOver ->
+           { shapeTransition
+               | graphB = shapeTransition.graphA
+           }
+
+       MaxCutLine ->
+           { shapeTransition
+               | specialToken = toggleToken shapeTransition.specialToken
+           }
+
+
+       _ ->
+           shapeTransition
+
+toggleToken : Token -> Token
+toggleToken token =
+   case token of
+      MakeKCut ->
+         NoToken
+      NoToken ->
+         MakeKCut
+
+animateIsomorphicTransition : Msg -> ShapeTransition -> ShapeTransition
+animateIsomorphicTransition msg shapeTransition =
    case msg of
        TimeDelta delta ->
            case shapeTransition.animationOn of
@@ -223,7 +510,9 @@ animateTransitionOfGraph msg shapeTransition =
        Other ->
            shapeTransition
 
-       ToggleTopic ->
+       NextTopic ->
+           shapeTransition
+       _ ->
            shapeTransition
 
 
@@ -240,6 +529,7 @@ executeShapeTransition shapeTransition =
             | graphB = moveTowards shapeTransition.graphB shapeTransition.finalGrid
         }
 
+
 distanceBetweenGraphAndGrid : Graph -> Grid -> Float
 distanceBetweenGraphAndGrid graph grid =
    let
@@ -254,18 +544,68 @@ distanceBetweenGraphAndGrid graph grid =
 -- of the webpage. Any change in the model by update function is reflected in the
 -- webpage as view works with the latest model.
 
+layOutOptions =
+   { options =
+      [ ELE.focusStyle
+         { borderColor = Nothing
+         , backgroundColor = Nothing
+         , shadow = Nothing
+         }
+       ]
+   } 
+
+layOutAttributes = [ELE.width ELE.fill, ELE.height ELE.fill]
+
 view model =
    case model of
       Isomorphic shapeTransition ->
-         div []
-             [ H.div pageStyle [ paneOne shapeTransition.graphA shapeTransition.graphB, explanationOne shapeTransition ]
-             ]
+         ELE.layoutWith 
+            layOutOptions
+            layOutAttributes
+            ( ELE.row
+                  [ ELE.width ELE.fill]
+
+                  [ ELE.html (paneOne shapeTransition.graphA shapeTransition.graphB) 
+                  , explanationOne shapeTransition
+                  ]
+            )
+
+
       MaxCut shapeTransition ->
-         div []
-             [ H.div pageStyle [ explanationTwo, paneOne shapeTransition.graphA shapeTransition.graphB]
-             --, H.div pageStyle [ paneThree, explanationThree ]
-             --, H.div pageStyle [ explanationFour, paneFour ]
-             ]
+         ELE.layoutWith 
+            layOutOptions
+            layOutAttributes
+            ( ELE.row
+                  [ ELE.width ELE.fill]
+
+                  [ ELE.html (paneTwo shapeTransition) 
+                  , explanationTwo shapeTransition
+                  ]
+            )
+
+      GraphColoring display ->
+         ELE.layoutWith 
+            layOutOptions
+            layOutAttributes
+            ( ELE.row
+                  [ ELE.width ELE.fill]
+
+                  [ ELE.html (paneThree display) 
+                  , explanationColoring display
+                  ]
+            )
+
+      VertexCover display ->
+         ELE.layoutWith 
+            layOutOptions
+            layOutAttributes
+            ( ELE.row
+                  [ ELE.width ELE.fill]
+
+                  [ ELE.html (paneFour display) 
+                  , explanationCover display
+                  ]
+            )
 
 
 
@@ -398,40 +738,16 @@ type alias Size =
 
 -- Scalable vector graphics
 
-
-anSvg =
+displaySvg elements =
     S.svg
         [ SA.width "100%"
         , SA.height "auto"
         , SA.viewBox "0 0 400 400"
         ]
-        --(drawGraph graph3)
-        --(drawGraph graph4)
-        (drawGraph graph5 ++ drawGraph graph6 ++ drawGraph graph7 ++ drawGraph graph8)
-
-
-anotherSvg graphA graphB =
-    S.svg
-        [ SA.width "100%"
-        , SA.height "auto"
-        , SA.viewBox "0 0 400 400"
-        ]
-        --(drawGraph graph3)
-        --(drawGraph graph4)
-        (drawGraph graphA ++ drawGraph graphB)
+        elements
 
 
 
---anotherSvg graph =
---    S.svg
---     [ SA.width "100%"
---     , SA.height "auto"
---     , SA.viewBox "0 0 400 400"
---     ]
---     --(drawGraph graph3)
---     --(drawGraph graph4)
---     ((drawGraph graph9) ++ (drawGraph transitionIntoIsomorph))
--- Vertex, Edge and Graph types.
 
 
 type alias Vertex =
@@ -515,26 +831,6 @@ makeGraph graphType position size initialAngle =
                     List.map2 Edge verticesSetA verticesSetB
             in
             Graph allVertices (edgesCycleSetA ++ edgesCycleSetB ++ spokesSetASetB)
-
-
-graph5 =
-    makeGraph (PolygonCycle 6) (vec3 100 100 0) (vec3 50 50 0) 0
-
-
-graph6 =
-    makeGraph (PolygonFullyConnected 2) (vec3 300 100 0) (vec3 50 50 0) 0
-
-
-graph7 =
-    makeGraph (PolygonFullyConnected 3) (vec3 300 300 0) (vec3 50 50 0) 0
-
-
-graph8 =
-    makeGraph (PolygonFullyConnected 4) (vec3 100 300 0) (vec3 50 50 0) (pi / 2)
-
-
-graph9 =
-    makeGraph (PolygonCycleDoll 4) (vec3 200 100 0) (vec3 80 80 0) (pi / 4)
 
 
 
@@ -623,30 +919,6 @@ lookUpVertex name vs =
 
 
 
--- newGraph = morphGraph graph9 (newGrid 4)
-
-
-transitionIntoIsomorph =
-    morphGraph graph9 bipartiteGrid
-
-
-newGrid n =
-    let
-        position =
-            vec3 200 300 0
-
-        size =
-            vec3 80 50 0
-
-        gridA =
-            parametricPolygon n size position 0
-
-        gridB =
-            parametricPolygon n (Math.Vector3.scale 0.5 size) position 0
-    in
-    gridA ++ gridB
-
-
 
 -- Will connect 1 to 3,4,5,6
 -- Then in next call 2 ot 3,4,5,6
@@ -712,9 +984,9 @@ drawSelectedVertex : Vertex -> S.Svg Msg
 drawSelectedVertex  v =
     ccircle 13 v.pos "#BF8915" v.name
 
-writeVertexName : Vertex -> S.Svg msg
+writeVertexName : Vertex -> S.Svg Msg
 writeVertexName v =
-    writeText (String.fromInt v.name) v.pos
+    writeName v.name v.pos
 
 
 drawEdge : Edge -> S.Svg msg
@@ -751,6 +1023,38 @@ drawGraph g =
         ++ List.map drawSelectedVertex selectedVertices
         ++ List.map writeVertexName g.vertices
 
+drawGraphForCover g =
+    let
+        ( specialEdges, normalEdges ) =
+            seperateEdges g
+
+        haloVertices =
+            getHaloVertices g specialEdges
+
+        selectedVertices =
+            List.filter (\ver -> ver.glow) g.vertices
+         
+    in
+    List.map drawEdge normalEdges
+        ++ List.map drawSpecialEdge specialEdges
+    --    ++ List.map drawGoldenCircle haloVertices
+        ++ List.map drawVertex g.vertices
+        ++ List.map drawSelectedVertex selectedVertices
+        ++ List.map writeVertexName g.vertices
+
+drawGraphForColoring g =
+    let
+      verticesOfSameColor edge =
+         edge.vertexOne.color == edge.vertexTwo.color && edge.vertexOne.color /= (Color.rgb 1 1 1)
+
+      normalEdges = List.filter (\e -> not (verticesOfSameColor e)) g.edges 
+
+      miscoloredEdges = List.filter (\e -> verticesOfSameColor e) g.edges 
+    in
+    List.map drawEdge normalEdges
+        ++ List.map drawSpecialEdge miscoloredEdges
+        ++ List.map drawVertex g.vertices
+        ++ List.map writeVertexName g.vertices
 
 getHaloVertices : Graph -> List Edge -> List Vertex
 getHaloVertices g es =
@@ -857,6 +1161,7 @@ circle size pos color name =
         , SA.style ("fill: " ++ Color.toCssString color ++ ";")
         , SE.onMouseOver (HoverOver name)
         , SE.onMouseOut (MouseOut name)
+        , SE.onClick (VertexClicked name)
         ]
         []
 
@@ -873,19 +1178,30 @@ ccircle size pos color name =
         ]
         []
 
+drawIntersectionPoint : Size -> Vec3 -> S.Svg Msg
+drawIntersectionPoint size pos =
+    S.circle
+        [ SA.cx (String.fromInt <| round <| getX pos)
+        , SA.cy (String.fromInt <| round <| getY pos)
+        , SA.r (String.fromInt size)
+        , SA.style ("fill: " ++ "blue" ++ ";")
+        ]
+        []
 
-writeText : String -> Vec3 -> S.Svg msg
-writeText text pos =
+
+writeName : Int -> Vec3 -> S.Svg Msg
+writeName name pos =
     S.text_
         [ SA.x (String.fromInt <| round <| getX pos)
         , SA.y (String.fromInt <| round <| getY pos)
         , SA.class "small"
         , SA.fontSize "7px"
         , SA.textAnchor "middle"
+        , SE.onClick (VertexClicked name)
 
         -- , SA.stroke "dark grey"
         ]
-        [ S.text text ]
+        [ S.text (String.fromInt name) ]
 
 
 
@@ -918,46 +1234,616 @@ lline veca vecb =
 
 
 paneOne graphA graphB =
-    H.div leftSideStyle [ anotherSvg graphA graphB ]
+    H.div leftSideStyle [ displaySvg ((drawGraph graphA) ++ (drawGraph graphB)) ]
+
+paneTwo shapeTransition =
+   let
+      graphA = shapeTransition.graphA
+      graphB = shapeTransition.graphB
+   in
+   case shapeTransition.specialToken of
+      MakeKCut ->
+         let
+            cutLine = makeCutLine shapeTransition
+         in
+         H.div leftSideStyle [ displaySvg ((drawGraph graphA) ++ (drawGraph graphB) ++ (drawCutLine cutLine)) ]
+
+      NoToken ->
+         H.div leftSideStyle [ displaySvg ((drawGraph graphA) ++ (drawGraph graphB)) ]
+
+paneThree display =
+   H.div leftSideStyle [ displaySvg ((drawGraphForColoring display.graphA) ++ (colorPallete display)) ]
 
 
-explanationOne : ShapeTransition -> H.Html Msg
-explanationOne shapeTransition =
-    H.div rightSideStyle
-       (  [ H.h1 [] [ H.text "Graph Isomorphism" ]
-          , p [] [ H.text isomorphismExplanation ]
-          , p []
-              [ H.button
-                  [ HE.onClick AnimationToggle ]
-                  [ H.text
-                      ((\switch ->
-                          if switch then
-                              "Pause Animation"
+paneFour display =
+   H.div leftSideStyle 
+         [ displaySvg (drawGraphForCover display.graphA) ]
+  
+colorPallete : ColorDisplay -> List (S.Svg Msg)
+colorPallete display=
+   let
+      sizeBig = (vec3 35 20 0)
+      sizeSmall = (vec3 20 20 0)
+      sizeOfColor color = if display.chosenColor == color
+                then sizeBig
+                else sizeSmall
+      red = (Color.rgb 1 0 0)
+      green = (Color.rgb 0 1 0)
+      blue = (Color.rgb 0 0 1)
+      squareRed = makeSquare (vec3 100 300 0) (sizeOfColor red) red
+      squareGreen = makeSquare (vec3 100 330 0) (sizeOfColor green) green 
+      squareBlue = makeSquare (vec3 100 360 0) (sizeOfColor blue) blue 
+   in
+   [squareRed, squareGreen, squareBlue]
 
-                          else
-                              "Play Animation"
-                       )
-                          shapeTransition.animationOn
-                      )
-                  ]
+
+makeSquare : Vec3 -> Vec3 -> Color -> S.Svg Msg
+makeSquare pos size color =
+   S.rect
+      [ SA.x (String.fromInt <| round <| getX pos)
+      , SA.y (String.fromInt <| round <| getY pos)
+      , SA.width (String.fromInt <| round <| getX size)
+      , SA.height (String.fromInt <| round <| getY size)
+      , SA.style ("fill: " ++ Color.toCssString color ++ ";")
+      , SE.onClick (ColoringSelectColor color)
+      ]
+      []
+
+makeCutLine shapeTransition =
+   let
+      start
+         = vec3 210 155 0
+      end
+         = vec3 370 155 0
+
+      setA = [1,2,3,4]
+
+      setB = [5,6,7,8]
+
+      edgeLines =
+         findEdgeLines shapeTransition.graphB.edges
+
+      intersectionPoints = 
+         List.filterMap (findIntersection (start, end)) edgeLines
+
+   in
+   CutLine start end (intersectionPoints)
+
+findEdgeLines : List Edge -> List (Vec3, Vec3)
+findEdgeLines edges =
+   case edges of
+      (x::xs) ->
+         (x.vertexOne.pos, x.vertexTwo.pos) :: findEdgeLines xs
+      [] ->
+         []
+
+findIntersection : (Vec3, Vec3) -> (Vec3, Vec3) -> Maybe Vec3
+findIntersection lineOne lineTwo =
+   let
+      (p11, p12) = 
+         lineOne
+      point1 =
+         Pt.meters (getX p11) (getY p11)
+      point2 =
+         Pt.meters (getX p12) (getY p12)
+      line1 =
+         Ln.fromEndpoints (point1, point2)
+
+      (p21, p22) =
+         lineTwo
+      point3 =
+         Pt.meters (getX p21) (getY p21)
+      point4 =
+         Pt.meters (getX p22) (getY p22)
+      line2 =
+         Ln.fromEndpoints (point3, point4)
+
+   in
+   case (Ln.intersectionPoint line1 line2) of
+      Nothing ->
+         Nothing
+      Just poinIn ->
+           let 
+               x = poinIn |> Pt.xCoordinate |> Len.inMeters
+
+               y = poinIn |> Pt.yCoordinate |> Len.inMeters
+           in
+           Just (vec3 x y 0)
+         
+
+      
+
+
+
+type CutLine =
+   CutLine Vec3 Vec3 (List Vec3)
+
+drawCutLine cutLine =
+    case cutLine of
+    CutLine start end l ->
+      [(line start end)] ++ (drawIntersectionPoints l)
+
+drawIntersectionPoints points =
+   List.map (drawIntersectionPoint 3) points
+
+explanationTwo : ShapeTransition -> ELE.Element Msg
+explanationTwo shapeTransition=
+      ELE.column
+         [ Font.color (ELE.rgb 1 1 1)
+         , ELE.height ELE.fill
+         , ELE.spacing 20
+         , ELE.padding 40
+         , ELE.height (ELE.fill |> ELE.minimum 970)
+         , ELE.width ELE.fill
+         ]
+         <|
+         [  ELE.el
+               [Font.size 30, Font.heavy] 
+               (ELE.text "Max Cut")
+         ,  ELE.paragraph
+               [ELE.spacing 8] 
+               [ELE.text maxCutExplanation]
+
+         ,  mediaButtons shapeTransition
+
+         , ELE.paragraph
+               []
+               [ ELE.text 
+                     """
+                     In the animation, the vertices are being segregated into
+                     two sets, such that the number of edges passing from
+                     vertices in one set to the vertices in another set is
+                     more than any other way the vertices of the graph could
+                     have been segregated.  In other words the problem of max
+                     cut is to identify such partition of the vertices of the
+                     graph that the above objective is satisfied.
+                     """
+               ]
+           
+        , Input.button
+            [
+              ELE.centerX
+            ] 
+            { onPress = Just MaxCutLine
+            , label = Icons.minusOutlined [ Ant.width 70, Ant.height 50 ]
+            }
+
+        , ELE.paragraph
+               []
+               [ELE.text <| if shapeTransition.specialToken == MakeKCut 
+                              then
+                         
+                                 """
+                                 The Max cut line, seperates the two sets of vertices. The intersection
+                                 between the cut line and the edges are shown as blue dots. As you should
+                                 verify, they are 9 in number. This number is equal to number of edges from
+                                 the set of vertices at the top going to the vertices at the bottom.
+                                 """
+                              else
+                                 ""
+               ]
+          , lowerNavigation "Isomporphism" "Graph Coloring"
+          --, Input.button
+          --     [ ELE.alignBottom
+          --     , ELE.alignRight
+          --     ]
+          --     { onPress = Just NextTopic
+          --     , label = Icons.verticalLeftOutlined [ Ant.width 50, Ant.height 50 ]
+          --     }
+          ]
+   
+explanationCover : VertexCoverDisplay -> ELE.Element Msg
+explanationCover display =
+    let
+        selected_vertices =
+            List.filter (\ver -> ver.glow) display.graphA.vertices
+
+        noOfSelectedVertices =
+            List.length selected_vertices
+
+        ( coveredEdges, _ ) =
+            seperateEdges display.graphA
+
+        noCoveredEdges =
+            List.length coveredEdges
+
+
+        totalEdges =
+            List.length display.graphA.edges
+
+        totalVertices =
+            List.length display.graphA.vertices
+
+        edgesRemainig = 
+            totalEdges - noCoveredEdges
+        
+    in
+    ELE.column
+         [ Font.color (ELE.rgb 1 1 1)
+         , ELE.height ELE.fill
+         , ELE.spacing 20
+         , ELE.padding 40
+         , ELE.height (ELE.fill |> ELE.minimum 970)
+         , ELE.width ELE.fill
+         ]
+         <|
+         [  ELE.el
+               [Font.size 30, Font.heavy] 
+               (ELE.text "Vertex Cover")
+
+         ,  ELE.paragraph
+               [ ELE.spacing 8 ] 
+               [ ELE.text vertexCoverExplanation ]
+
+         , ELE.paragraph
+               []
+               [ ELE.text 
+                     """
+                     In the task on the right, selecting a vertex will cover all
+                     the edges incident on it. Your objective is to select the
+                     minimum number of vertices such that, all the edges of the
+                     graph are covered.
+                     """
+               ]
+
+         , ELE.paragraph
+               []
+               [ ELE.text 
+                     """
+                     To select a vertex you can press, the vertex number
+                     on the keyboard. To de-select, do the same again.
+                     """
+               ]
+
+        , ELE.paragraph
+               []
+               [ ELE.text <| if noOfSelectedVertices  == 0
+                                then
+                                   ""
+                                else
+                                   "You have selected a total of "
+                                   ++ (String.fromInt noOfSelectedVertices)
+                                   ++ " vertices out of "
+                                   ++ (String.fromInt totalVertices)
+                                   ++ " vertices. "
+               ]
+
+        , ELE.paragraph
+               []
+               [ ELE.text <| if noCoveredEdges == 0
+                     then
+                        ""
+                     else
+                        "You have covered a total of "
+                        ++ (String.fromInt noCoveredEdges)
+                        ++ " edges out of a total of "
+                        ++ (String.fromInt totalEdges)
+                        ++ " edges. "
+               ]
+
+        , ELE.paragraph
+               []
+               [ ELE.text <| if edgesRemainig == 0
+                              then
+                                 "Congratulations, you have covered all "
+                                 ++ (String.fromInt noCoveredEdges)
+                                 ++ " edges. "
+                                 ++ "You have done so by selecting the vertices "
+                                 ++ getStringFromVertices selected_vertices
+                                 ++ "."
+                                 ++ " Therefore a vertex cover of this graph is the set vertices "
+                                 ++ getStringFromVertices selected_vertices
+                                 ++ "."
+
+                              else
+                                 if edgesRemainig == totalEdges
+                                 then
+                                    ""
+                                 else
+                                    (String.fromInt edgesRemainig)
+                                    ++ " edges more to be covered!"
               ]
-          , p [] [ H.button [ HE.onClick AnimationStartOver ] [ H.text "Animation Restart" ] ]
-          , p [] [H.text 
-                         """
-                         Go ahead and put your mouse over a vertex of the graph.
-                         Or press a number on the keyboard corresponding to a Vertex number.
-                         """
-                 ]
-          ] 
-          ++ (makeStory shapeTransition)
-       )
+
+          , lowerNavigation "Graph Coloring" "Isomporphism"
+          --, Input.button
+          --     [ ELE.alignBottom
+          --     , ELE.alignRight
+          --     ]
+          --     { onPress = Just NextTopic
+          --     , label = Icons.verticalLeftOutlined [ Ant.width 50, Ant.height 50 ]
+          --     }
+       ]
+
+explanationColoring : ColorDisplay -> ELE.Element Msg
+explanationColoring colorDisp =
+    let
+      verticesOfSameColor edge =
+         edge.vertexOne.color == edge.vertexTwo.color 
+                              && edge.vertexOne.color /= (Color.rgb 1 1 1)
+
+      miscoloredEdges = List.filter 
+                           (\e -> verticesOfSameColor e) colorDisp.graphA.edges 
+      coloredVertices = List.filter  
+                              (\v -> v.color /= Color.rgb 1 1 1 ) 
+                              colorDisp.graphA.vertices
+
+    in
+    ELE.column
+         [ Font.color (ELE.rgb 1 1 1)
+         , ELE.height ELE.fill
+         , ELE.spacing 20
+         , ELE.padding 40
+         , ELE.height (ELE.fill |> ELE.minimum 970)
+         , ELE.width ELE.fill
+         ]
+         <|
+         [  ELE.el
+               [Font.size 30, Font.heavy] 
+               (ELE.text "Graph Coloring")
+         ,  ELE.paragraph
+               [ ELE.spacing 8 ] 
+               [ ELE.text coloringExplanation ]
+
+         ,  ELE.paragraph
+               [ ELE.spacing 8 ] 
+               [ ELE.text howToColor ]
+         , ELE.paragraph
+               []
+               [ ELE.text 
+                     """
+                     As a challenge you may try to color
+                     the graph with only two colors and see if
+                     it is feasible.
+                     """
+               ]
+        , Input.button
+            [
+              ELE.centerX
+            ] 
+            { onPress = Just VertexNonColor
+            , label = Icons.minusOutlined [ Ant.width 70, Ant.height 50 ]
+            }
+
+        , ELE.paragraph
+               []
+               [ ELE.text <| if List.isEmpty coloredVertices
+                                then
+                                   ""
+                                else
+                                   """
+                                   Coloring has started.
+                                   """
+               ]
+
+        , ELE.paragraph
+               []
+               [ ELE.text <| if List.isEmpty miscoloredEdges
+                                then
+                                    ""
+                                else
+                                    String.join " "  <| List.map miscolorText miscoloredEdges
+               ]
+
+        , ELE.paragraph
+               []
+               [ ELE.text <| if List.isEmpty miscoloredEdges
+                                then
+                                    ""
+                                else
+                                   """
+                                   Try another color combination.
+                                   Remember the rule; No two adjacent
+                                   vertices must have the same color!
+                                   """
+               ]
+
+        , ELE.paragraph
+               []
+               [ ELE.text <| if (List.isEmpty miscoloredEdges
+                                 && List.length coloredVertices 
+                                    == List.length colorDisp.graphA.vertices)
+                                then
+                                   """
+                                   Congratulations! Graph has been colored fully and correctly.
+                                   i.e. No two adjacent vertices have the same color.
+                                   """
+                                else
+                                   ""
+              ]
+
+          , lowerNavigation "Max Cut" "Vertex Cover"
+          --, Input.button
+          --     [ ELE.alignBottom
+          --     , ELE.alignRight
+          --     ]
+          --     { onPress = Just NextTopic
+          --     , label = Icons.verticalLeftOutlined [ Ant.width 50, Ant.height 50 ]
+          --     }
+          ]
+
+--explanationColoring : ColorDisplay -> H.Html Msg
+--explanationColoring colorDisp =
+--    let
+--      verticesOfSameColor edge =
+--         edge.vertexOne.color == edge.vertexTwo.color 
+--                              && edge.vertexOne.color /= (Color.rgb 1 1 1)
+--
+--      miscoloredEdges = List.filter 
+--                           (\e -> verticesOfSameColor e) colorDisp.graphA.edges 
+--      coloredVertices = List.filter  
+--                              (\v -> v.color /= Color.rgb 1 1 1 ) 
+--                              colorDisp.graphA.vertices
+--
+--    in
+--    H.div rightSideStyle
+--       (  [ H.h1 [] [ H.text "Graph Coloring" ]
+--          , p [] [ H.text coloringExplanation  ]
+--          , p [] [ H.text howToColor ]
+--          , p [] [ H.text
+--                     """
+--                     As a challenge you may try to color
+--                     the graph with only two colors and see if
+--                     it is feasible.
+--                     """
+--                 ]
+--          , p [] [ H.button
+--                     [ HE.onClick VertexNonColor ]
+--                     [ H.text "Reset Colors" ]
+--                 ] 
+--          , p [] [ H.text <|
+--                           if (List.isEmpty coloredVertices)
+--                           then 
+--                              "" 
+--                           else
+--                              "Coloring has started."
+--                              
+--                 ]
+--          , p [] [ H.text <|
+--                           if (List.isEmpty miscoloredEdges)
+--                           then
+--                              ""
+--                           else
+--                              String.join " "  <| List.map miscolorText miscoloredEdges
+--                 ]
+--          , p [] [ H.text <|
+--                           if (List.isEmpty miscoloredEdges)
+--                           then
+--                              ""
+--                           else
+--                              """
+--                              Try another color combination.
+--                              Remember the rule; No two adjacent
+--                              vertices must have the same color!
+--                              """
+--                 ]
+--
+--          , p [] [ H.text <|
+--                           if (List.isEmpty miscoloredEdges
+--                                 && List.length coloredVertices 
+--                                    == List.length colorDisp.graphA.vertices)
+--                           then
+--                              """
+--                              Congratulations! Graph has been colored fully and correctly.
+--                              i.e. No two adjacent vertices have the same color.
+--                              """
+--                           else
+--                              ""
+--                 ]
+--          ]
+--       )
+miscolorText : Edge -> String
+miscolorText e =
+   "Vertex " ++ (String.fromInt e.vertexOne.name) 
+             ++ " and vertex "
+             ++ (String.fromInt e.vertexTwo.name)
+             ++ " which are adjacent to each other are colored with the same color."
+
+mediaButtons : ShapeTransition -> ELE.Element Msg
+mediaButtons shapeTransition =
+   ELE.row
+      [ELE.spacing 90, ELE.paddingXY 300 40]
+      [  playButton shapeTransition.animationOn
+      ,  resetButton
+      ]
 
 
-makeStory : ShapeTransition -> List (H.Html Msg)
+playButton : Bool -> ELE.Element Msg
+playButton animationOn =
+   Input.button
+      []
+      {  onPress = Just AnimationToggle  
+      ,  label = if animationOn  
+                 then   Icons.pauseOutlined [ Ant.width 50, Ant.height 50 ]
+                 else   Icons.caretRightOutlined [ Ant.width 50, Ant.height 50 ]
+      }
+
+resetButton : ELE.Element Msg
+resetButton =
+   Input.button
+         []
+         {  onPress = Just AnimationStartOver
+         ,  label = Icons.rollbackOutlined [ Ant.width 50, Ant.height 50 ]
+ 
+         }
+                        
+explanationOne : ShapeTransition -> ELE.Element Msg
+explanationOne shapeTransition =
+      ELE.column
+         [ Font.color (ELE.rgb 1 1 1)
+         , ELE.height ELE.fill
+         , ELE.spacing 20
+         , ELE.padding 40
+         , ELE.height (ELE.fill |> ELE.minimum 970)
+         , ELE.width ELE.fill
+         ]
+         <|
+         [  ELE.el
+               [Font.size 30, Font.heavy] 
+               (ELE.text "Graph Isomorphism")
+         ,  ELE.paragraph
+               [ELE.spacing 8] 
+               [ELE.text isomorphismExplanation]
+
+         , mediaButtons shapeTransition
+
+
+         , ELE.paragraph
+               []
+               [ ELE.text 
+                     """
+                     Go ahead and put your mouse over a vertex of the graph. 
+                     Or press a number on the keyboard corresponding to a Vertex number.
+                     """
+               ]
+
+         ]
+
+         ++  
+            (makeStory shapeTransition)
+         ++
+
+
+         [ lowerNavigation "Vertex Cover" "Max Cut" ]
+               
+
+lowerNavigation : String -> String -> ELE.Element Msg
+lowerNavigation leftTitle rightTitle =
+   ELE.row
+      [ ELE.alignBottom 
+      , ELE.width ELE.fill
+      , ELE.padding 20
+      , ELE.spacing 20
+      ]
+      [
+         Input.button
+         [
+            Border.rounded 100
+         ,  ELE.alignLeft
+         ] 
+         { onPress = Just PreviousTopic
+         , label = Icons.verticalRightOutlined [ Ant.width 40, Ant.height 40 ]
+         }
+         
+     ,  ELE.el [ ELE.alignLeft ] <| ELE.text leftTitle    
+
+     ,  ELE.el [ ELE.alignRight ] <| ELE.text rightTitle    
+     ,
+         Input.button
+         [
+            Border.rounded 100
+         ,  ELE.alignRight
+         ] 
+         { onPress = Just NextTopic
+         , label = Icons.verticalLeftOutlined [ Ant.width 40, Ant.height 40 ]
+         }
+     ]
+--explanationOne : ShapeTransition -> ELE.Element Msg
+makeStory : ShapeTransition -> List (ELE.Element Msg)
 makeStory shapeTransition =
     let
         glowing_vertices =
             List.filter (\ver -> ver.glow) shapeTransition.graphB.vertices
+
 
         putyourmouse =
             """
@@ -990,8 +1876,8 @@ makeStory shapeTransition =
                     ]
 
         storyPara =
-            List.intersperse (H.br [] [])
-                (List.map H.text
+            List.intersperse (ELE.html <| H.br [] [])
+                (List.map ELE.text
                     listOfStories
                 )
 
@@ -1006,9 +1892,10 @@ makeStory shapeTransition =
                   convince your self that the graphs are isomorphic to each other.
                   """
     in
-      [ p [] storyPara
-      , p [] [H.text footer]
+      [ ELE.paragraph [] storyPara
+      , ELE.paragraph [] [ELE.text footer]
       ]
+
 
 
 getStringFromVertices : List Vertex -> String
@@ -1027,19 +1914,10 @@ getStringFromVertices vs =
             String.fromInt x.name ++ ", " ++ getStringFromVertices xs
 
 
-paneTwo =
-    H.div rightSideStyle [ anSvg ]
 
 
-explanationTwo =
-    H.div leftSideStyle
-        [ H.h1 [] [ H.text "Hamiltonian Cycle" ]
-        , H.p [] [ H.text hamiltonianExplanation ]
-        ]
-
-
-paneThree =
-    H.div leftSideStyle [ H.text "Graph" ]
+--paneThree =
+ --   H.div leftSideStyle [ H.text "Graph" ]
 
 
 explanationThree =
@@ -1049,8 +1927,6 @@ explanationThree =
         ]
 
 
-paneFour =
-    H.div leftSideStyle [ H.text "Graph" ]
 
 
 explanationFour =
@@ -1075,11 +1951,20 @@ leftSideStyle =
     , HA.style "margin" "10px"
     ]
 
+goBottomStyle =
+   [ HA.style "position" "absolute"
+   , HA.style "bottom" "10px"
+   ]
+
+explanationStyle  = 
+   [ HA.style "position" "relative"
+   ]
 
 rightSideStyle =
     [ HA.style "float" "right"
 
     --, HA.style "background" "Blue"
+--    , HA.style "postion" "relative"
     , HA.style "width" "45%"
     , HA.style "height" "100%"
     , HA.style "padding" "30px"
