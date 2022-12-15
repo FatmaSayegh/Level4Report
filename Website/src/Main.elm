@@ -1996,7 +1996,7 @@ explanationCover display =
                                     ++ " edges more to be covered!"
               ]
 
-          , lowerNavigation "Graph Coloring" "Isomporphism"
+          , lowerNavigation "Graph Coloring" "Tree Width"
        ]
 
 
@@ -2175,7 +2175,7 @@ explanationOne shapeTransition =
          ++
 
 
-         [ lowerNavigation "Vertex Cover" "Max Cut" ]
+         [ lowerNavigation "Tree Width" "Max Cut" ]
                
 
 lowerNavigation : String -> String -> ELE.Element Msg
