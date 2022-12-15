@@ -759,6 +759,17 @@ layOutOptions =
 
 layOutAttributes = [ELE.width ELE.fill, ELE.height ELE.fill]
 
+displayColumn svgHtml =
+   ELE.column
+      [ Font.color (ELE.rgb 1 1 1)
+      , ELE.height ELE.fill
+      , ELE.spacing 20
+      , ELE.padding 40
+      , ELE.height ELE.fill
+      , ELE.width ELE.fill
+      ] [ELE.html svgHtml]
+
+
 view model =
    case model of
       Isomorphic shapeTransition ->
@@ -768,7 +779,7 @@ view model =
             ( ELE.row
                   [ ELE.width ELE.fill]
 
-                  [ ELE.html (paneOne shapeTransition.graphA shapeTransition.graphB) 
+                  [ displayColumn (paneOne shapeTransition.graphA shapeTransition.graphB)
                   , explanationOne shapeTransition
                   ]
             )
@@ -781,7 +792,7 @@ view model =
             ( ELE.row
                   [ ELE.width ELE.fill]
 
-                  [ ELE.html (paneTwo shapeTransition) 
+                  [ displayColumn (paneTwo shapeTransition) 
                   , explanationTwo shapeTransition
                   ]
             )
@@ -793,7 +804,7 @@ view model =
             ( ELE.row
                   [ ELE.width ELE.fill]
 
-                  [ ELE.html (paneThree display) 
+                  [ displayColumn (paneThree display) 
                   , explanationColoring display
                   ]
             )
@@ -805,7 +816,7 @@ view model =
             ( ELE.row
                   [ ELE.width ELE.fill]
 
-                  [ ELE.html (paneFour display) 
+                  [ displayColumn (paneFour display) 
                   , explanationCover display
                   ]
             )
@@ -817,7 +828,7 @@ view model =
             ( ELE.row
                   [ ELE.width ELE.fill]
 
-                  [ ELE.html (paneTree display) 
+                  [ displayColumn (paneTree display) 
                   , explanationWidth display
                   ]
             )
@@ -1526,7 +1537,7 @@ lline veca vecb =
 
 
 paneOne graphA graphB =
-    H.div leftSideStyle [ displaySvg ((drawGraph graphA) ++ (drawGraph graphB)) ]
+    displaySvg ((drawGraph graphA) ++ (drawGraph graphB))
 
 paneTwo shapeTransition =
    let
@@ -1538,23 +1549,21 @@ paneTwo shapeTransition =
          let
             cutLine = makeCutLine shapeTransition
          in
-         H.div leftSideStyle [ displaySvg ((drawGraph graphA) ++ (drawGraph graphB) ++ (drawCutLine cutLine)) ]
+         displaySvg ((drawGraph graphA) ++ (drawGraph graphB) ++ (drawCutLine cutLine))
 
       NoToken ->
-         H.div leftSideStyle [ displaySvg ((drawGraph graphA) ++ (drawGraph graphB)) ]
+         displaySvg ((drawGraph graphA) ++ (drawGraph graphB))
 
 paneThree display =
-   H.div leftSideStyle [ displaySvg ((drawGraphForColoring display.graphA) ++ (colorPallete display)) ]
+   displaySvg ((drawGraphForColoring display.graphA) ++ (colorPallete display))
 
 
 paneFour display =
-   H.div leftSideStyle 
-         [ displaySvg (drawGraphForCover display.graphA) ]
+         displaySvg (drawGraphForCover display.graphA)
 
 paneTree : TreeWidthDisplay -> H.Html Msg
 paneTree display =
-   H.div leftSideStyle 
-         [ displaySvg (drawGraphForTreeWidth display) ]
+         displaySvg (drawGraphForTreeWidth display)
   
 colorPallete : ColorDisplay -> List (S.Svg Msg)
 colorPallete display=
@@ -1670,7 +1679,7 @@ explanationTwo shapeTransition=
          , ELE.height ELE.fill
          , ELE.spacing 20
          , ELE.padding 40
-         , ELE.height (ELE.fill |> ELE.minimum 970)
+         , ELE.height ELE.fill
          , ELE.width ELE.fill
          ]
          <|
@@ -1777,7 +1786,7 @@ explanationWidth display =
          , ELE.height ELE.fill
          , ELE.spacing 20
          , ELE.padding 40
-         , ELE.height (ELE.fill |> ELE.minimum 970)
+         , ELE.height ELE.fill
          , ELE.width ELE.fill
          ]
          <|
@@ -1915,7 +1924,7 @@ explanationCover display =
          , ELE.height ELE.fill
          , ELE.spacing 20
          , ELE.padding 40
-         , ELE.height (ELE.fill |> ELE.minimum 970)
+         , ELE.height ELE.fill
          , ELE.width ELE.fill
          ]
          <|
@@ -2020,7 +2029,7 @@ explanationColoring colorDisp =
          , ELE.height ELE.fill
          , ELE.spacing 20
          , ELE.padding 40
-         , ELE.height (ELE.fill |> ELE.minimum 970)
+         , ELE.height ELE.fill
          , ELE.width ELE.fill
          ]
          <|
@@ -2145,7 +2154,7 @@ explanationOne shapeTransition =
          , ELE.height ELE.fill
          , ELE.spacing 20
          , ELE.padding 40
-         , ELE.height (ELE.fill |> ELE.minimum 970)
+         --, ELE.height (ELE.fill |> ELE.minimum 970)
          , ELE.width ELE.fill
          ]
          <|
