@@ -2154,7 +2154,7 @@ explanationOne shapeTransition =
          , ELE.height ELE.fill
          , ELE.spacing 20
          , ELE.padding 40
-         --, ELE.height (ELE.fill |> ELE.minimum 970)
+         , ELE.height ELE.fill
          , ELE.width ELE.fill
          ]
          <|
