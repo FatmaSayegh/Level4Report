@@ -59,3 +59,12 @@ vertexCoverExplanation =
    all the edges in the graph must have one of such vertices as at least one of
    their endpoints.
    """
+
+
+treeWidthExplanation =
+   """
+   Tree width can be seen a measure of tree-ness of a graph. It shows how well
+   a graph can be interpreted as a tree. This demonstration is broken into two parts.
+   The first part explains the concept of graph decomposition. The second part will
+   build upon the first to explain the definition of tree width more pricisely.
+   """
