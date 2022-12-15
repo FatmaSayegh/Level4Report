@@ -763,8 +763,8 @@ displayColumn svgHtml =
    ELE.column
       [ Font.color (ELE.rgb 1 1 1)
       , ELE.height ELE.fill
-      , ELE.spacing 20
-      , ELE.padding 40
+      --, ELE.spacing 20
+      --, ELE.padding 40
       , ELE.height ELE.fill
       , ELE.width ELE.fill
       ] [ELE.html svgHtml]
@@ -966,9 +966,9 @@ type alias Size =
 
 displaySvg elements =
     S.svg
-        [ SA.width "100%"
-        , SA.height "auto"
-        , SA.viewBox "0 0 400 400"
+        --[ SA.width "100%"
+        --, SA.height "auto"
+        [ SA.viewBox "0 0 400 400"
         ]
         elements
 
