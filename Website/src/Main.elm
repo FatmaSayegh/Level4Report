@@ -763,9 +763,6 @@ displayColumn svgHtml =
    ELE.column
       [ Font.color (ELE.rgb 1 1 1)
       , ELE.height ELE.fill
-      --, ELE.spacing 20
-      --, ELE.padding 40
-      , ELE.height ELE.fill
       , ELE.width ELE.fill
       ] [ELE.html svgHtml]
 
@@ -1678,8 +1675,8 @@ explanationTwo shapeTransition=
          [ Font.color (ELE.rgb 1 1 1)
          , ELE.height ELE.fill
          , ELE.spacing 20
-         , ELE.padding 40
-         , ELE.height ELE.fill
+         --, ELE.padding 40
+         --, ELE.height ELE.fill
          , ELE.width ELE.fill
          ]
          <|
@@ -1783,9 +1780,9 @@ explanationWidth : TreeWidthDisplay -> ELE.Element Msg
 explanationWidth display =
     ELE.column
          [ Font.color (ELE.rgb 1 1 1)
-         , ELE.height ELE.fill
+         --, ELE.height ELE.fill
          , ELE.spacing 20
-         , ELE.padding 40
+         --, ELE.padding 40
          , ELE.height ELE.fill
          , ELE.width ELE.fill
          ]
@@ -1921,9 +1918,9 @@ explanationCover display =
     in
     ELE.column
          [ Font.color (ELE.rgb 1 1 1)
-         , ELE.height ELE.fill
+         --, ELE.height ELE.fill
          , ELE.spacing 20
-         , ELE.padding 40
+         --, ELE.padding 40
          , ELE.height ELE.fill
          , ELE.width ELE.fill
          ]
@@ -2026,9 +2023,9 @@ explanationColoring colorDisp =
     in
     ELE.column
          [ Font.color (ELE.rgb 1 1 1)
-         , ELE.height ELE.fill
+         --, ELE.height ELE.fill
          , ELE.spacing 20
-         , ELE.padding 40
+         --, ELE.padding 40
          , ELE.height ELE.fill
          , ELE.width ELE.fill
          ]
@@ -2153,7 +2150,7 @@ explanationOne shapeTransition =
          [ Font.color (ELE.rgb 1 1 1)
          , ELE.height ELE.fill
          , ELE.spacing 20
-         , ELE.padding 40
+         --, ELE.padding 40
          , ELE.height ELE.fill
          , ELE.width ELE.fill
          ]
