@@ -57,7 +57,7 @@ main =
 
 type Model =
    Isomorphic ShapeTransition
-   | MaxCut ShapeTransition
+   | MaxCut MaxCutTransition
    | GraphColoring ColorDisplay
    | VertexCover VertexCoverDisplay
    | TreeWidth TreeWidthDisplay
@@ -101,6 +101,16 @@ type alias ShapeTransition =
     , specialToken : Token
     }
 
+type alias MaxCutTransition =
+    { transitionA : ShapeTransition -- Will remain static
+    , transitionB : ShapeTransition  -- Will move towards final Grid when animationOn is True
+    , state : MaxCutState
+    }
+
+type MaxCutState =
+   TwoCut
+   | ThreeCut
+
 -- Initializing the model
 -- init function initializes, a model and provides
 -- an instance of the model to the elm runtime.
@@ -119,8 +129,8 @@ isomorphicTransition =
         , specialToken = NoToken
         }
 
-maxcutTransition : ShapeTransition
-maxcutTransition =
+maxcutTransitionA : ShapeTransition
+maxcutTransitionA =
     let
         (initialGraph, finalGrid) =
             maxCutGeometry
@@ -131,6 +141,26 @@ maxcutTransition =
         , animationOn = False
         , specialToken = NoToken
         }
+
+maxcutTransitionB : ShapeTransition
+maxcutTransitionB =
+    let
+        (initialGraph, finalGrid) =
+            threeCutGeometry
+    in
+        { graphA = initialGraph
+        , graphB = initialGraph
+        , finalGrid = finalGrid
+        , animationOn = False
+        , specialToken = NoToken
+        }
+
+maxCutTransition : MaxCutTransition
+maxCutTransition =
+   { transitionA = maxcutTransitionA
+   , transitionB = maxcutTransitionB
+   , state = TwoCut
+   }
 
 maxCutGeometry : (Graph, Grid)
 maxCutGeometry =
@@ -159,6 +189,51 @@ maxCutGeometry =
 
       in
       (Graph vertices edges, setAFinalGrid ++ setBFinalGrid)
+
+threeCutGeometry : (Graph, Grid)
+threeCutGeometry =
+   let
+      position = (vec3 200 180 0) -- left center
+      distance =
+         100
+      angle = pi/6
+      verticalShift = vec3 0 (distance * sin angle) 0
+      longVerticalShift = vec3 0 distance 0
+      horizontalShift = vec3 (distance * cos angle) 0 0
+      edgeTuples 
+         = [  (1, 4), (1, 5), (1, 6), (1, 7), (1, 8), (1, 9)
+           ,  (2, 4), (2, 5), (2, 6), (2, 7), (2, 8), (2, 9)
+           ,  (3, 4), (3, 5), (3, 6), (3, 7), (3, 8), (3, 9)
+           ,  (4, 7), (4, 8), (4, 9)
+           ,  (5, 7), (5, 8), (5, 9)
+           ,  (6, 7), (6, 8), (6, 9)
+           ]
+      gridStart = parametricPolygon 9 (vec3 80 80 0) position (pi/2 - 2*pi/9)
+      modifiedGrid =
+         gridStart
+            |> List.map2 (\x y -> (x, y)) (List.range 1 9)
+            |> List.map (\t ->
+                           if Tuple.first t <= 3
+                              then
+                                 (add (Tuple.second t) longVerticalShift)
+                              else
+                                 if Tuple.first t > 3 && Tuple.first t <= 6
+                                    then
+                                    (sub (sub (Tuple.second t) horizontalShift) verticalShift)
+                                    else
+                                    (sub (add (Tuple.second t) horizontalShift) verticalShift)
+                        )
+
+      vertices = 
+         List.map3 (\name g c -> Vertex name g c False) 
+            (List.range 1 9)
+            (gridStart)
+            (listOfColors First 9)
+      edges =
+         makeEdgesWithTuples edgeTuples vertices
+
+      in
+      (Graph vertices edges, modifiedGrid)
          
 
 
@@ -225,7 +300,8 @@ type Msg
     | MaxCutLine
     | ColoringSelectColor Color
     | VertexNonColor
-    | NextTreeWidthAnimation 
+    --| NextTreeWidthAnimation 
+    | NextAnimation 
     | PreviousTreeWidthAnimation
     | Other
 
@@ -273,7 +349,8 @@ keyToMsg value =
                      'w' ->
                          VertexNonColor
                      't' ->
-                         NextTreeWidthAnimation
+                         --NextTreeWidthAnimation
+                         NextAnimation
                      'T' ->
                          PreviousTreeWidthAnimation
                      _ ->
@@ -307,7 +384,7 @@ update msg model =
       NextTopic ->
          case model of
             Isomorphic x ->
-               ( MaxCut maxcutTransition, Cmd.none)
+               ( MaxCut maxCutTransition, Cmd.none)
             MaxCut x ->
                (GraphColoring colorDisplay, Cmd.none)
             GraphColoring x ->
@@ -326,15 +403,15 @@ update msg model =
             MaxCut x ->
                ( Isomorphic isomorphicTransition, Cmd.none)
             GraphColoring x ->
-               ( MaxCut maxcutTransition, Cmd.none)
+               ( MaxCut maxCutTransition, Cmd.none)
             VertexCover x ->
                (GraphColoring colorDisplay, Cmd.none)
       _ ->
          case model of
            Isomorphic shapeTransition ->
               ( Isomorphic (animateIsomorphicTransition msg shapeTransition), Cmd.none )
-           MaxCut shapeTransition ->
-              ( MaxCut (animateMaxCutTransition msg shapeTransition), Cmd.none )
+           MaxCut maxcutTrans ->
+              ( MaxCut (animateMaxCutCompound msg maxcutTrans), Cmd.none )
            GraphColoring display ->
               ( goColor display msg, Cmd.none)
            VertexCover display ->
@@ -346,7 +423,8 @@ goTree : TreeWidthDisplay -> Msg -> Model
 goTree display msg =
    case msg of
 
-      NextTreeWidthAnimation ->
+      --NextTreeWidthAnimation ->
+      NextAnimation ->
          let 
            newStatus =
                case display.status of
@@ -623,6 +701,43 @@ colorDisplay =
       ColorDisplay newGraph (Color.rgb 1 1 1) (Color.rgb 1 1 1)
 
 
+animateMaxCutCompound : Msg -> MaxCutTransition -> MaxCutTransition
+animateMaxCutCompound  msg maxCutTrans =
+   case msg of
+      NextAnimation ->
+         let
+            newState =
+               case maxCutTrans.state of
+                  TwoCut ->
+                     ThreeCut
+                  ThreeCut ->
+                     TwoCut
+         in
+         { maxCutTrans
+            | state = newState
+         }
+
+      _ ->
+
+        case maxCutTrans.state of
+           TwoCut ->
+              let 
+                  shapeTrans =
+                     animateMaxCutTransition msg maxCutTrans.transitionA
+              in
+              {  maxCutTrans
+                 | transitionA = shapeTrans
+              }
+
+           ThreeCut ->
+              let 
+                  shapeTrans =
+                     animateMaxCutTransition msg maxCutTrans.transitionB
+              in
+              {  maxCutTrans
+                 | transitionB = shapeTrans
+              }
+
 animateMaxCutTransition : Msg -> ShapeTransition -> ShapeTransition
 animateMaxCutTransition  msg shapeTransition =
    case msg of
@@ -779,15 +894,15 @@ view model =
             )
 
 
-      MaxCut shapeTransition ->
+      MaxCut maxCutTrans ->
          ELE.layoutWith 
             layOutOptions
             layOutAttributes
             ( ELE.row
                   [ ELE.width ELE.fill]
 
-                  [ displayColumn (paneTwo shapeTransition) 
-                  , explanationTwo shapeTransition
+                  [ displayColumn (paneTwo maxCutTrans) 
+                  , explanationTwo maxCutTrans.transitionA
                   ]
             )
 
@@ -1557,7 +1672,14 @@ lline veca vecb =
 paneOne graphA graphB =
     displaySvg ((drawGraph graphA) ++ (drawGraph graphB))
 
-paneTwo shapeTransition =
+paneTwo maxCutTrans =
+   case maxCutTrans.state of
+      TwoCut ->
+         paneTwoA maxCutTrans.transitionA
+      ThreeCut ->
+         paneTwoB maxCutTrans.transitionB
+
+paneTwoA shapeTransition =
    let
       graphA = shapeTransition.graphA
       graphB = shapeTransition.graphB
@@ -1571,6 +1693,26 @@ paneTwo shapeTransition =
 
       NoToken ->
          displaySvg ((drawGraph graphA) ++ (drawGraph graphB))
+
+paneTwoB shapeTransition =
+   let
+      graphA = shapeTransition.graphA
+      graphB = shapeTransition.graphB
+   in
+   case shapeTransition.specialToken of
+      MakeKCut ->
+         let
+            cutLines = 
+               makeCutLineB shapeTransition
+            drawCutLines =
+               cutLines
+               |> List.map drawCutLine
+               |> List.concat
+         in
+         displaySvg ((drawGraph graphB) ++ drawCutLines)
+
+      NoToken ->
+         displaySvg (drawGraph graphB)
 
 paneThree display =
    displaySvg ((drawGraphForColoring display.graphA) ++ (colorPallete display))
@@ -1586,8 +1728,6 @@ paneTree display =
 colorPallete : ColorDisplay -> List (S.Svg Msg)
 colorPallete display=
    let
-      --sizeBig = (vec3 35 20 0)
-      --sizeSmall = (vec3 20 20 0)
       sizeBig = (vec3 20 35 0)
       sizeSmall = (vec3 20 20 0)
       sizeOfColor color = if display.chosenColor == color
@@ -1596,9 +1736,6 @@ colorPallete display=
       red = (Color.rgb 1 0 0)
       green = (Color.rgb 0 1 0)
       blue = (Color.rgb 0 0 1)
-      --squareRed = makeSquare (vec3 100 300 0) (sizeOfColor red) red
-      --squareGreen = makeSquare (vec3 100 330 0) (sizeOfColor green) green 
-      --squareBlue = makeSquare (vec3 100 360 0) (sizeOfColor blue) blue 
       squareRed = makeSquare (vec3 170 230 0) (sizeOfColor red) red
       squareGreen = makeSquare (vec3 200 230 0) (sizeOfColor green) green 
       squareBlue = makeSquare (vec3 230 230 0) (sizeOfColor blue) blue 
@@ -1617,6 +1754,65 @@ makeSquare pos size color =
       , SE.onClick (ColoringSelectColor color)
       ]
       []
+
+makeCutLineB shapeTransition = 
+   let
+      vertices =
+         shapeTransition.graphB.vertices
+
+      firstTuple = [ (4,6), (7,9), (1,3)]
+
+      listOfTupledPosns =
+         firstTuple
+            |> List.filterMap (findPositionsOfTuples vertices)
+
+      edgeLines =
+         findEdgeLines shapeTransition.graphB.edges
+
+      intersectionPoints =
+         listOfTupledPosns
+            |> List.map (\(p1, p2) ->
+                           List.filterMap (findIntersection (p1, p2)) edgeLines)
+   in
+   List.map2 
+         (\(p1, p2) ins ->
+            CutLine p1 p2 ins)
+         listOfTupledPosns 
+         intersectionPoints
+      
+findPositionsOfTuples : (List Vertex) -> (Int, Int) -> Maybe (Vec3, Vec3)
+findPositionsOfTuples vs tu =
+   case tu of
+      (name1, name2) ->
+         case (lookUpVertex name1 vs, lookUpVertex name2 vs) of
+            (Nothing, _ ) ->
+               Nothing
+            ( _, Nothing ) ->
+               Nothing
+            (Just vertexOne, Just vertexTwo) ->
+               let
+                  pullDown = vec3 0 20 0
+                  pos1 = vertexOne.pos
+                  pos2 = vertexTwo.pos
+                  diff = normalize <| sub pos2 pos1
+                  linePos2 = add pos2 (Math.Vector3.scale 50 diff)
+                  linePos1 = sub pos1 (Math.Vector3.scale 50 diff)
+                  (finalPos1, finalPos2) =
+                     if (List.member vertexOne.name [1,2,3])
+                        then
+                           (  sub linePos1 pullDown
+                           ,  sub linePos2 pullDown
+                           )
+                        else
+                           (  add linePos1 <| Math.Vector3.scale 1.6 pullDown
+                           ,  add linePos2 <| Math.Vector3.scale 1.6 pullDown
+                           )
+                           
+               in
+               Just (finalPos1, finalPos2)
+
+
+
 
 makeCutLine shapeTransition =
    let
@@ -1764,7 +1960,8 @@ treeWidthButtons status =
                Border.rounded 100
             ,  ELE.centerX
             ] 
-            { onPress = Just NextTreeWidthAnimation
+            --{ onPress = Just NextTreeWidthAnimation
+            { onPress = Just NextAnimation
             , label = Icons.forwardOutlined [ Ant.width 40, Ant.height 40 ]
             }
       backward =
