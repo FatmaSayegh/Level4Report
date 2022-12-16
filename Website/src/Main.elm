@@ -75,6 +75,7 @@ type TreeWidthStatus =
    CircularGraph
    | MorphingIntoHoneyComb
    | HoneyCombGraph
+   | ShowOnePiece
    | PiecesMarked
    | TreeDrawnGraph
 
@@ -354,7 +355,9 @@ goTree display msg =
                   MorphingIntoHoneyComb ->
                      HoneyCombGraph
                   HoneyCombGraph ->
-                     PiecesMarked
+                     ShowOnePiece
+                  ShowOnePiece ->
+                     PiecesMarked 
                   PiecesMarked ->
                      TreeDrawnGraph
                   TreeDrawnGraph ->
@@ -388,8 +391,10 @@ goTree display msg =
                      CircularGraph
                   HoneyCombGraph ->
                      CircularGraph
-                  PiecesMarked ->
+                  ShowOnePiece ->
                      HoneyCombGraph
+                  PiecesMarked ->
+                     ShowOnePiece
                   TreeDrawnGraph ->
                      PiecesMarked
 
@@ -555,12 +560,6 @@ treeWidthDisplay =
          ,  (11, 12)
          ]
 
-      --vertices = 
-      --   List.map3
-      --      (\name g c -> Vertex name g c False)
-      --      (List.range 1 12)
-      --      (initialGrid)
-      --      (listOfColors First 12)
       vertices = 
          List.map3
             (\name g c -> Vertex name g c False)
@@ -612,6 +611,7 @@ colorDisplay =
    let
       initialGraph =
          makeGraph (PolygonCycleDoll 5) (vec3 200 100 0) (vec3 80 80 0) (pi /4)
+         --makeGraph (PolygonCycleDoll 5) (vec3 200 130 0) (vec3 80 80 0) (pi /4)
       whiteVertices = 
          List.map (\v ->
             {v | color = (Color.rgb 1 1 1)})
@@ -622,18 +622,6 @@ colorDisplay =
    in
       ColorDisplay newGraph (Color.rgb 1 1 1) (Color.rgb 1 1 1)
 
---isomorphicTransition : ShapeTransition
---isomorphicTransition =
---    let
---        initialGraph =
---            makeGraph (PolygonCycleDoll 4) (vec3 200 100 0) (vec3 80 80 0) (pi / 4)
---    in
---        { graphA = initialGraph
---        , graphB = initialGraph
---        , finalGrid = bipartiteGrid
---        , animationOn = False
---        , specialToken = NoToken
---        }
 
 animateMaxCutTransition : Msg -> ShapeTransition -> ShapeTransition
 animateMaxCutTransition  msg shapeTransition =
@@ -762,6 +750,7 @@ layOutAttributes =
                   -- [ ELE.width ELE.fill
                    [ ELE.height ELE.fill
                    , Background.color <| ELE.rgb 0.2 0.2 0.2
+                   , ELE.padding 30
                    ]
 
 displayColumn svgHtml =
@@ -781,7 +770,7 @@ view model =
             layOutAttributes
             ( ELE.row
                   [ELE.width ELE.fill
-                  , Background.color <| ELE.rgb 44 44 44
+                  --, Background.color <| ELE.rgb 44 44 44
                   ]
 
                   [ displayColumn (paneOne shapeTransition.graphA shapeTransition.graphB)
@@ -1261,38 +1250,61 @@ drawGraphForTreeWidth display =
 
       centersOftriples =
          case display.status of
-            CircularGraph ->
-               []
-            HoneyCombGraph ->
-               []
-            MorphingIntoHoneyComb ->
-               []
-            --TreeDrawnGraph ->
-            _ ->
+            TreeDrawnGraph ->
                List.filterMap 
                   (  \(a, b, c) -> findCenterOfTriple a b c g.vertices ) 
                   display.triples
+            PiecesMarked ->
+               List.filterMap 
+                  (  \(a, b, c) -> findCenterOfTriple a b c g.vertices ) 
+                  display.triples
+            _ ->
+               []
 
       treeLinesDrawn =
          case display.status of
-            CircularGraph ->
-               []
-            HoneyCombGraph ->
-               []
-            MorphingIntoHoneyComb ->
-               []
-            PiecesMarked ->
-               []
             TreeDrawnGraph ->
                display.treeLines
                |> List.filterMap (findTwoPositions g.vertices)
+            _ ->
+               []
+
+      showPieceVertices =
+            case display.status of
+               ShowOnePiece ->
+                  List.filterMap (\name -> lookUpVertex name g.vertices)
+                     [1,2,3]
+               _ ->
+                  []
+
+      showPieceEdges =
+            case display.status of
+               ShowOnePiece ->
+                     makeEdgesWithTuples [ (1,2), (2,3), (3,1) ] g.vertices
+               _ ->
+                 []
+
+      onePieceCenter =
+            case display.status of
+               ShowOnePiece ->
+                  case (findCenterOfTriple 1 2 3 g.vertices) of
+                     Nothing ->
+                        []
+                     Just x ->
+                        [x]
+               _ ->
+                  []
+               
 
    
    in
    List.map drawEdge g.edges
         ++ List.map (\(p1, p2) -> lline p1 p2) treeLinesDrawn
         ++ List.map (drawIntersectionPoint 6) centersOftriples 
+        ++ List.map (drawIntersectionPoint 6) onePieceCenter 
         ++ List.map drawVertex g.vertices
+        ++ List.map drawSpecialEdge showPieceEdges
+        ++ List.map drawSelectedVertex showPieceVertices
         ++ List.map writeVertexName g.vertices
 
 findTwoPositions : List Vertex -> ( (Int, Int, Int), (Int, Int, Int) ) -> Maybe (Vec3, Vec3)
@@ -1483,6 +1495,7 @@ ccircle size pos color name =
         , SA.style ("fill: " ++ color ++ ";")
         , SE.onMouseOver (HoverOver name)
         , SE.onMouseOut (MouseOut name)
+        , SE.onClick (ToggleVertexStatus name)
         ]
         []
 
@@ -1573,7 +1586,9 @@ paneTree display =
 colorPallete : ColorDisplay -> List (S.Svg Msg)
 colorPallete display=
    let
-      sizeBig = (vec3 35 20 0)
+      --sizeBig = (vec3 35 20 0)
+      --sizeSmall = (vec3 20 20 0)
+      sizeBig = (vec3 20 35 0)
       sizeSmall = (vec3 20 20 0)
       sizeOfColor color = if display.chosenColor == color
                 then sizeBig
@@ -1581,9 +1596,12 @@ colorPallete display=
       red = (Color.rgb 1 0 0)
       green = (Color.rgb 0 1 0)
       blue = (Color.rgb 0 0 1)
-      squareRed = makeSquare (vec3 100 300 0) (sizeOfColor red) red
-      squareGreen = makeSquare (vec3 100 330 0) (sizeOfColor green) green 
-      squareBlue = makeSquare (vec3 100 360 0) (sizeOfColor blue) blue 
+      --squareRed = makeSquare (vec3 100 300 0) (sizeOfColor red) red
+      --squareGreen = makeSquare (vec3 100 330 0) (sizeOfColor green) green 
+      --squareBlue = makeSquare (vec3 100 360 0) (sizeOfColor blue) blue 
+      squareRed = makeSquare (vec3 170 230 0) (sizeOfColor red) red
+      squareGreen = makeSquare (vec3 200 230 0) (sizeOfColor green) green 
+      squareBlue = makeSquare (vec3 230 230 0) (sizeOfColor blue) blue 
    in
    [squareRed, squareGreen, squareBlue]
 
@@ -1842,18 +1860,23 @@ storyTreeWidth status =
                The circular graph is now transformed to a honey comb like
                structure. Which is more like a tree-like structure visually.
                """
-      piecesMarkedComment =
+      showOnePieceComment =
                """
                The graph can now be divided into pieces. The first piece for example
                is the sub graph made up by Vertices 1, 2 and 3. This is marked by
-               a blue dot at the circle of the triangle. Similarily all the other
-               pieces are marked by blue dots representing the subgraphs they are
-               situated inside.
+               golden vertices and edges. To make life easier in further
+               explanations, a piece will be represented by a blue dot present at the
+               center of the subgraph.
+               """
+      piecesMarkedComment =
+               """
+               Similarily all the other pieces are marked by blue dots
+               representing the subgraphs they are situated inside.
                """
       treeDetails =
                """
-               The golden line
-               joining the pieces is a tree as it has no cycles.
+               The golden line joining the pieces is a tree as it has no
+               cycles.
                """
       theoreticalComments =
                """
@@ -1874,7 +1897,7 @@ storyTreeWidth status =
                """
       finalComment =
                """
-               The number of vertices all the pieces is equal to 3. Therefore the maximum
+               The number of vertices in all the pieces is equal to 3. Therefore the maximum
                number of vertices in any piece in the present graph is also 3.
                Hence the tree width of the graph is 3 - 1 = 2.
                """
@@ -1886,8 +1909,10 @@ storyTreeWidth status =
                [ firstComment, secondComment ]
             HoneyCombGraph ->
                [ honeyCombFirstComment ]
+            ShowOnePiece ->
+               [honeyCombFirstComment, showOnePieceComment ]
             PiecesMarked ->
-               [honeyCombFirstComment, piecesMarkedComment]
+               [showOnePieceComment, piecesMarkedComment]
             TreeDrawnGraph ->
                [ treeDetails, theoreticalComments, treeWidthDef, treeWidthFormula, finalComment ]
    in
@@ -1986,15 +2011,31 @@ explanationCover display =
                []
                [ ELE.text <| if edgesRemainig == 0
                               then
-                                 "Congratulations, you have covered all "
-                                 ++ (String.fromInt noCoveredEdges)
-                                 ++ " edges. "
-                                 ++ "You have done so by selecting the vertices "
-                                 ++ getStringFromVertices selected_vertices
-                                 ++ "."
-                                 ++ " Therefore a vertex cover of this graph is the set vertices "
-                                 ++ getStringFromVertices selected_vertices
-                                 ++ "."
+                                 if noOfSelectedVertices > 4
+                                    then
+                                       """
+                                       You have covered all the edges.
+                                       but
+                                       you have done so by selecting
+                                       """
+                                       ++
+                                       (String.fromInt noOfSelectedVertices)
+                                       ++
+                                       """
+                                       vertices. The graph could have been covered by
+                                       selecting only four! Try again to see that
+                                       you can do it in just four.
+                                       """
+                                    else
+                                       "Congratulations, you have covered all "
+                                       ++ (String.fromInt noCoveredEdges)
+                                       ++ " edges. "
+                                       ++ "You have done so by selecting the vertices "
+                                       ++ getStringFromVertices selected_vertices
+                                       ++ "."
+                                       ++ " Therefore a vertex cover of this graph is the set vertices "
+                                       ++ getStringFromVertices selected_vertices
+                                       ++ "."
 
                               else
                                  if edgesRemainig == totalEdges
@@ -2069,6 +2110,16 @@ explanationColoring colorDisp =
                                 else
                                    """
                                    Coloring has started.
+                                   """
+               ]
+
+        , ELE.paragraph
+               []
+               [ ELE.text <| if List.length coloredVertices > 1 && List.length miscoloredEdges == 0
+                                then
+                                   "Good going! Adjacent Vertices are colored differently."
+                                else
+                                   """
                                    """
                ]
 
