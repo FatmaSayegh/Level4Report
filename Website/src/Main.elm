@@ -757,13 +757,19 @@ layOutOptions =
        ]
    } 
 
-layOutAttributes = [ELE.width ELE.fill, ELE.height ELE.fill]
+--layOutAttributes = [ELE.width ELE.fill, ELE.height ELE.fill]
+layOutAttributes = 
+                  -- [ ELE.width ELE.fill
+                   [ ELE.height ELE.fill
+                   , Background.color <| ELE.rgb 0.2 0.2 0.2
+                   ]
 
 displayColumn svgHtml =
    ELE.column
       [ Font.color (ELE.rgb 1 1 1)
       , ELE.height ELE.fill
       , ELE.width ELE.fill
+      , Background.color <| ELE.rgb 0.2 0.2 0.2
       ] [ELE.html svgHtml]
 
 
@@ -774,7 +780,9 @@ view model =
             layOutOptions
             layOutAttributes
             ( ELE.row
-                  [ ELE.width ELE.fill]
+                  [ELE.width ELE.fill
+                  , Background.color <| ELE.rgb 44 44 44
+                  ]
 
                   [ displayColumn (paneOne shapeTransition.graphA shapeTransition.graphB)
                   , explanationOne shapeTransition
@@ -1677,6 +1685,7 @@ explanationTwo shapeTransition=
          , ELE.spacing 20
          --, ELE.padding 40
          --, ELE.height ELE.fill
+         , Background.color <| ELE.rgb 0.2 0.2 0.2
          , ELE.width ELE.fill
          ]
          <|
@@ -1756,12 +1765,6 @@ treeWidthButtons status =
             [ELE.spacing 90, ELE.paddingXY 300 40]
             [ ELE.el 
                [ ELE.centerX
-               , ELE.paddingEach
-                  { top = 0
-                  , bottom = 0
-                  , right = 32
-                  , left = 0
-                  }
                ] 
                ELE.none
 
@@ -1785,6 +1788,7 @@ explanationWidth display =
          --, ELE.padding 40
          , ELE.height ELE.fill
          , ELE.width ELE.fill
+         , Background.color <| ELE.rgb 0.2 0.2 0.2
          ]
          <|
          [  ELE.el
@@ -1918,11 +1922,10 @@ explanationCover display =
     in
     ELE.column
          [ Font.color (ELE.rgb 1 1 1)
-         --, ELE.height ELE.fill
          , ELE.spacing 20
-         --, ELE.padding 40
          , ELE.height ELE.fill
          , ELE.width ELE.fill
+         , Background.color <| ELE.rgb 0.2 0.2 0.2
          ]
          <|
          [  ELE.el
@@ -2028,6 +2031,7 @@ explanationColoring colorDisp =
          --, ELE.padding 40
          , ELE.height ELE.fill
          , ELE.width ELE.fill
+         , Background.color <| ELE.rgb 0.2 0.2 0.2
          ]
          <|
          [  ELE.el
@@ -2151,6 +2155,7 @@ explanationOne shapeTransition =
          , ELE.height ELE.fill
          , ELE.spacing 20
          --, ELE.padding 40
+         , Background.color <| ELE.rgb 0.2 0.2 0.2
          , ELE.height ELE.fill
          , ELE.width ELE.fill
          ]
