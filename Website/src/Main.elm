@@ -38,7 +38,7 @@ import Ant.Icons as Icons
 -- subscription subscribes to the clock
 
 
-main : Program () Model Msg
+main : Program () SuperModel Msg
 main =
     Browser.element
         { init = init
@@ -54,6 +54,11 @@ main =
 -- Model has currently has 2 graphs
 -- and a grid, graphB will transform into slowly.
 
+
+type alias SuperModel =
+   { helpStatus : Bool
+   , model : Model
+   }
 
 type Model =
    Isomorphic ShapeTransition
@@ -264,7 +269,7 @@ makeEdgeWithTuple tu vs =
                Just (Edge vertexOne vertexTwo)
 
 
-init : () -> ( Model, Cmd Msg )
+init : () -> ( SuperModel, Cmd Msg )
 init _ =
     let
         initialGraph =
@@ -277,8 +282,11 @@ init _ =
             , animationOn = False
             , specialToken = NoToken
             }
+        model = ( Isomorphic shapeTransition)
     in
-    ( Isomorphic shapeTransition, Cmd.none )
+    ({ helpStatus = False
+    , model = model
+    }, Cmd.none)
 
 
 
@@ -300,9 +308,9 @@ type Msg
     | MaxCutLine
     | ColoringSelectColor Color
     | VertexNonColor
-    --| NextTreeWidthAnimation 
     | NextAnimation 
     | PreviousTreeWidthAnimation
+    | ToggleHelpStatus
     | Other
 
 
@@ -310,7 +318,7 @@ type Msg
 -- Generates a Msg which can be used by update function
 
 
-subscription : Model -> Sub Msg
+subscription : SuperModel -> Sub Msg
 subscription _ =
     Sub.batch
         [ E.onAnimationFrameDelta TimeDelta
@@ -349,10 +357,11 @@ keyToMsg value =
                      'w' ->
                          VertexNonColor
                      't' ->
-                         --NextTreeWidthAnimation
                          NextAnimation
                      'T' ->
                          PreviousTreeWidthAnimation
+                     'h' ->
+                         ToggleHelpStatus
                      _ ->
                          Other
         _ ->
@@ -378,46 +387,60 @@ chooseVertexFromInt x =
 -- 3. With MouseOut from a vertex it makes that vertices' incident edges not glow.
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
-    case msg of
-      NextTopic ->
-         case model of
-            Isomorphic x ->
-               ( MaxCut maxCutTransition, Cmd.none)
-            MaxCut x ->
-               (GraphColoring colorDisplay, Cmd.none)
-            GraphColoring x ->
-               ( VertexCover vertexCoverDisplay, Cmd.none)
-            VertexCover x ->
-               ( TreeWidth treeWidthDisplay, Cmd.none)
-            TreeWidth x ->
-               ( Isomorphic isomorphicTransition, Cmd.none)
+update : Msg -> SuperModel -> ( SuperModel, Cmd Msg )
+update msg superModel =
+    let
+      model = superModel.model
+      newModel =
+         case msg of
+           NextTopic ->
+              case model of
+                 Isomorphic x ->
+                    ( MaxCut maxCutTransition)
+                 MaxCut x ->
+                    (GraphColoring colorDisplay)
+                 GraphColoring x ->
+                    ( VertexCover vertexCoverDisplay)
+                 VertexCover x ->
+                    ( TreeWidth treeWidthDisplay)
+                 TreeWidth x ->
+                    ( Isomorphic isomorphicTransition)
 
-      PreviousTopic ->
-         case model of
-            Isomorphic x ->
-               ( TreeWidth treeWidthDisplay, Cmd.none)
-            TreeWidth x ->
-               ( VertexCover vertexCoverDisplay, Cmd.none)
-            MaxCut x ->
-               ( Isomorphic isomorphicTransition, Cmd.none)
-            GraphColoring x ->
-               ( MaxCut maxCutTransition, Cmd.none)
-            VertexCover x ->
-               (GraphColoring colorDisplay, Cmd.none)
-      _ ->
-         case model of
-           Isomorphic shapeTransition ->
-              ( Isomorphic (animateIsomorphicTransition msg shapeTransition), Cmd.none )
-           MaxCut maxcutTrans ->
-              ( MaxCut (animateMaxCutCompound msg maxcutTrans), Cmd.none )
-           GraphColoring display ->
-              ( goColor display msg, Cmd.none)
-           VertexCover display ->
-              ( goCover display msg, Cmd.none)
-           TreeWidth display ->
-              ( goTree display msg, Cmd.none)
+           PreviousTopic ->
+              case model of
+                 Isomorphic x ->
+                    ( TreeWidth treeWidthDisplay)
+                 TreeWidth x ->
+                    ( VertexCover vertexCoverDisplay)
+                 MaxCut x ->
+                    ( Isomorphic isomorphicTransition)
+                 GraphColoring x ->
+                    ( MaxCut maxCutTransition)
+                 VertexCover x ->
+                    (GraphColoring colorDisplay)
+           _ ->
+              case model of
+                Isomorphic shapeTransition ->
+                   ( Isomorphic (animateIsomorphicTransition msg shapeTransition))
+                MaxCut maxcutTrans ->
+                   ( MaxCut (animateMaxCutCompound msg maxcutTrans))
+                GraphColoring display ->
+                   ( goColor display msg)
+                VertexCover display ->
+                   ( goCover display msg)
+                TreeWidth display ->
+                   ( goTree display msg)
+      helpStatus =
+         case msg of
+            ToggleHelpStatus ->
+               not superModel.helpStatus
+            TimeDelta _ ->
+               superModel.helpStatus
+            _ ->
+               False
+            
+   in
+   ({ superModel | model = newModel, helpStatus = helpStatus }, Cmd.none)
 
 goTree : TreeWidthDisplay -> Msg -> Model
 goTree display msg =
@@ -877,8 +900,8 @@ displayColumn svgHtml =
       ] [ELE.html svgHtml]
 
 
-view model =
-   case model of
+view superModel =
+   case superModel.model of
       Isomorphic shapeTransition ->
          ELE.layoutWith 
             layOutOptions
@@ -889,7 +912,7 @@ view model =
                   ]
 
                   [ displayColumn (paneOne shapeTransition.graphA shapeTransition.graphB)
-                  , explanationOne shapeTransition
+                  , explanationOne shapeTransition superModel.helpStatus
                   ]
             )
 
@@ -902,7 +925,7 @@ view model =
                   [ ELE.width ELE.fill]
 
                   [ displayColumn (paneTwo maxCutTrans) 
-                  , explanationTwo maxCutTrans.transitionA
+                  , explanationTwo maxCutTrans.transitionA superModel.helpStatus
                   ]
             )
 
@@ -914,7 +937,7 @@ view model =
                   [ ELE.width ELE.fill]
 
                   [ displayColumn (paneThree display) 
-                  , explanationColoring display
+                  , explanationColoring display superModel.helpStatus
                   ]
             )
 
@@ -926,7 +949,7 @@ view model =
                   [ ELE.width ELE.fill]
 
                   [ displayColumn (paneFour display) 
-                  , explanationCover display
+                  , explanationCover display superModel.helpStatus
                   ]
             )
 
@@ -938,7 +961,7 @@ view model =
                   [ ELE.width ELE.fill]
 
                   [ displayColumn (paneTree display) 
-                  , explanationWidth display
+                  , explanationWidth display superModel.helpStatus
                   ]
             )
 
@@ -1891,8 +1914,8 @@ drawCutLine cutLine =
 drawIntersectionPoints points =
    List.map (drawIntersectionPoint 3) points
 
-explanationTwo : ShapeTransition -> ELE.Element Msg
-explanationTwo shapeTransition=
+explanationTwo : ShapeTransition -> Bool -> ELE.Element Msg
+explanationTwo shapeTransition helpStatus =
       ELE.column
          [ Font.color (ELE.rgb 1 1 1)
          , ELE.height ELE.fill
@@ -1934,20 +1957,28 @@ explanationTwo shapeTransition=
             , label = Icons.minusOutlined [ Ant.width 70, Ant.height 50 ]
             }
 
-        , ELE.paragraph
-               []
-               [ELE.text <| if shapeTransition.specialToken == MakeKCut 
-                              then
-                         
-                                 """
-                                 The Max cut line, seperates the two sets of vertices. The intersection
-                                 between the cut line and the edges are shown as blue dots. As you should
-                                 verify, they are 9 in number. This number is equal to number of edges from
-                                 the set of vertices at the top going to the vertices at the bottom.
-                                 """
-                              else
-                                 ""
-               ]
+        ,  if helpStatus == False
+               then
+                  ELE.paragraph
+                     []
+                     [ELE.text <| if shapeTransition.specialToken == MakeKCut 
+                                    then
+                               
+                                       """
+                                       The Max cut line, seperates the two sets of
+                                       vertices. The intersection between the cut
+                                       line and the edges are shown as blue dots. As
+                                       you should verify, they are 9 in number. This
+                                       number is equal to number of edges from the
+                                       set of vertices at the top going to the
+                                       vertices at the bottom.
+                                       """
+                                    else
+                                       ""
+                     ]
+               else
+                  helpParagraph MaxCutHelp
+
           , lowerNavigation "Isomporphism" "Graph Coloring"
           ]
 
@@ -1994,8 +2025,8 @@ treeWidthButtons status =
       
        
 
-explanationWidth : TreeWidthDisplay -> ELE.Element Msg
-explanationWidth display =
+explanationWidth : TreeWidthDisplay -> Bool -> ELE.Element Msg
+explanationWidth display helpStatus =
     ELE.column
          [ Font.color (ELE.rgb 1 1 1)
          --, ELE.height ELE.fill
@@ -2027,12 +2058,12 @@ explanationWidth display =
 
          ]
 
-         ++ (storyTreeWidth display.status)
+         ++ (storyTreeWidth display.status helpStatus)
 
          ++ [  lowerNavigation "Vertex Cover" "Isomorphism" ]
          
-storyTreeWidth : TreeWidthStatus -> List (ELE.Element Msg)
-storyTreeWidth status =
+storyTreeWidth : TreeWidthStatus -> Bool -> List (ELE.Element Msg)
+storyTreeWidth status helpStatus =
    let 
       para =
          (\l ->
@@ -2111,13 +2142,104 @@ storyTreeWidth status =
             PiecesMarked ->
                [showOnePieceComment, piecesMarkedComment]
             TreeDrawnGraph ->
-               [ treeDetails, theoreticalComments, treeWidthDef, treeWidthFormula, finalComment ]
+               [ treeDetails
+               , theoreticalComments
+               , treeWidthDef
+               , treeWidthFormula
+               , finalComment 
+               ]
    in
-      List.map para output
+   if helpStatus == False
+      then
+         List.map para output
+      else
+         [ helpParagraph TreeWidthHelp]
             
+type HelpKind =            
+   IsomorphismHelp
+   | MaxCutHelp
+   | GraphColoringHelp
+   | VertexCoverHelp
+   | TreeWidthHelp
 
-explanationCover : VertexCoverDisplay -> ELE.Element Msg
-explanationCover display =
+helpParagraph helpkind =
+   let
+      helpdetails =
+         case helpkind of
+            IsomorphismHelp ->
+               helpIsomorphic
+            MaxCutHelp ->
+               helpMaxCut
+            GraphColoringHelp ->
+               helpGraphColor
+            VertexCoverHelp ->
+               helpVertexCover
+            TreeWidthHelp ->
+               helpTreeWidth
+
+    in        
+    ELE.el [] ( 
+                ELE.column 
+                   [ Font.color (ELE.rgb 0.8 1 0.8)
+                   --, ELE.height ELE.fill
+                   --, ELE.width ELE.fill
+                   , Font.size 18
+                   , Background.color <| ELE.rgb 0.2 0.2 0.2
+                   ] 
+                   helpdetails
+              )
+
+helpDetails =
+   [ ELE.el [ELE.paddingXY 5 10, Font.size 20] (ELE.text "Keyboard Shorcuts:")
+   , ELE.el [ELE.paddingXY 5 2] (ELE.text "h: Toggle Help")
+   , ELE.el [ELE.paddingXY 5 2] (ELE.text "p: Toggle between pause and play animation")
+   , ELE.el [ELE.paddingXY 5 2] (ELE.text "r: Restart animation")
+   , ELE.el [ELE.paddingXY 5 2] (ELE.text "n: Next topic")
+   , ELE.el [ELE.paddingXY 5 2] (ELE.text "N: Previous topic")
+   , ELE.el [ELE.paddingXY 5 2] (ELE.text "t: For Max Cut: Next animation")
+   ]
+
+helpGraphColor =
+   [ ELE.el [ELE.paddingXY 5 10, Font.bold] (ELE.text "Mouse Funcionality:")
+   , ELE.el [ELE.paddingXY 5 2] (ELE.text "Click color on the palette: Select Color")
+   , ELE.el [ELE.paddingXY 5 2] (ELE.text "Click Vertex: Color the vertex with the selected color")
+   ]
+helpVertexCover =
+   [ ELE.el [ELE.paddingXY 5 10, Font.size 20] (ELE.text "Keyboard Shorcuts:")
+   , ELE.el [ELE.paddingXY 5 2] (ELE.text "h: Toggle Help")
+   , ELE.el [ELE.paddingXY 5 2] (ELE.text "1,2,3,4 ..... 8: Select/Unselect Vertex")
+   ]
+helpTreeWidth =
+   [ ELE.el [ELE.paddingXY 5 10] (ELE.text "Keyboard Shorcuts:")
+   , ELE.el [ELE.paddingXY 5 2] (ELE.text "h: Toggle Help")
+   , ELE.el [ELE.paddingXY 5 2] (ELE.text "t: Next animation in tree width")
+   , ELE.el [ELE.paddingXY 5 2] (ELE.text "T: Previous animation in tree width")
+   ]
+helpMaxCut =
+   [ ELE.el [ELE.paddingXY 5 10, Font.bold] (ELE.text "Keyboard Shorcuts:")
+   , ELE.el [ELE.paddingXY 5 2] (ELE.text "h: Toggle Help")
+   , ELE.el [ELE.paddingXY 5 2] (ELE.text "p: Toggle between pause and play animation")
+   , ELE.el [ELE.paddingXY 5 2] (ELE.text "r: Restart animation")
+   , ELE.el [ELE.paddingXY 5 2] (ELE.text "n: Next topic")
+   , ELE.el [ELE.paddingXY 5 2] (ELE.text "N: Previous topic")
+   , ELE.el [ELE.paddingXY 5 2] (ELE.text "t: Next animation")
+   , ELE.el [ELE.paddingXY 5 2] (ELE.text "l: Draw Max cut line(s)")
+   ]
+
+helpIsomorphic =
+   [ ELE.el [ELE.paddingXY 5 10, Font.bold] (ELE.text "Keyboard Shorcuts:")
+   , ELE.el [ELE.paddingXY 5 2] (ELE.text "h: Toggle Help")
+   , ELE.el [ELE.paddingXY 5 2] (ELE.text "p: Toggle between pause and play animation")
+   , ELE.el [ELE.paddingXY 5 2] (ELE.text "r: Restart animation")
+   , ELE.el [ELE.paddingXY 5 2] (ELE.text "1,2,3 ..... 8: Select/Unselect a vertex")
+   , ELE.el [ELE.paddingXY 5 2] (ELE.text "n: Next topic")
+   , ELE.el [ELE.paddingXY 5 2] (ELE.text "N: Previous topic")
+   , ELE.el [ELE.paddingXY 5 10, Font.bold] (ELE.text "Mouse Funcionality:")
+   , ELE.el [ELE.paddingXY 5 2] (ELE.text "Hover Over Vertex: Select Vertex ")
+   ]
+
+explanationCover : VertexCoverDisplay -> Bool -> ELE.Element Msg
+explanationCover display helpStatus =
     let
         selected_vertices =
             List.filter (\ver -> ver.glow) display.graphA.vertices
@@ -2243,13 +2365,14 @@ explanationCover display =
                                     ++ " edges more to be covered!"
               ]
 
+         ,  (if helpStatus == True then (helpParagraph VertexCoverHelp) else ELE.none)
           , lowerNavigation "Graph Coloring" "Tree Width"
        ]
 
 
 
-explanationColoring : ColorDisplay -> ELE.Element Msg
-explanationColoring colorDisp =
+explanationColoring : ColorDisplay -> Bool -> ELE.Element Msg
+explanationColoring colorDisp helpStatus =
     let
       verticesOfSameColor edge =
          edge.vertexOne.color == edge.vertexTwo.color 
@@ -2355,9 +2478,9 @@ explanationColoring colorDisp =
                                 else
                                    ""
               ]
-
-          , lowerNavigation "Max Cut" "Vertex Cover"
-          ]
+         , (if helpStatus == True then (helpParagraph GraphColoringHelp) else ELE.none)
+         , lowerNavigation "Max Cut" "Vertex Cover"
+         ]
 
 
 
@@ -2396,8 +2519,8 @@ resetButton =
  
          }
                         
-explanationOne : ShapeTransition -> ELE.Element Msg
-explanationOne shapeTransition =
+explanationOne : ShapeTransition -> Bool -> ELE.Element Msg
+explanationOne shapeTransition helpStatus =
       ELE.column
          [ Font.color (ELE.rgb 1 1 1)
          , ELE.height ELE.fill
@@ -2430,7 +2553,7 @@ explanationOne shapeTransition =
          ]
 
          ++  
-            (makeStory shapeTransition)
+            (makeStory shapeTransition helpStatus)
          ++
 
 
@@ -2457,6 +2580,15 @@ lowerNavigation leftTitle rightTitle =
          
      ,  ELE.el [ ELE.alignLeft ] <| ELE.text leftTitle    
 
+     ,   Input.button
+         [
+            Border.rounded 100
+         ,  ELE.centerX
+         ] 
+         { onPress = Just ToggleHelpStatus
+         , label = Icons.infoCircleOutlined [ Ant.width 40, Ant.height 40 ]
+         }
+
      ,  ELE.el [ ELE.alignRight ] <| ELE.text rightTitle    
      ,
          Input.button
@@ -2471,8 +2603,8 @@ lowerNavigation leftTitle rightTitle =
 
 
 
-makeStory : ShapeTransition -> List (ELE.Element Msg)
-makeStory shapeTransition =
+makeStory : ShapeTransition -> Bool -> List (ELE.Element Msg)
+makeStory shapeTransition helpStatus =
     let
         glowing_vertices =
             List.filter (\ver -> ver.glow) shapeTransition.graphB.vertices
@@ -2525,9 +2657,13 @@ makeStory shapeTransition =
                   convince your self that the graphs are isomorphic to each other.
                   """
     in
-      [ ELE.paragraph [] storyPara
-      , ELE.paragraph [] [ELE.text footer]
-      ]
+    if helpStatus == False
+      then
+         [ ELE.paragraph [] storyPara
+         , ELE.paragraph [] [ELE.text footer]
+         ]
+      else
+         [ helpParagraph IsomorphismHelp]
 
 
 
