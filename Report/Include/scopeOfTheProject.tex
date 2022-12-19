@@ -1,8 +1,129 @@
+In this chapter, the scope of the project, the criterion of selection of the
+problems in graph theory, the thinking behind choosing the methods of
+elucidation of the selected topics will be discussed. Finally to conclude the analysis
+the requirements of the project are stated.
+
+
 \section{Scope of The Project}
-The project's objective is to visualize graph problems and not to solve them.
-Solution of such problems could range from moderately difficult to very
-difficult to solve programatically.  Therefore in this project, although the
-the data type of Graphs (Set of Vertices and Set of Edges) and the associated
-functions, are quite general and can support operations of various kinds, care
-is taken that we provide the solution to the visualization program before hand
-to give enough information to the animations.
+
+Understanding a problem is a necessary first step in trying to solve it.
+It also enables a student to abstract out a mathematical
+problem from a real life scenario present in the fields of science and engineering.
+
+This idea has guided this project to be restricted to one which helps a learner to
+understand the problem itself. The solution, on the other hand, or suggesting an
+algorithm to solve the problem, if required, is the second important step which
+has been deliberately not touched upon to keep the scope of this project
+clear, precise and limited.
+
+
+\section{Criteria for Selection of Problems}
+
+One of the most important criteria for selection of the problems for the project was
+based upon the importance of the topic in the field of graph theory. There are
+several text books in graph theory, which discuss various theorems and problems in
+the subject.  There are a few problems which occur commonly and frequently in
+them. The order of their inclusion in the text books is based logically.
+Building the concepts from the basics to advanced. Therefore the problems
+included in the project should represent all hardness levels.
+
+Since imagining a graph theory problem is largely a visual exercise, there
+was no dearth of problems which could offer themselves as a subject of an
+interesting visualization. The additional criteria therefore for filtering the
+candidate problems was based on whether they could be elucidated in the form of a
+simple and meaningful example, employed for animation and user
+interaction. The simplicity of the example doesn't in anyway imply
+triviality of the problem. Indeed here the assumption is that a simple example
+problem can make a student reach to the heart of the concept in it's generality
+fairly quickly. From there on she can extrapolate the learning to more
+complicated examples.
+
+It is important to mention here that a survey among
+peers in the field of software engineering and computer science was conducted to 
+gather suggestions on the shortlisted topics and methods.
+The data from the survey had a role in determining topics and the methods chosen.
+
+
+\section{Methods of Elucidation}
+As it has been discussed in the previous section that feasible methods of
+elucidation/exposition played a prominent role in the selection of the problems
+in the first place. These methods can be broadly classified as animations and
+user interactions or a combination of both.
+
+\subsection{Animation}
+The visual medium has dimensions such as of color, position, shape and motion.
+Generating them with a computer program, scenes can be created attracting the
+users attention towards a particular aspect of it with the help of animations.
+The scene in this project consists of a graph, which undergoes transformations
+of color, shape and position to make a certain aspect of it emphasized for the
+purpose of explaining a concept.  Animations are used in this project to make
+problems like Graph Isomorphism, Max Cut, and Tree Width. For instance, the
+example problem of Graph Isomorphism, was explained by morphing a graph to change
+it's shape to acquire another radically different shape. It will be explained
+later how it can be considered as a visual proof that the two graphs in the
+scene are thus isomorphic.
+
+\subsection{User Interaction}
+Although animations go a long way in terms of having a user's mind involved in
+the learning process they only offer a linear narrative. On the other hand,
+user interaction with an animation not only makes the experience more
+immersive, it also leads to a natural multiplicity of stories from a single
+program. This happens as a human input results in a novel path from one state to
+another in the program just like a video game.
+
+\section{Technical Scope of The Project}
+
+To achieve the above mentioned features
+The program has data structures to hold graphs and
+algorithms to visually and geometrically manipulate them. 
+
+It's important to note here the program does not 
+contain algorithms to solve the listed problems. As the
+scope of the program was limited to the purposes of visualization and not
+coding the algorithms which can solve instances of the mentioned problems.
+Therefore in this project, although the data type of Graphs (Set of
+Vertices and Set of Edges) and the associated functions, are quite general and
+can support operations of various kinds, care is taken that we provide the
+solution to the visualization program before hand to give enough information to
+the various animations and user interactions.
+
+
+\section{Requirements}
+Based on synthesis of the above sections it is concluded that
+there should be a web application written for the desktop browser with user interactive animations which elucidate the following
+graph theory problems -
+
+\begin{enumerate}
+\item Graph Isomorphism
+\item Max Cut
+\item Graph Coloring
+\item Minimum Vertex Cover
+\item Tree Width
+\end{enumerate}
+
+And to achieve all this by programming the following items -
+
+\begin{enumerate}
+\item Data structures which represent vertices, edges and graphs.
+\item Display the above entities as Scalar Vector Graphics on screen.
+\item Translation and shape transformation of the graphs for animation.
+\item Generation and handling of events triggered by user interaction with the elements in the animation for user interaction.
+\item Display appropriate text in synchronization with the animations and user interaction.
+\end{enumerate}
+
+Doing so in a manner which fulfills the following subjective qualities -
+
+\begin{enumerate}
+\item Substantive learning impact
+\item Ease of Use
+\item Coherent Story telling
+\item Pleasing Aesthetics
+\end{enumerate}
+
+And finally, evaluating the application with the help of the peers on parameters which can be broadly classified into the following categories -
+
+\begin{enumerate}
+\item Quality of Elucidation
+\item User Experience 
+\item Learning Impact
+\end{enumerate}

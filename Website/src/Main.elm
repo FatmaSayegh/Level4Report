@@ -1367,8 +1367,7 @@ drawGraph g =
         ( specialEdges, normalEdges ) =
             seperateEdges g
 
-        haloVertices =
-            getHaloVertices g specialEdges
+        haloVertices = getHaloVertices g specialEdges
 
         selectedVertices =
             List.filter (\ver -> ver.glow) g.vertices
