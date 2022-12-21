@@ -53,6 +53,8 @@
 \usepackage{natbib}
 \bibpunct{(}{)}{;}{a}{}{;}
 
+%Fatma
+\usepackage{elm-highlighting}
 
 \usepackage{etoolbox}
 \usepackage[compact]{titlesec} % section heading formatting

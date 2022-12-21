@@ -1932,7 +1932,7 @@ explanationTwo shapeTransition helpStatus =
                [ELE.spacing 8] 
                [ELE.text maxCutExplanation]
 
-         ,  mediaButtons shapeTransition
+         ,  mediaButtonsForMaxCut shapeTransition
 
          , ELE.paragraph
                []
@@ -2496,6 +2496,27 @@ mediaButtons shapeTransition =
       [ELE.spacing 90, ELE.paddingXY 300 40]
       [  playButton shapeTransition.animationOn
       ,  resetButton
+      ]
+
+mediaButtonsForMaxCut : ShapeTransition -> ELE.Element Msg
+mediaButtonsForMaxCut shapeTransition =
+   let
+      forward =
+         Input.button
+            [
+               Border.rounded 100
+            ,  ELE.centerX
+            ] 
+            --{ onPress = Just NextTreeWidthAnimation
+            { onPress = Just NextAnimation
+            , label = Icons.forwardOutlined [ Ant.width 40, Ant.height 40 ]
+            }
+   in
+   ELE.row
+      [ELE.spacing 90, ELE.paddingXY 300 40]
+      [  playButton shapeTransition.animationOn
+      ,  resetButton
+      , forward  
       ]
 
 
