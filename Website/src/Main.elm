@@ -925,7 +925,7 @@ view superModel =
                   [ ELE.width ELE.fill]
 
                   [ displayColumn (paneTwo maxCutTrans) 
-                  , explanationTwo maxCutTrans.transitionA superModel.helpStatus
+                  , explanationTwo maxCutTrans superModel.helpStatus
                   ]
             )
 
@@ -1913,8 +1913,57 @@ drawCutLine cutLine =
 drawIntersectionPoints points =
    List.map (drawIntersectionPoint 3) points
 
-explanationTwo : ShapeTransition -> Bool -> ELE.Element Msg
-explanationTwo shapeTransition helpStatus =
+explanationTwo : MaxCutTransition -> Bool -> ELE.Element Msg
+explanationTwo maxCut helpStatus =
+      let 
+         shapeTransition =
+            case maxCut.state of
+               TwoCut ->
+                  maxCut.transitionA
+               ThreeCut ->
+                  maxCut.transitionB
+         state =
+            maxCut.state
+
+         twoCutExplanation =
+            """
+            In the animation, the vertices are being segregated into two sets,
+            such that the number of edges passing from vertices in one set to
+            the vertices in another set is more than any other way the vertices
+            of the graph could have been segregated.  In other words the
+            problem of max cut is to identify such partition of the vertices of
+            the graph that the above objective is satisfied.
+            """
+
+         threeCutExplanation =
+            """
+            In the animation, the vertices are being segregated into three
+            sets, such that the number of edges passing from vertices in one
+            set to the vertices in all other sets is more than any other way
+            the vertices of the graph could have been segregated.  In other
+            words the problem of max 3 cut is to identify such partition of the
+            vertices of the graph that the above objective is satisfied.
+            """
+
+         twoCutLineExplanation =
+            """
+            The Max cut line, seperates the two sets of vertices. The
+            intersection between the cut line and the edges are shown as blue
+            dots. As you should verify, they are 9 in number. This number is
+            equal to number of edges from the set of vertices at the top going
+            to the vertices at the bottom.
+            """
+
+         threeCutLineExplanation =
+            """
+            The three Max cut lines, seperates their respective sets from the
+            rest of the graph. The intersection between the cut lines and the
+            edges are shown as blue dots. As you should verify, they are 18 in
+            number for each set. This 3 cut is visually trivial as the graph
+            was tripartite.
+            """
+
+      in
       ELE.column
          [ Font.color (ELE.rgb 1 1 1)
          , ELE.height ELE.fill
@@ -1931,21 +1980,18 @@ explanationTwo shapeTransition helpStatus =
          ,  ELE.paragraph
                [ELE.spacing 8] 
                [ELE.text maxCutExplanation]
+               --TODO
 
          ,  mediaButtonsForMaxCut shapeTransition
 
          , ELE.paragraph
                []
                [ ELE.text 
-                     """
-                     In the animation, the vertices are being segregated into
-                     two sets, such that the number of edges passing from
-                     vertices in one set to the vertices in another set is
-                     more than any other way the vertices of the graph could
-                     have been segregated.  In other words the problem of max
-                     cut is to identify such partition of the vertices of the
-                     graph that the above objective is satisfied.
-                     """
+                     <| if state == TwoCut
+                           then
+                              twoCutExplanation
+                           else
+                              threeCutExplanation
                ]
            
         , Input.button
@@ -1962,16 +2008,11 @@ explanationTwo shapeTransition helpStatus =
                      []
                      [ELE.text <| if shapeTransition.specialToken == MakeKCut 
                                     then
-                               
-                                       """
-                                       The Max cut line, seperates the two sets of
-                                       vertices. The intersection between the cut
-                                       line and the edges are shown as blue dots. As
-                                       you should verify, they are 9 in number. This
-                                       number is equal to number of edges from the
-                                       set of vertices at the top going to the
-                                       vertices at the bottom.
-                                       """
+                                       if state == TwoCut
+                                          then
+                                            twoCutLineExplanation    
+                                          else 
+                                            threeCutLineExplanation    
                                     else
                                        ""
                      ]
@@ -2507,7 +2548,6 @@ mediaButtonsForMaxCut shapeTransition =
                Border.rounded 100
             ,  ELE.centerX
             ] 
-            --{ onPress = Just NextTreeWidthAnimation
             { onPress = Just NextAnimation
             , label = Icons.forwardOutlined [ Ant.width 40, Ant.height 40 ]
             }
@@ -2516,7 +2556,7 @@ mediaButtonsForMaxCut shapeTransition =
       [ELE.spacing 90, ELE.paddingXY 300 40]
       [  playButton shapeTransition.animationOn
       ,  resetButton
-      , forward  
+      ,  forward  
       ]
 
 
