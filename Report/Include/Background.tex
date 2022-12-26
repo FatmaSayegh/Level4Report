@@ -1,0 +1,153 @@
+%Background
+
+This chapter discusses concepts which are essential to understand the
+forthcoming chapters in this report. It starts out by discussing Graph Theory
+and it's classical problems, some prior work on visualization of computer
+science topics which has an influence over this project, and goes on to discuss
+some elements of Functional Programming.
+
+\section{Discussion of Classical Graph Theory Problems}
+This section formally discusses the concepts of Graph theory which are
+elucidated visually in the application.  If you are already familiar to the
+concepts of the topics discussed in this chapter then by all means skip over.
+If not, then it's recommended to go through the section as the material
+discussed here is essential to understand the discussion in the further
+chapters.  The forthcoming chapters will refer to the subsections below for
+definitions of the graph theory problems.
+
+\subsection{Definitions}
+A \textbf{Graph} can be understood as a collection of Vertices which are
+connected to each other by Edges.  A \textbf{Vertex} can be understood as a
+point and an \textbf{Edge} is a pair of Vertices.  The set of all the vertices
+in a graph $G$ can be represented as \textbf{$V(G)$} and the set of all the
+edges in $G$ is represented as \textbf{$E(G)$}.
+
+For a vertex $v$, it's degree \textbf{$deg(v)$} is the number of edges
+connected to it.  An \textbf{isolated vertex} $v$ is such that $deg(v) = 0$. An
+\textbf{end vertex} is $w$ such that $deg(w) = 1$.  Two vertices are
+\textbf{adjacent} to each other if there is an edge connects them.
+
+A \textbf{bipartite} graph, is a graph $G$ such that it's vertices $V(G)$ can
+be split into two disjoint sets $A$ and $B$ such that each edge of $G$ joins a
+vertex of $A$ and a vertex of $B$. \cite{Newman10}.
+
+
+\subsection{Graph Isomporphism}
+Two graphs $G_1$ and $G_2$ are isomorphic if there is a one to one correspondence
+between the vertices of $G_1$ and $G_2$ such that the number of edges between any
+two vertices in $G_1$ is equal to the number of edges joining the corresponding
+vertices of $G_2$.  Given two graphs, detecting if the graphs are Isomorphic is
+a problem to solve as the graphs may appear to be different in appearance and
+in the labeling of the nodes and edges. See \cite{Newman10}.
+
+\subsubsection{Application}
+The graph isomorphism problem finds application in the field of bioinformatics
+for finding network motifs (sub-graphs isomorphic to an input pattern) in a
+larger biological network. A network motif is a recurring pattern of connection
+of vertices in a large graph signifying their evolutionary selection over
+random patterns. See \cite{Bonnici2013}.
+
+\subsection{Max K Cut}
+A maximum cut, is partioning the vertices of a graph in two groups such that
+the number of edges between these two groups is maximum. In a weighted graph,
+where the edges are weighted, the weights of the edges are also taken into
+consideration.  A maximum k-cut, is generalized version of maximum cut, where
+the graph is partitioned into k subsets, such that the number of edges between
+these groups is maximized.
+
+It is important to note that a bipartite graph (refer to the Definitions
+section above) is a trivial example of Max Cut there are no edges among the
+vertices of a set $A$ and no edges among the vertices of set B and all the edges
+are from the vertices in set $A$ to vertices in set $B$.
+
+\subsection{Graph Coloring}
+It is an optimization problem where the objective is to assign to the vertices
+of a graph a color such that no two adjacent vertices have the same color,
+while keeping the number of colors employed to a minimum. Here a color can be
+thought of just any symbol from a finite set of symbols.
+
+\subsection{Minimum Vertex Cover}
+Minimum Vertex cover of a graph is the minimum amount of vertices such that,
+all the edges in the graph must have one of such vertices as at least one of
+their endpoints. This is also a optimization problem in which the constraint is
+that all the edges must be covered while keeping the number of vertices in the
+set of Minimum Vertex Cover to the minimum.
+
+\subsection{Tree Width}
+We will explain in two parts. First we will define what a tree decomposition of
+a graph is. Then we will define tree width of the graph.
+
+To decompose a Graph in a tree is to put nodes into sets called pieces, subject
+to certain conditions.  The first condition is that all the vertices of $G$
+should belong to at least one piece. Every edge of $G$, must be present in
+at least one piece which contains both ends of the edge.  And finally, in the
+tree decomposition, if there is a node $n$ present in a walk from a node $n1$
+to $n2$, and if both $n1$ and $n2$ have a vertex $v$ in common, then the node
+$n$ also contains that vertex $v$. 
+
+Any graph can be decomposed into a tree. Trivially, a graph can be tree
+decomposed by putting all of it's vertices in just one node. But it will not be
+a very useful tree decomposition.  Therefore a good tree decomposition of a
+tree is the one which has small pieces.  Tree width is defined as the size of
+the biggest piece $V_t - 1$. The smaller the tree width the bigger the better
+the tree decomposition. See \cite{KleinbergTardos06} in the bibliography.
+
+\section{Prior Work}
+This project takes subtle inspirations from some of the work which is available
+on the internet as web applications for visualization of popular algorithms.
+Although the works which are discussed in this section are focused on
+understanding algorithmic solutions of computer science problems, the
+visualization of graphs, trees and lists in such projects have been inspiring
+for depiction of graphs and their animation in this project.
+
+\subsection{Data Structure Visualizations}
+\label{priorWork: datastrucvisu}
+This tool was developed by David Galles, Associate Professor, University of San
+Francisco. See \cite{Galles}, in the bibliography section.  It covers topics
+from various categories of computer science problems such as Dynamic
+Programming, Geometric Programming, Trees, Heaps, Graphs etc.
+
+The design of the tool has several important features.  The task of forming the
+data-structures as input to algorithms is quite often delegated to the user
+rather than they being predefined or hard-coded.  There are control buttons
+which allow the user to start pause and restart the animations. There is a
+slider to tune the speed of the animation as well.
+
+There is a dearth of textual explanation of the algorithms while they run.
+Perhaps, the main purpose of this tool is as a teaching aid such that the
+teacher first explains the topic and uses the tool as a visual demonstration to
+show his students the working of the algorithm on real datastructures.
+
+\subsection{VisuAlgo}
+\label{priorWork: visualgo}
+This tool was developed by Dr. Steven Halim of National University of
+Singapore. See \cite{HalimVisu} in the bibliography. It covers topics from the
+subject of data structures and algorithms. Most relevant for this project are
+the topics related to graph theory; which are Maximum Flow, Minimum Vertex
+Cover, Traveling Salesman and Steiner Tree, although the emphasis is on
+algorithmic solutions to the problems and not problem visualization which is
+the emphasis of this project.
+
+For most topics the user is able to construct his instances of datastructures.
+Unlike Data Structure Visualization application mentioned in
+\autoref{priorWork: datastrucvisu}, there is an ample amount of textual
+information in terms of theory, tutorial and instructions. The explanation of
+the topics is done in text blocks which appear at appropriate places in a slide
+show like fashion. For organizing the textual information, it has drop down
+content menu for easy access to various sections. 
+
+\subsection{Algmatch}
+\label{priorWork: algmatch}
+This Web app was developed as a final year individual project dissertation for
+by Liam Lau under the supervision of Sofiat Olaosebikan. The application
+visualizes the matching algorithms such as Gale-Shapley Stable Matching and
+Extended Gale-Shapley Stable Matching algorithms applied to stable marriage and
+hospital/residents problem. See \cite{LiamApp} in the bibliography. The app
+lends ideas about user friendliness and intuitive usage.
+
+It has a panel which describes the algorithm steps while in an animation the
+matching algorithm works on an instance of the problem.
+
+Aesthetically, the most noteworthy features of the app are, playback and speed
+controls which are as intuitive as media buttons on a media player and smooth
+page animations resulting in a pleasing user interaction.

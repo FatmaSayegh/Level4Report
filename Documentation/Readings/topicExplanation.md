@@ -128,7 +128,7 @@ Formally, a tree decomposition of G = (V,E) consists of a tree T and a subset Vt
 node t <- T. We will call the subsets Vt pieces of tree decomposition. T and Vt must satisfy:
 - (Node coverage) Every node of G belongs to at least one piece Vt.
 - (Edge coverage) For every edge e of G, there is some piece Vt containing both ends of e.
-- (Coherence) Let t1, t2 and t3 be three nodes of T such that t2 lies on the path from t1 to t3.
+- (Coherence) Let t1, t2 and t3 be three nodes of T such that t2 lies on the path from t1 to t3. 
 
 All graphs have tree decompositions. A trivial tree decomposition of any graph has just one node with all
 the vertices of the graph residing in it. It will satisfy all the conditions mentioned in the definition
