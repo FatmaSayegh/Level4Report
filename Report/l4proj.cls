@@ -97,7 +97,9 @@
     framesep=12pt,
     framexleftmargin=12pt,
     tabsize=4,
-    captionpos=b
+    captionpos=b,
+    numbers=left,
+    xleftmargin=2em
 }
 %% ---
 

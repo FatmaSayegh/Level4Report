@@ -1,3 +1,5 @@
+% Analysis and Requirements
+
 In this chapter, the scope of the project, the criterion of selection of the
 problems in graph theory, the thinking behind choosing the methods of
 elucidation of the selected topics will be discussed. Finally to conclude the analysis
@@ -6,26 +8,27 @@ the requirements of the project are stated.
 
 \section{Scope of The Project}
 
-Understanding a problem is a necessary first step in trying to solve it.
-It also enables a student to abstract out a mathematical
+Understanding a problem in mathematics is a necessary first step in trying to solve it.
+It also enables a student to abstract out a formalized version of a
 problem from a real life scenario present in the fields of science and engineering.
 
 This idea has guided this project to be restricted to one which helps a learner to
-understand the problem itself. The solution, on the other hand, or suggesting an
+understand the problems in graph theory. Whereas the solution or suggesting an
 algorithm to solve the problem, if required, is the second important step which
 has been deliberately not touched upon to keep the scope of this project
-clear, precise and limited.
+clear, precise and specific.
 
 
 \section{Criteria for Selection of Problems}
 \label{section: selectionCriteria}
-One of the most important criteria for selection of the problems for the project was
-based upon the importance of the topic in the field of graph theory. There are
-several text books in graph theory, which discuss various theorems and problems in
-the subject.  There are a few problems which occur commonly and frequently in
-them. The order of their inclusion in the text books is based logically.
-Building the concepts from the basics to advanced. Therefore the problems
-included in the project should represent all hardness levels.
+One of the most important criteria for selection of the problems for the
+project was based upon the importance of the topic in the field of graph
+theory. There are several text books (see \cite{Newman10} and
+\cite{KleinbergTardos06}), in graph theory, which discuss various theorems and
+problems in the subject.  There are a few problems which occur commonly and
+frequently in them. The order of their inclusion in the text books is based
+logically.  Building the concepts from the basics to advanced. Therefore the
+problems included in the project should represent all levels of difficulty.
 
 Since imagining a graph theory problem is largely a visual exercise, there
 was no dearth of problems which could offer themselves as a subject of an
@@ -47,8 +50,9 @@ The data from the survey had a role in determining topics and the methods chosen
 \section{Methods of Elucidation}
 As it has been discussed in the previous section that feasible methods of
 elucidation/exposition played a prominent role in the selection of the problems
-in the first place. These methods can be broadly classified as animations and
-user interactions or a combination of both.
+in the first place. It was decided that for this project, such methods can be
+broadly classified as animations and user interactions or a combination of
+both.
 
 
 \subsection{Animation}
@@ -84,16 +88,24 @@ scope of the program was limited to the purposes of visualization and not
 coding the algorithms which can solve instances of the mentioned problems.
 Therefore in this project, although the data type of Graphs (Set of
 Vertices and Set of Edges) and the associated functions, are quite general and
-can support operations of various kinds, care is taken that we provide the
+can support operations of various kinds, care is taken that I provide the
 solution to the visualization program before hand to give enough information to
 the various animations and user interactions.
 
 
 \section{Requirements}
-Based on synthesis of the above sections it is concluded that
-there should be a web application written for the desktop browser with user interactive animations which elucidate the following
-graph theory problems -
+Based on synthesis of the above sections it is concluded that there must be a
+web application written for the desktop browser with user interactive
+animations. The requirements for the application are categorized into two
+priority levels. The application must definitely have the features mentioned
+in the \textbf{Must Have} section which is the minimum requirements necessary
+to have a functioning application without any bells and whistles. It should
+have the additional desirable features mentioned in the \textbf{Should Have}
+section. 
 
+\subsection{Must Have}
+The application must elucidate the following \emph{Classical Graph Theory
+Problems} by employing user interactive animations.
 \begin{enumerate}
 \item Graph Isomorphism
 \item Max Cut
@@ -118,13 +130,20 @@ Doing so in a manner which fulfills the following subjective qualities -
 \item Substantive learning impact
 \item Ease of Use
 \item Coherent Story telling
-\item Pleasing Aesthetics
 \end{enumerate}
 
-And finally, evaluating the application with the help of the peers on parameters which can be broadly classified into the following categories -
+And finally, evaluating the application with the help of the peers on
+parameters which can be broadly classified into the following categories -
 
 \begin{enumerate}
 \item Quality of Elucidation
 \item User Experience 
 \item Learning Impact
+\end{enumerate}
+
+\subsection{Should Have}
+The application should optionally have the following desirable features:
+\begin{enumerate}
+\item Pleasing Aesthetics, to be preferably verified by evaluation.
+\item Mobile Friendliness, so that the application can be accessed anywhere.
 \end{enumerate}

@@ -1,16 +1,44 @@
 % DESIGN
 
-This documents discusses the design choices made for the application.  It
-progresses to how a graph are visually displayed and animated in the app
-without going any deep in the program implementaion.  Finally, with the help of
-the above we shall discuss the intended experience of the user while going
-through the various topics explained in the application. We will also discuss
-the learning impact on the user as it forms an essential aspect of overall
-design.
+This document discusses the design choices made for the application and the
+guiding principles behind such choices. It progresses to how a graph are
+visually displayed and animated in the app without going in the technical
+details of implementation. Finally, I shall discuss the intended experience of
+the user while going through the various topics explained in the application.
+We will also discuss the learning impact of each topic on the user as it forms an essential
+aspect of overall design.
 
+\section{Guiding Principles}
+
+\subsection{Simplicity}
+\label{design: simplicity}
+For the purpose of elucidation of Mathematical concepts, which requires an
+undivided attention of the learner, it was decided that the user interface must
+have the minimum amount of clutter possible, without giving away the minimum
+amount of functionality required. The learner should not get distracted by an
+overpopulated user interface. Simplicity and elegance would also lead the user
+to stay longer on the application without getting visually exhausted.
+Furthermore the users on the web today are extremely goal driven and don't want any
+obstruction between them and their goal. See \cite{Karvonen2000}.
+
+\subsection{Intuitiveness}
+The layout of the user interface should be such that it not only has utility,
+but should also help communicate the intention of the designer about the usage
+of the application. For example a play button, just like it was found on media
+devices for decades, invites the user to kick-start an animation even without
+going through the text which tells him to do so explicitly. The size and
+placement of the play button on the page, therefore becomes important. Right
+placement of user interactive elements guide the user through the story which
+is intended to be told.
+
+\subsection{Meaningfulness}
+For a substantial learning impact, the elucidation of the topics must reach at
+the heart of the topic. Furthermore they must have a story line which is
+meaningful and coherent. The learning outcomes of the animation or a
+user-interactive task must be well defined before an attempt is made to
+implement them.
 
 \section{Wire-frame and Navigation}
-
 The web application is a \textbf{Single Page Application}. Where the navigation
 from one topic to another occurs according to the user inputs. When the state
 moves from one graph theory to another topic, the data on the screen, that is
@@ -209,27 +237,30 @@ imaginative student to want to investigate the subject further.
 
 
 \subsection{Graph Coloring}
-Graph Coloring is explained to the user with the help of a user-interactive
-task.  The user is presented with a graph which has all the vertices in color
-white.  On the explanation panel to the right he is given the definition of the
-problem and advice on how to complete the task.  
+A user-interactive task was chosen for explaining Graph Coloring as the nature
+of the problem lends naturally for such.  The user is presented with a graph
+which has all the vertices in color white.  On the explanation panel to the
+right he is given the definition of the problem and advice on how to complete
+the task.  
 
 The task is to choose colors from a color palette of three colors namely red,
 green and blue, and color vertices in the graph such that no two adjacent
 vertices have the same color. Whenever the user colors two or more adjacent
 vertices the same color the text panel warns them to make amends. There is a
 reset button in the explanation panel to un-color all the vertices to start all
-over again if the user wants to start from the beginning. 
+over again if the user wants to start from the beginning.
 
 The user is challenged to first challenged to color the graph successfully in
 just two colors but as it would be soon clear to the user it can only be done
 in three.
 
+A user-interactive task was chosen for explaining Graph Coloring as the nature
+of the problem lends naturally for such.
+
 \subsubsection{Learning Impact:}
-The aim of the user task is to make the user understand the problem, and retain
-this in their memory in for a long period of time as user interactive task can
-create an impression of a problem for a very long period of time than just
-watching an animation as a spectator.
+The user interactive task will help the student retain the meaning of the Graph
+Coloring problem in their memory for a long period of time than just watching
+an animation as a spectator.
 
 \subsection{Minimum Vertex Cover}
 Minimum Vertex Cover, just by the nature of the problem is chosen to be
@@ -278,5 +309,6 @@ the explanation panel.
 
 \subsubsection{Learning Impact:}
 The user is expected to learn the concept of tree decomposition of a graph.
-Also, by the help of animations, she will learn abstract thinking: how a
-\emph{form} of a tree can be derived out of an unseeming \emph{general} graph.
+Also, by the help of animations, he will be inspired to learn abstract
+thinking: how a \emph{form} of a tree can be derived out of an unassuming
+typical graph.
