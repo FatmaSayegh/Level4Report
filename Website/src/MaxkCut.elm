@@ -1,3 +1,19 @@
+module MaxkCut exposing (..)
+
+import Graph exposing (Graph, ColorRegion(..), linearGrid, parametricPolygon, Grid, makeGraph, Gtype(..), ShapeTransition, Token(..))
+import Math.Vector3 exposing (..)
+import Messages exposing (Msg(..))
+import Element as ELE
+import Element.Background as Background
+import Element.Font as Font
+import Explanation exposing (..)
+import Buttons exposing (..)
+import String.Format
+import Html as H exposing (div, h1, p, text)
+import Element.Input as Input
+import Ant.Icon as Ant
+import Ant.Icons as Icons
+
 type alias MaxCutTransition =
     { transitionA : ShapeTransition -- Will remain static
     , transitionB : ShapeTransition  -- Will move towards final Grid when animationOn is True
@@ -12,6 +28,13 @@ type MaxCutState =
 -- init function initializes, a model and provides
 -- an instance of the model to the elm runtime.
 
+toggleToken : Token -> Token
+toggleToken token =
+   case token of
+      MakeKCut ->
+         NoToken
+      NoToken ->
+         MakeKCut
 
 
 maxcutTransitionA : ShapeTransition
@@ -65,12 +88,12 @@ maxCutGeometry =
       setAFinalGrid = parametricPolygon 4 (vec3 70 10 0) setAGridPosition (pi/3)
       setBFinalGrid = parametricPolygon 4 (vec3 70 10 0) setBGridPosition (pi/3)
       vertices = 
-         List.map3 (\name g c -> Vertex name g c False) 
+         List.map3 (\name g c -> Graph.Vertex name g c False) 
             (setA ++ setB)
             (setAGrid ++ setBGrid)
-            (listOfColors First 8)
+            (Graph.listOfColors First 8)
       edges =
-         makeEdgesWithTuples edgeTuples vertices
+         Graph.makeEdgesWithTuples edgeTuples vertices
 
       in
       (Graph vertices edges, setAFinalGrid ++ setBFinalGrid)
@@ -110,12 +133,12 @@ threeCutGeometry =
                         )
 
       vertices = 
-         List.map3 (\name g c -> Vertex name g c False) 
+         List.map3 (\name g c -> Graph.Vertex name g c False) 
             (List.range 1 9)
             (gridStart)
-            (listOfColors First 9)
+            (Graph.listOfColors First 9)
       edges =
-         makeEdgesWithTuples edgeTuples vertices
+         Graph.makeEdgesWithTuples edgeTuples vertices
 
       in
       (Graph vertices edges, modifiedGrid)
@@ -246,10 +269,10 @@ paneTwoA shapeTransition =
          let
             cutLine = makeCutLine shapeTransition
          in
-         displaySvg ((drawGraph graphA) ++ (drawGraph graphB) ++ (drawCutLine cutLine))
+         Graph.displaySvg ((Graph.drawGraph graphA) ++ (Graph.drawGraph graphB) ++ (drawCutLine cutLine))
 
       NoToken ->
-         displaySvg ((drawGraph graphA) ++ (drawGraph graphB))
+         Graph.displaySvg ((Graph.drawGraph graphA) ++ (Graph.drawGraph graphB))
 
 paneTwoB shapeTransition =
    let
@@ -266,10 +289,10 @@ paneTwoB shapeTransition =
                |> List.map drawCutLine
                |> List.concat
          in
-         displaySvg ((drawGraph graphB) ++ drawCutLines)
+         Graph.displaySvg ((Graph.drawGraph graphB) ++ drawCutLines)
 
       NoToken ->
-         displaySvg (drawGraph graphB)
+         Graph.displaySvg (Graph.drawGraph graphB)
 
 animateMaxCutCompound : Msg -> MaxCutTransition -> MaxCutTransition
 animateMaxCutCompound  msg maxCutTrans =
@@ -314,7 +337,7 @@ animateMaxCutTransition  msg shapeTransition =
        TimeDelta delta ->
            case shapeTransition.animationOn of
                True ->
-                   executeShapeTransition shapeTransition
+                   Graph.executeShapeTransition shapeTransition
                False ->
                    shapeTransition
 
@@ -346,15 +369,15 @@ makeCutLineB shapeTransition =
 
       listOfTupledPosns =
          firstTuple
-            |> List.filterMap (findPositionsOfTuples vertices)
+            |> List.filterMap (Graph.findPositionsOfTuples vertices)
 
       edgeLines =
-         findEdgeLines shapeTransition.graphB.edges
+         Graph.findEdgeLines shapeTransition.graphB.edges
 
       intersectionPoints =
          listOfTupledPosns
             |> List.map (\(p1, p2) ->
-                           List.filterMap (findIntersection (p1, p2)) edgeLines)
+                           List.filterMap (Graph.findIntersection (p1, p2)) edgeLines)
    in
    List.map2 
          (\(p1, p2) ins ->
@@ -374,10 +397,10 @@ makeCutLine shapeTransition =
       setB = [5,6,7,8]
 
       edgeLines =
-         findEdgeLines shapeTransition.graphB.edges
+         Graph.findEdgeLines shapeTransition.graphB.edges
 
       intersectionPoints = 
-         List.filterMap (findIntersection (start, end)) edgeLines
+         List.filterMap (Graph.findIntersection (start, end)) edgeLines
 
    in
    CutLine start end (intersectionPoints)
@@ -388,4 +411,13 @@ type CutLine =
 drawCutLine cutLine =
     case cutLine of
     CutLine start end l ->
-      [(line start end)] ++ (drawIntersectionPoints l)
+      [(Graph.line start end)] ++ (Graph.drawIntersectionPoints l)
+
+mediaButtonsForMaxCut : ShapeTransition -> ELE.Element Msg
+mediaButtonsForMaxCut shapeTransition =
+   ELE.row
+      [ELE.spacing 90, ELE.paddingXY 300 40]
+      [  playButton shapeTransition.animationOn
+      ,  resetButton
+      ,  forwardButton
+      ]

@@ -804,3 +804,20 @@ findPositionsOfTuples vs tu =
                            
                in
                Just (finalPos1, finalPos2)
+drawGraph g =
+    let
+        ( specialEdges, normalEdges ) =
+            seperateEdges g
+
+        haloVertices = getHaloVertices g specialEdges
+
+        selectedVertices =
+            List.filter (\ver -> ver.glow) g.vertices
+         
+    in
+    List.map drawEdge normalEdges
+        ++ List.map drawSpecialEdge specialEdges
+        ++ List.map drawGoldenCircle haloVertices
+        ++ List.map drawVertex g.vertices
+        ++ List.map drawSelectedVertex selectedVertices
+        ++ List.map writeVertexName g.vertices

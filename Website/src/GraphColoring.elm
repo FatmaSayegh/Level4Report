@@ -1,3 +1,29 @@
+module GraphColoring exposing (..)
+
+import Graph exposing (Graph, ColorRegion(..), linearGrid, parametricPolygon, Grid, makeGraph, Gtype(..), ShapeTransition, Token(..))
+import Math.Vector3 exposing (..)
+import Messages exposing (Msg(..))
+import Element as ELE
+import Element.Background as Background
+import Element.Font as Font
+import Explanation exposing (..)
+import Buttons exposing (..)
+import String.Format
+import Html as H exposing (div, h1, p, text)
+import Element.Input as Input
+import Ant.Icon as Ant
+import Ant.Icons as Icons
+import Color exposing (Color)
+import Svg as S
+import Svg.Attributes as SA exposing (..)
+import Svg.Events as SE exposing (..)
+
+type alias ColorDisplay =
+   { graphA : Graph
+   , chosenColor : Color
+   , defaultColor : Color
+   }
+
 colorDisplay : ColorDisplay
 colorDisplay = 
    let
@@ -9,7 +35,7 @@ colorDisplay =
             {v | color = (Color.rgb 1 1 1)})
             initialGraph.vertices
       createEdge =
-         updateEdge whiteVertices
+         Graph.updateEdge whiteVertices
       newGraph = Graph whiteVertices (List.map createEdge initialGraph.edges)
    in
       ColorDisplay newGraph (Color.rgb 1 1 1) (Color.rgb 1 1 1)
@@ -44,7 +70,7 @@ makeSquare pos size color =
       []
 
 paneThree display =
-   displaySvg ((drawGraphForColoring display.graphA) ++ (colorPallete display))
+   Graph.displaySvg ((drawGraphForColoring display.graphA) ++ (colorPallete display))
 
 explanationColoring : ColorDisplay -> Bool -> ELE.Element Msg
 explanationColoring colorDisp helpStatus =
@@ -159,32 +185,26 @@ explanationColoring colorDisp helpStatus =
 
 
 
-miscolorText : Edge -> String
+miscolorText : Graph.Edge -> String
 miscolorText e =
    "Vertex " ++ (String.fromInt e.vertexOne.name) 
              ++ " and vertex "
              ++ (String.fromInt e.vertexTwo.name)
              ++ " which are adjacent to each other are colored with the same color."
 
-goColor : ColorDisplay -> Msg -> Model
+goColor : ColorDisplay -> Msg -> ColorDisplay
 goColor display msg =
    case msg of
       ColoringSelectColor color ->
-         let
-            newDisplay = 
                {display |
                   chosenColor = color
                }
-         in
-         GraphColoring newDisplay
-
       VertexClicked name ->
          let
-            newGraph = changeColorOfVertex name display.chosenColor display.graphA 
-            newDisplay = {display |
-                              graphA = newGraph }
+            newGraph = Graph.changeColorOfVertex name display.chosenColor display.graphA 
          in
-         GraphColoring newDisplay
+            {display |
+                 graphA = newGraph }
 
       VertexNonColor ->
          let
@@ -194,23 +214,17 @@ goColor display msg =
                   display.graphA.vertices
 
             createEdge =
-               updateEdge whiteVertices
+               Graph.updateEdge whiteVertices
 
             newGraph = Graph whiteVertices (List.map createEdge display.graphA.edges)
-
-            newDisplay = {display |
-                              graphA = newGraph }
          in
-         GraphColoring newDisplay
+
+         {display |
+              graphA = newGraph }
 
       _ ->
-         GraphColoring display
+         display
 
-type alias ColorDisplay =
-   { graphA : Graph
-   , chosenColor : Color
-   , defaultColor : Color
-   }
 
 drawGraphForColoring g =
     let
@@ -221,7 +235,7 @@ drawGraphForColoring g =
 
       miscoloredEdges = List.filter (\e -> verticesOfSameColor e) g.edges 
     in
-    List.map drawEdge normalEdges
-        ++ List.map drawSpecialEdge miscoloredEdges
-        ++ List.map drawVertex g.vertices
-        ++ List.map writeVertexName g.vertices
+    List.map Graph.drawEdge normalEdges
+        ++ List.map Graph.drawSpecialEdge miscoloredEdges
+        ++ List.map Graph.drawVertex g.vertices
+        ++ List.map Graph.writeVertexName g.vertices

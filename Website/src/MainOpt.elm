@@ -26,7 +26,10 @@ import Element.Input as Input
 import Ant.Icon as Ant
 import Ant.Icons as Icons
 import Messages exposing (Msg(..))
-import Isomorphism exposing (explanationOne, paneOne, animateIsomorphicTransition)
+import Isomorphism exposing (explanationOne, paneOne, animateIsomorphicTransition, isomorphicTransition)
+import MaxkCut exposing (MaxCutTransition, explanationTwo, paneTwo, animateMaxCutCompound, maxCutTransition)
+import GraphColoring exposing (ColorDisplay, paneThree, explanationColoring, colorDisplay, goColor)
+import Graph exposing (ShapeTransition)
 
 main : Program () SuperModel Msg
 main =
@@ -40,16 +43,8 @@ main =
 init : () -> ( SuperModel, Cmd Msg )
 init _ =
     let
-        initialGraph =
-            makeGraph (PolygonCycleDoll 4) (vec3 200 100 0) (vec3 80 80 0) (pi / 4)
-
         shapeTransition =
-            { graphA = initialGraph
-            , graphB = initialGraph
-            , finalGrid = bipartiteGrid
-            , animationOn = False
-            , specialToken = NoToken
-            }
+            isomorphicTransition
         model = ( Isomorphic shapeTransition)
     in
     ({ helpStatus = False
@@ -65,8 +60,8 @@ type Model =
    Isomorphic ShapeTransition
    | MaxCut MaxCutTransition
    | GraphColoring ColorDisplay
-   | VertexCover VertexCoverDisplay
-   | TreeWidth TreeWidthDisplay
+--   | VertexCover VertexCoverDisplay
+--   | TreeWidth TreeWidthDisplay
 
 
 
@@ -136,15 +131,31 @@ update msg superModel =
       newModel =
          case msg of
            NextTopic ->
-               model
+              case model of
+                 Isomorphic x ->
+                    ( MaxCut maxCutTransition)
+                 MaxCut x ->
+                    (GraphColoring colorDisplay)
+                 GraphColoring x ->
+                    ( Isomorphic isomorphicTransition)
            PreviousTopic ->
-               model
+              case model of
+                 Isomorphic x ->
+                    (GraphColoring colorDisplay)
+                 MaxCut x ->
+                    ( Isomorphic isomorphicTransition)
+                 GraphColoring x ->
+                    ( MaxCut maxCutTransition)
            _ ->
               case model of
                 Isomorphic shapeTransition ->
                    ( Isomorphic (animateIsomorphicTransition msg shapeTransition))
-                _ ->
-                  model
+                MaxCut maxcutTrans ->
+                   ( MaxCut (animateMaxCutCompound msg maxcutTrans))
+                GraphColoring display ->
+                   GraphColoring (goColor display msg)
+                --_ ->
+                --  model
       helpStatus =
          case msg of
             ToggleHelpStatus ->
@@ -198,16 +209,26 @@ view superModel =
                   ]
             )
 
-
       MaxCut maxCutTrans ->
-         ELE.el [] []
+         ELE.layoutWith 
+            layOutOptions
+            layOutAttributes
+            ( ELE.row
+                  [ ELE.width ELE.fill]
+
+                  [ displayColumn (paneTwo maxCutTrans) 
+                  , explanationTwo maxCutTrans superModel.helpStatus
+                  ]
+            )
+
       GraphColoring display ->
-         ELE.el [] []
+         ELE.layoutWith 
+            layOutOptions
+            layOutAttributes
+            ( ELE.row
+                  [ ELE.width ELE.fill]
 
-      VertexCover display ->
-         ELE.el [] []
-
-      TreeWidth display ->
-         ELE.el [] []
-
-
+                  [ displayColumn (paneThree display) 
+                  , explanationColoring display superModel.helpStatus
+                  ]
+            )
