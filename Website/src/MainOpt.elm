@@ -29,6 +29,7 @@ import Messages exposing (Msg(..))
 import Isomorphism exposing (explanationOne, paneOne, animateIsomorphicTransition, isomorphicTransition)
 import MaxkCut exposing (MaxCutTransition, explanationTwo, paneTwo, animateMaxCutCompound, maxCutTransition)
 import GraphColoring exposing (ColorDisplay, paneThree, explanationColoring, colorDisplay, goColor)
+import VertexCover exposing (VertexCoverDisplay, paneFour, explanationCover, vertexCoverDisplay, goCover)
 import Graph exposing (ShapeTransition)
 
 main : Program () SuperModel Msg
@@ -60,7 +61,7 @@ type Model =
    Isomorphic ShapeTransition
    | MaxCut MaxCutTransition
    | GraphColoring ColorDisplay
---   | VertexCover VertexCoverDisplay
+   | VertexCover VertexCoverDisplay
 --   | TreeWidth TreeWidthDisplay
 
 
@@ -137,15 +138,20 @@ update msg superModel =
                  MaxCut x ->
                     (GraphColoring colorDisplay)
                  GraphColoring x ->
+                    ( VertexCover vertexCoverDisplay)
+                 VertexCover x ->
                     ( Isomorphic isomorphicTransition)
+
            PreviousTopic ->
               case model of
                  Isomorphic x ->
-                    (GraphColoring colorDisplay)
+                    ( VertexCover vertexCoverDisplay)
                  MaxCut x ->
                     ( Isomorphic isomorphicTransition)
                  GraphColoring x ->
                     ( MaxCut maxCutTransition)
+                 VertexCover x ->
+                    (GraphColoring colorDisplay)
            _ ->
               case model of
                 Isomorphic shapeTransition ->
@@ -154,8 +160,11 @@ update msg superModel =
                    ( MaxCut (animateMaxCutCompound msg maxcutTrans))
                 GraphColoring display ->
                    GraphColoring (goColor display msg)
+                VertexCover display ->
+                   VertexCover ( goCover display msg)
                 --_ ->
                 --  model
+
       helpStatus =
          case msg of
             ToggleHelpStatus ->
@@ -230,5 +239,17 @@ view superModel =
 
                   [ displayColumn (paneThree display) 
                   , explanationColoring display superModel.helpStatus
+                  ]
+            )
+
+      VertexCover display ->
+         ELE.layoutWith 
+            layOutOptions
+            layOutAttributes
+            ( ELE.row
+                  [ ELE.width ELE.fill]
+
+                  [ displayColumn (paneFour display) 
+                  , explanationCover display superModel.helpStatus
                   ]
             )

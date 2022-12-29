@@ -1,3 +1,23 @@
+module VertexCover exposing (..)
+
+import Graph exposing (Graph, ColorRegion(..), linearGrid, parametricPolygon, Grid, makeGraph, Gtype(..), ShapeTransition, Token(..))
+import Math.Vector3 exposing (..)
+import Messages exposing (Msg(..))
+import Element as ELE
+import Element.Background as Background
+import Element.Font as Font
+import Explanation exposing (..)
+import Buttons exposing (..)
+import String.Format
+import Html as H exposing (div, h1, p, text)
+import Element.Input as Input
+import Ant.Icon as Ant
+import Ant.Icons as Icons
+import Color exposing (Color)
+import Svg as S
+import Svg.Attributes as SA exposing (..)
+import Svg.Events as SE exposing (..)
+
 type alias VertexCoverDisplay =
    { graphA : Graph
    }
@@ -11,31 +31,23 @@ vertexCoverDisplay =
       VertexCoverDisplay initialGraph
 
 paneFour display =
-         displaySvg (drawGraphForCover display.graphA)
+         Graph.displaySvg (drawGraphForCover display.graphA)
 
-goCover : VertexCoverDisplay -> Msg -> Model
+goCover : VertexCoverDisplay -> Msg -> VertexCoverDisplay
 goCover display msg =
    case msg of
        ToggleVertexStatus name ->
-           let
-               newDisplay =
-                  { display
-                      | graphA = toggleGlowVertex name display.graphA
-                  }
-            in
-            VertexCover newDisplay
+            { display
+                | graphA = Graph.toggleGlowVertex name display.graphA
+            }
 
        VertexClicked name ->
-           let
-               newDisplay =
-                  { display
-                      | graphA = toggleGlowVertex name display.graphA
-                  }
-            in
-            VertexCover newDisplay
+            { display
+                | graphA = Graph.toggleGlowVertex name display.graphA
+            }
 
        _ ->
-            VertexCover display
+            display
 
 explanationCover : VertexCoverDisplay -> Bool -> ELE.Element Msg
 explanationCover display helpStatus =
@@ -47,7 +59,7 @@ explanationCover display helpStatus =
             List.length selected_vertices
 
         ( coveredEdges, _ ) =
-            seperateEdges display.graphA
+            Graph.seperateEdges display.graphA
 
         noCoveredEdges =
             List.length coveredEdges
@@ -149,10 +161,10 @@ explanationCover display helpStatus =
                                        ++ (String.fromInt noCoveredEdges)
                                        ++ " edges. "
                                        ++ "You have done so by selecting the vertices "
-                                       ++ getStringFromVertices selected_vertices
+                                       ++ Graph.getStringFromVertices selected_vertices
                                        ++ "."
                                        ++ " Therefore a vertex cover of this graph is the set vertices "
-                                       ++ getStringFromVertices selected_vertices
+                                       ++ Graph.getStringFromVertices selected_vertices
                                        ++ "."
 
                               else
@@ -171,18 +183,18 @@ explanationCover display helpStatus =
 drawGraphForCover g =
     let
         ( specialEdges, normalEdges ) =
-            seperateEdges g
+            Graph.seperateEdges g
 
         haloVertices =
-            getHaloVertices g specialEdges
+            Graph.getHaloVertices g specialEdges
 
         selectedVertices =
             List.filter (\ver -> ver.glow) g.vertices
          
     in
-    List.map drawEdge normalEdges
-        ++ List.map drawSpecialEdge specialEdges
+    List.map Graph.drawEdge normalEdges
+        ++ List.map Graph.drawSpecialEdge specialEdges
     --    ++ List.map drawGoldenCircle haloVertices
-        ++ List.map drawVertex g.vertices
-        ++ List.map drawSelectedVertex selectedVertices
-        ++ List.map writeVertexName g.vertices
+        ++ List.map Graph.drawVertex g.vertices
+        ++ List.map Graph.drawSelectedVertex selectedVertices
+        ++ List.map Graph.writeVertexName g.vertices
