@@ -26,19 +26,12 @@ import Element.Input as Input
 import Ant.Icon as Ant
 import Ant.Icons as Icons
 import Messages exposing (Msg(..))
-import Graph as GR
-
-
-
-
-
--- Main Program
--- main is the main program
--- init will initialize the model
--- view uses the model to populate the app
--- update updates the model
--- subscription subscribes to the clock
-
+import Isomorphism exposing (explanationOne, paneOne, animateIsomorphicTransition, isomorphicTransition)
+import MaxkCut exposing (MaxCutTransition, explanationTwo, paneTwo, animateMaxCutCompound, maxCutTransition)
+import GraphColoring exposing (ColorDisplay, paneThree, explanationColoring, colorDisplay, goColor)
+import VertexCover exposing (VertexCoverDisplay, paneFour, explanationCover, vertexCoverDisplay, goCover)
+import TreeWidth exposing (TreeWidthDisplay, paneTree, explanationWidth, treeWidthDisplay, goTree)
+import Graph exposing (ShapeTransition)
 
 main : Program () SuperModel Msg
 main =
@@ -49,12 +42,16 @@ main =
         , subscriptions = subscription
         }
 
-
-
--- Model of the app
--- Model contains the data model of the app.
--- Model has currently has 2 graphs
--- and a grid, graphB will transform into slowly.
+init : () -> ( SuperModel, Cmd Msg )
+init _ =
+    let
+        shapeTransition =
+            isomorphicTransition
+        model = ( Isomorphic shapeTransition)
+    in
+    ({ helpStatus = False
+    , model = model
+    }, Cmd.none)
 
 type alias SuperModel =
    { helpStatus : Bool
@@ -71,45 +68,12 @@ type Model =
 
 
 
-
-         
-
-
-
-init : () -> ( SuperModel, Cmd Msg )
-init _ =
-    let
-        initialGraph =
-            makeGraph (PolygonCycleDoll 4) (vec3 200 100 0) (vec3 80 80 0) (pi / 4)
-
-        shapeTransition =
-            { graphA = initialGraph
-            , graphB = initialGraph
-            , finalGrid = bipartiteGrid
-            , animationOn = False
-            , specialToken = NoToken
-            }
-        model = ( Isomorphic shapeTransition)
-    in
-    ({ helpStatus = False
-    , model = model
-    }, Cmd.none)
-
-
-
-
-
--- Subscribing to Animation frame clock.
--- Generates a Msg which can be used by update function
-
-
 subscription : SuperModel -> Sub Msg
 subscription _ =
     Sub.batch
         [ E.onAnimationFrameDelta TimeDelta
         , E.onKeyPress keyDecoder
         ]
-
 
 keyDecoder : Decode.Decoder Msg
 keyDecoder =
@@ -152,7 +116,6 @@ keyToMsg value =
         _ ->
             Other
 
-
 chooseVertexFromInt : Maybe Int -> Msg
 chooseVertexFromInt x =
    case x of
@@ -161,15 +124,6 @@ chooseVertexFromInt x =
       Just name
          -> ToggleVertexStatus name
 
-
-
--- Update the model
--- Update function takes in messages from the webpage or the subscriber
--- and uses them to modify the model
--- 1. With every animation clock tick, it changes the graph to move towards
---    a specified grid.
--- 2. With MouseOver a vertex it makes that vertices' incident edges glow.
--- 3. With MouseOut from a vertex it makes that vertices' incident edges not glow.
 
 
 update : Msg -> SuperModel -> ( SuperModel, Cmd Msg )
@@ -210,11 +164,14 @@ update msg superModel =
                 MaxCut maxcutTrans ->
                    ( MaxCut (animateMaxCutCompound msg maxcutTrans))
                 GraphColoring display ->
-                   ( goColor display msg)
+                   GraphColoring ( goColor display msg)
                 VertexCover display ->
-                   ( goCover display msg)
+                   VertexCover ( goCover display msg)
                 TreeWidth display ->
-                   ( goTree display msg)
+                   TreeWidth ( goTree display msg)
+                --_ ->
+                --  model
+
       helpStatus =
          case msg of
             ToggleHelpStatus ->
@@ -226,17 +183,6 @@ update msg superModel =
             
    in
    ({ superModel | model = newModel, helpStatus = helpStatus }, Cmd.none)
-
-
-
-
-
-
-
--- View the Model
--- This function is responsible for the actual rendering
--- of the webpage. Any change in the model by update function is reflected in the
--- webpage as view works with the latest model.
 
 layOutOptions =
    { options =
@@ -264,7 +210,6 @@ displayColumn svgHtml =
       , Background.color <| ELE.rgb 0.2 0.2 0.2
       ] [ELE.html svgHtml]
 
-
 view superModel =
    case superModel.model of
       Isomorphic shapeTransition ->
@@ -273,14 +218,12 @@ view superModel =
             layOutAttributes
             ( ELE.row
                   [ELE.width ELE.fill
-                  --, Background.color <| ELE.rgb 44 44 44
                   ]
 
                   [ displayColumn (paneOne shapeTransition.graphA shapeTransition.graphB)
                   , explanationOne shapeTransition superModel.helpStatus
                   ]
             )
-
 
       MaxCut maxCutTrans ->
          ELE.layoutWith 
@@ -329,34 +272,3 @@ view superModel =
                   , explanationWidth display superModel.helpStatus
                   ]
             )
-
-
-
-
-
-
-
--- Move a graph towards grid points.
--- This function takes as inputs a graph, and a target grid
--- First an intermediate grid is created near the input graph, which has the placeholder for
--- the vertices a little bit towards the final destination.
--- then the original graph is morphed into the intermediate grid.
-
-
-type alias Size =
-    Int
-
--- put edges first and then vertices
--- and produces a single list
-
-
-
-      
-            
-
-
-
-
-
-
-
