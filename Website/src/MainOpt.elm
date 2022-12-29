@@ -30,6 +30,7 @@ import Isomorphism exposing (explanationOne, paneOne, animateIsomorphicTransitio
 import MaxkCut exposing (MaxCutTransition, explanationTwo, paneTwo, animateMaxCutCompound, maxCutTransition)
 import GraphColoring exposing (ColorDisplay, paneThree, explanationColoring, colorDisplay, goColor)
 import VertexCover exposing (VertexCoverDisplay, paneFour, explanationCover, vertexCoverDisplay, goCover)
+import TreeWidth exposing (TreeWidthDisplay, paneTree, explanationWidth, treeWidthDisplay, goTree)
 import Graph exposing (ShapeTransition)
 
 main : Program () SuperModel Msg
@@ -62,7 +63,7 @@ type Model =
    | MaxCut MaxCutTransition
    | GraphColoring ColorDisplay
    | VertexCover VertexCoverDisplay
---   | TreeWidth TreeWidthDisplay
+   | TreeWidth TreeWidthDisplay
 
 
 
@@ -140,11 +141,15 @@ update msg superModel =
                  GraphColoring x ->
                     ( VertexCover vertexCoverDisplay)
                  VertexCover x ->
+                    ( TreeWidth treeWidthDisplay)
+                 TreeWidth x ->
                     ( Isomorphic isomorphicTransition)
 
            PreviousTopic ->
               case model of
                  Isomorphic x ->
+                    ( TreeWidth treeWidthDisplay)
+                 TreeWidth x ->
                     ( VertexCover vertexCoverDisplay)
                  MaxCut x ->
                     ( Isomorphic isomorphicTransition)
@@ -159,9 +164,11 @@ update msg superModel =
                 MaxCut maxcutTrans ->
                    ( MaxCut (animateMaxCutCompound msg maxcutTrans))
                 GraphColoring display ->
-                   GraphColoring (goColor display msg)
+                   GraphColoring ( goColor display msg)
                 VertexCover display ->
                    VertexCover ( goCover display msg)
+                TreeWidth display ->
+                   TreeWidth ( goTree display msg)
                 --_ ->
                 --  model
 
@@ -251,5 +258,17 @@ view superModel =
 
                   [ displayColumn (paneFour display) 
                   , explanationCover display superModel.helpStatus
+                  ]
+            )
+
+      TreeWidth display ->
+         ELE.layoutWith 
+            layOutOptions
+            layOutAttributes
+            ( ELE.row
+                  [ ELE.width ELE.fill]
+
+                  [ displayColumn (paneTree display) 
+                  , explanationWidth display superModel.helpStatus
                   ]
             )

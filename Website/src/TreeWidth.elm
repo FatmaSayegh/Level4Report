@@ -1,3 +1,24 @@
+module TreeWidth exposing (..)
+
+import Graph exposing (Graph, ColorRegion(..), linearGrid, parametricPolygon, Grid, makeGraph, Gtype(..), ShapeTransition, Token(..))
+import Math.Vector3 exposing (..)
+import Messages exposing (Msg(..))
+import Element as ELE
+import Element.Background as Background
+import Element.Font as Font
+import Element.Border as Border
+import Explanation exposing (..)
+import Buttons exposing (..)
+import String.Format
+import Html as H exposing (div, h1, p, text)
+import Element.Input as Input
+import Ant.Icon as Ant
+import Ant.Icons as Icons
+import Color exposing (Color)
+import Svg as S
+import Svg.Attributes as SA exposing (..)
+import Svg.Events as SE exposing (..)
+
 explanationWidth : TreeWidthDisplay -> Bool -> ELE.Element Msg
 explanationWidth display helpStatus =
     ELE.column
@@ -208,12 +229,12 @@ treeWidthDisplay =
 
       vertices = 
          List.map3
-            (\name g c -> Vertex name g c False)
+            (\name g c -> Graph.Vertex name g c False)
             (List.range 1 12)
             (gridCircular)
-            (listOfColors First 12)
+            (Graph.listOfColors First 12)
       edges =
-         makeEdgesWithTuples edgeTuples vertices
+         Graph.makeEdgesWithTuples edgeTuples vertices
 
       triples = [ (1,2,3), (2,3,4)
                 , (3,4,7), (4,5,8), (4,7,8), (5,8,9), (5,6,9)
@@ -242,7 +263,7 @@ treeWidthDisplay =
       , treeLines = treeLines
       , status = CircularGraph
       }
-goTree : TreeWidthDisplay -> Msg -> Model
+goTree : TreeWidthDisplay -> Msg -> TreeWidthDisplay
 goTree display msg =
    case msg of
 
@@ -267,20 +288,18 @@ goTree display msg =
            newGraph =
                case newStatus of
                    CircularGraph ->
-                     morphGraph display.graph display.gridCircular
+                     Graph.morphGraph display.graph display.gridCircular
                    HoneyCombGraph ->
-                     morphGraph display.graph display.gridHoneyComb
+                     Graph.morphGraph display.graph display.gridHoneyComb
                    _ ->
                      display.graph
 
-           newDisplay =
-               { display
-                 | status = newStatus
-                 , graph = newGraph
-               }
+         in
+         { display
+           | status = newStatus
+           , graph = newGraph
+         }
 
-          in
-          TreeWidth newDisplay
 
       PreviousTreeWidthAnimation ->
          let 
@@ -302,42 +321,39 @@ goTree display msg =
            newGraph =
                case newStatus of
                    CircularGraph ->
-                     morphGraph display.graph display.gridCircular
+                     Graph.morphGraph display.graph display.gridCircular
                    HoneyCombGraph ->
-                     morphGraph display.graph display.gridHoneyComb
+                     Graph.morphGraph display.graph display.gridHoneyComb
                    _ ->
                      display.graph
 
-           newDisplay =
-               { display
-                 | status = newStatus
-                 , graph = newGraph
-               }
-
-          in
-          TreeWidth newDisplay
+         in
+         { display
+           | status = newStatus
+           , graph = newGraph
+         }
 
       TimeDelta delta ->
          if display.status == MorphingIntoHoneyComb
             then
-              TreeWidth <| morphIntoHoneyComb display
+              morphIntoHoneyComb display
             else
-              TreeWidth display
+              display
       
       _ ->
-         TreeWidth display
+         display
 
 
 morphIntoHoneyComb : TreeWidthDisplay -> TreeWidthDisplay
 morphIntoHoneyComb display =
-   if (distanceBetweenGraphAndGrid display.graph display.gridHoneyComb < 20)
+   if (Graph.distanceBetweenGraphAndGrid display.graph display.gridHoneyComb < 20)
       then { display
                | status = HoneyCombGraph
-               , graph = morphGraph display.graph display.gridHoneyComb
+               , graph = Graph.morphGraph display.graph display.gridHoneyComb
            }
       else
            { display
-               | graph = moveTowards display.graph display.gridHoneyComb
+               | graph = Graph.moveTowards display.graph display.gridHoneyComb
            }
 
 drawGraphForTreeWidth display =
@@ -348,11 +364,11 @@ drawGraphForTreeWidth display =
          case display.status of
             TreeDrawnGraph ->
                List.filterMap 
-                  (  \(a, b, c) -> findCenterOfTriple a b c g.vertices ) 
+                  (  \(a, b, c) -> Graph.findCenterOfTriple a b c g.vertices ) 
                   display.triples
             PiecesMarked ->
                List.filterMap 
-                  (  \(a, b, c) -> findCenterOfTriple a b c g.vertices ) 
+                  (  \(a, b, c) -> Graph.findCenterOfTriple a b c g.vertices ) 
                   display.triples
             _ ->
                []
@@ -361,14 +377,14 @@ drawGraphForTreeWidth display =
          case display.status of
             TreeDrawnGraph ->
                display.treeLines
-               |> List.filterMap (findTwoPositions g.vertices)
+               |> List.filterMap (Graph.findTwoPositions g.vertices)
             _ ->
                []
 
       showPieceVertices =
             case display.status of
                ShowOnePiece ->
-                  List.filterMap (\name -> lookUpVertex name g.vertices)
+                  List.filterMap (\name -> Graph.lookUpVertex name g.vertices)
                      [1,2,3]
                _ ->
                   []
@@ -376,14 +392,14 @@ drawGraphForTreeWidth display =
       showPieceEdges =
             case display.status of
                ShowOnePiece ->
-                     makeEdgesWithTuples [ (1,2), (2,3), (3,1) ] g.vertices
+                     Graph.makeEdgesWithTuples [ (1,2), (2,3), (3,1) ] g.vertices
                _ ->
                  []
 
       onePieceCenter =
             case display.status of
                ShowOnePiece ->
-                  case (findCenterOfTriple 1 2 3 g.vertices) of
+                  case (Graph.findCenterOfTriple 1 2 3 g.vertices) of
                      Nothing ->
                         []
                      Just x ->
@@ -394,18 +410,18 @@ drawGraphForTreeWidth display =
 
    
    in
-   List.map drawEdge g.edges
-        ++ List.map (\(p1, p2) -> lline p1 p2) treeLinesDrawn
-        ++ List.map (drawIntersectionPoint 6) centersOftriples 
-        ++ List.map (drawIntersectionPoint 6) onePieceCenter 
-        ++ List.map drawVertex g.vertices
-        ++ List.map drawSpecialEdge showPieceEdges
-        ++ List.map drawSelectedVertex showPieceVertices
-        ++ List.map writeVertexName g.vertices
+   List.map Graph.drawEdge g.edges
+        ++ List.map (\(p1, p2) -> Graph.lline p1 p2) treeLinesDrawn
+        ++ List.map (Graph.drawIntersectionPoint 6) centersOftriples 
+        ++ List.map (Graph.drawIntersectionPoint 6) onePieceCenter 
+        ++ List.map Graph.drawVertex g.vertices
+        ++ List.map Graph.drawSpecialEdge showPieceEdges
+        ++ List.map Graph.drawSelectedVertex showPieceVertices
+        ++ List.map Graph.writeVertexName g.vertices
 
 paneTree : TreeWidthDisplay -> H.Html Msg
 paneTree display =
-         displaySvg (drawGraphForTreeWidth display)
+         Graph.displaySvg (drawGraphForTreeWidth display)
 
 -- makelinear takes n : int and gives a list of 3d vecs. They are 0 in x and z, but y varies form
 -- 0 to 1.0. There are n such vectors.
@@ -423,10 +439,10 @@ treeWidthGrid =
          ,  False, False, True, False, False, False, False, False
          ]
    in
-   List.map2 Tuple.pair presenceList (makelinearIn2D 5 8)
+   List.map2 Tuple.pair presenceList (Graph.makelinearIn2D 5 8)
       |> List.filter (\(x,y) -> x)
       |> List.map Tuple.second
-      |> situateShape position size
+      |> Graph.situateShape position size
 
 type alias TreeWidthDisplay =
    { graph : Graph

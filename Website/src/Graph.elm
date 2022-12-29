@@ -821,3 +821,37 @@ drawGraph g =
         ++ List.map drawVertex g.vertices
         ++ List.map drawSelectedVertex selectedVertices
         ++ List.map writeVertexName g.vertices
+
+findTwoPositions : List Vertex -> ( (Int, Int, Int), (Int, Int, Int) ) -> Maybe (Vec3, Vec3)
+findTwoPositions vs x =
+   case x of
+      ((a1, b1, c1), (a2, b2, c2)) ->
+         let 
+            pos1 = findCenterOfTriple a1 b1 c1 vs
+            pos2 = findCenterOfTriple a2 b2 c2 vs
+         in
+         case (pos1, pos2) of
+            (Nothing, _) ->
+               Nothing
+            (_, Nothing) ->
+               Nothing
+            (Just p1, Just p2) ->
+               Just (p1, p2)
+            
+      
+
+findCenterOfTriple : Int -> Int -> Int -> List Vertex -> Maybe Vec3
+findCenterOfTriple a b c vs =
+   case (lookUpVertex a vs, lookUpVertex b vs, lookUpVertex c vs) of
+      (Nothing, _, _) ->
+         Nothing
+      (_, Nothing, _) ->
+         Nothing
+      (_, _, Nothing) ->
+         Nothing
+      (Just v1 , Just v2, Just v3) ->
+            Just <| 
+            ( Math.Vector3.add v1.pos v2.pos
+            |> Math.Vector3.add v3.pos
+            |> Math.Vector3.scale 0.333
+            )
