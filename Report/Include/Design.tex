@@ -1,4 +1,5 @@
 % DESIGN
+\graphicspath{ {images/} }
 
 This document discusses the design choices made for the application and the
 guiding principles behind such choices. It progresses to how a graph are
@@ -42,12 +43,14 @@ implement them.
 The web application is a \textbf{Single Page Application}. Where the navigation
 from one topic to another occurs according to the user inputs. When the state
 moves from one graph theory to another topic, the data on the screen, that is
-the graphics and the text, change on the same page without changing the url.
+the graphics and the text, change on the same page without changing the URL.
 
-The page is vertical divided into two parts, the left part of the page contains
-an instance of an animation, the right contains explanation of the topic and
-advice on how to interpret the animation along with navigation and control
-buttons. 
+There were several iterations made for the layout of the web page, one of the
+is shown in \autoref{wireframe: initial}. Finally, a layout was chosen, see
+\autoref{wireframe: final}, in which the page is vertical divided into two
+parts, the left part of the page contains an instance of an animation, the
+right contains explanation of the topic and advice on how to interpret the
+animation along with navigation and control buttons. 
 
 The text in the explanation part of the page is dynamic in nature, if the
 animation has facility of user interaction with it's elements, the
@@ -57,6 +60,26 @@ and what the user should do next.
 There is a navigation bar at the bottom of the page, with left and right
 arrows, along with the names of the previous and the next topics, to hop from
 one topic to another.
+
+\begin{figure}
+\centering
+
+   \begin{subfigure}{0.30\textwidth}
+   \centering
+   \includegraphics[width=4cm]{WireframeInitial}
+   \caption{}
+   \label{wireframe: initial}
+   \end{subfigure}\quad
+
+   \begin{subfigure}{0.30\textwidth}
+   \centering
+   \includegraphics[width=4cm]{Wireframe}
+   \caption{}
+   \label{wireframe: final}
+   \end{subfigure}
+\centering
+\caption{(a) An initial wireframe, (b) The final wireframe.}
+\end{figure}
 
 
 \section{Animation Panel} 
@@ -214,6 +237,12 @@ button in the explanation panel. The line is drawn between the two sets of
 vertices.  The intersection points between the edges and the max cut line is
 shown by blue dots. These user is advised to observe the number of intersection
 points which tell the user the number of edges passing from one set to another.
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.2]{maxcutdes}
+\caption{Initial design of Max 2 Cut}
+\end{figure}
 
 \subsubsection{Max 3 Cut Animation:}
 Just like the animation for Max 2 Cut, this animation is started by the user by

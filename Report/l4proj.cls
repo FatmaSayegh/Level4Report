@@ -62,6 +62,7 @@
 \usepackage[table,svgnames]{xcolor}
 \usepackage{parskip} % adjustable line spacing
 \usepackage{listings} % nice code listings
+%\usepackage{multicols}
 
 % remove dots from ToC
 \usepackage[titles]{tocloft} 

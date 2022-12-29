@@ -7,7 +7,7 @@ the requirements of the project are stated.
 
 
 \section{Scope of The Project}
-
+\label{requirements: scope}
 Understanding a problem in mathematics is a necessary first step in trying to solve it.
 It also enables a student to abstract out a formalized version of a
 problem from a real life scenario present in the fields of science and engineering.
@@ -56,41 +56,40 @@ both.
 
 
 \subsection{Animation}
-The visual medium has dimensions such as of color, position, shape and motion.
-Generating them with a computer program, scenes can be created attracting the
-users attention towards a particular aspect of it with the help of animations.
-The scene in this project consists of a graph, which undergoes transformations
-of color, shape and position to make a certain aspect of it emphasized for the
-purpose of explaining a concept.  Animations are used in this project to make
-problems like Graph Isomorphism, Max Cut, and Tree Width. For instance, the
-example problem of Graph Isomorphism, was explained by morphing a graph to change
-it's shape to acquire another radically different shape. It will be explained
-later how it can be considered as a visual proof that the two graphs in the
-scene are thus isomorphic.
+
+Humans are primarily visual learners from the days of hunting and gathering. We
+sometimes like to imagine even the most abstract concepts visually. Therefore
+Computer animations have been increasingly adopted to elucidate complex
+concepts in mathematics and science.  Animations are used in this project to
+make problems like Graph Isomorphism, Max Cut, and Tree Width.  For instance,
+the example problem of Graph Isomorphism, was explained by morphing a graph to
+change it's shape to acquire another radically different shape. It will be
+explained later how it can be considered as a visual proof that the two graphs
+in the scene are thus isomorphic.
 
 \subsection{User Interaction}
 Although animations go a long way in terms of having a user's mind involved in
 the learning process they only offer a linear narrative. On the other hand,
 user interaction with an animation not only makes the experience more
 immersive, it also leads to a natural multiplicity of stories from a single
-program. This happens as a human input results in a novel path from one state to
-another in the program just like a video game.
+program. This happens as a human input results in a novel path from one state
+to another in the program just like a video game.
+
 
 \section{Technical Scope of The Project}
+\label{requirements: techScope}
 
-To achieve the above mentioned features
-The program has data structures to hold graphs and
-algorithms to visually and geometrically manipulate them. 
+To achieve the above mentioned features The program has data structures to hold
+graphs and algorithms to visually and geometrically manipulate them. 
 
-It's important to note here the program does not 
-contain algorithms to solve the listed problems. As the
-scope of the program was limited to the purposes of visualization and not
-coding the algorithms which can solve instances of the mentioned problems.
-Therefore in this project, although the data type of Graphs (Set of
-Vertices and Set of Edges) and the associated functions, are quite general and
-can support operations of various kinds, care is taken that I provide the
-solution to the visualization program before hand to give enough information to
-the various animations and user interactions.
+It's important to note here the program does not contain algorithms to solve
+the listed problems. As the scope of the program was limited to the purposes of
+visualization and not coding the algorithms which can solve instances of the
+mentioned problems.  Therefore in this project, although the data type of
+Graphs (Set of Vertices and Set of Edges) and the associated functions, are
+quite general and can support operations of various kinds, care is taken that I
+provide the solution to the visualization program before hand to give enough
+information to the various animations and user interactions.
 
 
 \section{Requirements}
@@ -98,14 +97,16 @@ Based on synthesis of the above sections it is concluded that there must be a
 web application written for the desktop browser with user interactive
 animations. The requirements for the application are categorized into two
 priority levels. The application must definitely have the features mentioned
-in the \textbf{Must Have} section which is the minimum requirements necessary
+in the \emph{Must Have} section which is the minimum requirements necessary
 to have a functioning application without any bells and whistles. It should
-have the additional desirable features mentioned in the \textbf{Should Have}
-section. 
+have the additional desirable features mentioned in the \emph{Should Have}
+section relating to visual aesthetics, wider use and code-extendability.
+Finally to precisely define the boundries of the project there is section
+of \emph{Will Not Have}.
 
 \subsection{Must Have}
-The application must elucidate the following \emph{Classical Graph Theory
-Problems} by employing user interactive animations.
+The application must elucidate the following enumerated \emph{Classical Graph Theory
+Problems} by employing user interactive animations of their respective examples.
 \begin{enumerate}
 \item Graph Isomorphism
 \item Max Cut
@@ -114,7 +115,7 @@ Problems} by employing user interactive animations.
 \item Tree Width
 \end{enumerate}
 
-And to achieve all this by programming the following items -
+And to achieve this by programming the following items -
 
 \begin{enumerate}
 \item Data structures which represent vertices, edges and graphs.
@@ -136,14 +137,24 @@ And finally, evaluating the application with the help of the peers on
 parameters which can be broadly classified into the following categories -
 
 \begin{enumerate}
-\item Quality of Elucidation
-\item User Experience 
+\item User Experience
 \item Learning Impact
+\item Quality of Elucidation
 \end{enumerate}
 
 \subsection{Should Have}
-The application should optionally have the following desirable features:
+Although not detrimentally essential for the basic utility and functioning of
+the application, a few desirable features should be included for wider use and
+additionally ease of contribution by others. 
 \begin{enumerate}
-\item Pleasing Aesthetics, to be preferably verified by evaluation.
-\item Mobile Friendliness, so that the application can be accessed anywhere.
+\item Pleasing Aesthetics
+\item Device Compatibility, the application must be friendly to most screen sizes.
+\item Contribution friendliness, in the way of good code organization and documentation.
 \end{enumerate}
+
+\subsection{Will Not Have}
+For the reasons elaborated in \autoref{requirements: scope} and
+\autoref{requirements: techScope} the project will not implement algoritmic
+solution of the the graph theory problems.  Although it will have some
+algorithms implemented to check if a given solution is correct specially in
+user-interaction tasks.

@@ -1,4 +1,5 @@
 % Implementation
+\graphicspath{ {images/} }
 
 This chapter discusses the platform and the programming techniques employed to
 implement the application.  This application is a web application meant to run
@@ -39,10 +40,16 @@ understandable code to produce a dynamic front end.
 \subsection{Why Functional Programming?}
 Functional programming, makes the programmer think in a different way than what
 may be called imperative programming. In the functional paradigm, functions are
-first class citizens, which can be mashed up together with each other, by
-giving a function as input to another function, a function giving out another
-function as an output, function composed of two functions dove-tailed to each
-other, programming patterns being abstracted out as functions and so on.
+first class citizens, which can be mashed up together in myriad different ways
+such as the following -
+
+
+\begin{enumerate}
+\item A function given as input to a another function. 
+\item A function producing another function as an output.
+\item Composition of two functions dove-tailed to each other to produce another function.
+\item Programming patterns being abstracted out as functions.
+\end{enumerate}
 
 For such Lego like usage of functions they must be dependable, such that for a
 particular input a function will give a particular output just like
@@ -59,8 +66,8 @@ programming and is easier to maintain.
 It may be asked that if functions don't have side effects, how do they print
 output on the terminal or read file from the hard disk or accept inputs from a
 user. Functional programming environments have a way of separating the pure
-part of a program from the impure part, by introducing 'actions'. These
-'actions' or side-effects are treated as a form of encapsulated data, which
+part of a program from the impure part, by introducing `actions'. These
+`actions' or side-effects are treated as a form of encapsulated data, which
 can be manipulated by pure functions, and the environment makes changes to the
 outside world by executing these actions.
 
@@ -69,18 +76,18 @@ deals with just pure functions. This allows him to exploit the perfectness of
 pure functional programming.
 
 This separation of concerns of pure and impure code in the context of the Elm
-programming language is discussed in the next section called the Elm
-Architecture.
+programming language is discussed in the \autoref{elm: architecture} called \emph{the Elm
+Architecture}.
 
 \subsection{Why Elm Programming Language for This Project?}
 
 For the reasons in the previous sections, a functional programming language was chosen
 keeping in mind that the size of this project would be quite substantial.
-Unlike Javascript, Elm does not require any external framework such as Angular
+Unlike JavaScript, Elm does not require any external framework such as Angular
 or React. This makes the program easier to reason with and maintainable.
 
 Although, Elm is a new language which may not have as much community support as
-Javascript and it's various frameworks have, it has a compiler which gives
+JavaScript and it's various frameworks have, it has a compiler which gives
 friendly error messages almost guiding the programmer for correct usage of the
 language.
 
@@ -140,14 +147,26 @@ subscription _ =
 
 \section{Implementation of Graphs}
 Inside the program, a graph exists as data structure which contains a list of
-vertices and a list of edges. The vertex which is a data type defined
+vertices and a list of edges. The vertex, as can be seen in \autoref{code: typeGraph} which is a data type defined
 separately consists of a name (which is an integer), a color, a 2D position (it
 is actually implemented using a 3D vector, with z is always kept at zero).  An
 edge on the other hand is defined as a combination of two vertices. Such Graphs
 are present in the Model in and are used by the view function to be drawn as
 SVG.
 
-\begin{lstlisting}[language=elm, caption={Definition of Vertex, Edge and Graph}]
+\begin{lstlisting}[  language=elm, 
+                     caption={
+                              Definition of Vertex, Edge and Graph.  Vertex is
+                              defined as a data structure which has a name as
+                              an integer, a position as a 3 dimensional vector,
+                              color, and a flag which depicts if it has been
+                              selected by the user.  An Edge has two Vertices and
+                              a Graph contains a list of Vertices and a list of
+                              Edges.
+                             }
+                  ,  label={code: typeGraph}
+                  ]
+
 -- Definition of Vertex
 type alias Vertex =
     { name : Int, pos : Vec3, color : Color, glow : Bool }
@@ -181,17 +200,23 @@ patterns. Functions were created to form polygon with $n$ geometric vertices
 which prove very handy in producing grids for various geometries like
 the one seen in Graph Ismoporphism and Max k Cut examples.
 
-As a small example, here is a functional programming code to find the centroid
-of of three position vectors. You can observe how first two vectors are added
-on line 1, and then it is pipelined to addition with a third vector, which is
-in turn pipelined to being scaled by $0.33$ (divided by $3.0$). This could have
-been achieved in a single line of code, but Elm reserves operators like $+$,
-$-$, $*$ for only numbers and they can't be overloaded to work for vectors.
+As a small example, here is a functional programming code in \autoref{code:
+centroid} to find the centroid of of three position vectors. You can observe
+how first two vectors are added on line 3, and then it is pipelined to addition
+with a third vector, which is in turn pipelined to being scaled by $0.33$
+(divided by $3.0$). This could have been achieved in a single line of code, but
+Elm reserves operators like $+$, $-$, $*$ for only numbers and they can't be
+overloaded to work for vectors.
 
-\begin{lstlisting}[language=elm, caption={Finding Centroid of Three points.}]
-Math.Vector3.add v1.pos v2.pos
-|> Math.Vector3.add v3.pos
-|> Math.Vector3.scale 0.333
+\begin{lstlisting}[  language=elm
+                  ,  caption={Finding Centroid of Three Vertices.}
+                  ,  label={code: centroid}
+                  ]
+findCentroidOfVertices : Vertex -> Vertex -> Vertex -> Vec3
+findCentroidOfVertices v1 v2 v3 =
+   Math.Vector3.add v1.pos v2.pos
+   |> Math.Vector3.add v3.pos
+   |> Math.Vector3.scale 0.333
 \end{lstlisting}
 
 \subsection{Implementing Colors}
@@ -208,6 +233,11 @@ straight line segment between the positions of the two vertices, they do not req
 positional data associated explicitly for them. It is drawn out from the vertices,
 they contain.
 
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.05]{Graph1New}
+\caption{Implementation of a Graph}
+\end{figure}
 
 \section{Implementation of Animations}
 In this section, it will be explained how various animations in the
@@ -239,12 +269,21 @@ animations, it is true for user-interaction or anything which requires visual
 (Geometric or Color) modification of the graph.
 
 The re-formation of the vertices and the edges are quite explicitly shown in
-the Elm function below. The function takes a graph and a grid and produces a
-new graph situated at the new grid with new vertices and edges.  The edges
-formed in the new graph are connected to the same vertices (vertices with the
-same names, actually) as the original ones.
+the Elm function shown in \autoref{code: morphGraph}. The function takes a
+graph and a grid and produces a new graph situated at the new grid with new
+vertices and edges.  The edges formed in the new graph are connected to the
+same vertices (vertices with the same names, actually) as the original ones.
 
-\begin{lstlisting}[language=elm, caption={Changing the shape of a graph for animation}]
+\begin{lstlisting}[language=elm, 
+      caption={
+      Changing the shape of a graph for animation.
+      The first line, in the code describes the Type Signature of the function
+      morphGraph. It says that the function takes a Graph and a Grid as input
+      and produces a Graph as an output.
+      The input Graph's vertices adopt the positions listed in the Grid.
+   }
+   , label={code: morphGraph}
+   ]
 morphGraph : Graph -> Grid -> Graph
 morphGraph graph grid =
     let
@@ -258,6 +297,7 @@ morphGraph graph grid =
             List.map createEdge graph.edges
     in
     Graph updatedVertices updatedEdges
+
 \end{lstlisting}
 
 \subsection{Drawing of Graphs}
@@ -301,37 +341,51 @@ even after development therefore they still can be used to trigger events in
 the application. 
 The key presses messages are registered by the elm run-time which in turn
 triggers the update function to update the model. The updated model is now
-rendered by the view function. Information about the keyboard shorcuts can be
+rendered by the view function. Information about the keyboard shortcuts can be
 availed on the screen by pressing the information icon present in the
 navigation bar. Below is an example list of a few key-bindings.
 
 \begin{itemize}
-\item \textbf{p}: Toggle between pause and play animation. (Can be used instead of the Play/Pause button; Genrates the \textbf{AnimationToggle} message). \\
-\item \textbf{r}: Restart animation. (Can be used instead of Restart Button; Generates the \textbf{AnimationStartOver} message). \\
-\item \textbf{n}: Go to the next topic. (Can be used instead of the navigation button; Generates the \textbf{NextTopic} message). \\
-\item \textbf{N}: Go to the previous topic. (Can be used instead of the navigation button; Generates the \textbf{PreviousTopic} message). \\
-\item \textbf{t}: Next animation (Can be used in case of Max k Cut and Tree width to go to the next animation; Generates the \textbf{NextAnimation} message)
+\item \textbf{p}: Toggle between pause and play animation. (Can be used instead of the Play/Pause button; Generates the $AnimationToggle$ message). \\
+\item \textbf{r}: Restart animation. (Can be used instead of Restart Button; Generates the $AnimationStartOver$ message). \\
+\item \textbf{n}: Go to the next topic. (Can be used instead of the navigation button; Generates the $NextTopic$ message). \\
+\item \textbf{N}: Go to the previous topic. (Can be used instead of the navigation button; Generates the $PreviousTopic$ message). \\
+\item \textbf{t}: Next animation (Can be used in case of Max k Cut and Tree width to go to the next animation; Generates the $NextAnimation$ message)
 \end{itemize}
 
 \section{Software Engineering Practices}
 In the following subsections, how a few good practices which were adopted to
-make the project of this size managable and organized are explained.
+make the project of this size manageable and organized are explained.
 
 \subsection{Version Control}
 The program along with the documentation and the dissertation report were
-version controlled in a single GitHub repositiory. A git repository, gives the
+version controlled in a single GitHub repository. A git repository, gives the
 developer confidence for fearless refactoring and feature enhancement by the
-way of creating seperate branches for seperate issues.
+way of creating separate branches for separate issues. Therefore a different
+branch was created for editing documentation, and it was made sure that
+modification in code files was not done on this branch. Similarly, a branch for
+code refactoring didn't modify the documentation part hence separating
+concerns.  Furthermore a branch was conveniently discarded if an adventure in a
+radical change in code went wrong.
 
-\subsection{Continous Deployment}
+\subsection{Continuous Deployment}
 The web application concerning the project is deployed on the World Wide Web
 using Netlify. It is a service which lets one host a front end website. It is
-connected to the master branch of the GitHub repository of the poject. Every
+connected to the master branch of the GitHub repository of the project. Every
 time a new version is pushed to the master, netlify service fetches the new
 version of the app from the repository, builds it according to the build script
 present in the GitHub repository and deploys the web application on a specific
-url. The build and deployment can also be done manually by going to the
+URL. The build and deployment can also be done manually by going to the
 dashboard of the Netlify website. The build and deployment process primarily
-consists of transpiling Elm code to a Javascript file.
+consists of running a script to transpile Elm code to a JavaScript file and copy
+the output along with the boiler plate HTML to the publish directory.
 
 \subsection{Documentation}
+Documentation for the project was done in a continuous fashion in a variety of
+ways, such as a wiki for code implementation and a guide for future work, time
+logging for project management and report writing for the submission. 
+
+The wiki was informed heavily from the code comments made to explain the
+functions. Time logging brought a sense of discipline in the whole endeavor.
+It also helped in estimating time required to complete the tasks which lay in
+future and asses the learning curve.

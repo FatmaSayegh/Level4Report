@@ -1,19 +1,36 @@
 %Background
 
 This chapter discusses concepts which are essential to understand the
-forthcoming chapters in this report. It starts out by discussing Graph Theory
-and it's classical problems, some prior work on visualization of computer
-science topics which has an influence over this project, and goes on to discuss
-some elements of Functional Programming.
+forthcoming chapters in this report. It starts out by litrature review
+discussing the books and research papers refered and consulted for this
+project.Then it goes onto discuss Graph Theory definitions and it's classical
+problems, which are useful to understand their implementation in the app.
+Discussion of prior work on visualization of computer science topics which have
+an influence over this project is also an part of research.
+
+\section{Literature Review}
+The books and the research papers which were referred to for this project
+range from theoretical texts on Graph Theory, to Programming books on the programming
+language called Elm.
+
+\subsection{Graph Theory and Algorithm Textbooks}
+\subsubsection{Networks: An Introduction}
+This book was consulted for definitions, explanations and understanding of
+basics of Graph Theory and it's problems. It discusses the mathematical and
+computer science perspectives of the subject in dedicated sections.
+\subsubsection{Algorithm Design}
+This book lent the description and the example of \emph{Tree-width} problem
+incorporated for an animation in the application.  See \autoref{explanation:
+treewidth} for the explanation of the topic.
 
 \section{Discussion of Classical Graph Theory Problems}
 This section formally discusses the concepts of Graph theory which are
-elucidated visually in the application.  If you are already familiar to the
-concepts of the topics discussed in this chapter then by all means skip over.
-If not, then it's recommended to go through the section as the material
-discussed here is essential to understand the discussion in the further
-chapters.  The forthcoming chapters will refer to the subsections below for
-definitions of the graph theory problems.
+elucidated visually in the application. If you are already familiar of the
+topics discussed in this chapter then by all means skip over.  If not, then
+it's recommended to go through the section as the material discussed here is
+essential to understand the discussion in the further chapters.  The
+forthcoming chapters will refer to the subsections here for definitions and
+explanations.
 
 \subsection{Definitions}
 A \emph{Graph} $\boldsymbol{G}$, can be understood as a collection of vertices which are
@@ -74,6 +91,7 @@ that all the edges must be covered while keeping the number of vertices in the
 set of Minimum Vertex Cover to the minimum.
 
 \subsection{Tree Width}
+\label{explanation: treewidth}
 We will explain in two parts. First we will define what a tree decomposition of
 a graph is. Then we will define tree width of the graph.
 
