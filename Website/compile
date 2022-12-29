@@ -1,2 +1,2 @@
 #!/bin/bash
-elm make src/Main.elm --output=app.js
+elm make src/MainOpt.elm --output=app.js
