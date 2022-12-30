@@ -65,7 +65,7 @@
 %\usepackage{multicols}
 
 % remove dots from ToC
-\usepackage[titles]{tocloft} 
+\usepackage[titles]{tocloft}
 \renewcommand{\cftdot}{}
 \usepackage[nottoc]{tocbibind}
 
@@ -109,6 +109,16 @@
 
 % allow PDF graphics
 \usepackage{graphicx}
+
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning, arrows}
+\tikzset{
+   ->, % makes the edges directed
+   >=stealth', % makes the arrow heads bold
+   node distance=4.5cm, % specifies the minimum distance between two nodes. Change if necessary.
+   every state/.style={thick, fill=gray!10}, % sets the properties for each ’state’ node
+   initial text=$ $, % sets the text that appears on the start arrow
+}
 
 % allow section styling
 %\usepackage{sectsty}
