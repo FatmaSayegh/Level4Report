@@ -22,4 +22,10 @@ type Msg
     | NextAnimation 
     | PreviousTreeWidthAnimation
     | ToggleHelpStatus
+    | GotoHome
+    | GotoIsomorphism
+    | GotoMaxkCut
+    | GotoColoring
+    | GotoCover
+    | GotoTreeWidth
     | Other

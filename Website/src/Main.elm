@@ -23,6 +23,7 @@ import Element.Border as Border
 import Element.Font as Font
 import Element.Region as Region
 import Element.Input as Input
+import Element.Events as Events
 import Ant.Icon as Ant
 import Ant.Icons as Icons
 import Messages exposing (Msg(..))
@@ -42,16 +43,23 @@ main =
         , subscriptions = subscription
         }
 
+--init : () -> ( SuperModel, Cmd Msg )
+--init _ =
+--    let
+--        shapeTransition =
+--            isomorphicTransition
+--        model = ( Isomorphic shapeTransition)
+--    in
+--    ({ helpStatus = False
+--    , model = model
+--    }, Cmd.none)
+
 init : () -> ( SuperModel, Cmd Msg )
 init _ =
-    let
-        shapeTransition =
-            isomorphicTransition
-        model = ( Isomorphic shapeTransition)
-    in
-    ({ helpStatus = False
-    , model = model
+   ({ helpStatus = False
+    , model = HomePage
     }, Cmd.none)
+
 
 type alias SuperModel =
    { helpStatus : Bool
@@ -64,6 +72,7 @@ type Model =
    | GraphColoring ColorDisplay
    | VertexCover VertexCoverDisplay
    | TreeWidth TreeWidthDisplay
+   | HomePage
 
 
 
@@ -111,6 +120,8 @@ keyToMsg value =
                          PreviousTreeWidthAnimation
                      'h' ->
                          ToggleHelpStatus
+                     'c' ->
+                         GotoHome
                      _ ->
                          Other
         _ ->
@@ -134,6 +145,8 @@ update msg superModel =
          case msg of
            NextTopic ->
               case model of
+                 HomePage ->
+                    ( Isomorphic isomorphicTransition)
                  Isomorphic x ->
                     ( MaxCut maxCutTransition)
                  MaxCut x ->
@@ -157,6 +170,20 @@ update msg superModel =
                     ( MaxCut maxCutTransition)
                  VertexCover x ->
                     (GraphColoring colorDisplay)
+                 HomePage ->
+                    model
+           GotoHome ->
+                 HomePage
+           GotoIsomorphism ->
+                 ( Isomorphic isomorphicTransition)
+           GotoMaxkCut ->
+                 ( MaxCut maxCutTransition)
+           GotoColoring ->
+                 (GraphColoring colorDisplay)
+           GotoCover ->
+                 ( VertexCover vertexCoverDisplay)
+           GotoTreeWidth ->
+                 ( TreeWidth treeWidthDisplay)
            _ ->
               case model of
                 Isomorphic shapeTransition ->
@@ -169,6 +196,8 @@ update msg superModel =
                    VertexCover ( goCover display msg)
                 TreeWidth display ->
                    TreeWidth ( goTree display msg)
+                HomePage ->
+                   model
                 --_ ->
                 --  model
 
@@ -273,3 +302,52 @@ view superModel =
                   , explanationWidth display superModel.helpStatus
                   ]
             )
+      HomePage ->
+         ELE.layoutWith 
+            layOutOptions
+            layOutAttributes
+            ( ELE.column
+               [ ELE.centerX
+               , ELE.centerY
+               , Font.color <| ELE.rgb 1 1 1
+               , Font.heavy
+               ]
+               <|[ ELE.el [ Font.size 50
+                          , ELE.paddingXY 5 20
+                          ] 
+                          (ELE.text "Visualization of Classical Graph Theory Problems")
+                 ]
+                 ++  List.map makeTopicIcon 
+                        [ GotoIsomorphism
+                        , GotoMaxkCut
+                        , GotoColoring
+                        , GotoCover
+                        , GotoTreeWidth
+                        ]
+            )
+
+
+makeTopicIcon : Msg -> ELE.Element Msg
+makeTopicIcon topicMsg =  
+   let
+      tex =
+         case topicMsg of
+            GotoIsomorphism ->
+               "Graph Isomorphism."
+            GotoMaxkCut ->
+               "Max k Cut."
+            GotoColoring ->
+               "Graph Coloring."
+            GotoCover ->
+               "Vertex Cover."
+            GotoTreeWidth ->
+               "Tree Width."
+            _ ->
+               "Oops"
+   in
+   ELE.el [ Events.onClick topicMsg
+          , ELE.pointer
+          , ELE.padding 13
+          ] 
+          (ELE.text tex)
+
