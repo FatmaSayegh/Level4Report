@@ -199,8 +199,8 @@ explanationTwo maxCut helpStatus =
          , ELE.height ELE.fill
          , ELE.spacing 20
          --, ELE.padding 40
-         --, ELE.height ELE.fill
          , Background.color <| ELE.rgb 0.2 0.2 0.2
+         , ELE.height ELE.fill
          , ELE.width ELE.fill
          ]
          <|
@@ -224,13 +224,13 @@ explanationTwo maxCut helpStatus =
                               threeCutExplanation
                ]
            
-        , Input.button
-            [
-              ELE.centerX
-            ] 
-            { onPress = Just MaxCutLine
-            , label = Icons.minusOutlined [ Ant.width 70, Ant.height 50 ]
-            }
+        , buttonWrap "Cutline" <| Input.button
+                                  [
+                                    ELE.centerX
+                                  ] 
+                                  { onPress = Just MaxCutLine
+                                  , label = Icons.minusOutlined [ Ant.width 70, Ant.height 50 ]
+                                  }
 
         ,  if helpStatus == False
                then
@@ -252,6 +252,22 @@ explanationTwo maxCut helpStatus =
           , lowerNavigation "Isomporphism" "Graph Coloring"
           ]
 
+buttonWrap : String -> (ELE.Element Msg) -> ELE.Element Msg
+buttonWrap description button =
+   let
+      descriptionStyle =
+         [ Font.color (ELE.rgb 0.5 0.5 0.5)
+         , Font.size 10
+         , ELE.centerX
+         ]
+   in
+   ELE.column
+   [ ELE.centerX
+   ]
+   [ button
+   , ELE.el descriptionStyle (ELE.text description)
+   ]
+
 paneTwo maxCutTrans =
    case maxCutTrans.state of
       TwoCut ->
@@ -269,7 +285,9 @@ paneTwoA shapeTransition =
          let
             cutLine = makeCutLine shapeTransition
          in
-         Graph.displaySvg ((Graph.drawGraph graphA) ++ (Graph.drawGraph graphB) ++ (drawCutLine cutLine))
+         Graph.displaySvg (   (Graph.drawGraph graphA) 
+                           ++ (Graph.drawGraph graphB) 
+                           ++ (drawCutLine cutLine)  )
 
       NoToken ->
          Graph.displaySvg ((Graph.drawGraph graphA) ++ (Graph.drawGraph graphB))

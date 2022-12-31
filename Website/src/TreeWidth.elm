@@ -151,44 +151,11 @@ storyTreeWidth status helpStatus =
 
 treeWidthButtons : TreeWidthStatus -> ELE.Element Msg
 treeWidthButtons status =
-   let
-      forward =
-         Input.button
-            [
-               Border.rounded 100
-            ,  ELE.centerX
-            ] 
-            --{ onPress = Just NextTreeWidthAnimation
-            { onPress = Just NextAnimation
-            , label = Icons.forwardOutlined [ Ant.width 40, Ant.height 40 ]
-            }
-      backward =
-         Input.button
-            [
-               Border.rounded 100
-            ,  ELE.centerX
-            ] 
-            { onPress = Just PreviousTreeWidthAnimation
-            , label = Icons.backwardOutlined [ Ant.width 40, Ant.height 40 ]
-            }
-   in
    case status of
       CircularGraph ->
-         ELE.row
-            [ELE.spacing 90, ELE.paddingXY 300 40]
-            [ ELE.el 
-               [ ELE.centerX
-               ] 
-               ELE.none
-
-            , forward  
-            ]
+         treeWidthButtonRow False
       _ ->
-         ELE.row
-            [ELE.spacing 90, ELE.paddingXY 300 40]
-            [  backward
-            ,  forward
-            ]
+         treeWidthButtonRow True
 
 treeWidthDisplay : TreeWidthDisplay
 treeWidthDisplay =

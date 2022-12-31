@@ -115,13 +115,8 @@ explanationColoring colorDisp helpStatus =
                      it is feasible.
                      """
                ]
-        , Input.button
-            [
-              ELE.centerX
-            ] 
-            { onPress = Just VertexNonColor
-            , label = Icons.rollbackOutlined [ Ant.width 70, Ant.height 50 ]
-            }
+
+        , unColorButton
 
         , ELE.paragraph
                []

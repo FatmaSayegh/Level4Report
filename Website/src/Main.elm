@@ -200,6 +200,7 @@ layOutAttributes =
                    [ ELE.height ELE.fill
                    , Background.color <| ELE.rgb 0.2 0.2 0.2
                    , ELE.padding 30
+                   , Font.size 18
                    ]
 
 displayColumn svgHtml =

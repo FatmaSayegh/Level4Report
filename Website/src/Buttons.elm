@@ -9,36 +9,121 @@ import Messages exposing (Msg(..))
 import Element.Font as Font
 import Element.Background as Background
 
+buttonWrap : String -> (ELE.Element Msg) -> ELE.Element Msg
+buttonWrap description button =
+   let
+      descriptionStyle =
+         [ Font.color (ELE.rgb 0.5 0.5 0.5)
+         , Font.size 10
+         , ELE.centerX
+         ]
+   in
+   ELE.column
+   [ ELE.centerX
+   ]
+   [ button
+   , ELE.el descriptionStyle (ELE.text description)
+   ]
+
+
+treeWidthButtonRow : Bool -> ELE.Element Msg
+treeWidthButtonRow  isPreviousActive =
+   let
+      forward =
+         buttonWrap "Next animation"
+         <| Input.button
+               [
+                  Border.rounded 100
+               ,  ELE.centerX
+               ] 
+               --{ onPress = Just NextTreeWidthAnimation
+               { onPress = Just NextAnimation
+               , label = Icons.forwardOutlined [ Ant.width 40, Ant.height 40 ]
+               }
+
+      backward =
+         buttonWrap "Previous animation"
+         <| Input.button
+               [
+                  Border.rounded 100
+               ,  ELE.centerX
+               ] 
+               { onPress = Just PreviousTreeWidthAnimation
+               , label = Icons.backwardOutlined [ Ant.width 40, Ant.height 40 ]
+               }
+      backwardDead =
+         buttonWrap "Previous animation"
+         <| Input.button
+               [
+                  Border.rounded 100
+               ,  ELE.centerX
+               ,  Font.color (ELE.rgb 0.4 0.4 0.4)
+               ] 
+               { onPress = Nothing
+               , label = Icons.backwardOutlined [ Ant.width 40, Ant.height 40 ]
+               }
+   in
+   ELE.row
+      [ELE.spacing 90, ELE.paddingXY 300 40]
+      [  if isPreviousActive then backward else backwardDead
+      ,  forward
+      ]
+
+unColorButton : ELE.Element Msg
+unColorButton =
+         buttonWrap "Uncolor all Vertices" 
+         <| Input.button
+              [
+                ELE.centerX
+              ] 
+              { onPress = Just VertexNonColor
+              , label = Icons.rollbackOutlined [ Ant.width 70, Ant.height 50 ]
+              }
+
 playButton : Bool -> ELE.Element Msg
 playButton animationOn =
-   Input.button
-      []
-      {  onPress = Just AnimationToggle  
-      ,  label = if animationOn  
-                 then   Icons.pauseOutlined [ Ant.width 50, Ant.height 50 ]
-                 else   Icons.caretRightOutlined [ Ant.width 50, Ant.height 50 ]
-      }
+   let
+      theButton =
+         Input.button
+            []
+            {  onPress = Just AnimationToggle  
+            ,  label = if animationOn  
+                       then   Icons.pauseOutlined [ Ant.width 50, Ant.height 50 ]
+                       else   Icons.caretRightOutlined [ Ant.width 50, Ant.height 50 ]
+            }
+
+    in
+    buttonWrap "Play/Pause" theButton
+
 
 resetButton : ELE.Element Msg
 resetButton =
-   Input.button
-         []
-         {  onPress = Just AnimationStartOver
-         ,  label = Icons.rollbackOutlined [ Ant.width 50, Ant.height 50 ]
+   let
+      theButton =
+         Input.button
+               []
+               {  onPress = Just AnimationStartOver
+               ,  label = Icons.rollbackOutlined [ Ant.width 50, Ant.height 50 ]
  
-         }
+               }
+    in
+    buttonWrap "Restart" theButton
                         
                
 forwardButton : ELE.Element Msg
 forwardButton =
-   Input.button
-      [
-         Border.rounded 100
-      ,  ELE.centerX
-      ] 
-      { onPress = Just NextAnimation
-      , label = Icons.forwardOutlined [ Ant.width 40, Ant.height 40 ]
-      }
+   let
+      theButton =
+         Input.button
+            [
+               Border.rounded 100
+            ,  ELE.centerX
+            ] 
+            { onPress = Just NextAnimation
+            , label = Icons.forwardOutlined [ Ant.width 40, Ant.height 40 ]
+            }
+    in
+    buttonWrap "Next Animation" theButton
 
 lowerNavigation : String -> String -> ELE.Element Msg
 lowerNavigation leftTitle rightTitle =
@@ -163,3 +248,4 @@ helpIsomorphic =
    , ELE.el [ELE.paddingXY 5 10, Font.bold] (ELE.text "Mouse Funcionality:")
    , ELE.el [ELE.paddingXY 5 2] (ELE.text "Hover Over Vertex: Select Vertex ")
    ]
+
