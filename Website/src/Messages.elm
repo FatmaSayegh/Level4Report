@@ -1,6 +1,8 @@
 module Messages exposing (Msg(..))
 
 import Color exposing (Color)
+import Browser
+import Url
 -- Msg
 -- This data type contains the kinds of messages
 -- the html page or the or a subscriber (animation clock in this app) may give to the elm-runtime.
@@ -28,4 +30,6 @@ type Msg
     | GotoColoring
     | GotoCover
     | GotoTreeWidth
+    | LinkClicked Browser.UrlRequest
+    | UrlChanged Url.Url
     | Other

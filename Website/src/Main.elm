@@ -2,6 +2,9 @@ module Main exposing (..)
 
 import Browser
 import Browser.Events as E
+import Url
+import Url.Parser as Parser
+import Browser.Navigation as Nav
 import Color exposing (Color)
 import Explanation exposing (..)
 import Html as H exposing (div, h1, p, text)
@@ -36,11 +39,14 @@ import Graph exposing (ShapeTransition)
 
 main : Program () SuperModel Msg
 main =
-    Browser.element
+    --Browser.element
+    Browser.application
         { init = init
         , view = view
         , update = update
         , subscriptions = subscription
+        , onUrlChange = UrlChanged
+        , onUrlRequest = LinkClicked
         }
 
 --init : () -> ( SuperModel, Cmd Msg )
@@ -54,15 +60,24 @@ main =
 --    , model = model
 --    }, Cmd.none)
 
-init : () -> ( SuperModel, Cmd Msg )
-init _ =
-   ({ helpStatus = False
-    , model = HomePage
-    }, Cmd.none)
+--init : () -> ( SuperModel, Cmd Msg )
+--init _ =
+--   ({ helpStatus = False
+--    , model = HomePage
+--    }, Cmd.none)
 
+init : () -> Url.Url -> Nav.Key -> ( SuperModel, Cmd Msg )
+init flags url key =
+   ({ helpStatus = False
+    , url = url
+    , key = key
+    , model = getTopicModel url
+    }, Cmd.none)
 
 type alias SuperModel =
    { helpStatus : Bool
+   , key : Nav.Key
+   , url : Url.Url
    , model : Model
    }
 
@@ -184,6 +199,9 @@ update msg superModel =
                  ( VertexCover vertexCoverDisplay)
            GotoTreeWidth ->
                  ( TreeWidth treeWidthDisplay)
+           UrlChanged url ->
+                 getTopicModel url
+
            _ ->
               case model of
                 Isomorphic shapeTransition ->
@@ -209,9 +227,43 @@ update msg superModel =
                superModel.helpStatus
             _ ->
                False
+
+      command =
+          case msg of
+             LinkClicked urlRequest ->
+               case urlRequest of
+                  Browser.Internal url ->
+                     Nav.pushUrl superModel.key (Url.toString url)
+                  Browser.External href ->
+                     Nav.load href
+             _ ->
+               Cmd.none
+
+      newUrl =
+         case msg of
+            UrlChanged url ->
+               url
+            _ ->
+               superModel.url
             
    in
-   ({ superModel | model = newModel, helpStatus = helpStatus }, Cmd.none)
+   ({ superModel | model = newModel, helpStatus = helpStatus, url = newUrl }, command)
+
+getTopicModel : Url.Url -> Model
+getTopicModel url =
+   case (url.path) of
+      "/isomorphism" ->
+         Isomorphic isomorphicTransition
+      "/maxkcut" ->
+         MaxCut maxCutTransition
+      "/coloring" ->
+         GraphColoring colorDisplay
+      "/vertexcover" ->
+         VertexCover vertexCoverDisplay
+      "/treewidth" ->
+         TreeWidth treeWidthDisplay
+      _ ->
+         HomePage
 
 layOutOptions =
    { options =
@@ -240,7 +292,13 @@ displayColumn svgHtml =
       , Background.color <| ELE.rgb 0.2 0.2 0.2
       ] [ELE.html svgHtml]
 
-view superModel =
+view : SuperModel -> Browser.Document Msg
+view supermodel =
+   { title = "Visualization"
+   , body  = [ viewbody supermodel ]
+   }
+
+viewbody superModel =
    case superModel.model of
       Isomorphic shapeTransition ->
          ELE.layoutWith 
