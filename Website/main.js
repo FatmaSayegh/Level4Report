@@ -7255,6 +7255,8 @@ var $author$project$Main$getTopicModel = function (url) {
 			return $author$project$Main$VertexCover($author$project$VertexCover$vertexCoverDisplay);
 		case '/treewidth':
 			return $author$project$Main$TreeWidth($author$project$TreeWidth$treeWidthDisplay);
+		case '/':
+			return $author$project$Main$HomePage;
 		default:
 			return $author$project$Main$HomePage;
 	}
@@ -8367,97 +8369,36 @@ var $elm$url$Url$toString = function (url) {
 };
 var $author$project$Main$update = F2(
 	function (msg, superModel) {
-		var newUrl = function () {
-			if (msg.$ === 'UrlChanged') {
-				var url = msg.a;
-				return url;
-			} else {
-				return superModel.url;
-			}
-		}();
 		var model = superModel.model;
 		var newModel = function () {
-			switch (msg.$) {
-				case 'NextTopic':
-					switch (model.$) {
-						case 'HomePage':
-							return $author$project$Main$Isomorphic($author$project$Isomorphism$isomorphicTransition);
-						case 'Isomorphic':
-							var x = model.a;
-							return $author$project$Main$MaxCut($author$project$MaxkCut$maxCutTransition);
-						case 'MaxCut':
-							var x = model.a;
-							return $author$project$Main$GraphColoring($author$project$GraphColoring$colorDisplay);
-						case 'GraphColoring':
-							var x = model.a;
-							return $author$project$Main$VertexCover($author$project$VertexCover$vertexCoverDisplay);
-						case 'VertexCover':
-							var x = model.a;
-							return $author$project$Main$TreeWidth($author$project$TreeWidth$treeWidthDisplay);
-						default:
-							var x = model.a;
-							return $author$project$Main$Isomorphic($author$project$Isomorphism$isomorphicTransition);
-					}
-				case 'PreviousTopic':
-					switch (model.$) {
-						case 'Isomorphic':
-							var x = model.a;
-							return $author$project$Main$TreeWidth($author$project$TreeWidth$treeWidthDisplay);
-						case 'TreeWidth':
-							var x = model.a;
-							return $author$project$Main$VertexCover($author$project$VertexCover$vertexCoverDisplay);
-						case 'MaxCut':
-							var x = model.a;
-							return $author$project$Main$Isomorphic($author$project$Isomorphism$isomorphicTransition);
-						case 'GraphColoring':
-							var x = model.a;
-							return $author$project$Main$MaxCut($author$project$MaxkCut$maxCutTransition);
-						case 'VertexCover':
-							var x = model.a;
-							return $author$project$Main$GraphColoring($author$project$GraphColoring$colorDisplay);
-						default:
-							return model;
-					}
-				case 'GotoHome':
-					return $author$project$Main$HomePage;
-				case 'GotoIsomorphism':
-					return $author$project$Main$Isomorphic($author$project$Isomorphism$isomorphicTransition);
-				case 'GotoMaxkCut':
-					return $author$project$Main$MaxCut($author$project$MaxkCut$maxCutTransition);
-				case 'GotoColoring':
-					return $author$project$Main$GraphColoring($author$project$GraphColoring$colorDisplay);
-				case 'GotoCover':
-					return $author$project$Main$VertexCover($author$project$VertexCover$vertexCoverDisplay);
-				case 'GotoTreeWidth':
-					return $author$project$Main$TreeWidth($author$project$TreeWidth$treeWidthDisplay);
-				case 'UrlChanged':
-					var url = msg.a;
-					return $author$project$Main$getTopicModel(url);
-				default:
-					switch (model.$) {
-						case 'Isomorphic':
-							var shapeTransition = model.a;
-							return $author$project$Main$Isomorphic(
-								A2($author$project$Isomorphism$animateIsomorphicTransition, msg, shapeTransition));
-						case 'MaxCut':
-							var maxcutTrans = model.a;
-							return $author$project$Main$MaxCut(
-								A2($author$project$MaxkCut$animateMaxCutCompound, msg, maxcutTrans));
-						case 'GraphColoring':
-							var display = model.a;
-							return $author$project$Main$GraphColoring(
-								A2($author$project$GraphColoring$goColor, display, msg));
-						case 'VertexCover':
-							var display = model.a;
-							return $author$project$Main$VertexCover(
-								A2($author$project$VertexCover$goCover, display, msg));
-						case 'TreeWidth':
-							var display = model.a;
-							return $author$project$Main$TreeWidth(
-								A2($author$project$TreeWidth$goTree, display, msg));
-						default:
-							return model;
-					}
+			if (msg.$ === 'UrlChanged') {
+				var url = msg.a;
+				return $author$project$Main$getTopicModel(url);
+			} else {
+				switch (model.$) {
+					case 'Isomorphic':
+						var shapeTransition = model.a;
+						return $author$project$Main$Isomorphic(
+							A2($author$project$Isomorphism$animateIsomorphicTransition, msg, shapeTransition));
+					case 'MaxCut':
+						var maxcutTrans = model.a;
+						return $author$project$Main$MaxCut(
+							A2($author$project$MaxkCut$animateMaxCutCompound, msg, maxcutTrans));
+					case 'GraphColoring':
+						var display = model.a;
+						return $author$project$Main$GraphColoring(
+							A2($author$project$GraphColoring$goColor, display, msg));
+					case 'VertexCover':
+						var display = model.a;
+						return $author$project$Main$VertexCover(
+							A2($author$project$VertexCover$goCover, display, msg));
+					case 'TreeWidth':
+						var display = model.a;
+						return $author$project$Main$TreeWidth(
+							A2($author$project$TreeWidth$goTree, display, msg));
+					default:
+						return model;
+				}
 			}
 		}();
 		var helpStatus = function () {
@@ -8471,26 +8412,79 @@ var $author$project$Main$update = F2(
 			}
 		}();
 		var command = function () {
-			if (msg.$ === 'LinkClicked') {
-				var urlRequest = msg.a;
-				if (urlRequest.$ === 'Internal') {
-					var url = urlRequest.a;
-					return A2(
-						$elm$browser$Browser$Navigation$pushUrl,
-						superModel.key,
-						$elm$url$Url$toString(url));
-				} else {
-					var href = urlRequest.a;
-					return $elm$browser$Browser$Navigation$load(href);
-				}
-			} else {
-				return $elm$core$Platform$Cmd$none;
+			switch (msg.$) {
+				case 'LinkClicked':
+					var urlRequest = msg.a;
+					if (urlRequest.$ === 'Internal') {
+						var url = urlRequest.a;
+						return A2(
+							$elm$browser$Browser$Navigation$pushUrl,
+							superModel.key,
+							$elm$url$Url$toString(url));
+					} else {
+						var href = urlRequest.a;
+						return $elm$browser$Browser$Navigation$load(href);
+					}
+				case 'GotoHome':
+					return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/');
+				case 'GotoIsomorphism':
+					return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/isomorphism');
+				case 'GotoMaxkCut':
+					return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/maxkcut');
+				case 'GotoColoring':
+					return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/coloring');
+				case 'GotoCover':
+					return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/vertexcover');
+				case 'GotoTreeWidth':
+					return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/treewidth');
+				case 'NextTopic':
+					switch (model.$) {
+						case 'HomePage':
+							return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/isomorphism');
+						case 'Isomorphic':
+							var x = model.a;
+							return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/maxkcut');
+						case 'MaxCut':
+							var x = model.a;
+							return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/coloring');
+						case 'GraphColoring':
+							var x = model.a;
+							return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/vertexcover');
+						case 'VertexCover':
+							var x = model.a;
+							return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/treewidth');
+						default:
+							var x = model.a;
+							return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/isomorphism');
+					}
+				case 'PreviousTopic':
+					switch (model.$) {
+						case 'Isomorphic':
+							var x = model.a;
+							return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/treewidth');
+						case 'TreeWidth':
+							var x = model.a;
+							return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/vertexcover');
+						case 'MaxCut':
+							var x = model.a;
+							return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/isomorphism');
+						case 'GraphColoring':
+							var x = model.a;
+							return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/maxkcut');
+						case 'VertexCover':
+							var x = model.a;
+							return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/coloring');
+						default:
+							return $elm$core$Platform$Cmd$none;
+					}
+				default:
+					return $elm$core$Platform$Cmd$none;
 			}
 		}();
 		return _Utils_Tuple2(
 			_Utils_update(
 				superModel,
-				{helpStatus: helpStatus, model: newModel, url: newUrl}),
+				{helpStatus: helpStatus, model: newModel}),
 			command);
 	});
 var $author$project$Messages$GotoColoring = {$: 'GotoColoring'};

@@ -49,22 +49,6 @@ main =
         , onUrlRequest = LinkClicked
         }
 
---init : () -> ( SuperModel, Cmd Msg )
---init _ =
---    let
---        shapeTransition =
---            isomorphicTransition
---        model = ( Isomorphic shapeTransition)
---    in
---    ({ helpStatus = False
---    , model = model
---    }, Cmd.none)
-
---init : () -> ( SuperModel, Cmd Msg )
---init _ =
---   ({ helpStatus = False
---    , model = HomePage
---    }, Cmd.none)
 
 init : () -> Url.Url -> Nav.Key -> ( SuperModel, Cmd Msg )
 init flags url key =
@@ -158,47 +142,6 @@ update msg superModel =
       model = superModel.model
       newModel =
          case msg of
-           NextTopic ->
-              case model of
-                 HomePage ->
-                    ( Isomorphic isomorphicTransition)
-                 Isomorphic x ->
-                    ( MaxCut maxCutTransition)
-                 MaxCut x ->
-                    (GraphColoring colorDisplay)
-                 GraphColoring x ->
-                    ( VertexCover vertexCoverDisplay)
-                 VertexCover x ->
-                    ( TreeWidth treeWidthDisplay)
-                 TreeWidth x ->
-                    ( Isomorphic isomorphicTransition)
-
-           PreviousTopic ->
-              case model of
-                 Isomorphic x ->
-                    ( TreeWidth treeWidthDisplay)
-                 TreeWidth x ->
-                    ( VertexCover vertexCoverDisplay)
-                 MaxCut x ->
-                    ( Isomorphic isomorphicTransition)
-                 GraphColoring x ->
-                    ( MaxCut maxCutTransition)
-                 VertexCover x ->
-                    (GraphColoring colorDisplay)
-                 HomePage ->
-                    model
-           GotoHome ->
-                 HomePage
-           GotoIsomorphism ->
-                 ( Isomorphic isomorphicTransition)
-           GotoMaxkCut ->
-                 ( MaxCut maxCutTransition)
-           GotoColoring ->
-                 (GraphColoring colorDisplay)
-           GotoCover ->
-                 ( VertexCover vertexCoverDisplay)
-           GotoTreeWidth ->
-                 ( TreeWidth treeWidthDisplay)
            UrlChanged url ->
                  getTopicModel url
 
@@ -216,8 +159,6 @@ update msg superModel =
                    TreeWidth ( goTree display msg)
                 HomePage ->
                    model
-                --_ ->
-                --  model
 
       helpStatus =
          case msg of
@@ -236,18 +177,52 @@ update msg superModel =
                      Nav.pushUrl superModel.key (Url.toString url)
                   Browser.External href ->
                      Nav.load href
+             GotoHome ->
+                   Nav.pushUrl superModel.key "/"
+             GotoIsomorphism ->
+                   Nav.pushUrl superModel.key "/isomorphism"
+             GotoMaxkCut ->
+                   Nav.pushUrl superModel.key "/maxkcut"
+             GotoColoring ->
+                   Nav.pushUrl superModel.key "/coloring"
+             GotoCover ->
+                   Nav.pushUrl superModel.key "/vertexcover"
+             GotoTreeWidth ->
+                   Nav.pushUrl superModel.key "/treewidth"
+
+             NextTopic ->
+                case model of
+                   HomePage ->
+                     Nav.pushUrl superModel.key "/isomorphism"
+                   Isomorphic x ->
+                     Nav.pushUrl superModel.key "/maxkcut"
+                   MaxCut x ->
+                     Nav.pushUrl superModel.key "/coloring"
+                   GraphColoring x ->
+                     Nav.pushUrl superModel.key "/vertexcover"
+                   VertexCover x ->
+                     Nav.pushUrl superModel.key "/treewidth"
+                   TreeWidth x ->
+                     Nav.pushUrl superModel.key "/isomorphism"
+
+             PreviousTopic ->
+                case model of
+                   Isomorphic x ->
+                     Nav.pushUrl superModel.key "/treewidth"
+                   TreeWidth x ->
+                     Nav.pushUrl superModel.key "/vertexcover"
+                   MaxCut x ->
+                     Nav.pushUrl superModel.key "/isomorphism"
+                   GraphColoring x ->
+                     Nav.pushUrl superModel.key "/maxkcut"
+                   VertexCover x ->
+                     Nav.pushUrl superModel.key "/coloring"
+                   HomePage ->
+                     Cmd.none
              _ ->
                Cmd.none
-
-      newUrl =
-         case msg of
-            UrlChanged url ->
-               url
-            _ ->
-               superModel.url
-            
    in
-   ({ superModel | model = newModel, helpStatus = helpStatus, url = newUrl }, command)
+   ({ superModel | model = newModel, helpStatus = helpStatus}, command)
 
 getTopicModel : Url.Url -> Model
 getTopicModel url =
@@ -262,8 +237,11 @@ getTopicModel url =
          VertexCover vertexCoverDisplay
       "/treewidth" ->
          TreeWidth treeWidthDisplay
+      "/" ->
+         HomePage
       _ ->
          HomePage
+
 
 layOutOptions =
    { options =
