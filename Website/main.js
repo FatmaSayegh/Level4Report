@@ -7242,7 +7242,7 @@ var $author$project$VertexCover$vertexCoverDisplay = function () {
 		$elm$core$Basics$pi / 4);
 	return $author$project$VertexCover$VertexCoverDisplay(initialGraph);
 }();
-var $author$project$Main$getTopicModel = function (url) {
+var $author$project$Main$getTopic = function (url) {
 	var _v0 = url.path;
 	switch (_v0) {
 		case '/isomorphism':
@@ -7269,7 +7269,7 @@ var $author$project$Main$init = F3(
 			{
 				helpStatus: false,
 				key: key,
-				model: $author$project$Main$getTopicModel(url),
+				topic: $author$project$Main$getTopic(url),
 				url: url
 			},
 			$elm$core$Platform$Cmd$none);
@@ -8368,45 +8368,45 @@ var $elm$url$Url$toString = function (url) {
 				url.path)));
 };
 var $author$project$Main$update = F2(
-	function (msg, superModel) {
-		var model = superModel.model;
-		var newModel = function () {
+	function (msg, model) {
+		var topic = model.topic;
+		var newTopic = function () {
 			if (msg.$ === 'UrlChanged') {
 				var url = msg.a;
-				return $author$project$Main$getTopicModel(url);
+				return $author$project$Main$getTopic(url);
 			} else {
-				switch (model.$) {
+				switch (topic.$) {
 					case 'Isomorphic':
-						var shapeTransition = model.a;
+						var shapeTransition = topic.a;
 						return $author$project$Main$Isomorphic(
 							A2($author$project$Isomorphism$animateIsomorphicTransition, msg, shapeTransition));
 					case 'MaxCut':
-						var maxcutTrans = model.a;
+						var maxcutTrans = topic.a;
 						return $author$project$Main$MaxCut(
 							A2($author$project$MaxkCut$animateMaxCutCompound, msg, maxcutTrans));
 					case 'GraphColoring':
-						var display = model.a;
+						var display = topic.a;
 						return $author$project$Main$GraphColoring(
 							A2($author$project$GraphColoring$goColor, display, msg));
 					case 'VertexCover':
-						var display = model.a;
+						var display = topic.a;
 						return $author$project$Main$VertexCover(
 							A2($author$project$VertexCover$goCover, display, msg));
 					case 'TreeWidth':
-						var display = model.a;
+						var display = topic.a;
 						return $author$project$Main$TreeWidth(
 							A2($author$project$TreeWidth$goTree, display, msg));
 					default:
-						return model;
+						return topic;
 				}
 			}
 		}();
 		var helpStatus = function () {
 			switch (msg.$) {
 				case 'ToggleHelpStatus':
-					return !superModel.helpStatus;
+					return !model.helpStatus;
 				case 'TimeDelta':
-					return superModel.helpStatus;
+					return model.helpStatus;
 				default:
 					return false;
 			}
@@ -8419,61 +8419,61 @@ var $author$project$Main$update = F2(
 						var url = urlRequest.a;
 						return A2(
 							$elm$browser$Browser$Navigation$pushUrl,
-							superModel.key,
+							model.key,
 							$elm$url$Url$toString(url));
 					} else {
 						var href = urlRequest.a;
 						return $elm$browser$Browser$Navigation$load(href);
 					}
 				case 'GotoHome':
-					return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/');
+					return A2($elm$browser$Browser$Navigation$pushUrl, model.key, '/');
 				case 'GotoIsomorphism':
-					return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/isomorphism');
+					return A2($elm$browser$Browser$Navigation$pushUrl, model.key, '/isomorphism');
 				case 'GotoMaxkCut':
-					return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/maxkcut');
+					return A2($elm$browser$Browser$Navigation$pushUrl, model.key, '/maxkcut');
 				case 'GotoColoring':
-					return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/coloring');
+					return A2($elm$browser$Browser$Navigation$pushUrl, model.key, '/coloring');
 				case 'GotoCover':
-					return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/vertexcover');
+					return A2($elm$browser$Browser$Navigation$pushUrl, model.key, '/vertexcover');
 				case 'GotoTreeWidth':
-					return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/treewidth');
+					return A2($elm$browser$Browser$Navigation$pushUrl, model.key, '/treewidth');
 				case 'NextTopic':
-					switch (model.$) {
+					switch (topic.$) {
 						case 'HomePage':
-							return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/isomorphism');
+							return A2($elm$browser$Browser$Navigation$pushUrl, model.key, '/isomorphism');
 						case 'Isomorphic':
-							var x = model.a;
-							return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/maxkcut');
+							var x = topic.a;
+							return A2($elm$browser$Browser$Navigation$pushUrl, model.key, '/maxkcut');
 						case 'MaxCut':
-							var x = model.a;
-							return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/coloring');
+							var x = topic.a;
+							return A2($elm$browser$Browser$Navigation$pushUrl, model.key, '/coloring');
 						case 'GraphColoring':
-							var x = model.a;
-							return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/vertexcover');
+							var x = topic.a;
+							return A2($elm$browser$Browser$Navigation$pushUrl, model.key, '/vertexcover');
 						case 'VertexCover':
-							var x = model.a;
-							return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/treewidth');
+							var x = topic.a;
+							return A2($elm$browser$Browser$Navigation$pushUrl, model.key, '/treewidth');
 						default:
-							var x = model.a;
-							return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/isomorphism');
+							var x = topic.a;
+							return A2($elm$browser$Browser$Navigation$pushUrl, model.key, '/isomorphism');
 					}
 				case 'PreviousTopic':
-					switch (model.$) {
+					switch (topic.$) {
 						case 'Isomorphic':
-							var x = model.a;
-							return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/treewidth');
+							var x = topic.a;
+							return A2($elm$browser$Browser$Navigation$pushUrl, model.key, '/treewidth');
 						case 'TreeWidth':
-							var x = model.a;
-							return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/vertexcover');
+							var x = topic.a;
+							return A2($elm$browser$Browser$Navigation$pushUrl, model.key, '/vertexcover');
 						case 'MaxCut':
-							var x = model.a;
-							return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/isomorphism');
+							var x = topic.a;
+							return A2($elm$browser$Browser$Navigation$pushUrl, model.key, '/isomorphism');
 						case 'GraphColoring':
-							var x = model.a;
-							return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/maxkcut');
+							var x = topic.a;
+							return A2($elm$browser$Browser$Navigation$pushUrl, model.key, '/maxkcut');
 						case 'VertexCover':
-							var x = model.a;
-							return A2($elm$browser$Browser$Navigation$pushUrl, superModel.key, '/coloring');
+							var x = topic.a;
+							return A2($elm$browser$Browser$Navigation$pushUrl, model.key, '/coloring');
 						default:
 							return $elm$core$Platform$Cmd$none;
 					}
@@ -8483,8 +8483,8 @@ var $author$project$Main$update = F2(
 		}();
 		return _Utils_Tuple2(
 			_Utils_update(
-				superModel,
-				{helpStatus: helpStatus, model: newModel}),
+				model,
+				{helpStatus: helpStatus, topic: newTopic}),
 			command);
 	});
 var $author$project$Messages$GotoColoring = {$: 'GotoColoring'};
@@ -17226,8 +17226,8 @@ var $author$project$MaxkCut$paneTwo = function (maxCutTrans) {
 		return $author$project$MaxkCut$paneTwoB(maxCutTrans.transitionB);
 	}
 };
-var $author$project$Main$viewbody = function (superModel) {
-	var _v0 = superModel.model;
+var $author$project$Main$viewbody = function (model) {
+	var _v0 = model.topic;
 	switch (_v0.$) {
 		case 'Isomorphic':
 			var shapeTransition = _v0.a;
@@ -17245,7 +17245,7 @@ var $author$project$Main$viewbody = function (superModel) {
 						[
 							$author$project$Main$displayColumn(
 							A2($author$project$Isomorphism$paneOne, shapeTransition.graphA, shapeTransition.graphB)),
-							A2($author$project$Isomorphism$explanationOne, shapeTransition, superModel.helpStatus)
+							A2($author$project$Isomorphism$explanationOne, shapeTransition, model.helpStatus)
 						])));
 		case 'MaxCut':
 			var maxCutTrans = _v0.a;
@@ -17263,7 +17263,7 @@ var $author$project$Main$viewbody = function (superModel) {
 						[
 							$author$project$Main$displayColumn(
 							$author$project$MaxkCut$paneTwo(maxCutTrans)),
-							A2($author$project$MaxkCut$explanationTwo, maxCutTrans, superModel.helpStatus)
+							A2($author$project$MaxkCut$explanationTwo, maxCutTrans, model.helpStatus)
 						])));
 		case 'GraphColoring':
 			var display = _v0.a;
@@ -17281,7 +17281,7 @@ var $author$project$Main$viewbody = function (superModel) {
 						[
 							$author$project$Main$displayColumn(
 							$author$project$GraphColoring$paneThree(display)),
-							A2($author$project$GraphColoring$explanationColoring, display, superModel.helpStatus)
+							A2($author$project$GraphColoring$explanationColoring, display, model.helpStatus)
 						])));
 		case 'VertexCover':
 			var display = _v0.a;
@@ -17299,7 +17299,7 @@ var $author$project$Main$viewbody = function (superModel) {
 						[
 							$author$project$Main$displayColumn(
 							$author$project$VertexCover$paneFour(display)),
-							A2($author$project$VertexCover$explanationCover, display, superModel.helpStatus)
+							A2($author$project$VertexCover$explanationCover, display, model.helpStatus)
 						])));
 		case 'TreeWidth':
 			var display = _v0.a;
@@ -17317,7 +17317,7 @@ var $author$project$Main$viewbody = function (superModel) {
 						[
 							$author$project$Main$displayColumn(
 							$author$project$TreeWidth$paneTree(display)),
-							A2($author$project$TreeWidth$explanationWidth, display, superModel.helpStatus)
+							A2($author$project$TreeWidth$explanationWidth, display, model.helpStatus)
 						])));
 		default:
 			return A3(
@@ -17353,11 +17353,11 @@ var $author$project$Main$viewbody = function (superModel) {
 								[$author$project$Messages$GotoIsomorphism, $author$project$Messages$GotoMaxkCut, $author$project$Messages$GotoColoring, $author$project$Messages$GotoCover, $author$project$Messages$GotoTreeWidth])))));
 	}
 };
-var $author$project$Main$view = function (supermodel) {
+var $author$project$Main$view = function (model) {
 	return {
 		body: _List_fromArray(
 			[
-				$author$project$Main$viewbody(supermodel)
+				$author$project$Main$viewbody(model)
 			]),
 		title: 'Visualization'
 	};

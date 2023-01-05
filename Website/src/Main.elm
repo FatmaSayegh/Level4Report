@@ -37,7 +37,7 @@ import VertexCover exposing (VertexCoverDisplay, paneFour, explanationCover, ver
 import TreeWidth exposing (TreeWidthDisplay, paneTree, explanationWidth, treeWidthDisplay, goTree)
 import Graph exposing (ShapeTransition)
 
-main : Program () SuperModel Msg
+main : Program () Model Msg
 main =
     --Browser.element
     Browser.application
@@ -50,22 +50,22 @@ main =
         }
 
 
-init : () -> Url.Url -> Nav.Key -> ( SuperModel, Cmd Msg )
+init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init flags url key =
    ({ helpStatus = False
     , url = url
     , key = key
-    , model = getTopicModel url
+    , topic = getTopic url
     }, Cmd.none)
 
-type alias SuperModel =
+type alias Model =
    { helpStatus : Bool
    , key : Nav.Key
    , url : Url.Url
-   , model : Model
+   , topic : Topic
    }
 
-type Model =
+type Topic =
    Isomorphic ShapeTransition
    | MaxCut MaxCutTransition
    | GraphColoring ColorDisplay
@@ -76,7 +76,7 @@ type Model =
 
 
 
-subscription : SuperModel -> Sub Msg
+subscription : Model -> Sub Msg
 subscription _ =
     Sub.batch
         [ E.onAnimationFrameDelta TimeDelta
@@ -136,17 +136,17 @@ chooseVertexFromInt x =
 
 
 
-update : Msg -> SuperModel -> ( SuperModel, Cmd Msg )
-update msg superModel =
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
     let
-      model = superModel.model
-      newModel =
+      topic = model.topic
+      newTopic =
          case msg of
            UrlChanged url ->
-                 getTopicModel url
+                 getTopic url
 
            _ ->
-              case model of
+              case topic of
                 Isomorphic shapeTransition ->
                    ( Isomorphic (animateIsomorphicTransition msg shapeTransition))
                 MaxCut maxcutTrans ->
@@ -158,14 +158,14 @@ update msg superModel =
                 TreeWidth display ->
                    TreeWidth ( goTree display msg)
                 HomePage ->
-                   model
+                   topic
 
       helpStatus =
          case msg of
             ToggleHelpStatus ->
-               not superModel.helpStatus
+               not model.helpStatus
             TimeDelta _ ->
-               superModel.helpStatus
+               model.helpStatus
             _ ->
                False
 
@@ -174,58 +174,58 @@ update msg superModel =
              LinkClicked urlRequest ->
                case urlRequest of
                   Browser.Internal url ->
-                     Nav.pushUrl superModel.key (Url.toString url)
+                     Nav.pushUrl model.key (Url.toString url)
                   Browser.External href ->
                      Nav.load href
              GotoHome ->
-                   Nav.pushUrl superModel.key "/"
+                   Nav.pushUrl model.key "/"
              GotoIsomorphism ->
-                   Nav.pushUrl superModel.key "/isomorphism"
+                   Nav.pushUrl model.key "/isomorphism"
              GotoMaxkCut ->
-                   Nav.pushUrl superModel.key "/maxkcut"
+                   Nav.pushUrl model.key "/maxkcut"
              GotoColoring ->
-                   Nav.pushUrl superModel.key "/coloring"
+                   Nav.pushUrl model.key "/coloring"
              GotoCover ->
-                   Nav.pushUrl superModel.key "/vertexcover"
+                   Nav.pushUrl model.key "/vertexcover"
              GotoTreeWidth ->
-                   Nav.pushUrl superModel.key "/treewidth"
+                   Nav.pushUrl model.key "/treewidth"
 
              NextTopic ->
-                case model of
+                case topic of
                    HomePage ->
-                     Nav.pushUrl superModel.key "/isomorphism"
+                     Nav.pushUrl model.key "/isomorphism"
                    Isomorphic x ->
-                     Nav.pushUrl superModel.key "/maxkcut"
+                     Nav.pushUrl model.key "/maxkcut"
                    MaxCut x ->
-                     Nav.pushUrl superModel.key "/coloring"
+                     Nav.pushUrl model.key "/coloring"
                    GraphColoring x ->
-                     Nav.pushUrl superModel.key "/vertexcover"
+                     Nav.pushUrl model.key "/vertexcover"
                    VertexCover x ->
-                     Nav.pushUrl superModel.key "/treewidth"
+                     Nav.pushUrl model.key "/treewidth"
                    TreeWidth x ->
-                     Nav.pushUrl superModel.key "/isomorphism"
+                     Nav.pushUrl model.key "/isomorphism"
 
              PreviousTopic ->
-                case model of
+                case topic of
                    Isomorphic x ->
-                     Nav.pushUrl superModel.key "/treewidth"
+                     Nav.pushUrl model.key "/treewidth"
                    TreeWidth x ->
-                     Nav.pushUrl superModel.key "/vertexcover"
+                     Nav.pushUrl model.key "/vertexcover"
                    MaxCut x ->
-                     Nav.pushUrl superModel.key "/isomorphism"
+                     Nav.pushUrl model.key "/isomorphism"
                    GraphColoring x ->
-                     Nav.pushUrl superModel.key "/maxkcut"
+                     Nav.pushUrl model.key "/maxkcut"
                    VertexCover x ->
-                     Nav.pushUrl superModel.key "/coloring"
+                     Nav.pushUrl model.key "/coloring"
                    HomePage ->
                      Cmd.none
              _ ->
                Cmd.none
    in
-   ({ superModel | model = newModel, helpStatus = helpStatus}, command)
+   ({ model | topic = newTopic, helpStatus = helpStatus}, command)
 
-getTopicModel : Url.Url -> Model
-getTopicModel url =
+getTopic : Url.Url -> Topic
+getTopic url =
    case (url.path) of
       "/isomorphism" ->
          Isomorphic isomorphicTransition
@@ -270,14 +270,14 @@ displayColumn svgHtml =
       , Background.color <| ELE.rgb 0.2 0.2 0.2
       ] [ELE.html svgHtml]
 
-view : SuperModel -> Browser.Document Msg
-view supermodel =
+view : Model -> Browser.Document Msg
+view model =
    { title = "Visualization"
-   , body  = [ viewbody supermodel ]
+   , body  = [ viewbody model ]
    }
 
-viewbody superModel =
-   case superModel.model of
+viewbody model =
+   case model.topic of
       Isomorphic shapeTransition ->
          ELE.layoutWith 
             layOutOptions
@@ -287,7 +287,7 @@ viewbody superModel =
                   ]
 
                   [ displayColumn (paneOne shapeTransition.graphA shapeTransition.graphB)
-                  , explanationOne shapeTransition superModel.helpStatus
+                  , explanationOne shapeTransition model.helpStatus
                   ]
             )
 
@@ -299,7 +299,7 @@ viewbody superModel =
                   [ ELE.width ELE.fill]
 
                   [ displayColumn (paneTwo maxCutTrans) 
-                  , explanationTwo maxCutTrans superModel.helpStatus
+                  , explanationTwo maxCutTrans model.helpStatus
                   ]
             )
 
@@ -311,7 +311,7 @@ viewbody superModel =
                   [ ELE.width ELE.fill]
 
                   [ displayColumn (paneThree display) 
-                  , explanationColoring display superModel.helpStatus
+                  , explanationColoring display model.helpStatus
                   ]
             )
 
@@ -323,7 +323,7 @@ viewbody superModel =
                   [ ELE.width ELE.fill]
 
                   [ displayColumn (paneFour display) 
-                  , explanationCover display superModel.helpStatus
+                  , explanationCover display model.helpStatus
                   ]
             )
 
@@ -335,7 +335,7 @@ viewbody superModel =
                   [ ELE.width ELE.fill]
 
                   [ displayColumn (paneTree display) 
-                  , explanationWidth display superModel.helpStatus
+                  , explanationWidth display model.helpStatus
                   ]
             )
       HomePage ->
