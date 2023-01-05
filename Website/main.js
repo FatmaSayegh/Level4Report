@@ -6784,7 +6784,7 @@ var $author$project$Isomorphism$isomorphicTransition = function () {
 		A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 200, 100, 0),
 		A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 80, 80, 0),
 		$elm$core$Basics$pi / 4);
-	return {animationOn: false, finalGrid: $author$project$Isomorphism$bipartiteGrid, graphA: initialGraph, graphB: initialGraph, specialToken: $author$project$Graph$NoToken};
+	return {animationOn: false, finalGrid: $author$project$Isomorphism$bipartiteGrid, graphA: initialGraph, graphB: initialGraph, specialToken: $author$project$Graph$NoToken, time: 0.0};
 }();
 var $author$project$MaxkCut$TwoCut = {$: 'TwoCut'};
 var $elm_explorations$linear_algebra$Math$Vector3$add = _MJS_v3add;
@@ -6915,7 +6915,7 @@ var $author$project$MaxkCut$maxcutTransitionA = function () {
 	var _v0 = $author$project$MaxkCut$maxCutGeometry;
 	var initialGraph = _v0.a;
 	var finalGrid = _v0.b;
-	return {animationOn: false, finalGrid: finalGrid, graphA: initialGraph, graphB: initialGraph, specialToken: $author$project$Graph$NoToken};
+	return {animationOn: false, finalGrid: finalGrid, graphA: initialGraph, graphB: initialGraph, specialToken: $author$project$Graph$NoToken, time: 0.0};
 }();
 var $elm$core$Basics$cos = _Basics_cos;
 var $elm$core$Tuple$second = function (_v0) {
@@ -7011,7 +7011,7 @@ var $author$project$MaxkCut$maxcutTransitionB = function () {
 	var _v0 = $author$project$MaxkCut$threeCutGeometry;
 	var initialGraph = _v0.a;
 	var finalGrid = _v0.b;
-	return {animationOn: false, finalGrid: finalGrid, graphA: initialGraph, graphB: initialGraph, specialToken: $author$project$Graph$NoToken};
+	return {animationOn: false, finalGrid: finalGrid, graphA: initialGraph, graphB: initialGraph, specialToken: $author$project$Graph$NoToken, time: 0.0};
 }();
 var $author$project$MaxkCut$maxCutTransition = {state: $author$project$MaxkCut$TwoCut, transitionA: $author$project$MaxkCut$maxcutTransitionA, transitionB: $author$project$MaxkCut$maxcutTransitionB};
 var $author$project$TreeWidth$CircularGraph = {$: 'CircularGraph'};
@@ -7228,7 +7228,7 @@ var $author$project$TreeWidth$treeWidthDisplay = function () {
 		A2($author$project$Graph$listOfColors, $author$project$Graph$First, 12));
 	var edges = A2($author$project$Graph$makeEdgesWithTuples, edgeTuples, vertices);
 	var graph = A2($author$project$Graph$Graph, vertices, edges);
-	return {graph: graph, gridCircular: gridCircular, gridHoneyComb: gridHoneyComb, status: $author$project$TreeWidth$CircularGraph, treeLines: treeLines, triples: triples};
+	return {graph: graph, gridCircular: gridCircular, gridHoneyComb: gridHoneyComb, status: $author$project$TreeWidth$CircularGraph, time: 0.0, treeLines: treeLines, triples: triples};
 }();
 var $author$project$VertexCover$VertexCoverDisplay = function (graphA) {
 	return {graphA: graphA};
@@ -7936,7 +7936,7 @@ var $author$project$Graph$advanceVertexTowardsPosition = F3(
 		return A2(
 			$elm_explorations$linear_algebra$Math$Vector3$add,
 			vertex.pos,
-			A2($elm_explorations$linear_algebra$Math$Vector3$scale, 1 / time, dif));
+			A2($elm_explorations$linear_algebra$Math$Vector3$scale, time, dif));
 	});
 var $author$project$Graph$calcNextGrid = F3(
 	function (graph, grid, time) {
@@ -7946,23 +7946,32 @@ var $author$project$Graph$calcNextGrid = F3(
 			graph.vertices,
 			grid);
 	});
-var $author$project$Graph$moveTowards = F2(
-	function (graph, grid) {
-		var intermediateGrid = A3($author$project$Graph$calcNextGrid, graph, grid, 100);
+var $author$project$Graph$moveTowards = F3(
+	function (time, graph, grid) {
+		var intermediateGrid = A3($author$project$Graph$calcNextGrid, graph, grid, time);
 		return A2($author$project$Graph$morphGraph, graph, intermediateGrid);
 	});
-var $author$project$Graph$executeShapeTransition = function (shapeTransition) {
-	return (A2($author$project$Graph$distanceBetweenGraphAndGrid, shapeTransition.graphB, shapeTransition.finalGrid) < 10) ? _Utils_update(
-		shapeTransition,
-		{
-			animationOn: false,
-			graphB: A2($author$project$Graph$morphGraph, shapeTransition.graphB, shapeTransition.finalGrid)
-		}) : _Utils_update(
-		shapeTransition,
-		{
-			graphB: A2($author$project$Graph$moveTowards, shapeTransition.graphB, shapeTransition.finalGrid)
-		});
-};
+var $author$project$Graph$executeShapeTransition = F2(
+	function (delta, shapeTransition) {
+		if (A2($author$project$Graph$distanceBetweenGraphAndGrid, shapeTransition.graphB, shapeTransition.finalGrid) < 10) {
+			return _Utils_update(
+				shapeTransition,
+				{
+					animationOn: false,
+					graphB: A2($author$project$Graph$morphGraph, shapeTransition.graphB, shapeTransition.finalGrid),
+					time: 0.0
+				});
+		} else {
+			var accumulatedTime = shapeTransition.time + delta;
+			var calculatedTime = delta / (2000 - (0.78 * accumulatedTime));
+			return _Utils_update(
+				shapeTransition,
+				{
+					graphB: A3($author$project$Graph$moveTowards, calculatedTime, shapeTransition.graphB, shapeTransition.finalGrid),
+					time: accumulatedTime
+				});
+		}
+	});
 var $author$project$Graph$makeUnglowAllVertices = function (graph) {
 	var new_vertices = function (vs) {
 		if (!vs.b) {
@@ -8033,7 +8042,7 @@ var $author$project$Isomorphism$animateIsomorphicTransition = F2(
 				var delta = msg.a;
 				var _v1 = shapeTransition.animationOn;
 				if (_v1) {
-					return $author$project$Graph$executeShapeTransition(shapeTransition);
+					return A2($author$project$Graph$executeShapeTransition, delta, shapeTransition);
 				} else {
 					return shapeTransition;
 				}
@@ -8082,7 +8091,7 @@ var $author$project$Isomorphism$animateIsomorphicTransition = F2(
 			case 'AnimationStartOver':
 				return _Utils_update(
 					shapeTransition,
-					{graphB: shapeTransition.graphA});
+					{graphB: shapeTransition.graphA, time: 0.0});
 			case 'Other':
 				return shapeTransition;
 			case 'NextTopic':
@@ -8107,7 +8116,7 @@ var $author$project$MaxkCut$animateMaxCutTransition = F2(
 				var delta = msg.a;
 				var _v1 = shapeTransition.animationOn;
 				if (_v1) {
-					return $author$project$Graph$executeShapeTransition(shapeTransition);
+					return A2($author$project$Graph$executeShapeTransition, delta, shapeTransition);
 				} else {
 					return shapeTransition;
 				}
@@ -8118,7 +8127,7 @@ var $author$project$MaxkCut$animateMaxCutTransition = F2(
 			case 'AnimationStartOver':
 				return _Utils_update(
 					shapeTransition,
-					{graphB: shapeTransition.graphA});
+					{graphB: shapeTransition.graphA, time: 0.0});
 			case 'MaxCutLine':
 				return _Utils_update(
 					shapeTransition,
@@ -8237,18 +8246,27 @@ var $author$project$TreeWidth$MorphingIntoHoneyComb = {$: 'MorphingIntoHoneyComb
 var $author$project$TreeWidth$PiecesMarked = {$: 'PiecesMarked'};
 var $author$project$TreeWidth$ShowOnePiece = {$: 'ShowOnePiece'};
 var $author$project$TreeWidth$TreeDrawnGraph = {$: 'TreeDrawnGraph'};
-var $author$project$TreeWidth$morphIntoHoneyComb = function (display) {
-	return (A2($author$project$Graph$distanceBetweenGraphAndGrid, display.graph, display.gridHoneyComb) < 20) ? _Utils_update(
-		display,
-		{
-			graph: A2($author$project$Graph$morphGraph, display.graph, display.gridHoneyComb),
-			status: $author$project$TreeWidth$HoneyCombGraph
-		}) : _Utils_update(
-		display,
-		{
-			graph: A2($author$project$Graph$moveTowards, display.graph, display.gridHoneyComb)
-		});
-};
+var $author$project$TreeWidth$morphIntoHoneyComb = F2(
+	function (delta, display) {
+		if (A2($author$project$Graph$distanceBetweenGraphAndGrid, display.graph, display.gridHoneyComb) < 20) {
+			return _Utils_update(
+				display,
+				{
+					graph: A2($author$project$Graph$morphGraph, display.graph, display.gridHoneyComb),
+					status: $author$project$TreeWidth$HoneyCombGraph,
+					time: 0.0
+				});
+		} else {
+			var accumulatedTime = display.time + delta;
+			var calculatedTime = delta / (2000 - accumulatedTime);
+			return _Utils_update(
+				display,
+				{
+					graph: A3($author$project$Graph$moveTowards, calculatedTime, display.graph, display.gridHoneyComb),
+					time: accumulatedTime
+				});
+		}
+	});
 var $author$project$TreeWidth$goTree = F2(
 	function (display, msg) {
 		switch (msg.$) {
@@ -8316,7 +8334,7 @@ var $author$project$TreeWidth$goTree = F2(
 					{graph: newGraph, status: newStatus});
 			case 'TimeDelta':
 				var delta = msg.a;
-				return _Utils_eq(display.status, $author$project$TreeWidth$MorphingIntoHoneyComb) ? $author$project$TreeWidth$morphIntoHoneyComb(display) : display;
+				return _Utils_eq(display.status, $author$project$TreeWidth$MorphingIntoHoneyComb) ? A2($author$project$TreeWidth$morphIntoHoneyComb, delta, display) : display;
 			default:
 				return display;
 		}

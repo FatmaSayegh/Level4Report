@@ -48,6 +48,7 @@ maxcutTransitionA =
         , finalGrid = finalGrid
         , animationOn = False
         , specialToken = NoToken
+        , time = 0.0
         }
 
 maxcutTransitionB : ShapeTransition
@@ -61,6 +62,7 @@ maxcutTransitionB =
         , finalGrid = finalGrid
         , animationOn = False
         , specialToken = NoToken
+        , time = 0.0
         }
 
 maxCutTransition : MaxCutTransition
@@ -355,7 +357,7 @@ animateMaxCutTransition  msg shapeTransition =
        TimeDelta delta ->
            case shapeTransition.animationOn of
                True ->
-                   Graph.executeShapeTransition shapeTransition
+                   Graph.executeShapeTransition delta shapeTransition
                False ->
                    shapeTransition
 
@@ -367,6 +369,7 @@ animateMaxCutTransition  msg shapeTransition =
        AnimationStartOver ->
            { shapeTransition
                | graphB = shapeTransition.graphA
+               , time = 0.0
            }
 
        MaxCutLine ->

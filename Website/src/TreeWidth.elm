@@ -229,6 +229,7 @@ treeWidthDisplay =
       , triples = triples
       , treeLines = treeLines
       , status = CircularGraph
+      , time = 0.0
       }
 goTree : TreeWidthDisplay -> Msg -> TreeWidthDisplay
 goTree display msg =
@@ -303,7 +304,7 @@ goTree display msg =
       TimeDelta delta ->
          if display.status == MorphingIntoHoneyComb
             then
-              morphIntoHoneyComb display
+              morphIntoHoneyComb delta display
             else
               display
       
@@ -311,16 +312,25 @@ goTree display msg =
          display
 
 
-morphIntoHoneyComb : TreeWidthDisplay -> TreeWidthDisplay
-morphIntoHoneyComb display =
+morphIntoHoneyComb : Float -> TreeWidthDisplay -> TreeWidthDisplay
+morphIntoHoneyComb delta display =
    if (Graph.distanceBetweenGraphAndGrid display.graph display.gridHoneyComb < 20)
       then { display
                | status = HoneyCombGraph
                , graph = Graph.morphGraph display.graph display.gridHoneyComb
+               , time = 0.0
            }
       else
+           let
+               accumulatedTime =
+                  display.time + delta
+
+               calculatedTime =
+                  delta/(2000 - accumulatedTime)
+           in
            { display
-               | graph = Graph.moveTowards display.graph display.gridHoneyComb
+               | graph = Graph.moveTowards calculatedTime display.graph display.gridHoneyComb
+               , time = accumulatedTime
            }
 
 drawGraphForTreeWidth display =
@@ -418,6 +428,7 @@ type alias TreeWidthDisplay =
    , triples : List (Int, Int, Int)
    , treeLines : List ( (Int, Int, Int), (Int, Int, Int) )
    , status : TreeWidthStatus
+   , time : Float
    }
 
 type TreeWidthStatus =

@@ -39,6 +39,7 @@ type alias ShapeTransition =
     , finalGrid : Grid 
     , animationOn : Bool
     , specialToken : Token
+    , time : Float
     }
 
 type Token =
@@ -139,16 +140,38 @@ makeEdgeWithTuple tu vs =
             (Just vertexOne, Just vertexTwo) ->
                Just (Edge vertexOne vertexTwo)
 
-executeShapeTransition : ShapeTransition -> ShapeTransition
-executeShapeTransition shapeTransition =
+--executeShapeTransition : ShapeTransition -> ShapeTransition
+--executeShapeTransition shapeTransition =
+--   if (distanceBetweenGraphAndGrid shapeTransition.graphB shapeTransition.finalGrid < 10)
+--   then { shapeTransition 
+--            | animationOn = False
+--            , graphB = morphGraph shapeTransition.graphB shapeTransition.finalGrid
+--        }
+--   else { shapeTransition 
+--            | graphB = moveTowards shapeTransition.graphB shapeTransition.finalGrid
+--        }
+
+executeShapeTransition : Float -> ShapeTransition -> ShapeTransition
+executeShapeTransition delta shapeTransition =
    if (distanceBetweenGraphAndGrid shapeTransition.graphB shapeTransition.finalGrid < 10)
    then { shapeTransition 
             | animationOn = False
             , graphB = morphGraph shapeTransition.graphB shapeTransition.finalGrid
+            , time = 0.0
         }
-   else { shapeTransition 
-            | graphB = moveTowards shapeTransition.graphB shapeTransition.finalGrid
-        }
+
+   else 
+      let
+         accumulatedTime =
+            shapeTransition.time + delta
+
+         calculatedTime =
+            delta/(2000 -  0.78 * accumulatedTime)
+      in
+         { shapeTransition 
+            | graphB = moveTowards calculatedTime shapeTransition.graphB shapeTransition.finalGrid
+            , time = accumulatedTime
+         }
 
 
 distanceBetweenGraphAndGrid : Graph -> Grid -> Float
@@ -270,7 +293,7 @@ advanceVertexTowardsPosition time vertex position =
         dif =
             sub position vertex.pos
     in
-      Math.Vector3.add vertex.pos (Math.Vector3.scale (1 / time) dif)
+      Math.Vector3.add vertex.pos (Math.Vector3.scale time dif)
 
 
 
@@ -398,11 +421,11 @@ parametricPolygon : Int -> Vec3 -> Vec3 -> Float -> List Vec3
 parametricPolygon n scaleVec position startAngle =
     situateShape position scaleVec <| makePolygon startAngle n
 
-moveTowards : Graph -> Grid -> Graph
-moveTowards graph grid =
+moveTowards : Float -> Graph -> Grid -> Graph
+moveTowards time graph grid =
     let
         intermediateGrid =
-            calcNextGrid graph grid 100
+            calcNextGrid graph grid time
     in
     morphGraph graph intermediateGrid
 

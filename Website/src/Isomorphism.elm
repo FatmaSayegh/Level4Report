@@ -24,6 +24,7 @@ isomorphicTransition =
         , finalGrid = bipartiteGrid
         , animationOn = False
         , specialToken = NoToken
+        , time = 0.0
         }
 
 animateIsomorphicTransition : Msg -> ShapeTransition -> ShapeTransition
@@ -32,26 +33,42 @@ animateIsomorphicTransition msg shapeTransition =
        TimeDelta delta ->
            case shapeTransition.animationOn of
                True ->
-                   Graph.executeShapeTransition shapeTransition
+                   Graph.executeShapeTransition delta shapeTransition
                False ->
                    shapeTransition
    
        HoverOver name ->
            { shapeTransition
-               | graphA = Graph.changeGlowVertex True name <| Graph.makeUnglowAllVertices shapeTransition.graphA
-               , graphB = Graph.changeGlowVertex True name <| Graph.makeUnglowAllVertices shapeTransition.graphB
+               | graphA =
+                     shapeTransition.graphA
+                     |> Graph.makeUnglowAllVertices
+                     |> Graph.changeGlowVertex True name
+               , graphB = 
+                     shapeTransition.graphB
+                     |> Graph.makeUnglowAllVertices
+                     |> Graph.changeGlowVertex True name
            }
    
        MouseOut name ->
            { shapeTransition
-             | graphA = Graph.changeGlowVertex False name shapeTransition.graphA
-             , graphB = Graph.changeGlowVertex False name shapeTransition.graphB
+             | graphA = 
+                  shapeTransition.graphA
+                  |> Graph.changeGlowVertex False name
+             , graphB = 
+                  shapeTransition.graphB
+                  |> Graph.changeGlowVertex False name
            }
    
        ToggleVertexStatus name ->
            { shapeTransition
-               | graphA = Graph.toggleGlowVertex name <| Graph.makeUnglowAllVerticesBut name shapeTransition.graphA
-               , graphB = Graph.toggleGlowVertex name <| Graph.makeUnglowAllVerticesBut name shapeTransition.graphB
+               | graphA = 
+                     shapeTransition.graphA
+                     |> Graph.makeUnglowAllVerticesBut name
+                     |> Graph.toggleGlowVertex name
+               , graphB = 
+                     shapeTransition.graphB
+                     |> Graph.makeUnglowAllVerticesBut name
+                     |> Graph.toggleGlowVertex name
            }
    
        AnimationToggle ->
@@ -62,6 +79,7 @@ animateIsomorphicTransition msg shapeTransition =
        AnimationStartOver ->
            { shapeTransition
                | graphB = shapeTransition.graphA
+               , time = 0.0
            }
 
        Other ->
