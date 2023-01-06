@@ -114,34 +114,6 @@ then rendered by the view function to a modified page.  Therefore, the Model is
 changed by the update function, whereas it is used by the view function to
 render a webpage according to a formula set by the programmer.
 
-\section{Modules}
-
-The program is divided into ten modules.
-
-The $Main$ module is of the central utility. It's function is to be a
-starting point for the program and also to act as a porter to load the
-functionality of individual graph theory topics to the state of the program
-whenever the navigation commands demand so. 
-
-The five topics included in the project own a module of their own. They are
-$Isomorphism$, $Maxkcut$, $GraphColoring$, $VertexCover$ and $TreeWidth$ modules.
-These modules are imported by the main function to be used on the screen.
-Henceforth these will be collectively known as the \emph{Topic Modules}.
-
-The $Graph$ module contains the data types and functions for representing,
-constructing, drawing and animating the graphs. This module contains the most
-geometry. This module is depended upon by all the \emph{topic modules}.
-
-The $Explanation$ module contains the text data as a $0-nary$ functions
-(functions which don't take input) used by topic modules for the explanation of
-the respective topics. These only contain the definitions of the concerned
-graph theory problems.
-
-The $Messages$ module contains the messages which are generated with system
-clock ticks or user interaction with the DOM elements.  Such messages are
-defined as \emph{Algebraical Data Types} and are imported by almost all other
-modules. This along with the $Main$ and $Graph$ modules form the central pillar
-of the program and are the minimum requirement of the program to function.
 
 \section{Events as Messages}
 \label{impl: messages}
@@ -350,9 +322,9 @@ straight line segment between the positions of the two vertices, they do not req
 positional data associated explicitly for them. It is drawn out from the vertices,
 they contain.
 
-\begin{figure}[h]
+\begin{figure}[!ht]
 \centering
-\includegraphics[scale=0.05]{Graph1New}
+\includegraphics[scale=0.047]{Graph1New}
 \caption{
          Drawing a Graph. Starting with a grid of positions
          a set of vertices are created. Connecting the vertices,
@@ -375,13 +347,24 @@ redrawing these entities takes the position information from the updated model
 to draw them as SVG.
 
 \subsection{Morphing Geometry of a Graph}
+\label{animation: morphing}
 In some of the animations in the application, the graph changes it's geometry
 to visually look different than the original. This is accomplished by a
 function which takes a graph and a grid to move the input graph incrementally
-towards the grid with every tick of the animation clock. The function
-calculates the displacement vector between a vertex and the respective final
-position given in the grid and finds a new position along the direction of the
-displacement vector.
+towards the grid with every tick of the animation clock. 
+When the animation
+is started, with each tick of the animation clock, the vertices of the
+second graph move towards the target grid points with a constant velocity.
+The velocity of a vertex is calculated by obtaining the displacement vector between
+the target position and the current position of the vertex and also the time
+available before the animation ends.
+The displacement is calculated as $\vec{d} = \vec{p_t} - \vec{p_v}$, where
+$\vec{p_t}$ is the target postion and $\vec{p_v}$ is the current position of
+the vertex. The time available is calculated as $t = t_{available} -
+t_{elapsed}$. The velocity is calculated as $\vec{v} = \vec{d}/t$.  The
+distance the vertex must travel is hence calculated as $\Delta d = \vec{v}
+\times \Delta t$.  Where $\Delta t$ is the time elapsed since the last tick of
+the animation clock.
 
 \subsection{Re-formation of the Graphs}
 At each tick of the animation clock the graph under transformation, is built
@@ -515,6 +498,171 @@ navigation bar. Below is an example list of a few key-bindings.
 \item \textbf{N}: Go to the previous topic. (Can be used instead of the navigation button; Generates the $PreviousTopic$ message). \\
 \item \textbf{t}: Next animation (Can be used in case of Max k Cut and Tree width to go to the next animation; Generates the $NextAnimation$ message)
 \end{itemize}
+
+\section{Implementation of Topics}
+
+\subsection{Graph Isomorphism}
+\label{impl: isomporphism}
+
+This topic is elucidated by a user interactive animation. Refer to
+\autoref{story: isomorphism} for the details. The animation consists of two
+Graphs which are the same. 
+
+In the beginning the two graphs are superimposed with each other positionally.
+Each graph is constructed by merging two polygons and connecting their vertices
+as a wheel like structure.
+As the animation begins one graph leaves it's position and transforms to
+another shape.  This is achieved by instantiating the two graphs with same
+position and form. An empty grid is also provided as the target set of
+positions for the vertices of the second graph. 
+
+When the animation is started, with each tick of the animation clock, the
+vertices of the second graph move towards the target grid points with a
+constant velocity. For the kinematics involved in this transition see
+\emph{Morphing Geometry of a Graph} in \autoref{animation: morphing}.
+
+For the user interaction part, when the user hovers over a vertex, or selects
+it by pressing the corresponding numerical key on the keyboard, a Boolean
+variable associated with the vertex is turned \emph{True}. A function does a
+linear search over the vertices to find the selected vertex, the edges incident
+on the vertex and also the vertices adjacent to the selected vertex. These are
+shown differently in a highlighted color in both the graphs in the display
+section. The explanation section also uses this data to explain how the
+selected vertex is connected to the same adjacent vertices in both the graphs.
+
+\subsection{Max k Cut}
+\label{impl: maxkcut}
+The Max k Cut topic has two animations back to back related to firstly the Max
+2 Cut and then Max 3 Cut . See \autoref{story: maxkcut} for explanation of the
+animations. The first animation has a graph constructed by merging two polygons.
+The edges are so defined that the graph is nearly bipartite (see
+\autoref{graphtheory: definitions} ) save for one edge (see \autoref{story:
+max2cut}). The target grid for the animation is made of the combination of the
+same polygons but set apart vertically. The kinematics of the animation is
+executed the same way as is done for Graph Isomorphism.
+
+The user can draw a predetermined line segment which seperates the two
+sets. The line segment is superimposed by intersection points of the
+line segments and the edges between the two sets. An intersection point
+is calculated by finding intersection of two line segments. A linear algebra
+library function was used for this task.
+
+In the case of Max 3 Cut (see \autoref{story: max3cut}), the animation begins
+with a tripartite graph. The graph is based upon a nonagon shaped grid. The
+destination grid, in this animation is shape of an equilateral triangle, with
+the grid points near the vertices of the said triangle. The graph consists of
+three sets of vertices which settle down at the vicinity of the three vertices
+of the equilateral triangle at the end of the animation. The kinematics of the
+motion of the vertices is explained in \autoref{animation: morphing}.
+
+\subsection{Graph Coloring}
+The graph in this section is composed of two concentric pentagonal graphs such
+that each vertex has three adjacent vertices. The user task is to color the
+graph using three different colors. See \autoref{story: coloring} for further
+explanation of the task.
+
+When the user chooses a color from the color palette, the chosen color is
+updated in the state of the program. When the user clicks a vertex, the color
+of the vertex is changed with the color stored in the state of the program.
+
+There is a function which makes a check while the user task is going on, whether
+two adjacent vertices have similar color by doing a linear search on the edges.
+If they are the information is used in the display to mark that edge differently
+and a warning appears on the explanation panel based on this search.
+
+If in a linear search for finding adjacent vertices of the same colors
+doesn't have an output and if all the vertices have been colored, then
+the function which populates text on the explanation panel shows a message that
+the task is complete.
+
+\subsection{Vertex Cover}
+
+The graph in the Vertex Cover is based on composition of two square grids.
+
+The user interaction for this topic asks the user to choose the minimum number
+of vertices such that all the edges in the Graph belong to the set of vertices
+which are incident on the chosen vertices. See \autoref{story: vertexcover}.
+
+When the user clicks on a Vertex, there is a Boolean value associated with the
+Vertex which becomes \emph{True}. There is a function which filters
+the list of edges to find which of them have at least one of their vertices
+\emph{selected}. Such edges are illuminated, for the user to note that the edge has
+been covered.
+
+There is another function which filters out the edges whose one of the vertices
+have been selected, and yet another which counts the number of vertices which
+have been selected.  When the all the edges have been covered, the program
+checks for the number of vertices selected to do this by filtering the list of
+vertices. In the case of the particular example in this project, the graph can
+be covered using four vertices. Therefore if the number of vertices selected at
+the end of the session are greater than four, then the explanation panel is
+populated with a message that the task needs to be attempted again for proper
+execution.
+
+\subsection{Tree Width}
+Tree width topic is implemented in a series of animations.  In the first
+animation the vertices of the graph of this topic are arranged circularly
+albeit with edges such that there is a cellular structure in present inherently
+in the graph. This edges were set up in this graph by coding their connectivity
+in a list of tuples.
+This is also a graph-transition just like graph isomorphism. The target grid
+for this transition is a regular lattice which reveals the cellular nature of
+the graph. The kinematics of the transition is the same as that of graph
+isomorphism (see \autoref{impl: isomporphism}) and Max k Cut (see
+\autoref{impl: maxkcut}). For more information on the kinematics of such shape
+transitions see \autoref{animation: morphing}.
+
+The second part of the animation highlights one piece of the cellular structure
+(see \autoref{}). The piece is also marked by drawing a blue dot at the center
+of the it. The position of the blue dot is found by  taking the centroid of the
+constituent vertices of the piece.
+
+In the third part the centroid of all the pieces are found and marked as blue.
+These blue dots are connected by special lines to form the tree structure inherent
+in the original graph.
+
+The animation series is followed step by step by explanation panel which responds
+to the various states of the program.
+
+\section{Modules}
+
+The program is divided into ten modules.
+
+The $Main$ module is of the central utility. It's function is to be a
+starting point for the program and also to act as a porter to load the
+functionality of individual graph theory topics to the state of the program
+whenever the navigation commands demand so. 
+
+The five topics included in the project own a module of their own. They are
+$Isomorphism$, $Maxkcut$, $GraphColoring$, $VertexCover$ and $TreeWidth$ modules.
+These modules are imported by the main function to be used on the screen.
+Henceforth these will be collectively known as the \emph{Topic Modules}.
+
+The $Graph$ module contains the data types and functions for representing,
+constructing, drawing and animating the graphs. This module contains the most
+geometry. This module is depended upon by all the \emph{topic modules}.
+
+The $Explanation$ module contains the text data as a $0-nary$ functions
+(functions which don't take input) used by topic modules for the explanation of
+the respective topics. These only contain the definitions of the concerned
+graph theory problems.
+
+The $Messages$ module contains the messages which are generated with system
+clock ticks or user interaction with the DOM elements.  Such messages are
+defined as \emph{Algebraical Data Types} (see \autoref{impl: messages}) and are
+imported by almost all other modules. This along with the $Main$ and $Graph$
+modules form the central pillar of the program and are the minimum requirement
+of the program to function.
+
+%PICTURE of modules
+\begin{figure}[h]
+\centering
+\includegraphics[width=4.22in]{Modules}
+\caption{
+        Modules in the Program. Arrows from the blunt end to
+        the pointy end depict dependency.
+        }
+\end{figure}
 
 \section{Software Engineering Practices}
 In the following subsections, how a few good practices which were adopted to

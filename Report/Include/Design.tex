@@ -43,7 +43,13 @@ implement them.
 The web application is a \textbf{Single Page Application}. Where the navigation
 from one topic to another occurs according to the user inputs. When the state
 moves from one graph theory to another topic, the data on the screen, that is
-the graphics and the text, change on the same page without changing the URL.
+the graphics and the text, change on the same page without loading a new HTML
+each time. The user however will notice the url change with navigation from one
+topic to another. This will also give the user the ability to use forward and
+backward buttons in the browser to navigate through the history of URLs
+visited. As a new HTML page is not loaded every time the user navigates from
+one topic to another the screen therefore does not turn briefly white and the
+transitions are imperceptible by default.
 
 There were several iterations made for the layout of the web page, one of the
 is shown in \autoref{wireframe: initial}. Finally, a layout was chosen, see
@@ -162,6 +168,7 @@ accomodated as they did not fit the flow of narrative, while others while being
 brilliant ideas, act as inspiration for future work due to constraints of time.
 
 \subsection{Graph Isomorphism}
+\label{story: isomorphism}
 The user is presented with a graph on the left and textual explanation on the
 right of the page.  The textual explanation portion of the page also has some
 media buttons such as play/pause and reset to interact with the explanation.
@@ -203,7 +210,7 @@ concept and definition of the term would be clear to her.
 
 
 \subsection{Max k Cut}
-
+\label{story: maxkcut}
 Max Cut has two animations one after the other.  The first animation is about
 Max 2 Cut and the second is about Max 3 Cut.  It is assumed that the user will
 extrapolate the concept of the general Max k Cut after understanding the first
@@ -219,6 +226,7 @@ be equal to $1$. This decision has been taken as with $w=1$, the answers to
 both the max cut problems are more visual than unequal weights.
 
 \subsubsection{Max 2 Cut Animation:} 
+\label{story: max2cut}
 It starts with an Original graph on the left and definition of Max K Cut and
 Max 2 Cut on the right of the web page. The right part of the page also
 contains media buttons to pause and play the animations. It also has a button
@@ -245,6 +253,7 @@ points which tell the user the number of edges passing from one set to another.
 \end{figure}
 
 \subsubsection{Max 3 Cut Animation:}
+\label{story: max3cut}
 Just like the animation for Max 2 Cut, this animation is started by the user by
 pressing the play button. The animation on the right starts with a tripartite
 graph arranged in a circular form. As the animation progresses the graph gets
@@ -266,6 +275,7 @@ imaginative student to want to investigate the subject further.
 
 
 \subsection{Graph Coloring}
+\label{story: coloring}
 \subsubsection{User Interaction:}
 A user-interactive task was chosen for explaining Graph Coloring as the nature
 of the problem lends naturally for such.  The user is presented with a graph
@@ -293,6 +303,7 @@ Coloring problem in their memory for a long period of time than just watching
 an animation as a spectator.
 
 \subsection{Minimum Vertex Cover}
+\label{story: vertexcover}
 \subsubsection{User Interaction:}
 Minimum Vertex Cover, by the nature of the problem is chosen to be
 elucidated by the help of a user-interactive task. The user is given a graph

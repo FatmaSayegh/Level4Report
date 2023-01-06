@@ -31,6 +31,7 @@
   \usepackage{textcomp}
   \usepackage[english]{babel}
   \usepackage[T1]{fontenc}
+  \usepackage{float}
 \else
   % make sure the fonts are actually set
   \usepackage{fontspec}
