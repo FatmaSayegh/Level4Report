@@ -37,7 +37,7 @@ import VertexCover exposing (VertexCoverDisplay, paneFour, explanationCover, ver
 import TreeWidth exposing (TreeWidthDisplay, paneTree, explanationWidth, treeWidthDisplay, goTree)
 import Graph exposing (ShapeTransition)
 
-main : Program () Model Msg
+main : Program Flags Model Msg
 main =
     --Browser.element
     Browser.application
@@ -49,8 +49,11 @@ main =
         , onUrlRequest = LinkClicked
         }
 
+type alias Flags =
+   { width : Int
+   }
 
-init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
+init : Flags -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init flags url key =
    ({ helpStatus = False
     , url = url
