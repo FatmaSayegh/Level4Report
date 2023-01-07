@@ -162,10 +162,11 @@ subscription _ =
         [ E.onAnimationFrameDelta TimeDelta
         , E.onKeyPress keyDecoder
         ]
+\label{listing: subsciption}
 \end{lstlisting}
 
 % Block diagram
-\begin{figure}[ht] % ’ht’ tells LaTeX to place the figure ’here’ or at the top of the page
+\begin{figure}[h] % ’ht’ tells LaTeX to place the figure ’here’ or at the top of the page
 \centering % centers the figure
 \begin{tikzpicture}
 % tikz code goes here
@@ -510,7 +511,7 @@ Graphs which are the same.
 
 In the beginning the two graphs are superimposed with each other positionally.
 Each graph is constructed by merging two polygons and connecting their vertices
-as a wheel like structure.
+in a wheel like structure.
 As the animation begins one graph leaves it's position and transforms to
 another shape.  This is achieved by instantiating the two graphs with same
 position and form. An empty grid is also provided as the target set of
@@ -523,12 +524,13 @@ constant velocity. For the kinematics involved in this transition see
 
 For the user interaction part, when the user hovers over a vertex, or selects
 it by pressing the corresponding numerical key on the keyboard, a Boolean
-variable associated with the vertex is turned \emph{True}. A function does a
-linear search over the vertices to find the selected vertex, the edges incident
-on the vertex and also the vertices adjacent to the selected vertex. These are
-shown differently in a highlighted color in both the graphs in the display
-section. The explanation section also uses this data to explain how the
-selected vertex is connected to the same adjacent vertices in both the graphs.
+variable associated with the vertex is turned \emph{True}. A function filters
+the list of vertices to find the selected vertex. Another function finds the
+edges incident on the vertex and also the vertices adjacent to the selected
+vertex by filtering over the list of edges in the graph. These are shown
+differently in a highlighted color in both the graphs in the display section.
+The explanation section also uses this data to explain how the selected vertex
+is connected to the same adjacent vertices in both the graphs.
 
 \subsection{Max k Cut}
 \label{impl: maxkcut}
@@ -618,8 +620,8 @@ of the it. The position of the blue dot is found by  taking the centroid of the
 constituent vertices of the piece.
 
 In the third part the centroid of all the pieces are found and marked as blue.
-These blue dots are connected by special lines to form the tree structure inherent
-in the original graph.
+These blue dots are connected by special lines in the last part of the
+animation to form the tree structure inherent in the original graph.
 
 The animation series is followed step by step by explanation panel which responds
 to the various states of the program.
@@ -660,7 +662,7 @@ of the program to function.
 \includegraphics[width=4.22in]{Modules}
 \caption{
         Modules in the Program. Arrows from the blunt end to
-        the pointy end depict dependency
+        the pointy end depict dependency.
         }
 \end{figure}
 
