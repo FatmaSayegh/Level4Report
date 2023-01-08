@@ -18,21 +18,22 @@ import Color exposing (Color)
 import Svg as S
 import Svg.Attributes as SA exposing (..)
 import Svg.Events as SE exposing (..)
+import FontSize exposing (getFontSize, FontSize(..))
 
-explanationWidth : TreeWidthDisplay -> Bool -> ELE.Element Msg
-explanationWidth display helpStatus =
+explanationWidth : TreeWidthDisplay -> Bool -> Int -> ELE.Element Msg
+explanationWidth display helpStatus width =
     ELE.column
          [ Font.color (ELE.rgb 1 1 1)
          --, ELE.height ELE.fill
          , ELE.spacing 20
          --, ELE.padding 40
          , ELE.height ELE.fill
-         , ELE.width ELE.fill
+         , ELE.width (ELE.fill |> ELE.maximum (width//2))
          , Background.color <| ELE.rgb 0.2 0.2 0.2
          ]
          <|
          [  ELE.el
-               [Font.size 30, Font.heavy] 
+               [Font.size (getFontSize Head width), Font.heavy] 
                (ELE.text "Tree Width")
 
          ,  ELE.paragraph

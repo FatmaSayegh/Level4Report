@@ -36,6 +36,7 @@ import GraphColoring exposing (ColorDisplay, paneThree, explanationColoring, col
 import VertexCover exposing (VertexCoverDisplay, paneFour, explanationCover, vertexCoverDisplay, goCover)
 import TreeWidth exposing (TreeWidthDisplay, paneTree, explanationWidth, treeWidthDisplay, goTree)
 import Graph exposing (ShapeTransition)
+import FontSize exposing (getFontSize, FontSize(..))
 
 main : Program Flags Model Msg
 main =
@@ -276,13 +277,15 @@ layOutOptions =
    } 
 
 --layOutAttributes = [ELE.width ELE.fill, ELE.height ELE.fill]
-layOutAttributes = 
+layOutAttributes width = 
                   -- [ ELE.width ELE.fill
                    [ ELE.height ELE.fill
                    , Background.color <| ELE.rgb 0.2 0.2 0.2
                    , ELE.padding 30
-                   , Font.size 18
+                   --, Font.size 18
+                   , Font.size (getFontSize Normal width)
                    ]
+
 
 displayColumn svgHtml =
    ELE.column
@@ -303,67 +306,67 @@ viewbody model =
       Isomorphic shapeTransition ->
          ELE.layoutWith 
             layOutOptions
-            layOutAttributes
+            (layOutAttributes model.width)
             ( ELE.row
                   [ELE.width ELE.fill
                   ]
 
                   [ displayColumn (paneOne shapeTransition.graphA shapeTransition.graphB)
-                  , explanationOne shapeTransition model.helpStatus
+                  , explanationOne shapeTransition model.helpStatus model.width
                   ]
             )
 
       MaxCut maxCutTrans ->
          ELE.layoutWith 
             layOutOptions
-            layOutAttributes
+            (layOutAttributes model.width)
             ( ELE.row
                   [ ELE.width ELE.fill]
 
                   [ displayColumn (paneTwo maxCutTrans) 
-                  , explanationTwo maxCutTrans model.helpStatus
+                  , explanationTwo maxCutTrans model.helpStatus model.width
                   ]
             )
 
       GraphColoring display ->
          ELE.layoutWith 
             layOutOptions
-            layOutAttributes
+            (layOutAttributes model.width)
             ( ELE.row
                   [ ELE.width ELE.fill]
 
                   [ displayColumn (paneThree display) 
-                  , explanationColoring display model.helpStatus
+                  , explanationColoring display model.helpStatus model.width
                   ]
             )
 
       VertexCover display ->
          ELE.layoutWith 
             layOutOptions
-            layOutAttributes
+            (layOutAttributes model.width)
             ( ELE.row
                   [ ELE.width ELE.fill]
 
                   [ displayColumn (paneFour display) 
-                  , explanationCover display model.helpStatus
+                  , explanationCover display model.helpStatus model.width
                   ]
             )
 
       TreeWidth display ->
          ELE.layoutWith 
             layOutOptions
-            layOutAttributes
+            (layOutAttributes model.width)
             ( ELE.row
                   [ ELE.width ELE.fill]
 
                   [ displayColumn (paneTree display) 
-                  , explanationWidth display model.helpStatus
+                  , explanationWidth display model.helpStatus model.width
                   ]
             )
       HomePage ->
          ELE.layoutWith 
             layOutOptions
-            layOutAttributes
+            (layOutAttributes model.width)
             ( ELE.column
                [ ELE.centerX
                , ELE.centerY
@@ -387,7 +390,7 @@ viewbody model =
       ScreenSize ->
          ELE.layoutWith 
             layOutOptions
-            layOutAttributes
+            (layOutAttributes model.width)
             ( ELE.el
                   [ ELE.width ELE.fill]
                   ( ELE.text <| String.fromInt model.width

@@ -17,6 +17,7 @@ import Color exposing (Color)
 import Svg as S
 import Svg.Attributes as SA exposing (..)
 import Svg.Events as SE exposing (..)
+import FontSize exposing (getFontSize, FontSize(..))
 
 type alias ColorDisplay =
    { graphA : Graph
@@ -72,8 +73,8 @@ makeSquare pos size color =
 paneThree display =
    Graph.displaySvg ((drawGraphForColoring display.graphA) ++ (colorPallete display))
 
-explanationColoring : ColorDisplay -> Bool -> ELE.Element Msg
-explanationColoring colorDisp helpStatus =
+explanationColoring : ColorDisplay -> Bool -> Int -> ELE.Element Msg
+explanationColoring colorDisp helpStatus width =
     let
       verticesOfSameColor edge =
          edge.vertexOne.color == edge.vertexTwo.color 
@@ -92,12 +93,12 @@ explanationColoring colorDisp helpStatus =
          , ELE.spacing 20
          --, ELE.padding 40
          , ELE.height ELE.fill
-         , ELE.width ELE.fill
          , Background.color <| ELE.rgb 0.2 0.2 0.2
+         , ELE.width (ELE.fill |> ELE.maximum (width//2))
          ]
          <|
          [  ELE.el
-               [Font.size 30, Font.heavy] 
+               [Font.size (getFontSize Head width), Font.heavy]
                (ELE.text "Graph Coloring")
          ,  ELE.paragraph
                [ ELE.spacing 8 ] 

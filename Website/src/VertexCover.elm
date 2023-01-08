@@ -17,6 +17,7 @@ import Color exposing (Color)
 import Svg as S
 import Svg.Attributes as SA exposing (..)
 import Svg.Events as SE exposing (..)
+import FontSize exposing (getFontSize, FontSize(..))
 
 type alias VertexCoverDisplay =
    { graphA : Graph
@@ -49,8 +50,8 @@ goCover display msg =
        _ ->
             display
 
-explanationCover : VertexCoverDisplay -> Bool -> ELE.Element Msg
-explanationCover display helpStatus =
+explanationCover : VertexCoverDisplay -> Bool -> Int -> ELE.Element Msg
+explanationCover display helpStatus width =
     let
         selected_vertices =
             List.filter (\ver -> ver.glow) display.graphA.vertices
@@ -79,12 +80,12 @@ explanationCover display helpStatus =
          [ Font.color (ELE.rgb 1 1 1)
          , ELE.spacing 20
          , ELE.height ELE.fill
-         , ELE.width ELE.fill
+         , ELE.width (ELE.fill |> ELE.maximum (width//2))
          , Background.color <| ELE.rgb 0.2 0.2 0.2
          ]
          <|
          [  ELE.el
-               [Font.size 30, Font.heavy] 
+               [Font.size (getFontSize Head width), Font.heavy] 
                (ELE.text "Vertex Cover")
 
          ,  ELE.paragraph
