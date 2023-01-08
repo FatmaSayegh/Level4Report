@@ -30,7 +30,8 @@ type Msg
     | GotoColoring
     | GotoCover
     | GotoTreeWidth
-    | GoToSize
+    | GotoSize
+    | GotoAbout
     | LinkClicked Browser.UrlRequest
     | UrlChanged Url.Url
     | Other

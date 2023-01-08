@@ -37,6 +37,7 @@ import VertexCover exposing (VertexCoverDisplay, paneFour, explanationCover, ver
 import TreeWidth exposing (TreeWidthDisplay, paneTree, explanationWidth, treeWidthDisplay, goTree)
 import Graph exposing (ShapeTransition)
 import FontSize exposing (getFontSize, FontSize(..))
+import Buttons exposing(homeButton, aboutButton)
 
 main : Program Flags Model Msg
 main =
@@ -81,6 +82,7 @@ type Topic =
    | VertexCover VertexCoverDisplay
    | TreeWidth TreeWidthDisplay
    | HomePage
+   | About
    | ScreenSize
 
 --type TopicName
@@ -140,7 +142,9 @@ keyToMsg value =
                      'c' ->
                          GotoHome
                      's' ->
-                         GoToSize
+                         GotoSize
+                     'a' ->
+                         GotoAbout
                      _ ->
                          Other
         _ ->
@@ -211,8 +215,11 @@ update msg model =
                    Nav.pushUrl model.key "/vertexcover"
              GotoTreeWidth ->
                    Nav.pushUrl model.key "/treewidth"
-             GoToSize ->
+             GotoSize ->
                    Nav.pushUrl model.key "/size"
+             GotoAbout ->
+                   Nav.pushUrl model.key "/about"
+
 
              NextTopic ->
                 case topic of
@@ -270,6 +277,8 @@ getTopic url =
          HomePage
       "/size" ->
          ScreenSize
+      "/about" ->
+         About
       _ ->
          HomePage
 
@@ -310,72 +319,73 @@ view model =
    }
 
 viewbody model =
+   ELE.layoutWith
+      layOutOptions
+      (layOutAttributes model.width)
+      ( ELE.column
+         [ ELE.width ELE.fill
+         , ELE.height ELE.fill
+         ]
+         [ headerOfPage model.height
+         , viewTopic model
+         ]
+      )
+
+headerOfPage height =
+   ELE.row
+      [ ELE.width ELE.fill
+      , ELE.height (ELE.fill |> ELE.maximum (height//22))
+      , Background.color (ELE.rgb 0.2 0.2 0.2)
+      ]
+      [ ELE.el [ELE.padding 20] (homeButton (height//27))
+      , ELE.el [ELE.padding 20] (aboutButton (height//27))
+      ]
+
+
+viewTopic model =
    case model.topic of
       Isomorphic shapeTransition ->
-         ELE.layoutWith 
-            layOutOptions
-            (layOutAttributes model.width)
-            ( ELE.row
+            ELE.row
                   [ELE.width ELE.fill
                   ]
 
                   [ displayColumn (paneOne shapeTransition.graphA shapeTransition.graphB)
                   , explanationOne shapeTransition model.helpStatus model.width
                   ]
-            )
 
       MaxCut maxCutTrans ->
-         ELE.layoutWith 
-            layOutOptions
-            (layOutAttributes model.width)
-            ( ELE.row
+            ELE.row
                   [ ELE.width ELE.fill]
 
                   [ displayColumn (paneTwo maxCutTrans) 
                   , explanationTwo maxCutTrans model.helpStatus model.width
                   ]
-            )
 
       GraphColoring display ->
-         ELE.layoutWith 
-            layOutOptions
-            (layOutAttributes model.width)
-            ( ELE.row
+            ELE.row
                   [ ELE.width ELE.fill]
 
                   [ displayColumn (paneThree display) 
                   , explanationColoring display model.helpStatus model.width
                   ]
-            )
 
       VertexCover display ->
-         ELE.layoutWith 
-            layOutOptions
-            (layOutAttributes model.width)
-            ( ELE.row
+            ELE.row
                   [ ELE.width ELE.fill]
 
                   [ displayColumn (paneFour display) 
                   , explanationCover display model.helpStatus model.width
                   ]
-            )
 
       TreeWidth display ->
-         ELE.layoutWith 
-            layOutOptions
-            (layOutAttributes model.width)
-            ( ELE.row
+            ELE.row
                   [ ELE.width ELE.fill]
 
                   [ displayColumn (paneTree display) 
                   , explanationWidth display model.helpStatus model.width
                   ]
-            )
       HomePage ->
-         ELE.layoutWith 
-            layOutOptions
-            (layOutAttributes model.width)
-            ( ELE.column
+            ELE.column
                [ ELE.centerX
                , ELE.centerY
                , Font.color <| ELE.rgb 1 1 1
@@ -394,19 +404,26 @@ viewbody model =
                         , GotoCover
                         , GotoTreeWidth
                         ]
-            )
 
       ScreenSize ->
-         ELE.layoutWith 
-            layOutOptions
-            (layOutAttributes model.width)
-            ( ELE.el
+            ELE.el
                   [ ELE.width ELE.fill]
                   ( ELE.text <| String.fromInt model.width
                                ++ " x " ++ String.fromInt model.height
                   )
 
-            )
+      About ->
+            ELE.column
+               [ ELE.centerX
+               , ELE.centerY
+               , Font.color <| ELE.rgb 1 1 1
+               , Font.heavy
+               , ELE.spacingXY 10 15
+               ]
+               <|[ ELE.paragraph [ 
+                          ] 
+                          [(ELE.text "Hi I am Fatma! How are you doing!")]
+                 ]
 
 
 makeTopicIcon : Msg -> ELE.Element Msg

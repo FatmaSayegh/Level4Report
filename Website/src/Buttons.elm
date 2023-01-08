@@ -95,6 +95,33 @@ playButton animationOn =
     in
     buttonWrap "Play/Pause" theButton
 
+homeButton : Int -> ELE.Element Msg
+homeButton size =
+   let
+      theButton =
+         Input.button
+            [ELE.centerX, Font.color (ELE.rgb 0.8 0.8 0.8)]
+            {  onPress = Just GotoHome  
+            ,  label =  
+                       Icons.homeOutlined [ Ant.width size, Ant.height size ]
+            }
+
+    in
+    buttonWrap "Home/Contents" theButton
+
+aboutButton : Int -> ELE.Element Msg
+aboutButton size =
+   let
+      theButton =
+         Input.button
+            [ELE.centerX, Font.color (ELE.rgb 0.8 0.8 0.8)]
+            {  onPress = Just GotoAbout  
+            ,  label =  
+                       ELE.el [Font.size size] (ELE.text "A")
+            }
+
+    in
+    buttonWrap "About" theButton
 
 resetButton : ELE.Element Msg
 resetButton =
