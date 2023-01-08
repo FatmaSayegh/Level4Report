@@ -51,6 +51,7 @@ main =
 
 type alias Flags =
    { width : Int
+   , height : Int
    }
 
 init : Flags -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
@@ -58,6 +59,8 @@ init flags url key =
    ({ helpStatus = False
     , url = url
     , key = key
+    , width = flags.width
+    , height = flags.height
     , topic = getTopic url
     }, Cmd.none)
 
@@ -65,6 +68,8 @@ type alias Model =
    { helpStatus : Bool
    , key : Nav.Key
    , url : Url.Url
+   , width : Int
+   , height : Int
    , topic : Topic
    }
 
@@ -75,6 +80,7 @@ type Topic =
    | VertexCover VertexCoverDisplay
    | TreeWidth TreeWidthDisplay
    | HomePage
+   | ScreenSize
 
 
 
@@ -124,6 +130,8 @@ keyToMsg value =
                          ToggleHelpStatus
                      'c' ->
                          GotoHome
+                     's' ->
+                         GoToSize
                      _ ->
                          Other
         _ ->
@@ -162,6 +170,8 @@ update msg model =
                    TreeWidth ( goTree display msg)
                 HomePage ->
                    topic
+                _ ->
+                   topic
 
       helpStatus =
          case msg of
@@ -192,6 +202,8 @@ update msg model =
                    Nav.pushUrl model.key "/vertexcover"
              GotoTreeWidth ->
                    Nav.pushUrl model.key "/treewidth"
+             GoToSize ->
+                   Nav.pushUrl model.key "/size"
 
              NextTopic ->
                 case topic of
@@ -207,6 +219,9 @@ update msg model =
                      Nav.pushUrl model.key "/treewidth"
                    TreeWidth x ->
                      Nav.pushUrl model.key "/isomorphism"
+                   _ ->
+                     Nav.pushUrl model.key "/"
+                     
 
              PreviousTopic ->
                 case topic of
@@ -222,6 +237,8 @@ update msg model =
                      Nav.pushUrl model.key "/coloring"
                    HomePage ->
                      Cmd.none
+                   _ ->
+                     Nav.pushUrl model.key "/"
              _ ->
                Cmd.none
    in
@@ -242,6 +259,8 @@ getTopic url =
          TreeWidth treeWidthDisplay
       "/" ->
          HomePage
+      "/size" ->
+         ScreenSize
       _ ->
          HomePage
 
@@ -363,6 +382,18 @@ viewbody model =
                         , GotoCover
                         , GotoTreeWidth
                         ]
+            )
+
+      ScreenSize ->
+         ELE.layoutWith 
+            layOutOptions
+            layOutAttributes
+            ( ELE.el
+                  [ ELE.width ELE.fill]
+                  ( ELE.text <| String.fromInt model.width
+                               ++ " x " ++ String.fromInt model.height
+                  )
+
             )
 
 

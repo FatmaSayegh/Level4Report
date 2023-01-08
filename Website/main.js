@@ -6329,6 +6329,7 @@ var $author$project$Main$Isomorphic = function (a) {
 var $author$project$Main$MaxCut = function (a) {
 	return {$: 'MaxCut', a: a};
 };
+var $author$project$Main$ScreenSize = {$: 'ScreenSize'};
 var $author$project$Main$TreeWidth = function (a) {
 	return {$: 'TreeWidth', a: a};
 };
@@ -7259,6 +7260,8 @@ var $author$project$Main$getTopic = function (url) {
 			return $author$project$Main$TreeWidth($author$project$TreeWidth$treeWidthDisplay);
 		case '/':
 			return $author$project$Main$HomePage;
+		case '/size':
+			return $author$project$Main$ScreenSize;
 		default:
 			return $author$project$Main$HomePage;
 	}
@@ -7269,10 +7272,12 @@ var $author$project$Main$init = F3(
 	function (flags, url, key) {
 		return _Utils_Tuple2(
 			{
+				height: flags.height,
 				helpStatus: false,
 				key: key,
 				topic: $author$project$Main$getTopic(url),
-				url: url
+				url: url,
+				width: flags.width
 			},
 			$elm$core$Platform$Cmd$none);
 	});
@@ -7283,6 +7288,7 @@ var $author$project$Messages$TimeDelta = function (a) {
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $author$project$Messages$AnimationStartOver = {$: 'AnimationStartOver'};
 var $author$project$Messages$AnimationToggle = {$: 'AnimationToggle'};
+var $author$project$Messages$GoToSize = {$: 'GoToSize'};
 var $author$project$Messages$GotoHome = {$: 'GotoHome'};
 var $author$project$Messages$MaxCutLine = {$: 'MaxCutLine'};
 var $author$project$Messages$NextAnimation = {$: 'NextAnimation'};
@@ -7336,6 +7342,8 @@ var $author$project$Main$keyToMsg = function (value) {
 					return $author$project$Messages$ToggleHelpStatus;
 				case 'c':
 					return $author$project$Messages$GotoHome;
+				case 's':
+					return $author$project$Messages$GoToSize;
 				default:
 					return $author$project$Messages$Other;
 			}
@@ -8416,6 +8424,8 @@ var $author$project$Main$update = F2(
 						var display = topic.a;
 						return $author$project$Main$TreeWidth(
 							A2($author$project$TreeWidth$goTree, display, msg));
+					case 'HomePage':
+						return topic;
 					default:
 						return topic;
 				}
@@ -8457,6 +8467,8 @@ var $author$project$Main$update = F2(
 					return A2($elm$browser$Browser$Navigation$pushUrl, model.key, '/vertexcover');
 				case 'GotoTreeWidth':
 					return A2($elm$browser$Browser$Navigation$pushUrl, model.key, '/treewidth');
+				case 'GoToSize':
+					return A2($elm$browser$Browser$Navigation$pushUrl, model.key, '/size');
 				case 'NextTopic':
 					switch (topic.$) {
 						case 'HomePage':
@@ -8473,9 +8485,11 @@ var $author$project$Main$update = F2(
 						case 'VertexCover':
 							var x = topic.a;
 							return A2($elm$browser$Browser$Navigation$pushUrl, model.key, '/treewidth');
-						default:
+						case 'TreeWidth':
 							var x = topic.a;
 							return A2($elm$browser$Browser$Navigation$pushUrl, model.key, '/isomorphism');
+						default:
+							return A2($elm$browser$Browser$Navigation$pushUrl, model.key, '/');
 					}
 				case 'PreviousTopic':
 					switch (topic.$) {
@@ -8494,8 +8508,10 @@ var $author$project$Main$update = F2(
 						case 'VertexCover':
 							var x = topic.a;
 							return A2($elm$browser$Browser$Navigation$pushUrl, model.key, '/coloring');
-						default:
+						case 'HomePage':
 							return $elm$core$Platform$Cmd$none;
+						default:
+							return A2($elm$browser$Browser$Navigation$pushUrl, model.key, '/');
 					}
 				default:
 					return $elm$core$Platform$Cmd$none;
@@ -17338,7 +17354,7 @@ var $author$project$Main$viewbody = function (model) {
 							$author$project$TreeWidth$paneTree(display)),
 							A2($author$project$TreeWidth$explanationWidth, display, model.helpStatus)
 						])));
-		default:
+		case 'HomePage':
 			return A3(
 				$mdgriffith$elm_ui$Element$layoutWith,
 				$author$project$Main$layOutOptions,
@@ -17370,6 +17386,19 @@ var $author$project$Main$viewbody = function (model) {
 							$author$project$Main$makeTopicIcon,
 							_List_fromArray(
 								[$author$project$Messages$GotoIsomorphism, $author$project$Messages$GotoMaxkCut, $author$project$Messages$GotoColoring, $author$project$Messages$GotoCover, $author$project$Messages$GotoTreeWidth])))));
+		default:
+			return A3(
+				$mdgriffith$elm_ui$Element$layoutWith,
+				$author$project$Main$layOutOptions,
+				$author$project$Main$layOutAttributes,
+				A2(
+					$mdgriffith$elm_ui$Element$el,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+						]),
+					$mdgriffith$elm_ui$Element$text(
+						$elm$core$String$fromInt(model.width) + (' x ' + $elm$core$String$fromInt(model.height)))));
 	}
 };
 var $author$project$Main$view = function (model) {
@@ -17387,7 +17416,12 @@ _Platform_export({'Main':{'init':$author$project$Main$main(
 	A2(
 		$elm$json$Json$Decode$andThen,
 		function (width) {
-			return $elm$json$Json$Decode$succeed(
-				{width: width});
+			return A2(
+				$elm$json$Json$Decode$andThen,
+				function (height) {
+					return $elm$json$Json$Decode$succeed(
+						{height: height, width: width});
+				},
+				A2($elm$json$Json$Decode$field, 'height', $elm$json$Json$Decode$int));
 		},
 		A2($elm$json$Json$Decode$field, 'width', $elm$json$Json$Decode$int)))(0)}});}(this));
