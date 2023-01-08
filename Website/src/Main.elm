@@ -83,7 +83,15 @@ type Topic =
    | HomePage
    | ScreenSize
 
-
+--type TopicName
+--   = Iso
+--   | Max
+--   | Color
+--   | Cover
+--   | Tree
+--
+--type alias HomeState =
+--   { topic : TopicName }
 
 
 subscription : Model -> Sub Msg
@@ -372,6 +380,7 @@ viewbody model =
                , ELE.centerY
                , Font.color <| ELE.rgb 1 1 1
                , Font.heavy
+               , ELE.spacingXY 10 15
                ]
                <|[ ELE.el [ Font.size 50
                           , ELE.paddingXY 5 20
@@ -420,7 +429,11 @@ makeTopicIcon topicMsg =
    in
    ELE.el [ Events.onClick topicMsg
           , ELE.pointer
-          , ELE.padding 13
+          , ELE.paddingXY 13 15
+          , Border.solid
+          , Border.width 2
+          , Border.rounded 15
+          , ELE.width (ELE.fill |> ELE.maximum 230)
           ] 
           (ELE.text tex)
 

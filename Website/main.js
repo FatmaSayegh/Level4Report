@@ -16291,6 +16291,24 @@ var $mdgriffith$elm_ui$Element$layoutWith = F3(
 				_Utils_ap($mdgriffith$elm_ui$Internal$Model$rootStyle, attrs)),
 			child);
 	});
+var $mdgriffith$elm_ui$Internal$Flag$borderStyle = $mdgriffith$elm_ui$Internal$Flag$flag(11);
+var $mdgriffith$elm_ui$Element$Border$solid = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$borderStyle, $mdgriffith$elm_ui$Internal$Style$classes.borderSolid);
+var $mdgriffith$elm_ui$Internal$Model$BorderWidth = F5(
+	function (a, b, c, d, e) {
+		return {$: 'BorderWidth', a: a, b: b, c: c, d: d, e: e};
+	});
+var $mdgriffith$elm_ui$Element$Border$width = function (v) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$borderWidth,
+		A5(
+			$mdgriffith$elm_ui$Internal$Model$BorderWidth,
+			'b-' + $elm$core$String$fromInt(v),
+			v,
+			v,
+			v,
+			v));
+};
 var $author$project$Main$makeTopicIcon = function (topicMsg) {
 	var tex = function () {
 		switch (topicMsg.$) {
@@ -16314,7 +16332,12 @@ var $author$project$Main$makeTopicIcon = function (topicMsg) {
 			[
 				$mdgriffith$elm_ui$Element$Events$onClick(topicMsg),
 				$mdgriffith$elm_ui$Element$pointer,
-				$mdgriffith$elm_ui$Element$padding(13)
+				A2($mdgriffith$elm_ui$Element$paddingXY, 13, 15),
+				$mdgriffith$elm_ui$Element$Border$solid,
+				$mdgriffith$elm_ui$Element$Border$width(2),
+				$mdgriffith$elm_ui$Element$Border$rounded(15),
+				$mdgriffith$elm_ui$Element$width(
+				A2($mdgriffith$elm_ui$Element$maximum, 230, $mdgriffith$elm_ui$Element$fill))
 			]),
 		$mdgriffith$elm_ui$Element$text(tex));
 };
@@ -17290,6 +17313,17 @@ var $author$project$MaxkCut$paneTwo = function (maxCutTrans) {
 		return $author$project$MaxkCut$paneTwoB(maxCutTrans.transitionB);
 	}
 };
+var $mdgriffith$elm_ui$Element$spacingXY = F2(
+	function (x, y) {
+		return A2(
+			$mdgriffith$elm_ui$Internal$Model$StyleClass,
+			$mdgriffith$elm_ui$Internal$Flag$spacing,
+			A3(
+				$mdgriffith$elm_ui$Internal$Model$SpacingStyle,
+				A2($mdgriffith$elm_ui$Internal$Model$spacingName, x, y),
+				x,
+				y));
+	});
 var $author$project$Main$viewbody = function (model) {
 	var _v0 = model.topic;
 	switch (_v0.$) {
@@ -17396,7 +17430,8 @@ var $author$project$Main$viewbody = function (model) {
 							$mdgriffith$elm_ui$Element$centerY,
 							$mdgriffith$elm_ui$Element$Font$color(
 							A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
-							$mdgriffith$elm_ui$Element$Font$heavy
+							$mdgriffith$elm_ui$Element$Font$heavy,
+							A2($mdgriffith$elm_ui$Element$spacingXY, 10, 15)
 						]),
 					_Utils_ap(
 						_List_fromArray(
