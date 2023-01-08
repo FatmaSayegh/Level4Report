@@ -13,6 +13,7 @@ import Html as H exposing (div, h1, p, text)
 import Element.Input as Input
 import Ant.Icon as Ant
 import Ant.Icons as Icons
+import FontSize exposing (getFontSize, FontSize(..))
 
 type alias MaxCutTransition =
     { transitionA : ShapeTransition -- Will remain static
@@ -145,8 +146,8 @@ threeCutGeometry =
       in
       (Graph vertices edges, modifiedGrid)
 
-explanationTwo : MaxCutTransition -> Bool -> ELE.Element Msg
-explanationTwo maxCut helpStatus =
+explanationTwo : MaxCutTransition -> Bool -> Int -> ELE.Element Msg
+explanationTwo maxCut helpStatus width =
       let 
          shapeTransition =
             case maxCut.state of
@@ -202,12 +203,11 @@ explanationTwo maxCut helpStatus =
          , ELE.spacing 20
          --, ELE.padding 40
          , Background.color <| ELE.rgb 0.2 0.2 0.2
-         , ELE.height ELE.fill
-         , ELE.width ELE.fill
+         , ELE.width (ELE.fill |> ELE.maximum (width//2))
          ]
          <|
          [  ELE.el
-               [Font.size 30, Font.heavy] 
+               [Font.size (getFontSize Head width), Font.heavy] 
                (ELE.text "Max Cut")
          ,  ELE.paragraph
                [ELE.spacing 8] 

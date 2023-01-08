@@ -14119,7 +14119,16 @@ var $mdgriffith$elm_ui$Element$el = F2(
 					[child])));
 	});
 var $author$project$Buttons$GraphColoringHelp = {$: 'GraphColoringHelp'};
+var $author$project$FontSize$Head = {$: 'Head'};
 var $author$project$Explanation$coloringExplanation = '\n   The graph coloring problems objective is to assign colors to the vertices of a graph such that no to adjacent\n   vertices have the same color such that the number of colors utilized are kept at minimum.\n   The graph shown in the picture, needs three colors to color it properly.\n   ';
+var $author$project$FontSize$getFontSize = F2(
+	function (f, width) {
+		if (f.$ === 'Head') {
+			return (width > 1800) ? 30 : ((width > 1500) ? 25 : ((width > 1100) ? 20 : ((width > 800) ? 18 : 15)));
+		} else {
+			return (width > 1800) ? 18 : ((width > 1500) ? 17 : ((width > 1100) ? 16 : ((width > 800) ? 15 : 14)));
+		}
+	});
 var $mdgriffith$elm_ui$Internal$Model$Class = F2(
 	function (a, b) {
 		return {$: 'Class', a: a, b: b};
@@ -14922,6 +14931,14 @@ var $author$project$Buttons$lowerNavigation = F2(
 					})
 				]));
 	});
+var $mdgriffith$elm_ui$Internal$Model$Max = F2(
+	function (a, b) {
+		return {$: 'Max', a: a, b: b};
+	});
+var $mdgriffith$elm_ui$Element$maximum = F2(
+	function (i, l) {
+		return A2($mdgriffith$elm_ui$Internal$Model$Max, i, l);
+	});
 var $author$project$GraphColoring$miscolorText = function (e) {
 	return 'Vertex ' + ($elm$core$String$fromInt(e.vertexOne.name) + (' and vertex ' + ($elm$core$String$fromInt(e.vertexTwo.name) + ' which are adjacent to each other are colored with the same color.')));
 };
@@ -15008,8 +15025,8 @@ var $author$project$Buttons$unColorButton = A2(
 					])),
 			onPress: $elm$core$Maybe$Just($author$project$Messages$VertexNonColor)
 		}));
-var $author$project$GraphColoring$explanationColoring = F2(
-	function (colorDisp, helpStatus) {
+var $author$project$GraphColoring$explanationColoring = F3(
+	function (colorDisp, helpStatus, width) {
 		var verticesOfSameColor = function (edge) {
 			return _Utils_eq(edge.vertexOne.color, edge.vertexTwo.color) && (!_Utils_eq(
 				edge.vertexOne.color,
@@ -15037,9 +15054,10 @@ var $author$project$GraphColoring$explanationColoring = F2(
 					A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
 					$mdgriffith$elm_ui$Element$spacing(20),
 					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
 					$mdgriffith$elm_ui$Element$Background$color(
-					A3($mdgriffith$elm_ui$Element$rgb, 0.2, 0.2, 0.2))
+					A3($mdgriffith$elm_ui$Element$rgb, 0.2, 0.2, 0.2)),
+					$mdgriffith$elm_ui$Element$width(
+					A2($mdgriffith$elm_ui$Element$maximum, (width / 2) | 0, $mdgriffith$elm_ui$Element$fill))
 				]),
 			_List_fromArray(
 				[
@@ -15047,7 +15065,8 @@ var $author$project$GraphColoring$explanationColoring = F2(
 					$mdgriffith$elm_ui$Element$el,
 					_List_fromArray(
 						[
-							$mdgriffith$elm_ui$Element$Font$size(30),
+							$mdgriffith$elm_ui$Element$Font$size(
+							A2($author$project$FontSize$getFontSize, $author$project$FontSize$Head, width)),
 							$mdgriffith$elm_ui$Element$Font$heavy
 						]),
 					$mdgriffith$elm_ui$Element$text('Graph Coloring')),
@@ -15189,8 +15208,8 @@ var $author$project$Graph$seperateEdges = function (g) {
 	return _Utils_Tuple2(specialEdges, normalEdges);
 };
 var $author$project$Explanation$vertexCoverExplanation = '\n   Minimum Vertex cover of a graph is the minimum amount of vertices such that,\n   all the edges in the graph must have one of such vertices as at least one of\n   their endpoints.\n   ';
-var $author$project$VertexCover$explanationCover = F2(
-	function (display, helpStatus) {
+var $author$project$VertexCover$explanationCover = F3(
+	function (display, helpStatus, width) {
 		var totalVertices = $elm$core$List$length(display.graphA.vertices);
 		var totalEdges = $elm$core$List$length(display.graphA.edges);
 		var selected_vertices = A2(
@@ -15212,7 +15231,8 @@ var $author$project$VertexCover$explanationCover = F2(
 					A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
 					$mdgriffith$elm_ui$Element$spacing(20),
 					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+					$mdgriffith$elm_ui$Element$width(
+					A2($mdgriffith$elm_ui$Element$maximum, (width / 2) | 0, $mdgriffith$elm_ui$Element$fill)),
 					$mdgriffith$elm_ui$Element$Background$color(
 					A3($mdgriffith$elm_ui$Element$rgb, 0.2, 0.2, 0.2))
 				]),
@@ -15222,7 +15242,8 @@ var $author$project$VertexCover$explanationCover = F2(
 					$mdgriffith$elm_ui$Element$el,
 					_List_fromArray(
 						[
-							$mdgriffith$elm_ui$Element$Font$size(30),
+							$mdgriffith$elm_ui$Element$Font$size(
+							A2($author$project$FontSize$getFontSize, $author$project$FontSize$Head, width)),
 							$mdgriffith$elm_ui$Element$Font$heavy
 						]),
 					$mdgriffith$elm_ui$Element$text('Vertex Cover')),
@@ -15540,8 +15561,8 @@ var $author$project$Isomorphism$mediaButtons = function (shapeTransition) {
 				$author$project$Buttons$resetButton
 			]));
 };
-var $author$project$Isomorphism$explanationOne = F2(
-	function (shapeTransition, helpStatus) {
+var $author$project$Isomorphism$explanationOne = F3(
+	function (shapeTransition, helpStatus, width) {
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
@@ -15552,8 +15573,8 @@ var $author$project$Isomorphism$explanationOne = F2(
 					$mdgriffith$elm_ui$Element$spacing(20),
 					$mdgriffith$elm_ui$Element$Background$color(
 					A3($mdgriffith$elm_ui$Element$rgb, 0.2, 0.2, 0.2)),
-					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+					$mdgriffith$elm_ui$Element$width(
+					A2($mdgriffith$elm_ui$Element$maximum, (width / 2) | 0, $mdgriffith$elm_ui$Element$fill))
 				]),
 			_Utils_ap(
 				_List_fromArray(
@@ -15562,7 +15583,8 @@ var $author$project$Isomorphism$explanationOne = F2(
 						$mdgriffith$elm_ui$Element$el,
 						_List_fromArray(
 							[
-								$mdgriffith$elm_ui$Element$Font$size(30),
+								$mdgriffith$elm_ui$Element$Font$size(
+								A2($author$project$FontSize$getFontSize, $author$project$FontSize$Head, width)),
 								$mdgriffith$elm_ui$Element$Font$heavy
 							]),
 						$mdgriffith$elm_ui$Element$text('Graph Isomorphism')),
@@ -15698,8 +15720,8 @@ var $lemol$ant_design_icons_elm$Ant$Icons$Svg$minusOutlined = $lemol$ant_design_
 var $lemol$ant_design_icons_elm_ui$Ant$Icons$minusOutlined = function (attrs) {
 	return A2($lemol$ant_design_icons_elm_ui$Ant$Icon$icon, attrs, $lemol$ant_design_icons_elm$Ant$Icons$Svg$minusOutlined);
 };
-var $author$project$MaxkCut$explanationTwo = F2(
-	function (maxCut, helpStatus) {
+var $author$project$MaxkCut$explanationTwo = F3(
+	function (maxCut, helpStatus, width) {
 		var twoCutLineExplanation = '\n            The Max cut line, seperates the two sets of vertices. The\n            intersection between the cut line and the edges are shown as blue\n            dots. As you should verify, they are 9 in number. This number is\n            equal to number of edges from the set of vertices at the top going\n            to the vertices at the bottom.\n            ';
 		var twoCutExplanation = '\n            In the animation, the vertices are being segregated into two sets,\n            such that the number of edges passing from vertices in one set to\n            the vertices in another set is more than any other way the vertices\n            of the graph could have been segregated.  In other words the\n            problem of max cut is to identify such partition of the vertices of\n            the graph that the above objective is satisfied.\n            ';
 		var threeCutLineExplanation = '\n            The three Max cut lines, seperates their respective sets from the\n            rest of the graph. The intersection between the cut lines and the\n            edges are shown as blue dots. As you should verify, they are 18 in\n            number for each set. This 3 cut is visually trivial as the graph\n            was tripartite.\n            ';
@@ -15723,8 +15745,8 @@ var $author$project$MaxkCut$explanationTwo = F2(
 					$mdgriffith$elm_ui$Element$spacing(20),
 					$mdgriffith$elm_ui$Element$Background$color(
 					A3($mdgriffith$elm_ui$Element$rgb, 0.2, 0.2, 0.2)),
-					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+					$mdgriffith$elm_ui$Element$width(
+					A2($mdgriffith$elm_ui$Element$maximum, (width / 2) | 0, $mdgriffith$elm_ui$Element$fill))
 				]),
 			_List_fromArray(
 				[
@@ -15732,7 +15754,8 @@ var $author$project$MaxkCut$explanationTwo = F2(
 					$mdgriffith$elm_ui$Element$el,
 					_List_fromArray(
 						[
-							$mdgriffith$elm_ui$Element$Font$size(30),
+							$mdgriffith$elm_ui$Element$Font$size(
+							A2($author$project$FontSize$getFontSize, $author$project$FontSize$Head, width)),
 							$mdgriffith$elm_ui$Element$Font$heavy
 						]),
 					$mdgriffith$elm_ui$Element$text('Max Cut')),
@@ -15939,8 +15962,8 @@ var $author$project$TreeWidth$treeWidthButtons = function (status) {
 	}
 };
 var $author$project$Explanation$treeWidthExplanation = '\n   Tree width can be seen a measure of tree-ness of a graph. It shows how well\n   a graph can be interpreted as a tree. This demonstration is broken into two parts.\n   The first part explains the concept of graph decomposition. The second part will\n   build upon the first to explain the definition of tree width more pricisely.\n   ';
-var $author$project$TreeWidth$explanationWidth = F2(
-	function (display, helpStatus) {
+var $author$project$TreeWidth$explanationWidth = F3(
+	function (display, helpStatus, width) {
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
@@ -15949,7 +15972,8 @@ var $author$project$TreeWidth$explanationWidth = F2(
 					A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
 					$mdgriffith$elm_ui$Element$spacing(20),
 					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+					$mdgriffith$elm_ui$Element$width(
+					A2($mdgriffith$elm_ui$Element$maximum, (width / 2) | 0, $mdgriffith$elm_ui$Element$fill)),
 					$mdgriffith$elm_ui$Element$Background$color(
 					A3($mdgriffith$elm_ui$Element$rgb, 0.2, 0.2, 0.2))
 				]),
@@ -15960,7 +15984,8 @@ var $author$project$TreeWidth$explanationWidth = F2(
 						$mdgriffith$elm_ui$Element$el,
 						_List_fromArray(
 							[
-								$mdgriffith$elm_ui$Element$Font$size(30),
+								$mdgriffith$elm_ui$Element$Font$size(
+								A2($author$project$FontSize$getFontSize, $author$project$FontSize$Head, width)),
 								$mdgriffith$elm_ui$Element$Font$heavy
 							]),
 						$mdgriffith$elm_ui$Element$text('Tree Width')),
@@ -15993,14 +16018,18 @@ var $author$project$TreeWidth$explanationWidth = F2(
 							A2($author$project$Buttons$lowerNavigation, 'Vertex Cover', 'Isomorphism')
 						]))));
 	});
-var $author$project$Main$layOutAttributes = _List_fromArray(
-	[
-		$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
-		$mdgriffith$elm_ui$Element$Background$color(
-		A3($mdgriffith$elm_ui$Element$rgb, 0.2, 0.2, 0.2)),
-		$mdgriffith$elm_ui$Element$padding(30),
-		$mdgriffith$elm_ui$Element$Font$size(18)
-	]);
+var $author$project$FontSize$Normal = {$: 'Normal'};
+var $author$project$Main$layOutAttributes = function (width) {
+	return _List_fromArray(
+		[
+			$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+			$mdgriffith$elm_ui$Element$Background$color(
+			A3($mdgriffith$elm_ui$Element$rgb, 0.2, 0.2, 0.2)),
+			$mdgriffith$elm_ui$Element$padding(30),
+			$mdgriffith$elm_ui$Element$Font$size(
+			A2($author$project$FontSize$getFontSize, $author$project$FontSize$Normal, width))
+		]);
+};
 var $mdgriffith$elm_ui$Internal$Model$FocusStyleOption = function (a) {
 	return {$: 'FocusStyleOption', a: a};
 };
@@ -17269,7 +17298,7 @@ var $author$project$Main$viewbody = function (model) {
 			return A3(
 				$mdgriffith$elm_ui$Element$layoutWith,
 				$author$project$Main$layOutOptions,
-				$author$project$Main$layOutAttributes,
+				$author$project$Main$layOutAttributes(model.width),
 				A2(
 					$mdgriffith$elm_ui$Element$row,
 					_List_fromArray(
@@ -17280,14 +17309,14 @@ var $author$project$Main$viewbody = function (model) {
 						[
 							$author$project$Main$displayColumn(
 							A2($author$project$Isomorphism$paneOne, shapeTransition.graphA, shapeTransition.graphB)),
-							A2($author$project$Isomorphism$explanationOne, shapeTransition, model.helpStatus)
+							A3($author$project$Isomorphism$explanationOne, shapeTransition, model.helpStatus, model.width)
 						])));
 		case 'MaxCut':
 			var maxCutTrans = _v0.a;
 			return A3(
 				$mdgriffith$elm_ui$Element$layoutWith,
 				$author$project$Main$layOutOptions,
-				$author$project$Main$layOutAttributes,
+				$author$project$Main$layOutAttributes(model.width),
 				A2(
 					$mdgriffith$elm_ui$Element$row,
 					_List_fromArray(
@@ -17298,14 +17327,14 @@ var $author$project$Main$viewbody = function (model) {
 						[
 							$author$project$Main$displayColumn(
 							$author$project$MaxkCut$paneTwo(maxCutTrans)),
-							A2($author$project$MaxkCut$explanationTwo, maxCutTrans, model.helpStatus)
+							A3($author$project$MaxkCut$explanationTwo, maxCutTrans, model.helpStatus, model.width)
 						])));
 		case 'GraphColoring':
 			var display = _v0.a;
 			return A3(
 				$mdgriffith$elm_ui$Element$layoutWith,
 				$author$project$Main$layOutOptions,
-				$author$project$Main$layOutAttributes,
+				$author$project$Main$layOutAttributes(model.width),
 				A2(
 					$mdgriffith$elm_ui$Element$row,
 					_List_fromArray(
@@ -17316,14 +17345,14 @@ var $author$project$Main$viewbody = function (model) {
 						[
 							$author$project$Main$displayColumn(
 							$author$project$GraphColoring$paneThree(display)),
-							A2($author$project$GraphColoring$explanationColoring, display, model.helpStatus)
+							A3($author$project$GraphColoring$explanationColoring, display, model.helpStatus, model.width)
 						])));
 		case 'VertexCover':
 			var display = _v0.a;
 			return A3(
 				$mdgriffith$elm_ui$Element$layoutWith,
 				$author$project$Main$layOutOptions,
-				$author$project$Main$layOutAttributes,
+				$author$project$Main$layOutAttributes(model.width),
 				A2(
 					$mdgriffith$elm_ui$Element$row,
 					_List_fromArray(
@@ -17334,14 +17363,14 @@ var $author$project$Main$viewbody = function (model) {
 						[
 							$author$project$Main$displayColumn(
 							$author$project$VertexCover$paneFour(display)),
-							A2($author$project$VertexCover$explanationCover, display, model.helpStatus)
+							A3($author$project$VertexCover$explanationCover, display, model.helpStatus, model.width)
 						])));
 		case 'TreeWidth':
 			var display = _v0.a;
 			return A3(
 				$mdgriffith$elm_ui$Element$layoutWith,
 				$author$project$Main$layOutOptions,
-				$author$project$Main$layOutAttributes,
+				$author$project$Main$layOutAttributes(model.width),
 				A2(
 					$mdgriffith$elm_ui$Element$row,
 					_List_fromArray(
@@ -17352,13 +17381,13 @@ var $author$project$Main$viewbody = function (model) {
 						[
 							$author$project$Main$displayColumn(
 							$author$project$TreeWidth$paneTree(display)),
-							A2($author$project$TreeWidth$explanationWidth, display, model.helpStatus)
+							A3($author$project$TreeWidth$explanationWidth, display, model.helpStatus, model.width)
 						])));
 		case 'HomePage':
 			return A3(
 				$mdgriffith$elm_ui$Element$layoutWith,
 				$author$project$Main$layOutOptions,
-				$author$project$Main$layOutAttributes,
+				$author$project$Main$layOutAttributes(model.width),
 				A2(
 					$mdgriffith$elm_ui$Element$column,
 					_List_fromArray(
@@ -17390,7 +17419,7 @@ var $author$project$Main$viewbody = function (model) {
 			return A3(
 				$mdgriffith$elm_ui$Element$layoutWith,
 				$author$project$Main$layOutOptions,
-				$author$project$Main$layOutAttributes,
+				$author$project$Main$layOutAttributes(model.width),
 				A2(
 					$mdgriffith$elm_ui$Element$el,
 					_List_fromArray(

@@ -10,6 +10,7 @@ import Explanation exposing (..)
 import Buttons exposing (..)
 import String.Format
 import Html as H exposing (div, h1, p, text)
+import FontSize exposing (getFontSize, FontSize(..))
 
 
 
@@ -173,20 +174,23 @@ starGrid =
    in
    List.map (\(x,y) -> y) (List.sortWith (\t1 t2 -> compare (Tuple.first t1) (Tuple.first t2)) positionsTupled)
 
-explanationOne : ShapeTransition -> Bool -> ELE.Element Msg
-explanationOne shapeTransition helpStatus =
+
+
+explanationOne : ShapeTransition -> Bool -> Int -> ELE.Element Msg
+explanationOne shapeTransition helpStatus width =
       ELE.column
          [ Font.color (ELE.rgb 1 1 1)
          , ELE.height ELE.fill
          , ELE.spacing 20
          --, ELE.padding 40
          , Background.color <| ELE.rgb 0.2 0.2 0.2
-         , ELE.height ELE.fill
-         , ELE.width ELE.fill
+         , ELE.width (ELE.fill |> ELE.maximum (width//2))
+         --, ELE.height ELE.fill
+         --, ELE.width ELE.fill
          ]
          <|
          [  ELE.el
-               [Font.size 30, Font.heavy] 
+               [Font.size (getFontSize Head width), Font.heavy]
                (ELE.text "Graph Isomorphism")
          ,  ELE.paragraph
                [ELE.spacing 8] 
