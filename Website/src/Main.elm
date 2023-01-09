@@ -413,17 +413,81 @@ viewTopic model =
                   )
 
       About ->
-            ELE.column
-               [ ELE.centerX
-               , ELE.centerY
-               , Font.color <| ELE.rgb 1 1 1
-               , Font.heavy
-               , ELE.spacingXY 10 15
+            let
+               width = model.width//3
+               height = model.height//4
+            in
+            ELE.row
+               [ Border.rounded 40
+               , Border.color (ELE.rgb 1 1 1)
                ]
-               <|[ ELE.paragraph [ 
+               [ introFatma width (height)
+               , dummyFragment (model.width - width) height
+               ]
+         
+
+dummyFragment width height =
+      ELE.column
+         [ Font.color <| ELE.rgb 1 1 1
+         , Font.heavy
+         , ELE.spacingXY 10 15
+         --, ELE.paddingXY 30 50
+         , ELE.width (ELE.fill |> ELE.maximum (width - 1))
+         , ELE.height (ELE.fill |> ELE.minimum (height))
+         , Border.rounded 20
+         , ELE.alignRight
+         , Border.width 5
+         , Border.color (ELE.rgb 0.7 0.6 0.6)
+         ]
+         [ ELE.el 
+               [ Border.rounded 200
+               ]
+               (ELE.image [ ELE.width (ELE.fill |> ELE.maximum 400)
                           ] 
-                          [(ELE.text "Hi I am Fatma! How are you doing!")]
-                 ]
+                     { src = "images/fatma.jpeg" 
+                     , description = ""
+                     }
+               )
+         ]
+
+introFatma width height =
+      let
+         fatmasIntro =
+            """
+            I am a third year Software Engineering student in University
+            of Glasgow. This web app was build for the as my final year
+            project. My intrests are maths and functional programming.
+            """
+            
+      in
+      ELE.column
+         [ Font.color <| ELE.rgb 1 1 1
+         , Font.heavy
+         , ELE.spacingXY 10 15
+         , ELE.paddingXY 30 50
+         , ELE.width (ELE.fill |> ELE.maximum (width))
+         , ELE.height (ELE.fill |> ELE.minimum (height))
+         , Border.rounded 10
+         , ELE.alignLeft
+         ]
+         <| [ ELE.el [ Font.size 30]
+                  (ELE.text "Fatma Alsayegh")
+            , ELE.paragraph [
+                            ] 
+                           [ ELE.el 
+                                     [
+                                     ]  
+                                     (ELE.text "Hi I am ")
+                           , ELE.el 
+                                     [ Font.color <| ELE.rgb 0.5 0.9 0.7
+                                     , Font.size 25
+                                     ]
+                                     (ELE.text "Fatma! ")
+                           , ELE.el 
+                                     []
+                                     (ELE.text fatmasIntro)
+                           ]
+            ]
 
 
 makeTopicIcon : Msg -> ELE.Element Msg
