@@ -18,7 +18,24 @@ import Color exposing (Color)
 import Svg as S
 import Svg.Attributes as SA exposing (..)
 import Svg.Events as SE exposing (..)
-import FontSize exposing (getFontSize, FontSize(..))
+import FontSize exposing
+               ( getFontSize
+               , FontSize(..)
+               , FontColor(..)
+               , giveFontColor
+               , emph
+               )
+
+miniTreeWidth = 
+      let
+         graph =
+            treeWidthDisplay.graph
+         grid =
+            treeWidthDisplay.gridHoneyComb
+      in
+      Graph.morphGraph graph grid
+      |> Graph.drawGraph
+      |> Graph.displaySvg
 
 explanationWidth : TreeWidthDisplay -> Bool -> Int -> ELE.Element Msg
 explanationWidth display helpStatus width =
@@ -64,72 +81,186 @@ storyTreeWidth status helpStatus =
          (\l ->
             ELE.paragraph
                [ ELE.spacing 8 ]
-               [ ELE.text l ]
+               l
          )
 
       firstComment =
-               """
-               The graph on the left seems very un-tree like.
-               Lets morph it to another shape. Press forward button
-               above to make it look a little different. 
-               """
+               [ ELE.text
+                  """
+                  The graph on the left seems very 
+                  """
+               , emph CuteGreen
+                  """
+                  un-tree 
+                  """
+               , ELE.text
+                  """
+                  like. Lets 
+                  """
+               , emph CuteGreen
+                  """
+                  morph 
+                  """
+               , ELE.text
+                  """
+                  it to another 
+                  """
+               , emph CuteGreen
+                  """
+                  shape. 
+                  """
+               , emph CuteBlue
+                  """
+                  Press 
+                  """
+               , ELE.text
+                  """
+                  forward button
+                  above to make it look a little different. 
+                  """
+               ]
       secondComment =
-               """
-               Which is now transforming into a new graph, which is more
-               tree-like visually.
-               """
+               [ ELE.text
+                  """
+                  Which is now 
+                  """
+               , emph CuteBlue
+                  """
+                  transforming 
+                  """
+               , ELE.text
+                  """
+                  into a new graph, which is more
+                  tree-like 
+                  """
+               , emph CuteBlue
+                  """
+                  visually.
+                  """
+               ]
       honeyCombFirstComment =
-               """
-               The circular graph is now transformed to a honey comb like
-               structure. Which is more like a tree-like structure visually.
-               """
+               [ ELE.text
+                  """
+                  The circular graph is now transformed to a 
+                  """
+               , emph CuteGreen
+                  """
+                  cellular
+                  """
+               , ELE.text
+                  """
+                  structure. Which is more like a 
+                  """
+               , emph CuteGreen
+                  """
+                  tree-like 
+                  """
+               , ELE.text
+                  """
+                  structure visually.
+                  """
+               ]
       showOnePieceComment =
-               """
-               The graph can now be divided into pieces. The first piece for example
-               is the sub graph made up by Vertices 1, 2 and 3. This is marked by
-               golden vertices and edges. To make life easier in further
-               explanations, a piece will be represented by a blue dot present at the
-               center of the subgraph.
-               """
+               [ ELE.text
+                  """
+                  The graph can now be divided into 
+                  """
+               , emph CuteGreen
+                  """
+                  pieces. 
+                  """
+               , ELE.text
+                  """
+                  The first piece for example
+                  is the 
+                  """
+               , emph CuteGreen
+                  """
+                  sub graph 
+                  """
+               , ELE.text
+                  """
+                  made up by Vertices 
+                  """
+               , emph Pink
+                  """
+                  1, 2  
+                  """
+               , ELE.text
+                  """
+                  and 
+                  """
+               , emph Pink
+                  """
+                  3
+                  """
+               , ELE.text
+                  """
+                  . This is marked by
+                  golden vertices and edges. To make life easier in further
+                  explanations, a piece will be represented by a 
+                  """
+               , emph CuteBlue
+                  """
+                  blue 
+                  """
+               , ELE.text
+                  """
+                  dot present at the
+                  center of the subgraph.
+                  """
+               ]
       piecesMarkedComment =
-               """
-               Similarily all the other pieces are marked by blue dots
-               representing the subgraphs they are situated inside.
-               """
+               [ ELE.text
+                  """
+                  Similarily all the other pieces are marked by blue dots
+                  representing the subgraphs they are situated inside.
+                  """
+               ]
       treeDetails =
-               """
-               The golden line joining the pieces is a tree as it has no
-               cycles.
-               """
+               [ ELE.text
+                  """
+                  The golden line joining the pieces is a tree as it has no
+                  cycles.
+                  """
+               ]
       theoreticalComments =
-               """
-               The division of the graph in pieces such as these such that
-               the pieces together form a tree is called tree decomposition of a
-               graph. The pieces hence formed have associated a number of
-               vertices. Here all the pieces have 3 vertices associated
-               with them.
-               """
+               [ ELE.text
+                  """
+                  The division of the graph in pieces such as these such that
+                  the pieces together form a tree is called tree decomposition of a
+                  graph. The pieces hence formed have associated a number of
+                  vertices. Here all the pieces have 3 vertices associated
+                  with them.
+                  """
+               ]
       treeWidthDef =
-               """
-               Tree width of the graph is related to the maximum number of vertices
-               associated with a piece. It is given by the formula:
-               """
+               [ ELE.text
+                  """
+                  Tree width of the graph is related to the maximum number of vertices
+                  associated with a piece. It is given by the formula:
+                  """
+               ]
       treeWidthFormula =
-               """
-               Tree Width = (Maximum Number of Vertices in a piece) - 1
-               """
+               [ ELE.text
+                  """
+                  Tree Width = (Maximum Number of Vertices in a piece) - 1
+                  """
+               ]
       finalComment =
-               """
-               The number of vertices in all the pieces is equal to 3. Therefore the maximum
-               number of vertices in any piece in the present graph is also 3.
-               Hence the tree width of the graph is 3 - 1 = 2.
-               """
+               [ ELE.text
+                  """
+                  The number of vertices in all the pieces is equal to 3. Therefore the maximum
+                  number of vertices in any piece in the present graph is also 3.
+                  Hence the tree width of the graph is 3 - 1 = 2.
+                  """
+               ]
       output =
          case status of
             CircularGraph ->
                [ firstComment ]
             MorphingIntoHoneyComb ->
-               [ firstComment, secondComment ]
+               [firstComment, secondComment ]
             HoneyCombGraph ->
                [ honeyCombFirstComment ]
             ShowOnePiece ->

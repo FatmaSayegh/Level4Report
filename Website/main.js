@@ -14884,157 +14884,36 @@ var $author$project$Main$displayColumn = function (svgHtml) {
 				$mdgriffith$elm_ui$Element$html(svgHtml)
 			]));
 };
-var $mdgriffith$elm_ui$Internal$Model$Right = {$: 'Right'};
-var $mdgriffith$elm_ui$Element$alignRight = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$Right);
-var $mdgriffith$elm_ui$Internal$Flag$fontWeight = $mdgriffith$elm_ui$Internal$Flag$flag(13);
-var $mdgriffith$elm_ui$Element$Font$heavy = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontWeight, $mdgriffith$elm_ui$Internal$Style$classes.textHeavy);
-var $elm$html$Html$Attributes$alt = $elm$html$Html$Attributes$stringProperty('alt');
-var $elm$html$Html$Attributes$src = function (url) {
-	return A2(
-		$elm$html$Html$Attributes$stringProperty,
-		'src',
-		_VirtualDom_noJavaScriptOrHtmlUri(url));
+var $author$project$FontSize$CuteBlue = {$: 'CuteBlue'};
+var $author$project$FontSize$CuteGreen = {$: 'CuteGreen'};
+var $author$project$Buttons$GraphColoringHelp = {$: 'GraphColoringHelp'};
+var $author$project$FontSize$Head = {$: 'Head'};
+var $author$project$FontSize$Pink = {$: 'Pink'};
+var $author$project$Explanation$coloringExplanation = '\n   The graph coloring problems objective is to assign colors to the vertices of a graph such that no to adjacent\n   vertices have the same color such that the number of colors utilized are kept at minimum.\n   The graph shown in the picture, needs three colors to color it properly.\n   ';
+var $author$project$FontSize$giveFontColor = function (fntcol) {
+	switch (fntcol.$) {
+		case 'Pink':
+			return A3($mdgriffith$elm_ui$Element$rgb, 0.8, 0.6, 0.7);
+		case 'CuteGreen':
+			return A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.9, 0.7);
+		default:
+			return A3($mdgriffith$elm_ui$Element$rgb, 0.4, 0.9, 0.9);
+	}
 };
-var $mdgriffith$elm_ui$Element$image = F2(
-	function (attrs, _v0) {
-		var src = _v0.src;
-		var description = _v0.description;
-		var imageAttributes = A2(
-			$elm$core$List$filter,
-			function (a) {
-				switch (a.$) {
-					case 'Width':
-						return true;
-					case 'Height':
-						return true;
-					default:
-						return false;
-				}
-			},
-			attrs);
-		return A4(
-			$mdgriffith$elm_ui$Internal$Model$element,
-			$mdgriffith$elm_ui$Internal$Model$asEl,
-			$mdgriffith$elm_ui$Internal$Model$div,
-			A2(
-				$elm$core$List$cons,
-				$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.imageContainer),
-				attrs),
-			$mdgriffith$elm_ui$Internal$Model$Unkeyed(
-				_List_fromArray(
-					[
-						A4(
-						$mdgriffith$elm_ui$Internal$Model$element,
-						$mdgriffith$elm_ui$Internal$Model$asEl,
-						$mdgriffith$elm_ui$Internal$Model$NodeName('img'),
-						_Utils_ap(
-							_List_fromArray(
-								[
-									$mdgriffith$elm_ui$Internal$Model$Attr(
-									$elm$html$Html$Attributes$src(src)),
-									$mdgriffith$elm_ui$Internal$Model$Attr(
-									$elm$html$Html$Attributes$alt(description))
-								]),
-							imageAttributes),
-						$mdgriffith$elm_ui$Internal$Model$Unkeyed(_List_Nil))
-					])));
-	});
-var $mdgriffith$elm_ui$Internal$Model$Min = F2(
-	function (a, b) {
-		return {$: 'Min', a: a, b: b};
-	});
-var $mdgriffith$elm_ui$Element$minimum = F2(
-	function (i, l) {
-		return A2($mdgriffith$elm_ui$Internal$Model$Min, i, l);
-	});
-var $mdgriffith$elm_ui$Internal$Flag$borderRound = $mdgriffith$elm_ui$Internal$Flag$flag(17);
-var $mdgriffith$elm_ui$Element$Border$rounded = function (radius) {
-	return A2(
-		$mdgriffith$elm_ui$Internal$Model$StyleClass,
-		$mdgriffith$elm_ui$Internal$Flag$borderRound,
-		A3(
-			$mdgriffith$elm_ui$Internal$Model$Single,
-			'br-' + $elm$core$String$fromInt(radius),
-			'border-radius',
-			$elm$core$String$fromInt(radius) + 'px'));
-};
-var $mdgriffith$elm_ui$Internal$Model$SpacingStyle = F3(
-	function (a, b, c) {
-		return {$: 'SpacingStyle', a: a, b: b, c: c};
-	});
-var $mdgriffith$elm_ui$Internal$Flag$spacing = $mdgriffith$elm_ui$Internal$Flag$flag(3);
-var $mdgriffith$elm_ui$Internal$Model$spacingName = F2(
-	function (x, y) {
-		return 'spacing-' + ($elm$core$String$fromInt(x) + ('-' + $elm$core$String$fromInt(y)));
-	});
-var $mdgriffith$elm_ui$Element$spacingXY = F2(
-	function (x, y) {
+var $author$project$FontSize$emph = F2(
+	function (fontCol, str) {
 		return A2(
-			$mdgriffith$elm_ui$Internal$Model$StyleClass,
-			$mdgriffith$elm_ui$Internal$Flag$spacing,
-			A3(
-				$mdgriffith$elm_ui$Internal$Model$SpacingStyle,
-				A2($mdgriffith$elm_ui$Internal$Model$spacingName, x, y),
-				x,
-				y));
-	});
-var $mdgriffith$elm_ui$Internal$Model$BorderWidth = F5(
-	function (a, b, c, d, e) {
-		return {$: 'BorderWidth', a: a, b: b, c: c, d: d, e: e};
-	});
-var $mdgriffith$elm_ui$Element$Border$width = function (v) {
-	return A2(
-		$mdgriffith$elm_ui$Internal$Model$StyleClass,
-		$mdgriffith$elm_ui$Internal$Flag$borderWidth,
-		A5(
-			$mdgriffith$elm_ui$Internal$Model$BorderWidth,
-			'b-' + $elm$core$String$fromInt(v),
-			v,
-			v,
-			v,
-			v));
-};
-var $author$project$Main$dummyFragment = F2(
-	function (width, height) {
-		return A2(
-			$mdgriffith$elm_ui$Element$column,
+			$mdgriffith$elm_ui$Element$el,
 			_List_fromArray(
 				[
 					$mdgriffith$elm_ui$Element$Font$color(
-					A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
-					$mdgriffith$elm_ui$Element$Font$heavy,
-					A2($mdgriffith$elm_ui$Element$spacingXY, 10, 15),
-					$mdgriffith$elm_ui$Element$width(
-					A2($mdgriffith$elm_ui$Element$maximum, width - 1, $mdgriffith$elm_ui$Element$fill)),
-					$mdgriffith$elm_ui$Element$height(
-					A2($mdgriffith$elm_ui$Element$minimum, height, $mdgriffith$elm_ui$Element$fill)),
-					$mdgriffith$elm_ui$Element$Border$rounded(20),
-					$mdgriffith$elm_ui$Element$alignRight,
-					$mdgriffith$elm_ui$Element$Border$width(5),
-					$mdgriffith$elm_ui$Element$Border$color(
-					A3($mdgriffith$elm_ui$Element$rgb, 0.7, 0.6, 0.6))
+					$author$project$FontSize$giveFontColor(fontCol)),
+					$mdgriffith$elm_ui$Element$Font$size(22)
 				]),
-			_List_fromArray(
-				[
-					A2(
-					$mdgriffith$elm_ui$Element$el,
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$Border$rounded(200)
-						]),
-					A2(
-						$mdgriffith$elm_ui$Element$image,
-						_List_fromArray(
-							[
-								$mdgriffith$elm_ui$Element$width(
-								A2($mdgriffith$elm_ui$Element$maximum, 400, $mdgriffith$elm_ui$Element$fill))
-							]),
-						{description: '', src: 'images/fatma.jpeg'}))
-				]));
+			$mdgriffith$elm_ui$Element$text(str));
 	});
-var $author$project$Buttons$GraphColoringHelp = {$: 'GraphColoringHelp'};
-var $author$project$FontSize$Head = {$: 'Head'};
-var $author$project$Explanation$coloringExplanation = '\n   The graph coloring problems objective is to assign colors to the vertices of a graph such that no to adjacent\n   vertices have the same color such that the number of colors utilized are kept at minimum.\n   The graph shown in the picture, needs three colors to color it properly.\n   ';
+var $mdgriffith$elm_ui$Internal$Flag$fontWeight = $mdgriffith$elm_ui$Internal$Flag$flag(13);
+var $mdgriffith$elm_ui$Element$Font$heavy = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontWeight, $mdgriffith$elm_ui$Internal$Style$classes.textHeavy);
 var $mdgriffith$elm_ui$Element$Font$bold = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontWeight, $mdgriffith$elm_ui$Internal$Style$classes.bold);
 var $mdgriffith$elm_ui$Element$paddingXY = F2(
 	function (x, y) {
@@ -15304,11 +15183,22 @@ var $author$project$Buttons$helpParagraph = function (helpkind) {
 				]),
 			helpdetails));
 };
-var $author$project$Explanation$howToColor = '\n   Choose a color from the color palette by clicking on one of the colors and apply it to one of the vertices.\n   While coloring the graph make sure that no two adjacent vertices are colored the same. For if they are, the\n   edges connecting them will be displayed differently to let you know of the mistake.\n   ';
+var $author$project$Explanation$howToColor = _List_fromArray(
+	[
+		A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '\n      Choose \n      '),
+		$mdgriffith$elm_ui$Element$text('\n      a color from the color palette by \n      '),
+		A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, '\n      clicking \n      '),
+		$mdgriffith$elm_ui$Element$text('\n      on one of the colors and \n      '),
+		A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, 'apply'),
+		$mdgriffith$elm_ui$Element$text('\n       it to one of the vertices.\n      While coloring the graph make sure that \n      '),
+		$mdgriffith$elm_ui$Element$text('\n      no two adjacent vertices are colored the same. For if they are, the\n      edges connecting them will be displayed differently to let you know of the mistake.\n      ')
+	]);
 var $mdgriffith$elm_ui$Internal$Model$Bottom = {$: 'Bottom'};
 var $mdgriffith$elm_ui$Element$alignBottom = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$Bottom);
 var $mdgriffith$elm_ui$Internal$Model$Left = {$: 'Left'};
 var $mdgriffith$elm_ui$Element$alignLeft = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$Left);
+var $mdgriffith$elm_ui$Internal$Model$Right = {$: 'Right'};
+var $mdgriffith$elm_ui$Element$alignRight = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$Right);
 var $lemol$ant_design_icons_elm$Ant$Icons$Svg$InfoCircleOutlined$viewWithAttributes = function (attributes) {
 	return A2(
 		$elm$svg$Svg$svg,
@@ -15340,6 +15230,26 @@ var $lemol$ant_design_icons_elm$Ant$Icons$Svg$infoCircleOutlined = $lemol$ant_de
 var $lemol$ant_design_icons_elm_ui$Ant$Icons$infoCircleOutlined = function (attrs) {
 	return A2($lemol$ant_design_icons_elm_ui$Ant$Icon$icon, attrs, $lemol$ant_design_icons_elm$Ant$Icons$Svg$infoCircleOutlined);
 };
+var $mdgriffith$elm_ui$Internal$Flag$borderRound = $mdgriffith$elm_ui$Internal$Flag$flag(17);
+var $mdgriffith$elm_ui$Element$Border$rounded = function (radius) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$borderRound,
+		A3(
+			$mdgriffith$elm_ui$Internal$Model$Single,
+			'br-' + $elm$core$String$fromInt(radius),
+			'border-radius',
+			$elm$core$String$fromInt(radius) + 'px'));
+};
+var $mdgriffith$elm_ui$Internal$Model$SpacingStyle = F3(
+	function (a, b, c) {
+		return {$: 'SpacingStyle', a: a, b: b, c: c};
+	});
+var $mdgriffith$elm_ui$Internal$Flag$spacing = $mdgriffith$elm_ui$Internal$Flag$flag(3);
+var $mdgriffith$elm_ui$Internal$Model$spacingName = F2(
+	function (x, y) {
+		return 'spacing-' + ($elm$core$String$fromInt(x) + ('-' + $elm$core$String$fromInt(y)));
+	});
 var $mdgriffith$elm_ui$Element$spacing = function (x) {
 	return A2(
 		$mdgriffith$elm_ui$Internal$Model$StyleClass,
@@ -15471,8 +15381,43 @@ var $author$project$Buttons$lowerNavigation = F2(
 					})
 				]));
 	});
+var $author$project$GraphColoring$makeCongrats = _List_fromArray(
+	[
+		A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, 'C'),
+		A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, 'o'),
+		A2($author$project$FontSize$emph, $author$project$FontSize$Pink, 'n'),
+		A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, 'g'),
+		A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, 'r'),
+		A2($author$project$FontSize$emph, $author$project$FontSize$Pink, 'a'),
+		A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, 't'),
+		A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, 'u'),
+		A2($author$project$FontSize$emph, $author$project$FontSize$Pink, 'l'),
+		A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, 'a'),
+		A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, 't'),
+		A2($author$project$FontSize$emph, $author$project$FontSize$Pink, 'i'),
+		A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, 'o'),
+		A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, 'n'),
+		A2($author$project$FontSize$emph, $author$project$FontSize$Pink, 's'),
+		A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '!')
+	]);
 var $author$project$GraphColoring$miscolorText = function (e) {
-	return 'Vertex ' + ($elm$core$String$fromInt(e.vertexOne.name) + (' and vertex ' + ($elm$core$String$fromInt(e.vertexTwo.name) + ' which are adjacent to each other are colored with the same color.')));
+	return _List_fromArray(
+		[
+			$mdgriffith$elm_ui$Element$text('Vertex '),
+			A2(
+			$author$project$FontSize$emph,
+			$author$project$FontSize$Pink,
+			$elm$core$String$fromInt(e.vertexOne.name)),
+			$mdgriffith$elm_ui$Element$text(' and vertex '),
+			A2(
+			$author$project$FontSize$emph,
+			$author$project$FontSize$Pink,
+			$elm$core$String$fromInt(e.vertexTwo.name)),
+			$mdgriffith$elm_ui$Element$text(' which are '),
+			A2($author$project$FontSize$emph, $author$project$FontSize$Pink, 'adjacent '),
+			$mdgriffith$elm_ui$Element$text('to each other are colored with the '),
+			A2($author$project$FontSize$emph, $author$project$FontSize$Pink, 'same color. ')
+		]);
 };
 var $mdgriffith$elm_ui$Internal$Model$Empty = {$: 'Empty'};
 var $mdgriffith$elm_ui$Element$none = $mdgriffith$elm_ui$Internal$Model$Empty;
@@ -15590,16 +15535,7 @@ var $author$project$GraphColoring$explanationColoring = F3(
 						[
 							$mdgriffith$elm_ui$Element$text($author$project$Explanation$coloringExplanation)
 						])),
-					A2(
-					$mdgriffith$elm_ui$Element$paragraph,
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$spacing(8)
-						]),
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$text($author$project$Explanation$howToColor)
-						])),
+					A2($mdgriffith$elm_ui$Element$paragraph, _List_Nil, $author$project$Explanation$howToColor),
 					A2(
 					$mdgriffith$elm_ui$Element$paragraph,
 					_List_Nil,
@@ -15619,40 +15555,46 @@ var $author$project$GraphColoring$explanationColoring = F3(
 					A2(
 					$mdgriffith$elm_ui$Element$paragraph,
 					_List_Nil,
-					_List_fromArray(
+					(($elm$core$List$length(coloredVertices) > 1) && (!$elm$core$List$length(miscoloredEdges))) ? _List_fromArray(
 						[
-							$mdgriffith$elm_ui$Element$text(
-							(($elm$core$List$length(coloredVertices) > 1) && (!$elm$core$List$length(miscoloredEdges))) ? 'Good going! Adjacent Vertices are colored differently.' : '\n                                   ')
+							A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, 'Good going! '),
+							$mdgriffith$elm_ui$Element$text('Adjacent Vertices are colored differently.')
+						]) : _List_fromArray(
+						[$mdgriffith$elm_ui$Element$none])),
+					A2(
+					$mdgriffith$elm_ui$Element$paragraph,
+					_List_Nil,
+					$elm$core$List$isEmpty(miscoloredEdges) ? _List_fromArray(
+						[$mdgriffith$elm_ui$Element$none]) : $elm$core$List$concat(
+						A2($elm$core$List$map, $author$project$GraphColoring$miscolorText, miscoloredEdges))),
+					A2(
+					$mdgriffith$elm_ui$Element$paragraph,
+					_List_Nil,
+					$elm$core$List$isEmpty(miscoloredEdges) ? _List_fromArray(
+						[$mdgriffith$elm_ui$Element$none]) : _List_fromArray(
+						[
+							A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, 'Try '),
+							$mdgriffith$elm_ui$Element$text('another color combination. '),
+							A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, 'Remember the rule;'),
+							A2($author$project$FontSize$emph, $author$project$FontSize$Pink, '\n                                       No two adjacent\n                                       '),
+							$mdgriffith$elm_ui$Element$text('\n                                       vertices must have the same color!\n                                       ')
 						])),
 					A2(
 					$mdgriffith$elm_ui$Element$paragraph,
 					_List_Nil,
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$text(
-							$elm$core$List$isEmpty(miscoloredEdges) ? '' : A2(
-								$elm$core$String$join,
-								' ',
-								A2($elm$core$List$map, $author$project$GraphColoring$miscolorText, miscoloredEdges)))
-						])),
-					A2(
-					$mdgriffith$elm_ui$Element$paragraph,
-					_List_Nil,
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$text(
-							$elm$core$List$isEmpty(miscoloredEdges) ? '' : '\n                                   Try another color combination.\n                                   Remember the rule; No two adjacent\n                                   vertices must have the same color!\n                                   ')
-						])),
-					A2(
-					$mdgriffith$elm_ui$Element$paragraph,
-					_List_Nil,
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$text(
-							($elm$core$List$isEmpty(miscoloredEdges) && _Utils_eq(
-								$elm$core$List$length(coloredVertices),
-								$elm$core$List$length(colorDisp.graphA.vertices))) ? '\n                                   Congratulations! Graph has been colored fully and correctly.\n                                   i.e. No two adjacent vertices have the same color.\n                                   ' : '')
-						])),
+					($elm$core$List$isEmpty(miscoloredEdges) && _Utils_eq(
+						$elm$core$List$length(coloredVertices),
+						$elm$core$List$length(colorDisp.graphA.vertices))) ? _Utils_ap(
+						$author$project$GraphColoring$makeCongrats,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$text('\n                                        Graph has been colored\n                                       '),
+								A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '\n                                       fully \n                                       '),
+								$mdgriffith$elm_ui$Element$text('\n                                       and \n                                       '),
+								A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '\n                                       correctly.\n                                       '),
+								$mdgriffith$elm_ui$Element$text('\n                                       i.e. No two adjacent vertices have the same color.\n                                       ')
+							])) : _List_fromArray(
+						[$mdgriffith$elm_ui$Element$none])),
 					helpStatus ? $author$project$Buttons$helpParagraph($author$project$Buttons$GraphColoringHelp) : $mdgriffith$elm_ui$Element$none,
 					A2($author$project$Buttons$lowerNavigation, 'Max Cut', 'Vertex Cover')
 				]));
@@ -15772,46 +15714,111 @@ var $author$project$VertexCover$explanationCover = F3(
 					_List_Nil,
 					_List_fromArray(
 						[
-							$mdgriffith$elm_ui$Element$text('\n                     In the task on the right, selecting a vertex will cover all\n                     the edges incident on it. Your objective is to select the\n                     minimum number of vertices such that, all the edges of the\n                     graph are covered.\n                     ')
+							$mdgriffith$elm_ui$Element$text('\n                     In the task on the right, selecting a vertex will cover all\n                     the edges\n                     '),
+							A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '\n                     incident \n                     '),
+							$mdgriffith$elm_ui$Element$text('\n                     on it. Your objective is to select the\n                     '),
+							A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '\n                     minimum \n                     '),
+							$mdgriffith$elm_ui$Element$text('\n                     number of vertices such that, all the edges of the\n                     graph are covered.\n                     ')
 						])),
 					A2(
 					$mdgriffith$elm_ui$Element$paragraph,
 					_List_Nil,
 					_List_fromArray(
 						[
-							$mdgriffith$elm_ui$Element$text('\n                     To select a vertex you can press, the vertex number\n                     on the keyboard. To de-select, do the same again.\n                     ')
+							$mdgriffith$elm_ui$Element$text('\n                     To select a vertex you can \n                     '),
+							A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, '\n                      press \n                     '),
+							$mdgriffith$elm_ui$Element$text('\n                     , the vertex \n                     '),
+							A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, '\n                      number\n                     '),
+							$mdgriffith$elm_ui$Element$text('\n                     on the keyboard. To \n                     '),
+							A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, '\n                     de-select \n                     '),
+							$mdgriffith$elm_ui$Element$text('\n                     , press the same key again.\n                     ')
 						])),
 					A2(
 					$mdgriffith$elm_ui$Element$paragraph,
 					_List_Nil,
-					_List_fromArray(
+					(!noOfSelectedVertices) ? _List_fromArray(
+						[$mdgriffith$elm_ui$Element$none]) : _List_fromArray(
 						[
-							$mdgriffith$elm_ui$Element$text(
-							(!noOfSelectedVertices) ? '' : ('You have selected a total of ' + ($elm$core$String$fromInt(noOfSelectedVertices) + (' vertices out of ' + ($elm$core$String$fromInt(totalVertices) + ' vertices. ')))))
+							$mdgriffith$elm_ui$Element$text('You have selected a total of '),
+							A2(
+							$author$project$FontSize$emph,
+							$author$project$FontSize$Pink,
+							$elm$core$String$fromInt(noOfSelectedVertices)),
+							$mdgriffith$elm_ui$Element$text(' vertices '),
+							A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, 'out of '),
+							A2(
+							$author$project$FontSize$emph,
+							$author$project$FontSize$Pink,
+							$elm$core$String$fromInt(totalVertices)),
+							$mdgriffith$elm_ui$Element$text(' vertices. ')
 						])),
 					A2(
 					$mdgriffith$elm_ui$Element$paragraph,
 					_List_Nil,
-					_List_fromArray(
+					(!noCoveredEdges) ? _List_fromArray(
+						[$mdgriffith$elm_ui$Element$none]) : _List_fromArray(
 						[
-							$mdgriffith$elm_ui$Element$text(
-							(!noCoveredEdges) ? '' : ('You have covered a total of ' + ($elm$core$String$fromInt(noCoveredEdges) + (' edges out of a total of ' + ($elm$core$String$fromInt(totalEdges) + ' edges. ')))))
+							$mdgriffith$elm_ui$Element$text('You have covered a total of '),
+							A2(
+							$author$project$FontSize$emph,
+							$author$project$FontSize$Pink,
+							$elm$core$String$fromInt(noCoveredEdges)),
+							$mdgriffith$elm_ui$Element$text(' edges '),
+							A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, 'out of '),
+							$mdgriffith$elm_ui$Element$text('a total of '),
+							A2(
+							$author$project$FontSize$emph,
+							$author$project$FontSize$Pink,
+							$elm$core$String$fromInt(totalEdges)),
+							$mdgriffith$elm_ui$Element$text(' edges. ')
 						])),
 					A2(
 					$mdgriffith$elm_ui$Element$paragraph,
 					_List_Nil,
-					_List_fromArray(
+					(!edgesRemainig) ? ((noOfSelectedVertices > 4) ? _List_fromArray(
 						[
-							$mdgriffith$elm_ui$Element$text(
-							(!edgesRemainig) ? ((noOfSelectedVertices > 4) ? ('\n                                       You have covered all the edges.\n                                       but\n                                       you have done so by selecting\n                                       ' + ($elm$core$String$fromInt(noOfSelectedVertices) + '\n                                       vertices. The graph could have been covered by\n                                       selecting only four! Try again to see that\n                                       you can do it in just four.\n                                       ')) : ('Congratulations, you have covered all ' + ($elm$core$String$fromInt(noCoveredEdges) + (' edges. ' + ('You have done so by selecting the vertices ' + ($author$project$Graph$getStringFromVertices(selected_vertices) + ('.' + (' Therefore a vertex cover of this graph is the set vertices ' + ($author$project$Graph$getStringFromVertices(selected_vertices) + '.'))))))))) : (_Utils_eq(edgesRemainig, totalEdges) ? '' : ($elm$core$String$fromInt(edgesRemainig) + ' edges more to be covered!')))
-						])),
+							$mdgriffith$elm_ui$Element$text('\n                                  You have covered all the edges.\n                                  but\n                                  you have done so by selecting\n                                  '),
+							A2(
+							$author$project$FontSize$emph,
+							$author$project$FontSize$Pink,
+							$elm$core$String$fromInt(noOfSelectedVertices)),
+							$mdgriffith$elm_ui$Element$text('\n                                  vertices. The graph could have been covered by\n                                  selecting only four! Try again to see that\n                                  you can do it in just four.\n                                  ')
+						]) : _List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$text('Congratulations, you have covered all '),
+							A2(
+							$author$project$FontSize$emph,
+							$author$project$FontSize$CuteBlue,
+							$elm$core$String$fromInt(noCoveredEdges)),
+							$mdgriffith$elm_ui$Element$text(' edges. '),
+							$mdgriffith$elm_ui$Element$text('You have done so by selecting the vertices '),
+							A2(
+							$author$project$FontSize$emph,
+							$author$project$FontSize$CuteBlue,
+							$author$project$Graph$getStringFromVertices(selected_vertices)),
+							$mdgriffith$elm_ui$Element$text('. Therefore a vertex cover of this graph is the'),
+							A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, ' set '),
+							$mdgriffith$elm_ui$Element$text(' of vertices '),
+							A2(
+							$author$project$FontSize$emph,
+							$author$project$FontSize$CuteBlue,
+							$author$project$Graph$getStringFromVertices(selected_vertices)),
+							$mdgriffith$elm_ui$Element$text('.')
+						])) : (_Utils_eq(edgesRemainig, totalEdges) ? _List_fromArray(
+						[$mdgriffith$elm_ui$Element$none]) : _List_fromArray(
+						[
+							A2(
+							$author$project$FontSize$emph,
+							$author$project$FontSize$Pink,
+							$elm$core$String$fromInt(edgesRemainig)),
+							$mdgriffith$elm_ui$Element$text(' edges more to be covered!')
+						]))),
 					helpStatus ? $author$project$Buttons$helpParagraph($author$project$Buttons$VertexCoverHelp) : $mdgriffith$elm_ui$Element$none,
 					A2($author$project$Buttons$lowerNavigation, 'Graph Coloring', 'Tree Width')
 				]));
 	});
 var $author$project$Explanation$isomorphismExplanation = '\n   Two graphs G1 and G2 are isomorphic if there is a one-one correspondence\n   between the vertices of G1 and G2 such that the number of edges between any\n   two vertices in G1 is equal to the number of edges joining the corresponding\n   vertices of G2. \n   Although the graphs may appear to be different in appearance and in\n   the labeling of the nodes and edges. But the way one vertex is connected to\n   another in one graph is same as another. \n\n   The animation shown here takes a graph and changes the positions of the\n   vertices without changing the edges which still connect the same vertices\n   throughout the motion. In the animation if there is an edge between any two\n   vertices in a graph, then there is a edge between the corresponding vertices\n   in the other graphs as well.\n   ';
 var $author$project$Buttons$IsomorphismHelp = {$: 'IsomorphismHelp'};
-var $elm$html$Html$br = _VirtualDom_node('br');
 var $author$project$Graph$isVertexInEdges = F2(
 	function (v, es) {
 		isVertexInEdges:
@@ -15861,24 +15868,6 @@ var $author$project$Graph$getHaloVertices = F2(
 					return A2($author$project$Graph$isVertexInEdges, v, es);
 				},
 				g.vertices));
-	});
-var $elm$core$List$intersperse = F2(
-	function (sep, xs) {
-		if (!xs.b) {
-			return _List_Nil;
-		} else {
-			var hd = xs.a;
-			var tl = xs.b;
-			var step = F2(
-				function (x, rest) {
-					return A2(
-						$elm$core$List$cons,
-						sep,
-						A2($elm$core$List$cons, x, rest));
-				});
-			var spersed = A3($elm$core$List$foldr, step, _List_Nil, tl);
-			return A2($elm$core$List$cons, hd, spersed);
-		}
 	});
 var $elm$regex$Regex$Match = F4(
 	function (match, index, number, submatches) {
@@ -15937,31 +15926,33 @@ var $author$project$Isomorphism$makeStory = F2(
 		var relatedVertices = A2($author$project$Graph$getHaloVertices, shapeTransition.graphB, specialEdges);
 		var listOfStories = function () {
 			if (!glowing_vertices.b) {
-				return _List_Nil;
+				return _List_fromArray(
+					[$mdgriffith$elm_ui$Element$none]);
 			} else {
 				var x = glowing_vertices.a;
 				var xs = glowing_vertices.b;
 				return _List_fromArray(
 					[
+						$mdgriffith$elm_ui$Element$text('You have selected '),
+						A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, 'Vertex '),
 						A2(
-						$jorgengranseth$elm_string_format$String$Format$value,
-						$elm$core$String$fromInt(x.name),
-						'You have selected Vertex {{}}.'),
-						_Utils_ap(
-						connectedToThis(x),
+						$author$project$FontSize$emph,
+						$author$project$FontSize$Pink,
+						$elm$core$String$fromInt(x.name)),
+						$mdgriffith$elm_ui$Element$text('. Connected to this vertex are'),
+						A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, ' Vertices '),
+						A2(
+						$author$project$FontSize$emph,
+						$author$project$FontSize$Pink,
 						$author$project$Graph$getStringFromVertices(relatedVertices)),
-						whichYouCanSee
+						$mdgriffith$elm_ui$Element$text('.'),
+						$mdgriffith$elm_ui$Element$text(whichYouCanSee)
 					]);
 			}
 		}();
-		var storyPara = A2(
-			$elm$core$List$intersperse,
-			$mdgriffith$elm_ui$Element$html(
-				A2($elm$html$Html$br, _List_Nil, _List_Nil)),
-			A2($elm$core$List$map, $mdgriffith$elm_ui$Element$text, listOfStories));
 		return (!helpStatus) ? _List_fromArray(
 			[
-				A2($mdgriffith$elm_ui$Element$paragraph, _List_Nil, storyPara),
+				A2($mdgriffith$elm_ui$Element$paragraph, _List_Nil, listOfStories),
 				A2(
 				$mdgriffith$elm_ui$Element$paragraph,
 				_List_Nil,
@@ -16108,13 +16099,28 @@ var $author$project$Isomorphism$explanationOne = F3(
 							[
 								$mdgriffith$elm_ui$Element$text($author$project$Explanation$isomorphismExplanation)
 							])),
+						A2(
+						$mdgriffith$elm_ui$Element$paragraph,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$text('You should now press the '),
+								A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, 'Play'),
+								$mdgriffith$elm_ui$Element$text('\n                      button, to set the animation rolling.\n                     Press the \n                     '),
+								A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, 'Restart '),
+								$mdgriffith$elm_ui$Element$text('\n                     button to see it all over again.\n                     ')
+							])),
 						$author$project$Isomorphism$mediaButtons(shapeTransition),
 						A2(
 						$mdgriffith$elm_ui$Element$paragraph,
 						_List_Nil,
 						_List_fromArray(
 							[
-								$mdgriffith$elm_ui$Element$text('\n                     Go ahead and put your mouse over a vertex of the graph. \n                     Or press a number on the keyboard corresponding to a Vertex number.\n                     ')
+								$mdgriffith$elm_ui$Element$text('\n                     Go ahead and put your mouse over a \n                     '),
+								A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, 'vertex'),
+								$mdgriffith$elm_ui$Element$text('\n                     of the graph. \n                     Or \n                     '),
+								A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, 'press'),
+								$mdgriffith$elm_ui$Element$text('\n                      a number on the keyboard corresponding to a Vertex number.\n                     ')
 							]))
 					]),
 				_Utils_ap(
@@ -16233,9 +16239,29 @@ var $lemol$ant_design_icons_elm_ui$Ant$Icons$minusOutlined = function (attrs) {
 var $author$project$MaxkCut$explanationTwo = F3(
 	function (maxCut, helpStatus, width) {
 		var twoCutLineExplanation = '\n            The Max cut line, seperates the two sets of vertices. The\n            intersection between the cut line and the edges are shown as blue\n            dots. As you should verify, they are 9 in number. This number is\n            equal to number of edges from the set of vertices at the top going\n            to the vertices at the bottom.\n            ';
-		var twoCutExplanation = '\n            In the animation, the vertices are being segregated into two sets,\n            such that the number of edges passing from vertices in one set to\n            the vertices in another set is more than any other way the vertices\n            of the graph could have been segregated.  In other words the\n            problem of max cut is to identify such partition of the vertices of\n            the graph that the above objective is satisfied.\n            ';
+		var twoCutExplanation = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('\n               In the animation, the \n               '),
+				A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, 'vertices'),
+				$mdgriffith$elm_ui$Element$text(' are being '),
+				A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, 'segregated'),
+				$mdgriffith$elm_ui$Element$text('\n                  into two sets,\n                  such that the number of edges passing from vertices in one set to\n                  the vertices in another set is more than \n                  '),
+				A2($author$project$FontSize$emph, $author$project$FontSize$Pink, '\n                  any other way \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  the vertices\n                  of the graph could have been segregated.  In other words the\n                  problem of max cut is to \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  identify such partition \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  of the vertices of\n                  the graph that the above objective is satisfied.\n                  ')
+			]);
 		var threeCutLineExplanation = '\n            The three Max cut lines, seperates their respective sets from the\n            rest of the graph. The intersection between the cut lines and the\n            edges are shown as blue dots. As you should verify, they are 18 in\n            number for each set. This 3 cut is visually trivial as the graph\n            was tripartite.\n            ';
-		var threeCutExplanation = '\n            In the animation, the vertices are being segregated into three\n            sets, such that the number of edges passing from vertices in one\n            set to the vertices in all other sets is more than any other way\n            the vertices of the graph could have been segregated.  In other\n            words the problem of max 3 cut is to identify such partition of the\n            vertices of the graph that the above objective is satisfied.\n            ';
+		var threeCutExplanation = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('\n               In the \n               animation, the vertices are being segregated into \n               '),
+				A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '\n               three sets\n               '),
+				$mdgriffith$elm_ui$Element$text('\n               , such that the number of edges \n               '),
+				A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, 'passing'),
+				$mdgriffith$elm_ui$Element$text('\n               from vertices in one\n               set to the vertices in all other sets is more than \n               '),
+				A2($author$project$FontSize$emph, $author$project$FontSize$Pink, 'any other way'),
+				$mdgriffith$elm_ui$Element$text('\n               the vertices of the graph could have been segregated.  In other\n               words the problem of max 3 cut is to identify such partition of the\n               vertices of the graph that the above objective is satisfied.\n               ')
+			]);
 		var state = maxCut.state;
 		var shapeTransition = function () {
 			var _v0 = maxCut.state;
@@ -16245,6 +16271,21 @@ var $author$project$MaxkCut$explanationTwo = F3(
 				return maxCut.transitionB;
 			}
 		}();
+		var drawCutLineExplanation = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('For a clear cut seperation of the sets '),
+				A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, 'Press'),
+				$mdgriffith$elm_ui$Element$text(' the cut line below.')
+			]);
+		var buttonExplanation = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('Press the '),
+				A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, 'Play '),
+				$mdgriffith$elm_ui$Element$text('button to start the animation. '),
+				$mdgriffith$elm_ui$Element$text('Press the '),
+				A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, 'Restart '),
+				$mdgriffith$elm_ui$Element$text('button to see it all over again.')
+			]);
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
@@ -16279,15 +16320,13 @@ var $author$project$MaxkCut$explanationTwo = F3(
 						[
 							$mdgriffith$elm_ui$Element$text($author$project$Explanation$maxCutExplanation)
 						])),
+					A2($mdgriffith$elm_ui$Element$paragraph, _List_Nil, buttonExplanation),
 					$author$project$MaxkCut$mediaButtonsForMaxCut(shapeTransition),
 					A2(
 					$mdgriffith$elm_ui$Element$paragraph,
 					_List_Nil,
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$text(
-							_Utils_eq(state, $author$project$MaxkCut$TwoCut) ? twoCutExplanation : threeCutExplanation)
-						])),
+					_Utils_eq(state, $author$project$MaxkCut$TwoCut) ? twoCutExplanation : threeCutExplanation),
+					A2($mdgriffith$elm_ui$Element$paragraph, _List_Nil, drawCutLineExplanation),
 					A2(
 					$author$project$MaxkCut$buttonWrap,
 					'Cutline',
@@ -16318,13 +16357,47 @@ var $author$project$MaxkCut$explanationTwo = F3(
 var $author$project$Buttons$TreeWidthHelp = {$: 'TreeWidthHelp'};
 var $author$project$TreeWidth$storyTreeWidth = F2(
 	function (status, helpStatus) {
-		var treeWidthFormula = '\n               Tree Width = (Maximum Number of Vertices in a piece) - 1\n               ';
-		var treeWidthDef = '\n               Tree width of the graph is related to the maximum number of vertices\n               associated with a piece. It is given by the formula:\n               ';
-		var treeDetails = '\n               The golden line joining the pieces is a tree as it has no\n               cycles.\n               ';
-		var theoreticalComments = '\n               The division of the graph in pieces such as these such that\n               the pieces together form a tree is called tree decomposition of a\n               graph. The pieces hence formed have associated a number of\n               vertices. Here all the pieces have 3 vertices associated\n               with them.\n               ';
-		var showOnePieceComment = '\n               The graph can now be divided into pieces. The first piece for example\n               is the sub graph made up by Vertices 1, 2 and 3. This is marked by\n               golden vertices and edges. To make life easier in further\n               explanations, a piece will be represented by a blue dot present at the\n               center of the subgraph.\n               ';
-		var secondComment = '\n               Which is now transforming into a new graph, which is more\n               tree-like visually.\n               ';
-		var piecesMarkedComment = '\n               Similarily all the other pieces are marked by blue dots\n               representing the subgraphs they are situated inside.\n               ';
+		var treeWidthFormula = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('\n                  Tree Width = (Maximum Number of Vertices in a piece) - 1\n                  ')
+			]);
+		var treeWidthDef = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('\n                  Tree width of the graph is related to the maximum number of vertices\n                  associated with a piece. It is given by the formula:\n                  ')
+			]);
+		var treeDetails = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('\n                  The golden line joining the pieces is a tree as it has no\n                  cycles.\n                  ')
+			]);
+		var theoreticalComments = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('\n                  The division of the graph in pieces such as these such that\n                  the pieces together form a tree is called tree decomposition of a\n                  graph. The pieces hence formed have associated a number of\n                  vertices. Here all the pieces have 3 vertices associated\n                  with them.\n                  ')
+			]);
+		var showOnePieceComment = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('\n                  The graph can now be divided into \n                  '),
+				A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '\n                  pieces. \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  The first piece for example\n                  is the \n                  '),
+				A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '\n                  sub graph \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  made up by Vertices \n                  '),
+				A2($author$project$FontSize$emph, $author$project$FontSize$Pink, '\n                  1, 2  \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  and \n                  '),
+				A2($author$project$FontSize$emph, $author$project$FontSize$Pink, '\n                  3\n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  . This is marked by\n                  golden vertices and edges. To make life easier in further\n                  explanations, a piece will be represented by a \n                  '),
+				A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, '\n                  blue \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  dot present at the\n                  center of the subgraph.\n                  ')
+			]);
+		var secondComment = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('\n                  Which is now \n                  '),
+				A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, '\n                  transforming \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  into a new graph, which is more\n                  tree-like \n                  '),
+				A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, '\n                  visually.\n                  ')
+			]);
+		var piecesMarkedComment = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('\n                  Similarily all the other pieces are marked by blue dots\n                  representing the subgraphs they are situated inside.\n                  ')
+			]);
 		var para = function (l) {
 			return A2(
 				$mdgriffith$elm_ui$Element$paragraph,
@@ -16332,14 +16405,31 @@ var $author$project$TreeWidth$storyTreeWidth = F2(
 					[
 						$mdgriffith$elm_ui$Element$spacing(8)
 					]),
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$text(l)
-					]));
+				l);
 		};
-		var honeyCombFirstComment = '\n               The circular graph is now transformed to a honey comb like\n               structure. Which is more like a tree-like structure visually.\n               ';
-		var firstComment = '\n               The graph on the left seems very un-tree like.\n               Lets morph it to another shape. Press forward button\n               above to make it look a little different. \n               ';
-		var finalComment = '\n               The number of vertices in all the pieces is equal to 3. Therefore the maximum\n               number of vertices in any piece in the present graph is also 3.\n               Hence the tree width of the graph is 3 - 1 = 2.\n               ';
+		var honeyCombFirstComment = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('\n                  The circular graph is now transformed to a \n                  '),
+				A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '\n                  cellular\n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  structure. Which is more like a \n                  '),
+				A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '\n                  tree-like \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  structure visually.\n                  ')
+			]);
+		var firstComment = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('\n                  The graph on the left seems very \n                  '),
+				A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '\n                  un-tree \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  like. Lets \n                  '),
+				A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '\n                  morph \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  it to another \n                  '),
+				A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '\n                  shape. \n                  '),
+				A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, '\n                  Press \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  forward button\n                  above to make it look a little different. \n                  ')
+			]);
+		var finalComment = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('\n                  The number of vertices in all the pieces is equal to 3. Therefore the maximum\n                  number of vertices in any piece in the present graph is also 3.\n                  Hence the tree width of the graph is 3 - 1 = 2.\n                  ')
+			]);
 		var output = function () {
 			switch (status.$) {
 				case 'CircularGraph':
@@ -16528,6 +16618,25 @@ var $author$project$TreeWidth$explanationWidth = F3(
 							A2($author$project$Buttons$lowerNavigation, 'Vertex Cover', 'Isomorphism')
 						]))));
 	});
+var $mdgriffith$elm_ui$Internal$Model$Min = F2(
+	function (a, b) {
+		return {$: 'Min', a: a, b: b};
+	});
+var $mdgriffith$elm_ui$Element$minimum = F2(
+	function (i, l) {
+		return A2($mdgriffith$elm_ui$Internal$Model$Min, i, l);
+	});
+var $mdgriffith$elm_ui$Element$spacingXY = F2(
+	function (x, y) {
+		return A2(
+			$mdgriffith$elm_ui$Internal$Model$StyleClass,
+			$mdgriffith$elm_ui$Internal$Flag$spacing,
+			A3(
+				$mdgriffith$elm_ui$Internal$Model$SpacingStyle,
+				A2($mdgriffith$elm_ui$Internal$Model$spacingName, x, y),
+				x,
+				y));
+	});
 var $author$project$Main$introFatma = F2(
 	function (width, height) {
 		var fatmasIntro = '\n            I am a third year Software Engineering student in University\n            of Glasgow. This web app was build for the as my final year\n            project. My intrests are maths and functional programming.\n            ';
@@ -16581,39 +16690,19 @@ var $author$project$Main$introFatma = F2(
 						]))
 				]));
 	});
-var $mdgriffith$elm_ui$Internal$Flag$borderStyle = $mdgriffith$elm_ui$Internal$Flag$flag(11);
-var $mdgriffith$elm_ui$Element$Border$solid = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$borderStyle, $mdgriffith$elm_ui$Internal$Style$classes.borderSolid);
-var $author$project$Main$makeTopicIcon = function (topicMsg) {
-	var tex = function () {
-		switch (topicMsg.$) {
-			case 'GotoIsomorphism':
-				return 'Graph Isomorphism.';
-			case 'GotoMaxkCut':
-				return 'Max k Cut.';
-			case 'GotoColoring':
-				return 'Graph Coloring.';
-			case 'GotoCover':
-				return 'Vertex Cover.';
-			case 'GotoTreeWidth':
-				return 'Tree Width.';
-			default:
-				return 'Oops';
-		}
-	}();
+var $author$project$Main$displayMiniGraph = function (svgHtml) {
 	return A2(
 		$mdgriffith$elm_ui$Element$el,
 		_List_fromArray(
 			[
-				$mdgriffith$elm_ui$Element$Events$onClick(topicMsg),
-				$mdgriffith$elm_ui$Element$pointer,
-				A2($mdgriffith$elm_ui$Element$paddingXY, 13, 15),
-				$mdgriffith$elm_ui$Element$Border$solid,
-				$mdgriffith$elm_ui$Element$Border$width(2),
-				$mdgriffith$elm_ui$Element$Border$rounded(15),
-				$mdgriffith$elm_ui$Element$width(
-				A2($mdgriffith$elm_ui$Element$maximum, 230, $mdgriffith$elm_ui$Element$fill))
+				$mdgriffith$elm_ui$Element$Font$color(
+				A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
+				$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+				$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+				$mdgriffith$elm_ui$Element$Background$color(
+				A3($mdgriffith$elm_ui$Element$rgb, 0.2, 0.2, 0.2))
 			]),
-		$mdgriffith$elm_ui$Element$text(tex));
+		$mdgriffith$elm_ui$Element$html(svgHtml));
 };
 var $author$project$Graph$displaySvg = function (elements) {
 	return A2(
@@ -16716,6 +16805,9 @@ var $author$project$Graph$ccircle = F4(
 				]),
 			_List_Nil);
 	});
+var $author$project$Graph$drawGoldenCircle = function (v) {
+	return A4($author$project$Graph$ccircle, 15, v.pos, '#BF8915', v.name);
+};
 var $author$project$Graph$drawSelectedVertex = function (v) {
 	return A4($author$project$Graph$ccircle, 13, v.pos, '#BF8915', v.name);
 };
@@ -16848,6 +16940,155 @@ var $author$project$Graph$writeName = F2(
 var $author$project$Graph$writeVertexName = function (v) {
 	return A2($author$project$Graph$writeName, v.name, v.pos);
 };
+var $author$project$Graph$drawGraph = function (g) {
+	var selectedVertices = A2(
+		$elm$core$List$filter,
+		function (ver) {
+			return ver.glow;
+		},
+		g.vertices);
+	var _v0 = $author$project$Graph$seperateEdges(g);
+	var specialEdges = _v0.a;
+	var normalEdges = _v0.b;
+	var haloVertices = A2($author$project$Graph$getHaloVertices, g, specialEdges);
+	return _Utils_ap(
+		A2($elm$core$List$map, $author$project$Graph$drawEdge, normalEdges),
+		_Utils_ap(
+			A2($elm$core$List$map, $author$project$Graph$drawSpecialEdge, specialEdges),
+			_Utils_ap(
+				A2($elm$core$List$map, $author$project$Graph$drawGoldenCircle, haloVertices),
+				_Utils_ap(
+					A2($elm$core$List$map, $author$project$Graph$drawVertex, g.vertices),
+					_Utils_ap(
+						A2($elm$core$List$map, $author$project$Graph$drawSelectedVertex, selectedVertices),
+						A2($elm$core$List$map, $author$project$Graph$writeVertexName, g.vertices))))));
+};
+var $author$project$GraphColoring$miniColGraph = $author$project$Graph$displaySvg(
+	$author$project$Graph$drawGraph(
+		A4(
+			$author$project$Graph$makeGraph,
+			$author$project$Graph$PolygonCycleDoll(5),
+			A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 200, 100, 0),
+			A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 80, 80, 0),
+			$elm$core$Basics$pi / 4)));
+var $author$project$Isomorphism$drawGraph = function (g) {
+	var selectedVertices = A2(
+		$elm$core$List$filter,
+		function (ver) {
+			return ver.glow;
+		},
+		g.vertices);
+	var _v0 = $author$project$Graph$seperateEdges(g);
+	var specialEdges = _v0.a;
+	var normalEdges = _v0.b;
+	var haloVertices = A2($author$project$Graph$getHaloVertices, g, specialEdges);
+	return _Utils_ap(
+		A2($elm$core$List$map, $author$project$Graph$drawEdge, normalEdges),
+		_Utils_ap(
+			A2($elm$core$List$map, $author$project$Graph$drawSpecialEdge, specialEdges),
+			_Utils_ap(
+				A2($elm$core$List$map, $author$project$Graph$drawGoldenCircle, haloVertices),
+				_Utils_ap(
+					A2($elm$core$List$map, $author$project$Graph$drawVertex, g.vertices),
+					_Utils_ap(
+						A2($elm$core$List$map, $author$project$Graph$drawSelectedVertex, selectedVertices),
+						A2($elm$core$List$map, $author$project$Graph$writeVertexName, g.vertices))))));
+};
+var $author$project$Isomorphism$miniIsoGraph = $author$project$Graph$displaySvg(
+	$author$project$Isomorphism$drawGraph(
+		A4(
+			$author$project$Graph$makeGraph,
+			$author$project$Graph$PolygonCycleDoll(4),
+			A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 200, 100, 0),
+			A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 80, 80, 0),
+			$elm$core$Basics$pi / 4)));
+var $author$project$MaxkCut$miniMaxGraph = function () {
+	var _v0 = $author$project$MaxkCut$threeCutGeometry;
+	var graph = _v0.a;
+	return $author$project$Graph$displaySvg(
+		$author$project$Graph$drawGraph(graph));
+}();
+var $author$project$TreeWidth$miniTreeWidth = function () {
+	var grid = $author$project$TreeWidth$treeWidthDisplay.gridHoneyComb;
+	var graph = $author$project$TreeWidth$treeWidthDisplay.graph;
+	return $author$project$Graph$displaySvg(
+		$author$project$Graph$drawGraph(
+			A2($author$project$Graph$morphGraph, graph, grid)));
+}();
+var $mdgriffith$elm_ui$Internal$Flag$borderStyle = $mdgriffith$elm_ui$Internal$Flag$flag(11);
+var $mdgriffith$elm_ui$Element$Border$solid = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$borderStyle, $mdgriffith$elm_ui$Internal$Style$classes.borderSolid);
+var $mdgriffith$elm_ui$Internal$Model$BorderWidth = F5(
+	function (a, b, c, d, e) {
+		return {$: 'BorderWidth', a: a, b: b, c: c, d: d, e: e};
+	});
+var $mdgriffith$elm_ui$Element$Border$width = function (v) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$borderWidth,
+		A5(
+			$mdgriffith$elm_ui$Internal$Model$BorderWidth,
+			'b-' + $elm$core$String$fromInt(v),
+			v,
+			v,
+			v,
+			v));
+};
+var $author$project$Main$makeTopicIcon = function (topicMsg) {
+	var tex = function () {
+		switch (topicMsg.$) {
+			case 'GotoIsomorphism':
+				return 'Graph Isomorphism.';
+			case 'GotoMaxkCut':
+				return 'Max k Cut.';
+			case 'GotoColoring':
+				return 'Graph Coloring.';
+			case 'GotoCover':
+				return 'Vertex Cover.';
+			case 'GotoTreeWidth':
+				return 'Tree Width.';
+			default:
+				return 'Oops';
+		}
+	}();
+	var miniGraph = function () {
+		switch (topicMsg.$) {
+			case 'GotoIsomorphism':
+				return $author$project$Isomorphism$miniIsoGraph;
+			case 'GotoMaxkCut':
+				return $author$project$MaxkCut$miniMaxGraph;
+			case 'GotoColoring':
+				return $author$project$GraphColoring$miniColGraph;
+			case 'GotoCover':
+				return $author$project$Isomorphism$miniIsoGraph;
+			case 'GotoTreeWidth':
+				return $author$project$TreeWidth$miniTreeWidth;
+			default:
+				return $author$project$Isomorphism$miniIsoGraph;
+		}
+	}();
+	return A2(
+		$mdgriffith$elm_ui$Element$column,
+		_List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$Events$onClick(topicMsg),
+				$mdgriffith$elm_ui$Element$pointer,
+				A2($mdgriffith$elm_ui$Element$paddingXY, 13, 15),
+				$mdgriffith$elm_ui$Element$Border$solid,
+				$mdgriffith$elm_ui$Element$Border$width(2),
+				$mdgriffith$elm_ui$Element$Border$rounded(15),
+				$mdgriffith$elm_ui$Element$width(
+				A2($mdgriffith$elm_ui$Element$minimum, 200, $mdgriffith$elm_ui$Element$fill))
+			]),
+		_List_fromArray(
+			[
+				$author$project$Main$displayMiniGraph(miniGraph),
+				A2(
+				$mdgriffith$elm_ui$Element$el,
+				_List_fromArray(
+					[$mdgriffith$elm_ui$Element$centerX]),
+				$mdgriffith$elm_ui$Element$text(tex))
+			]));
+};
 var $author$project$VertexCover$drawGraphForCover = function (g) {
 	var selectedVertices = A2(
 		$elm$core$List$filter,
@@ -16872,32 +17113,6 @@ var $author$project$VertexCover$drawGraphForCover = function (g) {
 var $author$project$VertexCover$paneFour = function (display) {
 	return $author$project$Graph$displaySvg(
 		$author$project$VertexCover$drawGraphForCover(display.graphA));
-};
-var $author$project$Graph$drawGoldenCircle = function (v) {
-	return A4($author$project$Graph$ccircle, 15, v.pos, '#BF8915', v.name);
-};
-var $author$project$Isomorphism$drawGraph = function (g) {
-	var selectedVertices = A2(
-		$elm$core$List$filter,
-		function (ver) {
-			return ver.glow;
-		},
-		g.vertices);
-	var _v0 = $author$project$Graph$seperateEdges(g);
-	var specialEdges = _v0.a;
-	var normalEdges = _v0.b;
-	var haloVertices = A2($author$project$Graph$getHaloVertices, g, specialEdges);
-	return _Utils_ap(
-		A2($elm$core$List$map, $author$project$Graph$drawEdge, normalEdges),
-		_Utils_ap(
-			A2($elm$core$List$map, $author$project$Graph$drawSpecialEdge, specialEdges),
-			_Utils_ap(
-				A2($elm$core$List$map, $author$project$Graph$drawGoldenCircle, haloVertices),
-				_Utils_ap(
-					A2($elm$core$List$map, $author$project$Graph$drawVertex, g.vertices),
-					_Utils_ap(
-						A2($elm$core$List$map, $author$project$Graph$drawSelectedVertex, selectedVertices),
-						A2($elm$core$List$map, $author$project$Graph$writeVertexName, g.vertices))))));
 };
 var $author$project$Isomorphism$paneOne = F2(
 	function (graphA, graphB) {
@@ -17213,29 +17428,6 @@ var $author$project$MaxkCut$drawCutLine = function (cutLine) {
 				A2($author$project$Graph$line, start, end)
 			]),
 		$author$project$Graph$drawIntersectionPoints(l));
-};
-var $author$project$Graph$drawGraph = function (g) {
-	var selectedVertices = A2(
-		$elm$core$List$filter,
-		function (ver) {
-			return ver.glow;
-		},
-		g.vertices);
-	var _v0 = $author$project$Graph$seperateEdges(g);
-	var specialEdges = _v0.a;
-	var normalEdges = _v0.b;
-	var haloVertices = A2($author$project$Graph$getHaloVertices, g, specialEdges);
-	return _Utils_ap(
-		A2($elm$core$List$map, $author$project$Graph$drawEdge, normalEdges),
-		_Utils_ap(
-			A2($elm$core$List$map, $author$project$Graph$drawSpecialEdge, specialEdges),
-			_Utils_ap(
-				A2($elm$core$List$map, $author$project$Graph$drawGoldenCircle, haloVertices),
-				_Utils_ap(
-					A2($elm$core$List$map, $author$project$Graph$drawVertex, g.vertices),
-					_Utils_ap(
-						A2($elm$core$List$map, $author$project$Graph$drawSelectedVertex, selectedVertices),
-						A2($elm$core$List$map, $author$project$Graph$writeVertexName, g.vertices))))));
 };
 var $author$project$MaxkCut$CutLine = F3(
 	function (a, b, c) {
@@ -17587,6 +17779,95 @@ var $author$project$MaxkCut$paneTwo = function (maxCutTrans) {
 		return $author$project$MaxkCut$paneTwoB(maxCutTrans.transitionB);
 	}
 };
+var $elm$html$Html$Attributes$alt = $elm$html$Html$Attributes$stringProperty('alt');
+var $elm$html$Html$Attributes$src = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'src',
+		_VirtualDom_noJavaScriptOrHtmlUri(url));
+};
+var $mdgriffith$elm_ui$Element$image = F2(
+	function (attrs, _v0) {
+		var src = _v0.src;
+		var description = _v0.description;
+		var imageAttributes = A2(
+			$elm$core$List$filter,
+			function (a) {
+				switch (a.$) {
+					case 'Width':
+						return true;
+					case 'Height':
+						return true;
+					default:
+						return false;
+				}
+			},
+			attrs);
+		return A4(
+			$mdgriffith$elm_ui$Internal$Model$element,
+			$mdgriffith$elm_ui$Internal$Model$asEl,
+			$mdgriffith$elm_ui$Internal$Model$div,
+			A2(
+				$elm$core$List$cons,
+				$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.imageContainer),
+				attrs),
+			$mdgriffith$elm_ui$Internal$Model$Unkeyed(
+				_List_fromArray(
+					[
+						A4(
+						$mdgriffith$elm_ui$Internal$Model$element,
+						$mdgriffith$elm_ui$Internal$Model$asEl,
+						$mdgriffith$elm_ui$Internal$Model$NodeName('img'),
+						_Utils_ap(
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Internal$Model$Attr(
+									$elm$html$Html$Attributes$src(src)),
+									$mdgriffith$elm_ui$Internal$Model$Attr(
+									$elm$html$Html$Attributes$alt(description))
+								]),
+							imageAttributes),
+						$mdgriffith$elm_ui$Internal$Model$Unkeyed(_List_Nil))
+					])));
+	});
+var $author$project$Main$photoGraph = F2(
+	function (width, height) {
+		return A2(
+			$mdgriffith$elm_ui$Element$column,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$Font$color(
+					A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
+					$mdgriffith$elm_ui$Element$Font$heavy,
+					A2($mdgriffith$elm_ui$Element$spacingXY, 10, 15),
+					$mdgriffith$elm_ui$Element$width(
+					A2($mdgriffith$elm_ui$Element$maximum, width - 1, $mdgriffith$elm_ui$Element$fill)),
+					$mdgriffith$elm_ui$Element$height(
+					A2($mdgriffith$elm_ui$Element$minimum, height, $mdgriffith$elm_ui$Element$fill)),
+					$mdgriffith$elm_ui$Element$Border$rounded(20),
+					$mdgriffith$elm_ui$Element$alignRight,
+					$mdgriffith$elm_ui$Element$Border$width(5),
+					$mdgriffith$elm_ui$Element$Border$color(
+					A3($mdgriffith$elm_ui$Element$rgb, 0.7, 0.6, 0.6))
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$mdgriffith$elm_ui$Element$el,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$Border$rounded(200)
+						]),
+					A2(
+						$mdgriffith$elm_ui$Element$image,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$width(
+								A2($mdgriffith$elm_ui$Element$maximum, 400, $mdgriffith$elm_ui$Element$fill))
+							]),
+						{description: '', src: 'images/fatma.jpeg'}))
+				]));
+	});
 var $author$project$Main$viewTopic = function (model) {
 	var _v0 = model.topic;
 	switch (_v0.$) {
@@ -17672,23 +17953,49 @@ var $author$project$Main$viewTopic = function (model) {
 						$mdgriffith$elm_ui$Element$Font$heavy,
 						A2($mdgriffith$elm_ui$Element$spacingXY, 10, 15)
 					]),
-				_Utils_ap(
-					_List_fromArray(
-						[
-							A2(
-							$mdgriffith$elm_ui$Element$el,
-							_List_fromArray(
-								[
-									$mdgriffith$elm_ui$Element$Font$size(50),
-									A2($mdgriffith$elm_ui$Element$paddingXY, 5, 20)
-								]),
-							$mdgriffith$elm_ui$Element$text('Visualization of Classical Graph Theory Problems'))
-						]),
-					A2(
-						$elm$core$List$map,
-						$author$project$Main$makeTopicIcon,
+				_List_fromArray(
+					[
+						A2(
+						$mdgriffith$elm_ui$Element$el,
 						_List_fromArray(
-							[$author$project$Messages$GotoIsomorphism, $author$project$Messages$GotoMaxkCut, $author$project$Messages$GotoColoring, $author$project$Messages$GotoCover, $author$project$Messages$GotoTreeWidth]))));
+							[
+								$mdgriffith$elm_ui$Element$Font$size(50),
+								A2($mdgriffith$elm_ui$Element$paddingXY, 5, 20)
+							]),
+						$mdgriffith$elm_ui$Element$text('Visualization of Classical Graph Theory Problems')),
+						A2(
+						$mdgriffith$elm_ui$Element$row,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$centerX,
+								$mdgriffith$elm_ui$Element$centerY,
+								$mdgriffith$elm_ui$Element$Font$color(
+								A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
+								$mdgriffith$elm_ui$Element$Font$heavy,
+								A2($mdgriffith$elm_ui$Element$spacingXY, 10, 15)
+							]),
+						A2(
+							$elm$core$List$map,
+							$author$project$Main$makeTopicIcon,
+							_List_fromArray(
+								[$author$project$Messages$GotoIsomorphism, $author$project$Messages$GotoMaxkCut, $author$project$Messages$GotoColoring]))),
+						A2(
+						$mdgriffith$elm_ui$Element$row,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$centerX,
+								$mdgriffith$elm_ui$Element$centerY,
+								$mdgriffith$elm_ui$Element$Font$color(
+								A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
+								$mdgriffith$elm_ui$Element$Font$heavy,
+								A2($mdgriffith$elm_ui$Element$spacingXY, 10, 15)
+							]),
+						A2(
+							$elm$core$List$map,
+							$author$project$Main$makeTopicIcon,
+							_List_fromArray(
+								[$author$project$Messages$GotoCover, $author$project$Messages$GotoTreeWidth])))
+					]));
 		case 'ScreenSize':
 			return A2(
 				$mdgriffith$elm_ui$Element$el,
@@ -17712,7 +18019,7 @@ var $author$project$Main$viewTopic = function (model) {
 				_List_fromArray(
 					[
 						A2($author$project$Main$introFatma, width, height),
-						A2($author$project$Main$dummyFragment, model.width - width, height)
+						A2($author$project$Main$photoGraph, model.width - width, height)
 					]));
 	}
 };

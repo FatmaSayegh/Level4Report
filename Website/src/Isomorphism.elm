@@ -10,9 +10,19 @@ import Explanation exposing (..)
 import Buttons exposing (..)
 import String.Format
 import Html as H exposing (div, h1, p, text)
-import FontSize exposing (getFontSize, FontSize(..))
+import FontSize exposing
+               ( getFontSize
+               , FontSize(..)
+               , FontColor(..)
+               , giveFontColor
+               , emph
+               )
 
 
+miniIsoGraph = 
+      makeGraph (PolygonCycleDoll 4) (vec3 200 100 0) (vec3 80 80 0) (pi / 4)
+      |> drawGraph
+      |> Graph.displaySvg
 
 isomorphicTransition : ShapeTransition
 isomorphicTransition =
@@ -175,6 +185,12 @@ starGrid =
    List.map (\(x,y) -> y) (List.sortWith (\t1 t2 -> compare (Tuple.first t1) (Tuple.first t2)) positionsTupled)
 
 
+type ScreenSize
+   = Big
+   | Standard
+   | Small
+   | Smaller
+
 
 explanationOne : ShapeTransition -> Bool -> Int -> ELE.Element Msg
 explanationOne shapeTransition helpStatus width =
@@ -196,6 +212,22 @@ explanationOne shapeTransition helpStatus width =
                [ELE.spacing 8] 
                [ELE.text isomorphismExplanation]
 
+         , ELE.paragraph
+               []
+               [ ELE.text "You should now press the "
+               , emph CuteBlue "Play"
+               , ELE.text 
+                     """
+                      button, to set the animation rolling.
+                     Press the 
+                     """
+               , emph CuteBlue "Restart "
+               , ELE.text
+                     """
+                     button to see it all over again.
+                     """
+               ]
+
          , mediaButtons shapeTransition
 
 
@@ -203,8 +235,22 @@ explanationOne shapeTransition helpStatus width =
                []
                [ ELE.text 
                      """
-                     Go ahead and put your mouse over a vertex of the graph. 
-                     Or press a number on the keyboard corresponding to a Vertex number.
+                     Go ahead and put your mouse over a 
+                     """
+               , emph CuteGreen "vertex"
+
+
+               , ELE.text
+
+                     """
+                     of the graph. 
+                     Or 
+                     """
+               , emph CuteBlue
+                     "press"
+               , ELE.text
+                     """
+                      a number on the keyboard corresponding to a Vertex number.
                      """
                ]
 
@@ -245,20 +291,19 @@ makeStory shapeTransition helpStatus =
         listOfStories =
             case glowing_vertices of
                 [] ->
-                    []
+                    [ ELE.none ]
 
                 x :: xs ->
-                    [ "You have selected Vertex {{}}." |> String.Format.value (String.fromInt x.name)
-                    , (connectedToThis x)
-                        ++ Graph.getStringFromVertices relatedVertices
-                    , whichYouCanSee
+                    [ ELE.text "You have selected "
+                    , emph CuteGreen "Vertex "
+                    , emph Pink (String.fromInt x.name)
+                    , ELE.text ". Connected to this vertex are" 
+                    , emph CuteGreen " Vertices "
+                    , emph Pink <| Graph.getStringFromVertices relatedVertices
+                    , ELE.text "."
+                    , ELE.text whichYouCanSee
                     ]
 
-        storyPara =
-            List.intersperse (ELE.html <| H.br [] [])
-                (List.map ELE.text
-                    listOfStories
-                )
 
         footer =
             case glowing_vertices of
@@ -273,7 +318,7 @@ makeStory shapeTransition helpStatus =
     in
     if helpStatus == False
       then
-         [ ELE.paragraph [] storyPara
+         [ ELE.paragraph [] listOfStories
          , ELE.paragraph [] [ELE.text footer]
          ]
       else

@@ -13,7 +13,22 @@ import Html as H exposing (div, h1, p, text)
 import Element.Input as Input
 import Ant.Icon as Ant
 import Ant.Icons as Icons
-import FontSize exposing (getFontSize, FontSize(..))
+import FontSize exposing
+      ( getFontSize
+      , FontSize(..)
+      , FontColor(..)
+      , giveFontColor
+      , emph
+      )
+
+miniMaxGraph = 
+      let
+         (graph, _) =
+            threeCutGeometry
+      in
+      graph
+      |> Graph.drawGraph
+      |> Graph.displaySvg
 
 type alias MaxCutTransition =
     { transitionA : ShapeTransition -- Will remain static
@@ -159,24 +174,83 @@ explanationTwo maxCut helpStatus width =
             maxCut.state
 
          twoCutExplanation =
-            """
-            In the animation, the vertices are being segregated into two sets,
-            such that the number of edges passing from vertices in one set to
-            the vertices in another set is more than any other way the vertices
-            of the graph could have been segregated.  In other words the
-            problem of max cut is to identify such partition of the vertices of
-            the graph that the above objective is satisfied.
-            """
+            [ ELE.text
+               """
+               In the animation, the 
+               """
+            , emph CuteGreen "vertices" 
+            , ELE.text " are being "
+            , emph CuteGreen "segregated"
+            , ELE.text
+                  """
+                  into two sets,
+                  such that the number of edges passing from vertices in one set to
+                  the vertices in another set is more than 
+                  """
+            , emph Pink
+                  """
+                  any other way 
+                  """
+            , ELE.text
+                  """
+                  the vertices
+                  of the graph could have been segregated.  In other words the
+                  problem of max cut is to 
+                  """
+            , ELE.text
+                  """
+                  identify such partition 
+                  """
+            , ELE.text
+                  """
+                  of the vertices of
+                  the graph that the above objective is satisfied.
+                  """
+            ]
 
+         buttonExplanation =
+            [ ELE.text "Press the "
+            , emph CuteBlue "Play "
+            , ELE.text "button to start the animation. "
+            , ELE.text "Press the "
+            , emph CuteBlue "Restart "
+            , ELE.text "button to see it all over again."
+            ]
+         drawCutLineExplanation =
+            [ ELE.text "For a clear cut seperation of the sets "
+            , emph CuteBlue "Press"
+            , ELE.text " the cut line below."
+            ]
          threeCutExplanation =
-            """
-            In the animation, the vertices are being segregated into three
-            sets, such that the number of edges passing from vertices in one
-            set to the vertices in all other sets is more than any other way
-            the vertices of the graph could have been segregated.  In other
-            words the problem of max 3 cut is to identify such partition of the
-            vertices of the graph that the above objective is satisfied.
-            """
+            [ ELE.text
+               """
+               In the 
+               animation, the vertices are being segregated into 
+               """
+           , emph CuteGreen
+               """
+               three sets
+               """
+           ,  ELE.text
+               """
+               , such that the number of edges 
+               """
+           ,   emph CuteGreen "passing"
+               
+           ,   ELE.text
+               """
+               from vertices in one
+               set to the vertices in all other sets is more than 
+               """
+           ,   emph Pink "any other way"
+
+           ,   ELE.text
+               """
+               the vertices of the graph could have been segregated.  In other
+               words the problem of max 3 cut is to identify such partition of the
+               vertices of the graph that the above objective is satisfied.
+               """
+            ]
 
          twoCutLineExplanation =
             """
@@ -212,19 +286,24 @@ explanationTwo maxCut helpStatus width =
          ,  ELE.paragraph
                [ELE.spacing 8] 
                [ELE.text maxCutExplanation]
-               --TODO
+
+         , ELE.paragraph
+              []
+              buttonExplanation
 
          ,  mediaButtonsForMaxCut shapeTransition
 
          , ELE.paragraph
                []
-               [ ELE.text 
-                     <| if state == TwoCut
-                           then
-                              twoCutExplanation
-                           else
-                              threeCutExplanation
-               ]
+               ( if state == TwoCut
+                     then
+                        twoCutExplanation
+                     else
+                        threeCutExplanation
+               )
+        , ELE.paragraph
+               []
+               drawCutLineExplanation
            
         , buttonWrap "Cutline" <| Input.button
                                   [

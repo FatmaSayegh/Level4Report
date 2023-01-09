@@ -17,7 +17,13 @@ import Color exposing (Color)
 import Svg as S
 import Svg.Attributes as SA exposing (..)
 import Svg.Events as SE exposing (..)
-import FontSize exposing (getFontSize, FontSize(..))
+import FontSize exposing
+               ( getFontSize
+               , FontSize(..)
+               , FontColor(..)
+               , giveFontColor
+               , emph
+               )
 
 type alias VertexCoverDisplay =
    { graphA : Graph
@@ -97,8 +103,23 @@ explanationCover display helpStatus width =
                [ ELE.text 
                      """
                      In the task on the right, selecting a vertex will cover all
-                     the edges incident on it. Your objective is to select the
-                     minimum number of vertices such that, all the edges of the
+                     the edges
+                     """
+               , emph CuteGreen
+                     """
+                     incident 
+                     """
+               , ELE.text
+                     """
+                     on it. Your objective is to select the
+                     """
+               , emph CuteGreen
+                     """
+                     minimum 
+                     """
+               , ELE.text
+                     """
+                     number of vertices such that, all the edges of the
                      graph are covered.
                      """
                ]
@@ -107,75 +128,105 @@ explanationCover display helpStatus width =
                []
                [ ELE.text 
                      """
-                     To select a vertex you can press, the vertex number
-                     on the keyboard. To de-select, do the same again.
+                     To select a vertex you can 
+                     """
+               , emph CuteBlue
+                     """
+                      press 
+                     """
+               , ELE.text  
+                     """
+                     , the vertex 
+                     """
+               , emph CuteBlue
+                     """
+                      number
+                     """
+               , ELE.text
+                     """
+                     on the keyboard. To 
+                     """
+               , emph CuteBlue
+                     """
+                     de-select 
+                     """
+               , ELE.text
+                     """
+                     , press the same key again.
                      """
                ]
 
         , ELE.paragraph
                []
-               [ ELE.text <| if noOfSelectedVertices  == 0
+               <| if noOfSelectedVertices  == 0
                                 then
-                                   ""
+                                   [ ELE.none ]
                                 else
-                                   "You have selected a total of "
-                                   ++ (String.fromInt noOfSelectedVertices)
-                                   ++ " vertices out of "
-                                   ++ (String.fromInt totalVertices)
-                                   ++ " vertices. "
-               ]
+                                   [ ELE.text "You have selected a total of "
+                                   , emph Pink (String.fromInt noOfSelectedVertices)
+                                   , ELE.text " vertices "
+                                   , emph CuteGreen "out of "
+                                   , emph Pink (String.fromInt totalVertices)
+                                   , ELE.text " vertices. "
+                                   ]
 
         , ELE.paragraph
                []
-               [ ELE.text <| if noCoveredEdges == 0
+               <| if noCoveredEdges == 0
                      then
-                        ""
+                        [ ELE.none ]
                      else
-                        "You have covered a total of "
-                        ++ (String.fromInt noCoveredEdges)
-                        ++ " edges out of a total of "
-                        ++ (String.fromInt totalEdges)
-                        ++ " edges. "
-               ]
+                        [ ELE.text "You have covered a total of "
+                        , emph Pink (String.fromInt noCoveredEdges)
+                        , ELE.text " edges " 
+                        , emph CuteGreen "out of " 
+                        , ELE.text "a total of "
+                        , emph Pink (String.fromInt totalEdges)
+                        , ELE.text  " edges. "
+                        ]
 
         , ELE.paragraph
                []
-               [ ELE.text <| if edgesRemainig == 0
-                              then
-                                 if noOfSelectedVertices > 4
-                                    then
-                                       """
-                                       You have covered all the edges.
-                                       but
-                                       you have done so by selecting
-                                       """
-                                       ++
-                                       (String.fromInt noOfSelectedVertices)
-                                       ++
-                                       """
-                                       vertices. The graph could have been covered by
-                                       selecting only four! Try again to see that
-                                       you can do it in just four.
-                                       """
-                                    else
-                                       "Congratulations, you have covered all "
-                                       ++ (String.fromInt noCoveredEdges)
-                                       ++ " edges. "
-                                       ++ "You have done so by selecting the vertices "
-                                       ++ Graph.getStringFromVertices selected_vertices
-                                       ++ "."
-                                       ++ " Therefore a vertex cover of this graph is the set vertices "
-                                       ++ Graph.getStringFromVertices selected_vertices
-                                       ++ "."
+               <| if edgesRemainig == 0
+                      then
+                         if noOfSelectedVertices > 4
+                            then
+                               [ ELE.text
+                                  """
+                                  You have covered all the edges.
+                                  but
+                                  you have done so by selecting
+                                  """
+                               , emph Pink (String.fromInt noOfSelectedVertices)
+                               , ELE.text 
+                                  """
+                                  vertices. The graph could have been covered by
+                                  selecting only four! Try again to see that
+                                  you can do it in just four.
+                                  """
+                               ]
+                            else
+                               [
+                                  ELE.text "Congratulations, you have covered all "
+                               ,  emph CuteBlue (String.fromInt noCoveredEdges)
+                               ,  ELE.text " edges. "
+                               ,  ELE.text "You have done so by selecting the vertices "
+                               ,  emph CuteBlue (Graph.getStringFromVertices selected_vertices)
+                               ,  ELE.text ". Therefore a vertex cover of this graph is the"
+                               ,  emph CuteGreen " set " 
+                               ,  ELE.text " of vertices "
+                               ,  emph CuteBlue (Graph.getStringFromVertices selected_vertices)
+                               ,  ELE.text "."
+                               ]
 
-                              else
-                                 if edgesRemainig == totalEdges
-                                 then
-                                    ""
-                                 else
-                                    (String.fromInt edgesRemainig)
-                                    ++ " edges more to be covered!"
-              ]
+                      else
+                         if edgesRemainig == totalEdges
+                         then
+                            [ ELE.none ]
+                         else
+                            [ emph Pink (String.fromInt edgesRemainig)
+                            , ELE.text  " edges more to be covered!"
+                            ]
 
          ,  (if helpStatus == True then (helpParagraph VertexCoverHelp) else ELE.none)
           , lowerNavigation "Graph Coloring" "Tree Width"

@@ -30,11 +30,11 @@ import Element.Events as Events
 import Ant.Icon as Ant
 import Ant.Icons as Icons
 import Messages exposing (Msg(..))
-import Isomorphism exposing (explanationOne, paneOne, animateIsomorphicTransition, isomorphicTransition)
-import MaxkCut exposing (MaxCutTransition, explanationTwo, paneTwo, animateMaxCutCompound, maxCutTransition)
-import GraphColoring exposing (ColorDisplay, paneThree, explanationColoring, colorDisplay, goColor)
+import Isomorphism exposing (explanationOne, paneOne, animateIsomorphicTransition, isomorphicTransition, miniIsoGraph )
+import MaxkCut exposing (MaxCutTransition, explanationTwo, paneTwo, animateMaxCutCompound, maxCutTransition, miniMaxGraph)
+import GraphColoring exposing (ColorDisplay, paneThree, explanationColoring, colorDisplay, goColor, miniColGraph)
 import VertexCover exposing (VertexCoverDisplay, paneFour, explanationCover, vertexCoverDisplay, goCover)
-import TreeWidth exposing (TreeWidthDisplay, paneTree, explanationWidth, treeWidthDisplay, goTree)
+import TreeWidth exposing (TreeWidthDisplay, paneTree, explanationWidth, treeWidthDisplay, goTree, miniTreeWidth)
 import Graph exposing (ShapeTransition)
 import FontSize exposing (getFontSize, FontSize(..))
 import Buttons exposing(homeButton, aboutButton)
@@ -396,14 +396,30 @@ viewTopic model =
                           , ELE.paddingXY 5 20
                           ] 
                           (ELE.text "Visualization of Classical Graph Theory Problems")
-                 ]
-                 ++  List.map makeTopicIcon 
-                        [ GotoIsomorphism
-                        , GotoMaxkCut
-                        , GotoColoring
-                        , GotoCover
-                        , GotoTreeWidth
+                 , ELE.row
+                        [ ELE.centerX
+                        , ELE.centerY
+                        , Font.color <| ELE.rgb 1 1 1
+                        , Font.heavy
+                        , ELE.spacingXY 10 15
                         ]
+                        <| List.map makeTopicIcon 
+                           [ GotoIsomorphism
+                           , GotoMaxkCut
+                           , GotoColoring
+                           ]
+                 , ELE.row
+                        [ ELE.centerX
+                        , ELE.centerY
+                        , Font.color <| ELE.rgb 1 1 1
+                        , Font.heavy
+                        , ELE.spacingXY 10 15
+                        ]
+                        <| List.map makeTopicIcon 
+                           [ GotoCover
+                           , GotoTreeWidth
+                           ]
+                  ]
 
       ScreenSize ->
             ELE.el
@@ -422,11 +438,11 @@ viewTopic model =
                , Border.color (ELE.rgb 1 1 1)
                ]
                [ introFatma width (height)
-               , dummyFragment (model.width - width) height
+               , photoGraph (model.width - width) height
                ]
          
 
-dummyFragment width height =
+photoGraph width height =
       ELE.column
          [ Font.color <| ELE.rgb 1 1 1
          , Font.heavy
@@ -507,14 +523,38 @@ makeTopicIcon topicMsg =
                "Tree Width."
             _ ->
                "Oops"
+               
+      miniGraph =
+         case topicMsg of
+            GotoIsomorphism ->
+               miniIsoGraph
+            GotoMaxkCut ->
+               miniMaxGraph
+            GotoColoring ->
+               miniColGraph
+            GotoCover ->
+               miniIsoGraph
+            GotoTreeWidth ->
+               miniTreeWidth
+            _ ->
+               miniIsoGraph
    in
-   ELE.el [ Events.onClick topicMsg
-          , ELE.pointer
-          , ELE.paddingXY 13 15
-          , Border.solid
-          , Border.width 2
-          , Border.rounded 15
-          , ELE.width (ELE.fill |> ELE.maximum 230)
-          ] 
-          (ELE.text tex)
+   ELE.column [ Events.onClick topicMsg
+              , ELE.pointer
+              , ELE.paddingXY 13 15
+              , Border.solid
+              , Border.width 2
+              , Border.rounded 15
+              , ELE.width (ELE.fill |> ELE.minimum 200)
+              ] 
+              [ displayMiniGraph miniGraph
+              , ELE.el [ELE.centerX] <| ELE.text tex
+              ]
 
+displayMiniGraph svgHtml =
+   ELE.el
+      [ Font.color (ELE.rgb 1 1 1)
+      , ELE.height ELE.fill
+      , ELE.width ELE.fill
+      , Background.color <| ELE.rgb 0.2 0.2 0.2
+      ] (ELE.html svgHtml)

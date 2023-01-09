@@ -17,7 +17,18 @@ import Color exposing (Color)
 import Svg as S
 import Svg.Attributes as SA exposing (..)
 import Svg.Events as SE exposing (..)
-import FontSize exposing (getFontSize, FontSize(..))
+import FontSize exposing
+      ( getFontSize
+      , FontSize(..)
+      , FontColor(..)
+      , giveFontColor
+      , emph
+      )
+
+miniColGraph = 
+      makeGraph (PolygonCycleDoll 5) (vec3 200 100 0) (vec3 80 80 0) (pi /4)
+      |> Graph.drawGraph
+      |> Graph.displaySvg
 
 type alias ColorDisplay =
    { graphA : Graph
@@ -105,8 +116,10 @@ explanationColoring colorDisp helpStatus width =
                [ ELE.text coloringExplanation ]
 
          ,  ELE.paragraph
-               [ ELE.spacing 8 ] 
-               [ ELE.text howToColor ]
+               --[ ELE.spacing 8 ] 
+               []
+               --[ ELE.text howToColor ]
+               howToColor
          , ELE.paragraph
                []
                [ ELE.text 
@@ -132,61 +145,109 @@ explanationColoring colorDisp helpStatus width =
 
         , ELE.paragraph
                []
-               [ ELE.text <| if List.length coloredVertices > 1 && List.length miscoloredEdges == 0
-                                then
-                                   "Good going! Adjacent Vertices are colored differently."
-                                else
-                                   """
-                                   """
-               ]
+               <| if List.length coloredVertices > 1 && List.length miscoloredEdges == 0
+                    then
+                       [ emph CuteGreen "Good going! "
+                       , ELE.text "Adjacent Vertices are colored differently."
+                       ]
+                    else
+                      [ ELE.none ]
 
         , ELE.paragraph
                []
-               [ ELE.text <| if List.isEmpty miscoloredEdges
-                                then
-                                    ""
-                                else
-                                    String.join " "  <| List.map miscolorText miscoloredEdges
-               ]
+               <| if List.isEmpty miscoloredEdges
+                     then
+                        [ ELE.none ]
+                     else
+                        List.concat <| List.map miscolorText miscoloredEdges
 
         , ELE.paragraph
                []
-               [ ELE.text <| if List.isEmpty miscoloredEdges
+               <| if List.isEmpty miscoloredEdges
                                 then
-                                    ""
+                                    [ ELE.none ]
                                 else
-                                   """
-                                   Try another color combination.
-                                   Remember the rule; No two adjacent
-                                   vertices must have the same color!
-                                   """
-               ]
+                                   [ emph CuteBlue "Try "
+
+                                   , ELE.text "another color combination. "
+
+                                   , emph CuteGreen "Remember the rule;"
+
+                                   , emph Pink
+                                       """
+                                       No two adjacent
+                                       """
+                                   , ELE.text
+                                       """
+                                       vertices must have the same color!
+                                       """
+                                   ]
 
         , ELE.paragraph
                []
-               [ ELE.text <| if (List.isEmpty miscoloredEdges
+               <| if (List.isEmpty miscoloredEdges
                                  && List.length coloredVertices 
                                     == List.length colorDisp.graphA.vertices)
                                 then
-                                   """
-                                   Congratulations! Graph has been colored fully and correctly.
-                                   i.e. No two adjacent vertices have the same color.
-                                   """
+                                   makeCongrats ++
+                                   [ ELE.text
+                                       """
+                                        Graph has been colored
+                                       """
+                                   , emph CuteGreen
+                                       """
+                                       fully 
+                                       """
+                                   , ELE.text
+                                       """
+                                       and 
+                                       """
+                                   , emph CuteGreen
+                                       """
+                                       correctly.
+                                       """
+                                   , ELE.text
+                                       """
+                                       i.e. No two adjacent vertices have the same color.
+                                       """
+                                   ]
                                 else
-                                   ""
-              ]
+                                   [ ELE.none ]
+
          , (if helpStatus == True then (helpParagraph GraphColoringHelp) else ELE.none)
          , lowerNavigation "Max Cut" "Vertex Cover"
          ]
 
+makeCongrats =
+   [ emph CuteGreen "C"
+   , emph CuteBlue "o"
+   , emph Pink "n"
+   , emph CuteGreen "g"
+   , emph CuteBlue "r"
+   , emph Pink "a"
+   , emph CuteGreen "t"
+   , emph CuteBlue "u"
+   , emph Pink "l"
+   , emph CuteGreen "a"
+   , emph CuteBlue "t"
+   , emph Pink "i"
+   , emph CuteGreen "o"
+   , emph CuteBlue "n"
+   , emph Pink "s"
+   , emph CuteGreen "!"
+   ]
 
-
-miscolorText : Graph.Edge -> String
+miscolorText : Graph.Edge -> List (ELE.Element msg)
 miscolorText e =
-   "Vertex " ++ (String.fromInt e.vertexOne.name) 
-             ++ " and vertex "
-             ++ (String.fromInt e.vertexTwo.name)
-             ++ " which are adjacent to each other are colored with the same color."
+   [ ELE.text "Vertex " 
+   , emph Pink (String.fromInt e.vertexOne.name) 
+   , ELE.text " and vertex "
+   , emph Pink (String.fromInt e.vertexTwo.name)
+   , ELE.text " which are "
+   , emph Pink "adjacent "
+   , ELE.text "to each other are colored with the " 
+   , emph Pink "same color. "
+   ]
 
 goColor : ColorDisplay -> Msg -> ColorDisplay
 goColor display msg =

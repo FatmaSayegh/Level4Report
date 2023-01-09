@@ -1,5 +1,13 @@
 module Explanation exposing (..)
 
+import Element as ELE
+import FontSize exposing
+               ( getFontSize
+               , FontSize(..)
+               , FontColor(..)
+               , giveFontColor
+               , emph
+               )
 isomorphismExplanation =
    """
    Two graphs G1 and G2 are isomorphic if there is a one-one correspondence
@@ -47,11 +55,38 @@ coloringExplanation =
    """
 
 howToColor =
-   """
-   Choose a color from the color palette by clicking on one of the colors and apply it to one of the vertices.
-   While coloring the graph make sure that no two adjacent vertices are colored the same. For if they are, the
-   edges connecting them will be displayed differently to let you know of the mistake.
-   """
+   [ emph CuteGreen
+      """
+      Choose 
+      """
+   , ELE.text
+      """
+      a color from the color palette by 
+      """
+   , emph CuteBlue
+      """
+      clicking 
+      """
+   , ELE.text
+      """
+      on one of the colors and 
+      """
+   , emph CuteGreen
+      "apply" 
+
+
+   , ELE.text
+      """
+       it to one of the vertices.
+      While coloring the graph make sure that 
+      """
+
+   , ELE.text
+      """
+      no two adjacent vertices are colored the same. For if they are, the
+      edges connecting them will be displayed differently to let you know of the mistake.
+      """
+   ]
 
 vertexCoverExplanation =
    """
