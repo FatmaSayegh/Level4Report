@@ -1,6 +1,6 @@
 {
     "name": "visualisation-of-classical-graph-problems",
     "scripts": {
-        "build": "mkdir -p dist && elm make src/Main.elm --optimize --output=dist/main.js && cp index.html dist"
+        "build": "mkdir -p dist && mkdir -p dist/images && elm make src/Main.elm --optimize --output=dist/main.js && cp index.html dist && cp images/* dist/images/"
     }
 }
