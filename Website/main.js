@@ -17956,13 +17956,65 @@ var $author$project$Main$viewTopic = function (model) {
 				_List_fromArray(
 					[
 						A2(
-						$mdgriffith$elm_ui$Element$el,
+						$mdgriffith$elm_ui$Element$paragraph,
 						_List_fromArray(
 							[
-								$mdgriffith$elm_ui$Element$Font$size(50),
+								$mdgriffith$elm_ui$Element$Font$size(45),
 								A2($mdgriffith$elm_ui$Element$paddingXY, 5, 20)
 							]),
-						$mdgriffith$elm_ui$Element$text('Visualization of Classical Graph Theory Problems')),
+						_List_fromArray(
+							[
+								A2(
+								$mdgriffith$elm_ui$Element$el,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$Font$color(
+										A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.9, 0.7)),
+										$mdgriffith$elm_ui$Element$Font$size(70)
+									]),
+								$mdgriffith$elm_ui$Element$text('V')),
+								$mdgriffith$elm_ui$Element$text('isualization of '),
+								A2(
+								$mdgriffith$elm_ui$Element$el,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$Font$color(
+										A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.9, 0.7)),
+										$mdgriffith$elm_ui$Element$Font$size(70)
+									]),
+								$mdgriffith$elm_ui$Element$text('C')),
+								$mdgriffith$elm_ui$Element$text('lassical '),
+								A2(
+								$mdgriffith$elm_ui$Element$el,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$Font$color(
+										A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.9, 0.7)),
+										$mdgriffith$elm_ui$Element$Font$size(70)
+									]),
+								$mdgriffith$elm_ui$Element$text('G')),
+								$mdgriffith$elm_ui$Element$text('raph '),
+								A2(
+								$mdgriffith$elm_ui$Element$el,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$Font$color(
+										A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.9, 0.7)),
+										$mdgriffith$elm_ui$Element$Font$size(70)
+									]),
+								$mdgriffith$elm_ui$Element$text('T')),
+								$mdgriffith$elm_ui$Element$text('heory '),
+								A2(
+								$mdgriffith$elm_ui$Element$el,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$Font$color(
+										A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.9, 0.7)),
+										$mdgriffith$elm_ui$Element$Font$size(70)
+									]),
+								$mdgriffith$elm_ui$Element$text('P')),
+								$mdgriffith$elm_ui$Element$text('roblems')
+							])),
 						A2(
 						$mdgriffith$elm_ui$Element$row,
 						_List_fromArray(

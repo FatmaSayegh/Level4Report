@@ -392,10 +392,40 @@ viewTopic model =
                , Font.heavy
                , ELE.spacingXY 10 15
                ]
-               <|[ ELE.el [ Font.size 50
-                          , ELE.paddingXY 5 20
-                          ] 
-                          (ELE.text "Visualization of Classical Graph Theory Problems")
+               <|[ ELE.paragraph [ Font.size 45
+                                 , ELE.paddingXY 5 20
+                                 ] 
+                                 [ ELE.el 
+                                     [ Font.color <| ELE.rgb 0.5 0.9 0.7
+                                     , Font.size 70
+                                     ]
+                                     (ELE.text "V")
+                                 , ELE.text "isualization of "
+                                 , ELE.el
+                                     [ Font.color <| ELE.rgb 0.5 0.9 0.7
+                                     , Font.size 70
+                                     ]
+                                     (ELE.text "C")
+                                 , ELE.text "lassical "
+                                 , ELE.el
+                                     [ Font.color <| ELE.rgb 0.5 0.9 0.7
+                                     , Font.size 70
+                                     ]
+                                    (ELE.text "G")
+                                 , ELE.text "raph "
+                                 , ELE.el
+                                     [ Font.color <| ELE.rgb 0.5 0.9 0.7
+                                     , Font.size 70
+                                     ]
+                                     (ELE.text "T")
+                                 , ELE.text "heory "
+                                 , ELE.el
+                                     [ Font.color <| ELE.rgb 0.5 0.9 0.7
+                                     , Font.size 70
+                                     ]
+                                     (ELE.text"P")
+                                 , ELE.text "roblems"
+                                 ]
                  , ELE.row
                         [ ELE.centerX
                         , ELE.centerY
