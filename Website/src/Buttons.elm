@@ -152,6 +152,21 @@ forwardButton =
     in
     buttonWrap "Next Animation" theButton
 
+nextTask : ELE.Element Msg
+nextTask =
+   let
+      theButton =
+         Input.button
+            [
+               Border.rounded 100
+            ,  ELE.centerX
+            ] 
+            { onPress = Just NextAnimation
+            , label = Icons.forwardOutlined [ Ant.width 50, Ant.height 50 ]
+            }
+    in
+    buttonWrap "Next Task" theButton
+
 lowerNavigation : String -> String -> ELE.Element Msg
 lowerNavigation leftTitle rightTitle =
    ELE.row

@@ -103,3 +103,21 @@ treeWidthExplanation =
    The first part explains the concept of graph decomposition. The second part will
    build upon the first to explain the definition of tree width more pricisely.
    """
+makeCongrats =
+   [ emph CuteGreen "C"
+   , emph CuteBlue "o"
+   , emph Pink "n"
+   , emph CuteGreen "g"
+   , emph CuteBlue "r"
+   , emph Pink "a"
+   , emph CuteGreen "t"
+   , emph CuteBlue "u"
+   , emph Pink "l"
+   , emph CuteGreen "a"
+   , emph CuteBlue "t"
+   , emph Pink "i"
+   , emph CuteGreen "o"
+   , emph CuteBlue "n"
+   , emph Pink "s"
+   , emph CuteGreen "!"
+   ]

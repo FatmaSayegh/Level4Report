@@ -220,7 +220,33 @@ storyTreeWidth status helpStatus =
       treeDetails =
                [ ELE.text
                   """
-                  The golden line joining the pieces is a tree as it has no
+                  The 
+                  golden 
+                  line 
+                  """
+               , ELE.text
+                  """
+                  joining the 
+                  """
+               , emph CuteGreen
+                  """
+                  pieces 
+                  """
+               , ELE.text
+                  """
+                  is a 
+                  """
+               , emph Gold
+                  """
+                  tree 
+                  """
+               , ELE.text
+                  """
+                  as it has 
+                  """
+               , emph Pink
+                  """
+                  no
                   cycles.
                   """
                ]
@@ -228,9 +254,25 @@ storyTreeWidth status helpStatus =
                [ ELE.text
                   """
                   The division of the graph in pieces such as these such that
-                  the pieces together form a tree is called tree decomposition of a
+                  the pieces together form a tree is called 
+                  """ 
+               , emph CuteGreen
+                  """
+                  tree decomposition 
+                  """
+               , ELE.text
+                  """
+                  of a
                   graph. The pieces hence formed have associated a number of
-                  vertices. Here all the pieces have 3 vertices associated
+                  vertices. Here all the pieces have 
+                  """
+               , emph Pink
+                  """
+                  3 
+                  """
+               , ELE.text
+                  """
+                  vertices associated
                   with them.
                   """
                ]
@@ -242,9 +284,25 @@ storyTreeWidth status helpStatus =
                   """
                ]
       treeWidthFormula =
-               [ ELE.text
+               [ emph CuteGreen
                   """
-                  Tree Width = (Maximum Number of Vertices in a piece) - 1
+                  Tree Width 
+                  """
+               , emph CuteBlue
+                  """
+                  = 
+                  """
+               , emph Pink
+                  """
+                  ( Maximum Number of Vertices in a piece ) 
+                  """
+               , emph CuteBlue
+                  """
+                  - 
+                  """
+               , emph CuteGreen
+                  """
+                  1
                   """
                ]
       finalComment =
@@ -252,7 +310,104 @@ storyTreeWidth status helpStatus =
                   """
                   The number of vertices in all the pieces is equal to 3. Therefore the maximum
                   number of vertices in any piece in the present graph is also 3.
-                  Hence the tree width of the graph is 3 - 1 = 2.
+                  Hence the tree width of the graph is 
+                  """
+               , emph Pink
+                  """
+                  3 
+                  """
+               , emph CuteBlue
+                  """
+                  - 
+                  """
+               , emph CuteGreen
+                  """
+                  1 
+                  """
+               , emph CuteBlue
+                  """
+                  = 
+                  """
+               , emph Pink
+                  """
+                  2
+                  """
+               , ELE.text
+                  """
+                  .
+                  """
+               ]
+
+      altTreeExplanation =
+               [ ELE.text
+                  """
+                  Therefore, a tree can be decomposed
+                  in 
+                  """
+               , emph CuteBlue
+                  """
+                  many ways
+                  """
+               , ELE.text
+                  """
+                  It can even be decomposed by keeping the
+                  whole graph in a single piece. For the graph shown
+                  in the figure The tree
+                  width in that case would be equal to 12 - 1 = 11.
+                  """
+               , emph CuteBlue
+                  """
+                  Ideally,
+                  """
+               , ELE.text
+                  """
+                  the pieces, should be derived from the
+                  graph such that the tree width is the minimum.
+                  """
+               ]
+      bigPieceExplanation =
+               [ emph Pink
+                  """
+                  However,
+                  """
+               , ELE.text
+                  """
+                  if the decomposition of a graph was done
+                  by deriving 
+                  """
+               , emph CuteGreen
+                  """
+                  bigger 
+                  """
+               , ELE.text
+                  """
+                  pieces like the one shown in
+                  the figure, then the tree-width would
+                  have been equal to 
+                  """
+               , emph Pink
+                  """
+                  4 
+                  """
+               , emph CuteBlue
+                  """
+                  - 
+                  """
+               , emph Pink
+                  """
+                  1 
+                  """
+               , emph CuteBlue
+                  """
+                  = 
+                  """
+               , emph Pink
+                  """
+                  3
+                  """
+               , ELE.text
+                  """
+                  .
                   """
                ]
       output =
@@ -274,6 +429,11 @@ storyTreeWidth status helpStatus =
                , treeWidthFormula
                , finalComment 
                ]
+            ShowLargePiece ->
+               [ bigPieceExplanation ]
+            AltTree ->
+               [ bigPieceExplanation , altTreeExplanation ]
+            
    in
    if helpStatus == False
       then
@@ -383,6 +543,10 @@ goTree display msg =
                   PiecesMarked ->
                      TreeDrawnGraph
                   TreeDrawnGraph ->
+                     ShowLargePiece
+                  ShowLargePiece ->
+                     AltTree
+                  AltTree ->
                      CircularGraph
 
            newGraph =
@@ -417,6 +581,10 @@ goTree display msg =
                      ShowOnePiece
                   TreeDrawnGraph ->
                      PiecesMarked
+                  ShowLargePiece ->
+                     TreeDrawnGraph
+                  AltTree ->
+                     ShowLargePiece
 
            newGraph =
                case newStatus of
@@ -482,6 +650,27 @@ drawGraphForTreeWidth display =
             _ ->
                []
 
+      unsafeHead xs =
+         case xs of
+            (x :: xss) -> x
+            [] -> vec3 0 0 0
+
+      firstBranchAltTree =
+         case display.status of
+            AltTree ->
+               let
+                  firstDot =
+                     bigPieceCenter
+                     |> unsafeHead
+                  secondPoint =
+                     altTreeDots
+                     |> unsafeHead
+               in
+               [(firstDot, secondPoint)]
+            _ ->
+             []
+               
+
       treeLinesDrawn =
          case display.status of
             TreeDrawnGraph ->
@@ -489,6 +678,32 @@ drawGraphForTreeWidth display =
                |> List.filterMap (Graph.findTwoPositions g.vertices)
             _ ->
                []
+
+      unsafeTail xs =
+         case xs of
+            [] -> []
+            [x] -> []
+            (x :: y :: xss) -> xss
+
+      altTreeLinesDrawn =
+         case display.status of
+            AltTree ->
+               display.treeLines
+               |> List.filterMap (Graph.findTwoPositions g.vertices)
+               |> unsafeTail
+            _ ->
+               []
+
+      altTreeDots =
+         case display.status of
+            AltTree ->
+               List.filterMap 
+                  (  \(a, b, c) -> Graph.findCenterOfTriple a b c g.vertices ) 
+                  display.triples
+               |> unsafeTail
+            _ ->
+               []
+         
 
       showPieceVertices =
             case display.status of
@@ -505,10 +720,58 @@ drawGraphForTreeWidth display =
                _ ->
                  []
 
+      showBigPieceEdges =
+            case display.status of
+               ShowLargePiece ->
+                     Graph.makeEdgesWithTuples [ (1,2), (2,3), (2,4), (4,3), (3,1) ] g.vertices
+               _ ->
+                 []
+
+      showGrayEdges =
+            case display.status of
+               AltTree ->
+                     Graph.makeEdgesWithTuples [ (1,2), (2,3), (2,4), (4,3), (3,1) ] g.vertices
+               _ ->
+                 []
+
+      showGrayVertices =
+            case display.status of
+               AltTree ->
+                  List.filterMap (\name -> Graph.lookUpVertex name g.vertices)
+                     [1,2,3,4]
+               _ ->
+                  []
+
+      showBigPieceVertices =
+            case display.status of
+               ShowLargePiece ->
+                  List.filterMap (\name -> Graph.lookUpVertex name g.vertices)
+                     [1,2,3,4]
+               _ ->
+                  []
+
       onePieceCenter =
             case display.status of
                ShowOnePiece ->
                   case (Graph.findCenterOfTriple 1 2 3 g.vertices) of
+                     Nothing ->
+                        []
+                     Just x ->
+                        [x]
+               _ ->
+                  []
+
+      bigPieceCenter =
+            case display.status of
+               ShowLargePiece ->
+                  case (Graph.findCenterOfQuad 1 2 3 4 g.vertices) of
+                     Nothing ->
+                        []
+                     Just x ->
+                        [x]
+
+               AltTree ->
+                  case (Graph.findCenterOfQuad 1 2 3 4 g.vertices) of
                      Nothing ->
                         []
                      Just x ->
@@ -521,11 +784,18 @@ drawGraphForTreeWidth display =
    in
    List.map Graph.drawEdge g.edges
         ++ List.map (\(p1, p2) -> Graph.lline p1 p2) treeLinesDrawn
+        ++ List.map Graph.drawGrayEdge showGrayEdges
+        ++ List.map (\(p1, p2) -> Graph.lline p1 p2) altTreeLinesDrawn
+        ++ List.map (\(p1, p2) -> Graph.lline p1 p2) firstBranchAltTree
         ++ List.map (Graph.drawIntersectionPoint 6) centersOftriples 
-        ++ List.map (Graph.drawIntersectionPoint 6) onePieceCenter 
+        ++ List.map (Graph.drawIntersectionPoint 6) altTreeDots 
         ++ List.map Graph.drawVertex g.vertices
         ++ List.map Graph.drawSpecialEdge showPieceEdges
+        ++ List.map Graph.drawSpecialEdge showBigPieceEdges
         ++ List.map Graph.drawSelectedVertex showPieceVertices
+        ++ List.map Graph.drawSelectedVertex showBigPieceVertices
+        ++ List.map Graph.drawGrayVertex showGrayVertices
+        ++ List.map (Graph.drawIntersectionPoint 6) bigPieceCenter 
         ++ List.map Graph.writeVertexName g.vertices
 
 paneTree : TreeWidthDisplay -> H.Html Msg
@@ -570,3 +840,5 @@ type TreeWidthStatus =
    | ShowOnePiece
    | PiecesMarked
    | TreeDrawnGraph
+   | ShowLargePiece
+   | AltTree

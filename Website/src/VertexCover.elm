@@ -27,31 +27,70 @@ import FontSize exposing
 
 type alias VertexCoverDisplay =
    { graphA : Graph
+   , graphB : Graph
+   , state : VertexCoverState
    }
+
+type VertexCoverState =
+   First
+   | Second
 
 vertexCoverDisplay : VertexCoverDisplay     
 vertexCoverDisplay = 
    let
-        initialGraph =
+        graphA =
             makeGraph (PolygonCycleDoll 4) (vec3 200 100 0) (vec3 80 80 0) (pi / 4)
+
+        graphB =
+            makeGraph (PolygonCycleDoll 6) (vec3 200 100 0) (vec3 80 80 0) (2 * pi / 3)
    in
-      VertexCoverDisplay initialGraph
+      VertexCoverDisplay graphA graphB First
 
 paneFour display =
+   case display.state of
+      First ->
          Graph.displaySvg (drawGraphForCover display.graphA)
+      Second ->
+         Graph.displaySvg (drawGraphForCover display.graphB)
 
 goCover : VertexCoverDisplay -> Msg -> VertexCoverDisplay
 goCover display msg =
    case msg of
        ToggleVertexStatus name ->
-            { display
-                | graphA = Graph.toggleGlowVertex name display.graphA
-            }
+            case display.state of
+               First ->
+                  { display
+                      | graphA = Graph.toggleGlowVertex name display.graphA
+                  }
+
+               Second ->
+                  { display
+                      | graphB = Graph.toggleGlowVertex name display.graphB
+                  }
 
        VertexClicked name ->
-            { display
-                | graphA = Graph.toggleGlowVertex name display.graphA
-            }
+            case display.state of
+               First ->
+                  { display
+                      | graphA = Graph.toggleGlowVertex name display.graphA
+                  }
+
+               Second ->
+                  { display
+                      | graphB = Graph.toggleGlowVertex name display.graphB
+                  }
+
+       NextAnimation ->
+            case display.state of
+               First ->
+                  { display
+                     | state = Second
+                  }
+
+               Second ->
+                  { display
+                     | state = First
+                  }
 
        _ ->
             display
@@ -59,24 +98,31 @@ goCover display msg =
 explanationCover : VertexCoverDisplay -> Bool -> Int -> ELE.Element Msg
 explanationCover display helpStatus width =
     let
+        graph =
+            case display.state of
+               First ->
+                  display.graphA
+               Second ->
+                  display.graphB
+
         selected_vertices =
-            List.filter (\ver -> ver.glow) display.graphA.vertices
+            List.filter (\ver -> ver.glow) graph.vertices
 
         noOfSelectedVertices =
             List.length selected_vertices
 
         ( coveredEdges, _ ) =
-            Graph.seperateEdges display.graphA
+            Graph.seperateEdges graph
 
         noCoveredEdges =
             List.length coveredEdges
 
 
         totalEdges =
-            List.length display.graphA.edges
+            List.length graph.edges
 
         totalVertices =
-            List.length display.graphA.vertices
+            List.length graph.vertices
 
         edgesRemainig = 
             totalEdges - noCoveredEdges
@@ -206,8 +252,9 @@ explanationCover display helpStatus width =
                                   """
                                ]
                             else
-                               [
-                                  ELE.text "Congratulations, you have covered all "
+                               
+                                  makeCongrats ++
+                               [  ELE.text " you have covered all "
                                ,  emph CuteBlue (String.fromInt noCoveredEdges)
                                ,  ELE.text " edges. "
                                ,  ELE.text "You have done so by selecting the vertices "
@@ -246,7 +293,6 @@ drawGraphForCover g =
     in
     List.map Graph.drawEdge normalEdges
         ++ List.map Graph.drawSpecialEdge specialEdges
-    --    ++ List.map drawGoldenCircle haloVertices
         ++ List.map Graph.drawVertex g.vertices
         ++ List.map Graph.drawSelectedVertex selectedVertices
         ++ List.map Graph.writeVertexName g.vertices

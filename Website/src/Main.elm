@@ -32,7 +32,7 @@ import Ant.Icons as Icons
 import Messages exposing (Msg(..))
 import Isomorphism exposing (explanationOne, paneOne, animateIsomorphicTransition, isomorphicTransition, miniIsoGraph )
 import MaxkCut exposing (MaxCutTransition, explanationTwo, paneTwo, animateMaxCutCompound, maxCutTransition, miniMaxGraph)
-import GraphColoring exposing (ColorDisplay, paneThree, explanationColoring, colorDisplay, goColor, miniColGraph)
+import GraphColoring exposing (ColorDisplaySeries, paneThree, explanationColoring, colorDisplaySeries, goColorSeries, miniColGraph)
 import VertexCover exposing (VertexCoverDisplay, paneFour, explanationCover, vertexCoverDisplay, goCover)
 import TreeWidth exposing (TreeWidthDisplay, paneTree, explanationWidth, treeWidthDisplay, goTree, miniTreeWidth)
 import Graph exposing (ShapeTransition)
@@ -78,7 +78,7 @@ type alias Model =
 type Topic =
    Isomorphic ShapeTransition
    | MaxCut MaxCutTransition
-   | GraphColoring ColorDisplay
+   | GraphColoring ColorDisplaySeries
    | VertexCover VertexCoverDisplay
    | TreeWidth TreeWidthDisplay
    | HomePage
@@ -175,8 +175,8 @@ update msg model =
                    ( Isomorphic (animateIsomorphicTransition msg shapeTransition))
                 MaxCut maxcutTrans ->
                    ( MaxCut (animateMaxCutCompound msg maxcutTrans))
-                GraphColoring display ->
-                   GraphColoring ( goColor display msg)
+                GraphColoring displaySeries ->
+                   GraphColoring ( goColorSeries displaySeries msg)
                 VertexCover display ->
                    VertexCover ( goCover display msg)
                 TreeWidth display ->
@@ -268,7 +268,7 @@ getTopic url =
       "/maxkcut" ->
          MaxCut maxCutTransition
       "/coloring" ->
-         GraphColoring colorDisplay
+         GraphColoring colorDisplaySeries
       "/vertexcover" ->
          VertexCover vertexCoverDisplay
       "/treewidth" ->

@@ -43,6 +43,8 @@ type FontColor
    = Pink
    | CuteGreen
    | CuteBlue
+   | Gold
+   | Blue
 
 
 giveFontColor : FontColor -> ELE.Color
@@ -54,6 +56,10 @@ giveFontColor fntcol =
          ELE.rgb 0.5 0.9 0.7
       CuteBlue ->
          ELE.rgb 0.4 0.9 0.9
+      Gold ->
+         ELE.rgb255 191 137 21
+      Blue ->
+         ELE.rgb 0.2 0.2 1
 
 
 emph : FontColor -> String -> ELE.Element msg

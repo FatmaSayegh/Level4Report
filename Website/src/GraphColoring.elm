@@ -36,8 +36,25 @@ type alias ColorDisplay =
    , defaultColor : Color
    }
 
-colorDisplay : ColorDisplay
-colorDisplay = 
+type ColorDisplayState =
+   TwoColor
+   | ThreeColor
+
+type alias ColorDisplaySeries =
+   { colorDisplayA : ColorDisplay
+   , colorDisplayB : ColorDisplay
+   , state : ColorDisplayState
+   }
+
+colorDisplaySeries : ColorDisplaySeries
+colorDisplaySeries =
+   { colorDisplayA = colorDisplayA
+   , colorDisplayB = colorDisplayB
+   , state = TwoColor
+   }
+
+colorDisplayB : ColorDisplay
+colorDisplayB = 
    let
       initialGraph =
          makeGraph (PolygonCycleDoll 5) (vec3 200 100 0) (vec3 80 80 0) (pi /4)
@@ -46,6 +63,56 @@ colorDisplay =
          List.map (\v ->
             {v | color = (Color.rgb 1 1 1)})
             initialGraph.vertices
+      createEdge =
+         Graph.updateEdge whiteVertices
+      newGraph = Graph whiteVertices (List.map createEdge initialGraph.edges)
+   in
+      ColorDisplay newGraph (Color.rgb 1 1 1) (Color.rgb 1 1 1)
+
+colorDisplayA : ColorDisplay
+colorDisplayA = 
+   let
+            
+      linearGridLeft =
+          --linearGrid 4 (vec3 150 250 0) (vec3 0 120 0)
+          linearGrid 4 (vec3 150 50 0) (vec3 0 120 0)
+      
+      linearGridRight =
+          --linearGrid 4 (vec3 250 250 0) (vec3 0 120 0)
+          linearGrid 4 (vec3 250 50 0) (vec3 0 120 0)
+
+      totalGrid =
+          linearGridLeft ++ linearGridRight
+
+      vertices =
+         List.map3 
+            (\name g c -> Graph.Vertex name g c False) 
+            (List.range 1 8) 
+            totalGrid
+            (Graph.listOfColors First 8)
+
+      tupleEdges =
+         [ (1,5), (1,6), (1,7)
+         , (2,5), (2,6), (2,8)
+         , (3,5), (3,7), (3,8)
+         , (4,6), (4,7), (4,8)
+         ]
+
+      --edges =
+      --   Graph.makeEdgesWithTuples tupleEdges vertices 
+
+      --initialGraph =
+      --   Graph vertices edges
+
+      initialGraph =
+         makeGraph (PolygonCycleDoll 4) (vec3 200 100 0) (vec3 80 80 0) (pi / 4)
+
+      whiteVertices = 
+         List.map (\v ->
+            {v | color = (Color.rgb 1 1 1)})
+            initialGraph.vertices
+
+
       createEdge =
          Graph.updateEdge whiteVertices
       newGraph = Graph whiteVertices (List.map createEdge initialGraph.edges)
@@ -69,6 +136,23 @@ colorPallete display=
    in
    [squareRed, squareGreen, squareBlue]
 
+colorPalleteTwo : ColorDisplay -> List (S.Svg Msg)
+colorPalleteTwo display=
+   let
+      sizeBig = (vec3 20 35 0)
+      sizeSmall = (vec3 20 20 0)
+      sizeOfColor color = if display.chosenColor == color
+                then sizeBig
+                else sizeSmall
+      red = (Color.rgb 1 0 0)
+      green = (Color.rgb 0 1 0)
+      blue = (Color.rgb 0 0 1)
+      squareRed = makeSquare (vec3 170 230 0) (sizeOfColor red) red
+      squareGreen = makeSquare (vec3 200 230 0) (sizeOfColor green) green 
+      squareBlue = makeSquare (vec3 230 230 0) (sizeOfColor blue) blue 
+   in
+   [squareRed, squareGreen]
+
 makeSquare : Vec3 -> Vec3 -> Color -> S.Svg Msg
 makeSquare pos size color =
    S.rect
@@ -81,12 +165,34 @@ makeSquare pos size color =
       ]
       []
 
-paneThree display =
-   Graph.displaySvg ((drawGraphForColoring display.graphA) ++ (colorPallete display))
+paneThree displaySeries =
+   let 
+      display =
+         case displaySeries.state of
+            TwoColor ->
+               displaySeries.colorDisplayA
+            ThreeColor ->
+               displaySeries.colorDisplayB
 
-explanationColoring : ColorDisplay -> Bool -> Int -> ELE.Element Msg
-explanationColoring colorDisp helpStatus width =
+      colorPalleteHere =
+         case displaySeries.state of
+            TwoColor ->
+               colorPalleteTwo
+            ThreeColor ->
+               colorPallete
+   in
+   Graph.displaySvg ((drawGraphForColoring display.graphA) ++ (colorPalleteHere display))
+
+explanationColoring : ColorDisplaySeries -> Bool -> Int -> ELE.Element Msg
+explanationColoring colorDispSer helpStatus width =
     let
+      colorDisp =
+         case colorDispSer.state of
+            TwoColor ->
+               colorDispSer.colorDisplayA
+            ThreeColor ->
+               colorDispSer.colorDisplayB
+            
       verticesOfSameColor edge =
          edge.vertexOne.color == edge.vertexTwo.color 
                               && edge.vertexOne.color /= (Color.rgb 1 1 1)
@@ -130,7 +236,8 @@ explanationColoring colorDisp helpStatus width =
                      """
                ]
 
-        , unColorButton
+        --, unColorButton
+        , colorButtons
 
         , ELE.paragraph
                []
@@ -218,25 +325,14 @@ explanationColoring colorDisp helpStatus width =
          , lowerNavigation "Max Cut" "Vertex Cover"
          ]
 
-makeCongrats =
-   [ emph CuteGreen "C"
-   , emph CuteBlue "o"
-   , emph Pink "n"
-   , emph CuteGreen "g"
-   , emph CuteBlue "r"
-   , emph Pink "a"
-   , emph CuteGreen "t"
-   , emph CuteBlue "u"
-   , emph Pink "l"
-   , emph CuteGreen "a"
-   , emph CuteBlue "t"
-   , emph Pink "i"
-   , emph CuteGreen "o"
-   , emph CuteBlue "n"
-   , emph Pink "s"
-   , emph CuteGreen "!"
-   ]
 
+colorButtons : ELE.Element Msg
+colorButtons =
+   ELE.row
+      [ELE.spacing 90, ELE.paddingXY 300 40]
+      [  unColorButton
+      ,  nextTask
+      ]
 miscolorText : Graph.Edge -> List (ELE.Element msg)
 miscolorText e =
    [ ELE.text "Vertex " 
@@ -248,6 +344,41 @@ miscolorText e =
    , ELE.text "to each other are colored with the " 
    , emph Pink "same color. "
    ]
+
+goColorSeries : ColorDisplaySeries -> Msg -> ColorDisplaySeries 
+goColorSeries displaySeries msg =
+   let 
+      newState =
+         case msg of
+            NextAnimation ->
+               case displaySeries.state of
+                  TwoColor ->
+                     ThreeColor
+                  ThreeColor ->
+                     TwoColor
+            _ ->
+               displaySeries.state
+
+      newDisplayA =
+         case newState of
+            TwoColor ->
+               goColor displaySeries.colorDisplayA msg
+            ThreeColor ->
+               displaySeries.colorDisplayA
+
+      newDisplayB =
+         case newState of
+            ThreeColor ->
+               goColor displaySeries.colorDisplayB msg
+            TwoColor ->
+               displaySeries.colorDisplayB
+    in
+    { colorDisplayA = newDisplayA
+    , colorDisplayB = newDisplayB
+    , state = newState
+    }
+
+            
 
 goColor : ColorDisplay -> Msg -> ColorDisplay
 goColor display msg =

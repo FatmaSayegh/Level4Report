@@ -312,6 +312,10 @@ drawSelectedVertex : Vertex -> S.Svg Msg
 drawSelectedVertex  v =
     ccircle 13 v.pos "#BF8915" v.name
 
+drawGrayVertex : Vertex -> S.Svg Msg
+drawGrayVertex  v =
+    ccircle 13 v.pos "#999999" v.name
+
 writeVertexName : Vertex -> S.Svg Msg
 writeVertexName v =
     writeName v.name v.pos
@@ -326,6 +330,9 @@ drawSpecialEdge : Edge -> S.Svg msg
 drawSpecialEdge e =
     lline e.vertexOne.pos e.vertexTwo.pos
 
+drawGrayEdge : Edge -> S.Svg msg
+drawGrayEdge e =
+    gline e.vertexOne.pos e.vertexTwo.pos
 
 
 
@@ -677,6 +684,18 @@ lline veca vecb =
         ]
         []
 
+gline : Vec3 -> Vec3 -> S.Svg msg
+gline veca vecb =
+    S.line
+        [ SA.x1 (String.fromInt <| round <| getX veca)
+        , SA.y1 (String.fromInt <| round <| getY veca)
+        , SA.x2 (String.fromInt <| round <| getX vecb)
+        , SA.y2 (String.fromInt <| round <| getY vecb)
+        , SA.stroke "#999999"
+        , SA.strokeWidth "4"
+        ]
+        []
+
 drawIntersectionPoints points =
    List.map (drawIntersectionPoint 3) points
 
@@ -877,4 +896,30 @@ findCenterOfTriple a b c vs =
             ( Math.Vector3.add v1.pos v2.pos
             |> Math.Vector3.add v3.pos
             |> Math.Vector3.scale 0.333
+            )
+
+findCenterOfQuad : Int -> Int -> Int -> Int -> List Vertex -> Maybe Vec3
+findCenterOfQuad a b c d vs =
+   let 
+      pos4 =
+         case (lookUpVertex d vs) of
+            Just x ->
+               x.pos
+            Nothing ->
+               (vec3 0.0 0.0 0.0)
+      
+   in
+   case (lookUpVertex a vs, lookUpVertex b vs, lookUpVertex c vs) of
+      (Nothing, _, _) ->
+         Nothing
+      (_, Nothing, _) ->
+         Nothing
+      (_, _, Nothing) ->
+         Nothing
+      (Just v1 , Just v2, Just v3) ->
+            Just <| 
+            ( Math.Vector3.add v1.pos v2.pos
+            |> Math.Vector3.add v3.pos
+            |> Math.Vector3.add pos4
+            |> Math.Vector3.scale 0.25
             )

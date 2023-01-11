@@ -173,6 +173,23 @@ explanationTwo maxCut helpStatus width =
          state =
             maxCut.state
 
+         max2CutTitle =
+            [ emph CuteBlue "Max"
+            , emph Pink " 2 "
+            , emph CuteBlue "Cut"
+            ]
+
+         max3CutTitle =
+            [ emph CuteBlue "Max"
+            , emph Pink " 3 "
+            , emph CuteBlue "Cut"
+            ]
+
+         topicTitle =
+            if state == TwoCut 
+               then max2CutTitle
+               else max3CutTitle
+
          twoCutExplanation =
             [ ELE.text
                """
@@ -253,22 +270,58 @@ explanationTwo maxCut helpStatus width =
             ]
 
          twoCutLineExplanation =
-            """
-            The Max cut line, seperates the two sets of vertices. The
-            intersection between the cut line and the edges are shown as blue
-            dots. As you should verify, they are 9 in number. This number is
-            equal to number of edges from the set of vertices at the top going
-            to the vertices at the bottom.
-            """
+            [ ELE.text
+               """
+               The Max cut line, 
+               seperates the two sets of vertices. The
+               intersection between the cut line and the edges are shown as 
+               """
+            , emph CuteBlue
+               """
+               blue
+               """
+            , ELE.text
+               """
+               dots. As you should verify, they are 
+               """
+            , emph Pink
+               """
+               9 
+               """
+            , ELE.text
+               """
+               in number. This number is
+               equal to number of edges from the set of vertices at the top going
+               to the vertices at the bottom.
+               """
+            ]
 
          threeCutLineExplanation =
-            """
-            The three Max cut lines, seperates their respective sets from the
-            rest of the graph. The intersection between the cut lines and the
-            edges are shown as blue dots. As you should verify, they are 18 in
-            number for each set. This 3 cut is visually trivial as the graph
-            was tripartite.
-            """
+            [ ELE.text
+               """
+               The three Max cut lines, seperates their respective sets from the
+               rest of the graph. The intersection between the cut lines and the
+               edges are shown as 
+               """
+            , emph CuteBlue
+               """
+               blue 
+               """
+            , ELE.text
+               """
+               dots. As you should verify, they are 
+               """
+            , emph Pink
+               """
+               18 
+               """
+            , ELE.text
+               """
+               in
+               number for each set. This 3 cut is visually trivial as the graph
+               was tripartite.
+               """
+            ]
 
       in
       ELE.column
@@ -292,7 +345,9 @@ explanationTwo maxCut helpStatus width =
               buttonExplanation
 
          ,  mediaButtonsForMaxCut shapeTransition
-
+         , ELE.paragraph
+               []
+               topicTitle
          , ELE.paragraph
                []
                ( if state == TwoCut
@@ -317,7 +372,7 @@ explanationTwo maxCut helpStatus width =
                then
                   ELE.paragraph
                      []
-                     [ELE.text <| if shapeTransition.specialToken == MakeKCut 
+                     <| if shapeTransition.specialToken == MakeKCut 
                                     then
                                        if state == TwoCut
                                           then
@@ -325,8 +380,7 @@ explanationTwo maxCut helpStatus width =
                                           else 
                                             threeCutLineExplanation    
                                     else
-                                       ""
-                     ]
+                                       [ ELE.none ]
                else
                   helpParagraph MaxCutHelp
 
