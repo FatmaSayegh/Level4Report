@@ -325,7 +325,7 @@ they contain.
 
 \begin{figure}[!ht]
 \centering
-\includegraphics[scale=0.025]{Graph1New}
+\includegraphics[width=4.22in]{Graph1New}
 \caption{
          Drawing a Graph. Starting with a grid of positions
          a set of vertices are created. Connecting the vertices,
@@ -371,7 +371,7 @@ the animation clock.
 %PICTURE of Isomorphic Animation
 \begin{figure}[h]
 \centering
-\includegraphics[width=3in]{IsomorphismAnimation}
+\includegraphics[width=4in]{IsomorphismAnimation}
 \caption{
         Morphing a graph. This example from the Graph Isomorphism topic
         shows how shape transformation is done with the help of a targed grid.
@@ -513,7 +513,18 @@ navigation bar. Below is an example list of a few key-bindings.
 \item \textbf{t}: Next animation (Can be used in case of Max k Cut and Tree width to go to the next animation; Generates the $NextAnimation$ message)
 \end{itemize}
 
+
+\subsection{Screen Compatability}
+So that the various visual sections of the application occupy their appropriate
+place on screens of different sizes, such as screens of of various laptops and
+smart phones, the width and height of the screen is used to give the height and
+width to each section.  Such measures, have made the application mobile
+friendly well.
+
 \section{Implementation of Topics}
+The above sections have discussed the basic building blocks which can be used
+to implement the individual topics. The building blocks include graphs, animations
+page-layout, navigation and control.
 
 \subsection{Graph Isomorphism}
 \label{impl: isomporphism}
@@ -599,6 +610,19 @@ When the user chooses a color from the color palette, the chosen color is
 updated in the state of the program. When the user clicks a vertex, the color
 of the vertex is changed with the color stored in the state of the program.
 
+%PICTURE of Graph Coloring task
+\begin{figure}[h]
+\centering
+\includegraphics[width=4.22in]{GraphColoring}
+\caption{
+        Graph Coloring Task. The graph on the left has a pair of incorrectly
+        colored vertices. On the right there is a fully and correctly colored
+        graph, with all the adjacent vertices are colored differently from each
+        other.
+        }
+\label{animationfigure: max3cut}
+\end{figure}
+
 There is a function which makes a check while the user task is going on, whether
 two adjacent vertices have similar color by doing a linear search on the edges.
 If they are the information is used in the display to mark that edge differently
@@ -623,6 +647,15 @@ the list of edges to find which of them have at least one of their vertices
 \emph{selected}. Such edges are illuminated, for the user to note that the edge has
 been covered.
 
+%PICTURE of Vertex Cover task
+\begin{figure}[ht]
+\centering
+\includegraphics[width=4.22in]{VertexCover}
+\caption{
+        Vertex Cover task.
+        }
+\label{animationfigure: vertexCover}
+\end{figure}
 There is another function which filters out the edges whose one of the vertices
 have been selected, and yet another which counts the number of vertices which
 have been selected.  When the all the edges have been covered, the program
@@ -645,6 +678,16 @@ the graph. The kinematics of the transition is the same as that of graph
 isomorphism (see \autoref{impl: isomporphism}) and Max k Cut (see
 \autoref{impl: maxkcut}). For more information on the kinematics of such shape
 transitions see \autoref{animation: morphing}.
+
+%PICTURE of Tree Width Animation
+\begin{figure}[ht]
+\centering
+\includegraphics[width=4.22in]{TreeWidth}
+\caption{
+        Tree width Animation.
+        }
+\label{animationfigure: vertexCover}
+\end{figure}
 
 The second part of the animation highlights one piece of the cellular structure
 (see \autoref{}). The piece is also marked by drawing a blue dot at the center

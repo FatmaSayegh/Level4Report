@@ -101,6 +101,7 @@ subscription _ =
     Sub.batch
         [ E.onAnimationFrameDelta TimeDelta
         , E.onKeyPress keyDecoder
+        , E.onResize (\w h -> GotNewScreen w h)
         ]
 
 keyDecoder : Decode.Decoder Msg
@@ -195,6 +196,14 @@ update msg model =
             _ ->
                False
 
+      (width, height) =
+         case msg of
+            GotNewScreen w h ->
+               (w, h)
+            _ ->
+               (model.width, model.height)
+               
+
       command =
           case msg of
              LinkClicked urlRequest ->
@@ -258,7 +267,12 @@ update msg model =
              _ ->
                Cmd.none
    in
-   ({ model | topic = newTopic, helpStatus = helpStatus}, command)
+   ({ model | 
+         topic = newTopic
+         , helpStatus = helpStatus
+         , width = width
+         , height = height
+    }, command)
 
 getTopic : Url.Url -> Topic
 getTopic url =

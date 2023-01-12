@@ -7358,6 +7358,10 @@ var $author$project$Main$init = F3(
 			$elm$core$Platform$Cmd$none);
 	});
 var $elm$json$Json$Decode$int = _Json_decodeInt;
+var $author$project$Messages$GotNewScreen = F2(
+	function (a, b) {
+		return {$: 'GotNewScreen', a: a, b: b};
+	});
 var $author$project$Messages$TimeDelta = function (a) {
 	return {$: 'TimeDelta', a: a};
 };
@@ -7963,12 +7967,32 @@ var $elm$browser$Browser$Events$on = F3(
 			A3($elm$browser$Browser$Events$MySub, node, name, decoder));
 	});
 var $elm$browser$Browser$Events$onKeyPress = A2($elm$browser$Browser$Events$on, $elm$browser$Browser$Events$Document, 'keypress');
+var $elm$browser$Browser$Events$Window = {$: 'Window'};
+var $elm$browser$Browser$Events$onResize = function (func) {
+	return A3(
+		$elm$browser$Browser$Events$on,
+		$elm$browser$Browser$Events$Window,
+		'resize',
+		A2(
+			$elm$json$Json$Decode$field,
+			'target',
+			A3(
+				$elm$json$Json$Decode$map2,
+				func,
+				A2($elm$json$Json$Decode$field, 'innerWidth', $elm$json$Json$Decode$int),
+				A2($elm$json$Json$Decode$field, 'innerHeight', $elm$json$Json$Decode$int))));
+};
 var $author$project$Main$subscription = function (_v0) {
 	return $elm$core$Platform$Sub$batch(
 		_List_fromArray(
 			[
 				$elm$browser$Browser$Events$onAnimationFrameDelta($author$project$Messages$TimeDelta),
-				$elm$browser$Browser$Events$onKeyPress($author$project$Main$keyDecoder)
+				$elm$browser$Browser$Events$onKeyPress($author$project$Main$keyDecoder),
+				$elm$browser$Browser$Events$onResize(
+				F2(
+					function (w, h) {
+						return A2($author$project$Messages$GotNewScreen, w, h);
+					}))
 			]));
 };
 var $author$project$Graph$changeGlowVertex = F3(
@@ -8669,10 +8693,21 @@ var $author$project$Main$update = F2(
 					return $elm$core$Platform$Cmd$none;
 			}
 		}();
+		var _v0 = function () {
+			if (msg.$ === 'GotNewScreen') {
+				var w = msg.a;
+				var h = msg.b;
+				return _Utils_Tuple2(w, h);
+			} else {
+				return _Utils_Tuple2(model.width, model.height);
+			}
+		}();
+		var width = _v0.a;
+		var height = _v0.b;
 		return _Utils_Tuple2(
 			_Utils_update(
 				model,
-				{helpStatus: helpStatus, topic: newTopic}),
+				{height: height, helpStatus: helpStatus, topic: newTopic, width: width}),
 			command);
 	});
 var $mdgriffith$elm_ui$Internal$Model$Unkeyed = function (a) {
