@@ -23,6 +23,8 @@ import FontSize exposing
       , FontColor(..)
       , giveFontColor
       , emph
+      , DisplaySize
+      , DeviceType(..)
       )
 
 miniColGraph = 
@@ -183,8 +185,8 @@ paneThree displaySeries =
    in
    Graph.displaySvg ((drawGraphForColoring display.graphA) ++ (colorPalleteHere display))
 
-explanationColoring : ColorDisplaySeries -> Bool -> Int -> ELE.Element Msg
-explanationColoring colorDispSer helpStatus width =
+explanationColoring : ColorDisplaySeries -> Bool -> DisplaySize -> ELE.Element Msg
+explanationColoring colorDispSer helpStatus displaySize =
     let
       colorDisp =
          case colorDispSer.state of
@@ -211,11 +213,11 @@ explanationColoring colorDispSer helpStatus width =
          --, ELE.padding 40
          , ELE.height ELE.fill
          , Background.color <| ELE.rgb 0.2 0.2 0.2
-         , ELE.width (ELE.fill |> ELE.maximum (width//2))
+         , ELE.width (ELE.fill |> ELE.maximum displaySize.width)
          ]
          <|
          [  ELE.el
-               [Font.size (getFontSize Head width), Font.heavy]
+               [Font.size (getFontSize Head displaySize.deviceType), Font.heavy]
                (ELE.text "Graph Coloring")
          ,  ELE.paragraph
                [ ELE.spacing 8 ] 
@@ -237,7 +239,7 @@ explanationColoring colorDispSer helpStatus width =
                ]
 
         --, unColorButton
-        , colorButtons
+        , colorButtons displaySize
 
         , ELE.paragraph
                []
@@ -326,10 +328,12 @@ explanationColoring colorDispSer helpStatus width =
          ]
 
 
-colorButtons : ELE.Element Msg
-colorButtons =
+colorButtons : DisplaySize -> ELE.Element Msg
+colorButtons displaySize =
    ELE.row
-      [ELE.spacing 90, ELE.paddingXY 300 40]
+      [ ELE.centerX
+      , ELE.spacing (displaySize.width//10)
+      ]
       [  unColorButton
       ,  nextTask
       ]

@@ -8,6 +8,15 @@ import Ant.Icons as Icons
 import Messages exposing (Msg(..))
 import Element.Font as Font
 import Element.Background as Background
+import FontSize exposing
+               ( getFontSize
+               , FontSize(..)
+               , FontColor(..)
+               , giveFontColor
+               , emph
+               , DisplaySize
+               , DeviceType(..)
+               )
 
 buttonWrap : String -> (ELE.Element Msg) -> ELE.Element Msg
 buttonWrap description button =
@@ -26,8 +35,8 @@ buttonWrap description button =
    ]
 
 
-treeWidthButtonRow : Bool -> ELE.Element Msg
-treeWidthButtonRow  isPreviousActive =
+treeWidthButtonRow : Bool -> DisplaySize -> ELE.Element Msg
+treeWidthButtonRow  isPreviousActive displaySize =
    let
       forward =
          buttonWrap "Next animation"
@@ -64,7 +73,9 @@ treeWidthButtonRow  isPreviousActive =
                }
    in
    ELE.row
-      [ELE.spacing 90, ELE.paddingXY 300 40]
+      [ ELE.centerX
+      , ELE.spacing (displaySize.width//10)
+      ]
       [  if isPreviousActive then backward else backwardDead
       ,  forward
       ]

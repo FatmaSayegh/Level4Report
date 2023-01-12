@@ -23,6 +23,8 @@ import FontSize exposing
                , FontColor(..)
                , giveFontColor
                , emph
+               , DisplaySize
+               , DeviceType(..)
                )
 
 type alias VertexCoverDisplay =
@@ -95,8 +97,8 @@ goCover display msg =
        _ ->
             display
 
-explanationCover : VertexCoverDisplay -> Bool -> Int -> ELE.Element Msg
-explanationCover display helpStatus width =
+explanationCover : VertexCoverDisplay -> Bool -> DisplaySize -> ELE.Element Msg
+explanationCover display helpStatus displaySize =
     let
         graph =
             case display.state of
@@ -132,12 +134,12 @@ explanationCover display helpStatus width =
          [ Font.color (ELE.rgb 1 1 1)
          , ELE.spacing 20
          , ELE.height ELE.fill
-         , ELE.width (ELE.fill |> ELE.maximum (width//2))
+         , ELE.width (ELE.fill |> ELE.maximum displaySize.width)
          , Background.color <| ELE.rgb 0.2 0.2 0.2
          ]
          <|
          [  ELE.el
-               [Font.size (getFontSize Head width), Font.heavy] 
+               [Font.size (getFontSize Head displaySize.deviceType), Font.heavy] 
                (ELE.text "Vertex Cover")
 
          ,  ELE.paragraph

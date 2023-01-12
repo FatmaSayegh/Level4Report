@@ -36,7 +36,13 @@ import GraphColoring exposing (ColorDisplaySeries, paneThree, explanationColorin
 import VertexCover exposing (VertexCoverDisplay, paneFour, explanationCover, vertexCoverDisplay, goCover)
 import TreeWidth exposing (TreeWidthDisplay, paneTree, explanationWidth, treeWidthDisplay, goTree, miniTreeWidth)
 import Graph exposing (ShapeTransition)
-import FontSize exposing (getFontSize, FontSize(..))
+import FontSize exposing 
+   ( getFontSize
+   , FontSize(..)
+   , DisplaySize
+   , DeviceType(..)
+   , getDeviceType
+   )
 import Buttons exposing(homeButton, aboutButton)
 
 main : Program Flags Model Msg
@@ -58,11 +64,17 @@ type alias Flags =
 
 init : Flags -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init flags url key =
+   let
+      displaySize =
+         { width = flags.width
+         , height = flags.height
+         , deviceType = getDeviceType flags.width
+         }
+   in
    ({ helpStatus = False
     , url = url
     , key = key
-    , width = flags.width
-    , height = flags.height
+    , displaySize = displaySize
     , topic = getTopic url
     }, Cmd.none)
 
@@ -70,10 +82,10 @@ type alias Model =
    { helpStatus : Bool
    , key : Nav.Key
    , url : Url.Url
-   , width : Int
-   , height : Int
+   , displaySize : DisplaySize
    , topic : Topic
    }
+
 
 type Topic =
    Isomorphic ShapeTransition
@@ -195,13 +207,19 @@ update msg model =
                model.helpStatus
             _ ->
                False
+      oldDisplaySize =
+         model.displaySize
 
-      (width, height) =
+      displaySize =
          case msg of
             GotNewScreen w h ->
-               (w, h)
+              { oldDisplaySize 
+                | width = w
+                , height = h
+                , deviceType = getDeviceType w
+              }
             _ ->
-               (model.width, model.height)
+               model.displaySize
                
 
       command =
@@ -270,8 +288,7 @@ update msg model =
    ({ model | 
          topic = newTopic
          , helpStatus = helpStatus
-         , width = width
-         , height = height
+         , displaySize = displaySize
     }, command)
 
 getTopic : Url.Url -> Topic
@@ -308,13 +325,13 @@ layOutOptions =
    } 
 
 --layOutAttributes = [ELE.width ELE.fill, ELE.height ELE.fill]
-layOutAttributes width = 
+layOutAttributes deviceType = 
                   -- [ ELE.width ELE.fill
                    [ ELE.height ELE.fill
                    , Background.color <| ELE.rgb 0.2 0.2 0.2
-                   , ELE.padding 30
+                   --, ELE.padding 30
                    --, Font.size 18
-                   , Font.size (getFontSize Normal width)
+                   , Font.size (getFontSize Normal deviceType)
                    ]
 
 
@@ -332,159 +349,114 @@ view model =
    , body  = [ viewbody model ]
    }
 
+viewbody : Model -> H.Html Msg
 viewbody model =
+   let
+      heightOfHeader =
+         round (toFloat model.displaySize.height * 0.085)
+      heightOfRest =
+         model.displaySize.height - heightOfHeader
+      displaySize =
+         DisplaySize model.displaySize.width heightOfRest model.displaySize.deviceType
+   in
    ELE.layoutWith
       layOutOptions
-      (layOutAttributes model.width)
+      (layOutAttributes model.displaySize.deviceType)
       ( ELE.column
          [ ELE.width ELE.fill
          , ELE.height ELE.fill
          ]
-         [ headerOfPage model.height
-         , viewTopic model
+         [ headerOfPage heightOfHeader
+         , viewTopic model displaySize
          ]
       )
 
 headerOfPage height =
+   let
+      buttonHeight =
+         round (toFloat height * 0.50)
+      padding =
+         round <| toFloat (height - buttonHeight) * 0.25
+
+   in 
    ELE.row
       [ ELE.width ELE.fill
-      , ELE.height (ELE.fill |> ELE.maximum (height//22))
+      , ELE.height (ELE.fill |> ELE.maximum height)
       , Background.color (ELE.rgb 0.2 0.2 0.2)
+      --, ELE.explain Debug.todo
       ]
-      [ ELE.el [ELE.padding 20] (homeButton (height//27))
-      , ELE.el [ELE.padding 20] (aboutButton (height//27))
+      [ ELE.el [ELE.padding padding] (homeButton buttonHeight)
+      , ELE.el [ELE.padding padding] (aboutButton buttonHeight)
+      ]
+
+showTopic displaySize =
+   ELE.row
+      [ ELE.width ELE.fill
+      , ELE.height (ELE.fill |> ELE.maximum displaySize.height)
       ]
 
 
-viewTopic model =
+viewTopic model displaySize =
+   let
+      explanationSize =
+         {displaySize | width = displaySize.width//2}
+   in
    case model.topic of
       Isomorphic shapeTransition ->
-            ELE.row
-                  [ELE.width ELE.fill
-                  ]
-
+            showTopic displaySize
                   [ displayColumn (paneOne shapeTransition.graphA shapeTransition.graphB)
-                  , explanationOne shapeTransition model.helpStatus model.width
+                  , explanationOne shapeTransition model.helpStatus explanationSize
                   ]
 
       MaxCut maxCutTrans ->
-            ELE.row
-                  [ ELE.width ELE.fill]
-
+            showTopic displaySize
                   [ displayColumn (paneTwo maxCutTrans) 
-                  , explanationTwo maxCutTrans model.helpStatus model.width
+                  , explanationTwo maxCutTrans model.helpStatus explanationSize
                   ]
 
       GraphColoring display ->
-            ELE.row
-                  [ ELE.width ELE.fill]
-
+            showTopic displaySize
                   [ displayColumn (paneThree display) 
-                  , explanationColoring display model.helpStatus model.width
+                  , explanationColoring display model.helpStatus explanationSize
                   ]
 
       VertexCover display ->
-            ELE.row
-                  [ ELE.width ELE.fill]
-
+            showTopic displaySize
                   [ displayColumn (paneFour display) 
-                  , explanationCover display model.helpStatus model.width
+                  , explanationCover display model.helpStatus explanationSize
                   ]
 
       TreeWidth display ->
-            ELE.row
-                  [ ELE.width ELE.fill]
-
+            showTopic displaySize
                   [ displayColumn (paneTree display) 
-                  , explanationWidth display model.helpStatus model.width
+                  , explanationWidth display model.helpStatus explanationSize
                   ]
       HomePage ->
-            ELE.column
-               [ ELE.centerX
-               , ELE.centerY
-               , Font.color <| ELE.rgb 1 1 1
-               , Font.heavy
-               , ELE.spacingXY 10 15
-               ]
-               <|[ ELE.paragraph [ Font.size 45
-                                 , ELE.paddingXY 5 20
-                                 ] 
-                                 [ ELE.el 
-                                     [ Font.color <| ELE.rgb 0.5 0.9 0.7
-                                     , Font.size 70
-                                     ]
-                                     (ELE.text "V")
-                                 , ELE.text "isualization of "
-                                 , ELE.el
-                                     [ Font.color <| ELE.rgb 0.5 0.9 0.7
-                                     , Font.size 70
-                                     ]
-                                     (ELE.text "C")
-                                 , ELE.text "lassical "
-                                 , ELE.el
-                                     [ Font.color <| ELE.rgb 0.5 0.9 0.7
-                                     , Font.size 70
-                                     ]
-                                    (ELE.text "G")
-                                 , ELE.text "raph "
-                                 , ELE.el
-                                     [ Font.color <| ELE.rgb 0.5 0.9 0.7
-                                     , Font.size 70
-                                     ]
-                                     (ELE.text "T")
-                                 , ELE.text "heory "
-                                 , ELE.el
-                                     [ Font.color <| ELE.rgb 0.5 0.9 0.7
-                                     , Font.size 70
-                                     ]
-                                     (ELE.text"P")
-                                 , ELE.text "roblems"
-                                 ]
-                 , ELE.row
-                        [ ELE.centerX
-                        , ELE.centerY
-                        , Font.color <| ELE.rgb 1 1 1
-                        , Font.heavy
-                        , ELE.spacingXY 10 15
-                        ]
-                        <| List.map makeTopicIcon 
-                           [ GotoIsomorphism
-                           , GotoMaxkCut
-                           , GotoColoring
-                           ]
-                 , ELE.row
-                        [ ELE.centerX
-                        , ELE.centerY
-                        , Font.color <| ELE.rgb 1 1 1
-                        , Font.heavy
-                        , ELE.spacingXY 10 15
-                        ]
-                        <| List.map makeTopicIcon 
-                           [ GotoCover
-                           , GotoTreeWidth
-                           ]
-                  ]
+            homePage displaySize.height
 
       ScreenSize ->
             ELE.el
                   [ ELE.width ELE.fill]
-                  ( ELE.text <| String.fromInt model.width
-                               ++ " x " ++ String.fromInt model.height
+                  ( ELE.text <| String.fromInt model.displaySize.width
+                               ++ " x " ++ String.fromInt model.displaySize.height
                   )
 
       About ->
-            let
-               width = model.width//3
-               height = model.height//4
-            in
-            ELE.row
-               [ Border.rounded 40
-               , Border.color (ELE.rgb 1 1 1)
-               ]
-               [ introFatma width (height)
-               , photoGraph (model.width - width) height
-               ]
-         
+            aboutPage (model.displaySize.width) (model.displaySize.height) 
+
+aboutPage : Int -> Int -> ELE.Element Msg
+aboutPage widthIn heightIn =
+   let
+      width = widthIn//3
+      height = widthIn//4
+   in
+   ELE.row
+      [ Border.rounded 40
+      , Border.color (ELE.rgb 1 1 1)
+      ]
+      [ introFatma width (height)
+      , photoGraph (widthIn - width) height
+      ]
 
 photoGraph width height =
       ELE.column
@@ -602,3 +574,71 @@ displayMiniGraph svgHtml =
       , ELE.width ELE.fill
       , Background.color <| ELE.rgb 0.2 0.2 0.2
       ] (ELE.html svgHtml)
+
+homePage : Int -> ELE.Element Msg
+homePage height =
+   ELE.column
+      [ ELE.centerX
+      , ELE.centerY
+      , Font.color <| ELE.rgb 1 1 1
+      , Font.heavy
+      , ELE.spacingXY 10 15
+      ]
+      <|[ ELE.paragraph [ Font.size 45
+                        , ELE.paddingXY 5 20
+                        ] 
+                        [ ELE.el 
+                            [ Font.color <| ELE.rgb 0.5 0.9 0.7
+                            , Font.size 70
+                            ]
+                            (ELE.text "V")
+                        , ELE.text "isualization of "
+                        , ELE.el
+                            [ Font.color <| ELE.rgb 0.5 0.9 0.7
+                            , Font.size 70
+                            ]
+                            (ELE.text "C")
+                        , ELE.text "lassical "
+                        , ELE.el
+                            [ Font.color <| ELE.rgb 0.5 0.9 0.7
+                            , Font.size 70
+                            ]
+                           (ELE.text "G")
+                        , ELE.text "raph "
+                        , ELE.el
+                            [ Font.color <| ELE.rgb 0.5 0.9 0.7
+                            , Font.size 70
+                            ]
+                            (ELE.text "T")
+                        , ELE.text "heory "
+                        , ELE.el
+                            [ Font.color <| ELE.rgb 0.5 0.9 0.7
+                            , Font.size 70
+                            ]
+                            (ELE.text"P")
+                        , ELE.text "roblems"
+                        ]
+        , ELE.row
+               [ ELE.centerX
+               , ELE.centerY
+               , Font.color <| ELE.rgb 1 1 1
+               , Font.heavy
+               , ELE.spacingXY 10 15
+               ]
+               <| List.map makeTopicIcon 
+                  [ GotoIsomorphism
+                  , GotoMaxkCut
+                  , GotoColoring
+                  ]
+        , ELE.row
+               [ ELE.centerX
+               , ELE.centerY
+               , Font.color <| ELE.rgb 1 1 1
+               , Font.heavy
+               , ELE.spacingXY 10 15
+               ]
+               <| List.map makeTopicIcon 
+                  [ GotoCover
+                  , GotoTreeWidth
+                  ]
+         ]

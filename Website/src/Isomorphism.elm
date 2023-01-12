@@ -16,6 +16,8 @@ import FontSize exposing
                , FontColor(..)
                , giveFontColor
                , emph
+               , DisplaySize
+               , DeviceType(..)
                )
 
 
@@ -192,21 +194,18 @@ type ScreenSize
    | Smaller
 
 
-explanationOne : ShapeTransition -> Bool -> Int -> ELE.Element Msg
-explanationOne shapeTransition helpStatus width =
+explanationOne : ShapeTransition -> Bool -> DisplaySize -> ELE.Element Msg
+explanationOne shapeTransition helpStatus displaySize =
       ELE.column
          [ Font.color (ELE.rgb 1 1 1)
          , ELE.height ELE.fill
          , ELE.spacing 20
-         --, ELE.padding 40
          , Background.color <| ELE.rgb 0.2 0.2 0.2
-         , ELE.width (ELE.fill |> ELE.maximum (width//2))
-         --, ELE.height ELE.fill
-         --, ELE.width ELE.fill
+         , ELE.width (ELE.fill |> ELE.maximum (displaySize.width))
          ]
          <|
          [  ELE.el
-               [Font.size (getFontSize Head width), Font.heavy]
+               [Font.size (getFontSize Head displaySize.deviceType), Font.heavy]
                (ELE.text "Graph Isomorphism")
          ,  ELE.paragraph
                [ELE.spacing 8] 
@@ -228,7 +227,7 @@ explanationOne shapeTransition helpStatus width =
                      """
                ]
 
-         , mediaButtons shapeTransition
+         , mediaButtons shapeTransition displaySize
 
 
          , ELE.paragraph
@@ -323,10 +322,12 @@ makeStory shapeTransition helpStatus =
          ]
       else
          [ helpParagraph IsomorphismHelp]
-mediaButtons : ShapeTransition -> ELE.Element Msg
-mediaButtons shapeTransition =
+mediaButtons : ShapeTransition -> DisplaySize -> ELE.Element Msg
+mediaButtons shapeTransition displaySize =
    ELE.row
-      [ELE.spacing 90, ELE.paddingXY 300 40]
+      [ ELE.centerX
+      , ELE.spacing (displaySize.width//10)
+      ]
       [  playButton shapeTransition.animationOn
       ,  resetButton
       ]

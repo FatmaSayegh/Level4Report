@@ -6319,6 +6319,14 @@ var $elm$core$Task$perform = F2(
 	});
 var $elm$browser$Browser$application = _Browser_application;
 var $elm$json$Json$Decode$field = _Json_decodeField;
+var $author$project$FontSize$Large = {$: 'Large'};
+var $author$project$FontSize$Small = {$: 'Small'};
+var $author$project$FontSize$XL = {$: 'XL'};
+var $author$project$FontSize$XS = {$: 'XS'};
+var $author$project$FontSize$XXL = {$: 'XXL'};
+var $author$project$FontSize$getDeviceType = function (width) {
+	return (width > 1800) ? $author$project$FontSize$XXL : ((width > 1500) ? $author$project$FontSize$XL : ((width > 1100) ? $author$project$FontSize$Large : ((width > 800) ? $author$project$FontSize$Small : $author$project$FontSize$XS)));
+};
 var $author$project$Main$About = {$: 'About'};
 var $author$project$Main$GraphColoring = function (a) {
 	return {$: 'GraphColoring', a: a};
@@ -7346,14 +7354,18 @@ var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = F3(
 	function (flags, url, key) {
+		var displaySize = {
+			deviceType: $author$project$FontSize$getDeviceType(flags.width),
+			height: flags.height,
+			width: flags.width
+		};
 		return _Utils_Tuple2(
 			{
-				height: flags.height,
+				displaySize: displaySize,
 				helpStatus: false,
 				key: key,
 				topic: $author$project$Main$getTopic(url),
-				url: url,
-				width: flags.width
+				url: url
 			},
 			$elm$core$Platform$Cmd$none);
 	});
@@ -8572,6 +8584,7 @@ var $elm$url$Url$toString = function (url) {
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		var topic = model.topic;
+		var oldDisplaySize = model.displaySize;
 		var newTopic = function () {
 			if (msg.$ === 'UrlChanged') {
 				var url = msg.a;
@@ -8613,6 +8626,21 @@ var $author$project$Main$update = F2(
 					return model.helpStatus;
 				default:
 					return false;
+			}
+		}();
+		var displaySize = function () {
+			if (msg.$ === 'GotNewScreen') {
+				var w = msg.a;
+				var h = msg.b;
+				return _Utils_update(
+					oldDisplaySize,
+					{
+						deviceType: $author$project$FontSize$getDeviceType(w),
+						height: h,
+						width: w
+					});
+			} else {
+				return model.displaySize;
 			}
 		}();
 		var command = function () {
@@ -8693,22 +8721,15 @@ var $author$project$Main$update = F2(
 					return $elm$core$Platform$Cmd$none;
 			}
 		}();
-		var _v0 = function () {
-			if (msg.$ === 'GotNewScreen') {
-				var w = msg.a;
-				var h = msg.b;
-				return _Utils_Tuple2(w, h);
-			} else {
-				return _Utils_Tuple2(model.width, model.height);
-			}
-		}();
-		var width = _v0.a;
-		var height = _v0.b;
 		return _Utils_Tuple2(
 			_Utils_update(
 				model,
-				{height: height, helpStatus: helpStatus, topic: newTopic, width: width}),
+				{displaySize: displaySize, helpStatus: helpStatus, topic: newTopic}),
 			command);
+	});
+var $author$project$FontSize$DisplaySize = F3(
+	function (width, height, deviceType) {
+		return {deviceType: deviceType, height: height, width: width};
 	});
 var $mdgriffith$elm_ui$Internal$Model$Unkeyed = function (a) {
 	return {$: 'Unkeyed', a: a};
@@ -14716,13 +14737,15 @@ var $mdgriffith$elm_ui$Element$row = F2(
 			$mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
 	});
 var $author$project$Main$headerOfPage = function (height) {
+	var buttonHeight = $elm$core$Basics$round(height * 0.50);
+	var padding = $elm$core$Basics$round((height - buttonHeight) * 0.25);
 	return A2(
 		$mdgriffith$elm_ui$Element$row,
 		_List_fromArray(
 			[
 				$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
 				$mdgriffith$elm_ui$Element$height(
-				A2($mdgriffith$elm_ui$Element$maximum, (height / 22) | 0, $mdgriffith$elm_ui$Element$fill)),
+				A2($mdgriffith$elm_ui$Element$maximum, height, $mdgriffith$elm_ui$Element$fill)),
 				$mdgriffith$elm_ui$Element$Background$color(
 				A3($mdgriffith$elm_ui$Element$rgb, 0.2, 0.2, 0.2))
 			]),
@@ -14732,36 +14755,84 @@ var $author$project$Main$headerOfPage = function (height) {
 				$mdgriffith$elm_ui$Element$el,
 				_List_fromArray(
 					[
-						$mdgriffith$elm_ui$Element$padding(20)
+						$mdgriffith$elm_ui$Element$padding(padding)
 					]),
-				$author$project$Buttons$homeButton((height / 27) | 0)),
+				$author$project$Buttons$homeButton(buttonHeight)),
 				A2(
 				$mdgriffith$elm_ui$Element$el,
 				_List_fromArray(
 					[
-						$mdgriffith$elm_ui$Element$padding(20)
+						$mdgriffith$elm_ui$Element$padding(padding)
 					]),
-				$author$project$Buttons$aboutButton((height / 27) | 0))
+				$author$project$Buttons$aboutButton(buttonHeight))
 			]));
 };
 var $author$project$FontSize$Normal = {$: 'Normal'};
 var $author$project$FontSize$getFontSize = F2(
-	function (f, width) {
-		if (f.$ === 'Head') {
-			return (width > 1800) ? 30 : ((width > 1500) ? 25 : ((width > 1100) ? 20 : ((width > 800) ? 18 : 15)));
-		} else {
-			return (width > 1800) ? 18 : ((width > 1500) ? 17 : ((width > 1100) ? 16 : ((width > 800) ? 15 : 14)));
+	function (f, deviceType) {
+		switch (f.$) {
+			case 'Head':
+				switch (deviceType.$) {
+					case 'XXL':
+						return 30;
+					case 'XL':
+						return 25;
+					case 'Large':
+						return 20;
+					case 'Small':
+						return 18;
+					default:
+						return 15;
+				}
+			case 'Title':
+				switch (deviceType.$) {
+					case 'XXL':
+						return 50;
+					case 'XL':
+						return 45;
+					case 'Large':
+						return 30;
+					case 'Small':
+						return 30;
+					default:
+						return 25;
+				}
+			case 'Emph':
+				switch (deviceType.$) {
+					case 'XXL':
+						return 22;
+					case 'XL':
+						return 19;
+					case 'Large':
+						return 17;
+					case 'Small':
+						return 14;
+					default:
+						return 12;
+				}
+			default:
+				switch (deviceType.$) {
+					case 'XXL':
+						return 18;
+					case 'XL':
+						return 16;
+					case 'Large':
+						return 14;
+					case 'Small':
+						return 12;
+					default:
+						return 10;
+				}
 		}
 	});
-var $author$project$Main$layOutAttributes = function (width) {
+var $author$project$Main$layOutAttributes = function (deviceType) {
 	return _List_fromArray(
 		[
 			$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
 			$mdgriffith$elm_ui$Element$Background$color(
 			A3($mdgriffith$elm_ui$Element$rgb, 0.2, 0.2, 0.2)),
-			$mdgriffith$elm_ui$Element$padding(30),
 			$mdgriffith$elm_ui$Element$Font$size(
-			A2($author$project$FontSize$getFontSize, $author$project$FontSize$Normal, width))
+			A2($author$project$FontSize$getFontSize, $author$project$FontSize$Normal, deviceType))
 		]);
 };
 var $mdgriffith$elm_ui$Internal$Model$FocusStyleOption = function (a) {
@@ -15025,16 +15096,6 @@ var $mdgriffith$elm_ui$Element$layoutWith = F3(
 				_Utils_ap($mdgriffith$elm_ui$Internal$Model$rootStyle, attrs)),
 			child);
 	});
-var $author$project$Messages$GotoColoring = {$: 'GotoColoring'};
-var $author$project$Messages$GotoCover = {$: 'GotoCover'};
-var $author$project$Messages$GotoIsomorphism = {$: 'GotoIsomorphism'};
-var $author$project$Messages$GotoMaxkCut = {$: 'GotoMaxkCut'};
-var $author$project$Messages$GotoTreeWidth = {$: 'GotoTreeWidth'};
-var $mdgriffith$elm_ui$Internal$Model$AlignY = function (a) {
-	return {$: 'AlignY', a: a};
-};
-var $mdgriffith$elm_ui$Internal$Model$CenterY = {$: 'CenterY'};
-var $mdgriffith$elm_ui$Element$centerY = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$CenterY);
 var $mdgriffith$elm_ui$Internal$Flag$borderColor = $mdgriffith$elm_ui$Internal$Flag$flag(28);
 var $mdgriffith$elm_ui$Element$Border$color = function (clr) {
 	return A2(
@@ -15046,6 +15107,285 @@ var $mdgriffith$elm_ui$Element$Border$color = function (clr) {
 			'border-color',
 			clr));
 };
+var $mdgriffith$elm_ui$Internal$Model$Left = {$: 'Left'};
+var $mdgriffith$elm_ui$Element$alignLeft = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$Left);
+var $mdgriffith$elm_ui$Internal$Flag$fontWeight = $mdgriffith$elm_ui$Internal$Flag$flag(13);
+var $mdgriffith$elm_ui$Element$Font$heavy = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontWeight, $mdgriffith$elm_ui$Internal$Style$classes.textHeavy);
+var $mdgriffith$elm_ui$Internal$Model$Min = F2(
+	function (a, b) {
+		return {$: 'Min', a: a, b: b};
+	});
+var $mdgriffith$elm_ui$Element$minimum = F2(
+	function (i, l) {
+		return A2($mdgriffith$elm_ui$Internal$Model$Min, i, l);
+	});
+var $mdgriffith$elm_ui$Element$paddingXY = F2(
+	function (x, y) {
+		if (_Utils_eq(x, y)) {
+			var f = x;
+			return A2(
+				$mdgriffith$elm_ui$Internal$Model$StyleClass,
+				$mdgriffith$elm_ui$Internal$Flag$padding,
+				A5(
+					$mdgriffith$elm_ui$Internal$Model$PaddingStyle,
+					'p-' + $elm$core$String$fromInt(x),
+					f,
+					f,
+					f,
+					f));
+		} else {
+			var yFloat = y;
+			var xFloat = x;
+			return A2(
+				$mdgriffith$elm_ui$Internal$Model$StyleClass,
+				$mdgriffith$elm_ui$Internal$Flag$padding,
+				A5(
+					$mdgriffith$elm_ui$Internal$Model$PaddingStyle,
+					'p-' + ($elm$core$String$fromInt(x) + ('-' + $elm$core$String$fromInt(y))),
+					yFloat,
+					xFloat,
+					yFloat,
+					xFloat));
+		}
+	});
+var $mdgriffith$elm_ui$Internal$Model$Paragraph = {$: 'Paragraph'};
+var $mdgriffith$elm_ui$Internal$Model$SpacingStyle = F3(
+	function (a, b, c) {
+		return {$: 'SpacingStyle', a: a, b: b, c: c};
+	});
+var $mdgriffith$elm_ui$Internal$Flag$spacing = $mdgriffith$elm_ui$Internal$Flag$flag(3);
+var $mdgriffith$elm_ui$Internal$Model$spacingName = F2(
+	function (x, y) {
+		return 'spacing-' + ($elm$core$String$fromInt(x) + ('-' + $elm$core$String$fromInt(y)));
+	});
+var $mdgriffith$elm_ui$Element$spacing = function (x) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$spacing,
+		A3(
+			$mdgriffith$elm_ui$Internal$Model$SpacingStyle,
+			A2($mdgriffith$elm_ui$Internal$Model$spacingName, x, x),
+			x,
+			x));
+};
+var $mdgriffith$elm_ui$Element$paragraph = F2(
+	function (attrs, children) {
+		return A4(
+			$mdgriffith$elm_ui$Internal$Model$element,
+			$mdgriffith$elm_ui$Internal$Model$asParagraph,
+			$mdgriffith$elm_ui$Internal$Model$div,
+			A2(
+				$elm$core$List$cons,
+				$mdgriffith$elm_ui$Internal$Model$Describe($mdgriffith$elm_ui$Internal$Model$Paragraph),
+				A2(
+					$elm$core$List$cons,
+					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+					A2(
+						$elm$core$List$cons,
+						$mdgriffith$elm_ui$Element$spacing(5),
+						attrs))),
+			$mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
+	});
+var $mdgriffith$elm_ui$Internal$Flag$borderRound = $mdgriffith$elm_ui$Internal$Flag$flag(17);
+var $mdgriffith$elm_ui$Element$Border$rounded = function (radius) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$borderRound,
+		A3(
+			$mdgriffith$elm_ui$Internal$Model$Single,
+			'br-' + $elm$core$String$fromInt(radius),
+			'border-radius',
+			$elm$core$String$fromInt(radius) + 'px'));
+};
+var $mdgriffith$elm_ui$Element$spacingXY = F2(
+	function (x, y) {
+		return A2(
+			$mdgriffith$elm_ui$Internal$Model$StyleClass,
+			$mdgriffith$elm_ui$Internal$Flag$spacing,
+			A3(
+				$mdgriffith$elm_ui$Internal$Model$SpacingStyle,
+				A2($mdgriffith$elm_ui$Internal$Model$spacingName, x, y),
+				x,
+				y));
+	});
+var $author$project$Main$introFatma = F2(
+	function (width, height) {
+		var fatmasIntro = '\n            I am a third year Software Engineering student in University\n            of Glasgow. This web app was build for the as my final year\n            project. My intrests are maths and functional programming.\n            ';
+		return A2(
+			$mdgriffith$elm_ui$Element$column,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$Font$color(
+					A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
+					$mdgriffith$elm_ui$Element$Font$heavy,
+					A2($mdgriffith$elm_ui$Element$spacingXY, 10, 15),
+					A2($mdgriffith$elm_ui$Element$paddingXY, 30, 50),
+					$mdgriffith$elm_ui$Element$width(
+					A2($mdgriffith$elm_ui$Element$maximum, width, $mdgriffith$elm_ui$Element$fill)),
+					$mdgriffith$elm_ui$Element$height(
+					A2($mdgriffith$elm_ui$Element$minimum, height, $mdgriffith$elm_ui$Element$fill)),
+					$mdgriffith$elm_ui$Element$Border$rounded(10),
+					$mdgriffith$elm_ui$Element$alignLeft
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$mdgriffith$elm_ui$Element$el,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$Font$size(30)
+						]),
+					$mdgriffith$elm_ui$Element$text('Fatma Alsayegh')),
+					A2(
+					$mdgriffith$elm_ui$Element$paragraph,
+					_List_Nil,
+					_List_fromArray(
+						[
+							A2(
+							$mdgriffith$elm_ui$Element$el,
+							_List_Nil,
+							$mdgriffith$elm_ui$Element$text('Hi I am ')),
+							A2(
+							$mdgriffith$elm_ui$Element$el,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$Font$color(
+									A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.9, 0.7)),
+									$mdgriffith$elm_ui$Element$Font$size(25)
+								]),
+							$mdgriffith$elm_ui$Element$text('Fatma! ')),
+							A2(
+							$mdgriffith$elm_ui$Element$el,
+							_List_Nil,
+							$mdgriffith$elm_ui$Element$text(fatmasIntro))
+						]))
+				]));
+	});
+var $mdgriffith$elm_ui$Internal$Model$Right = {$: 'Right'};
+var $mdgriffith$elm_ui$Element$alignRight = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$Right);
+var $elm$html$Html$Attributes$alt = $elm$html$Html$Attributes$stringProperty('alt');
+var $elm$html$Html$Attributes$src = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'src',
+		_VirtualDom_noJavaScriptOrHtmlUri(url));
+};
+var $mdgriffith$elm_ui$Element$image = F2(
+	function (attrs, _v0) {
+		var src = _v0.src;
+		var description = _v0.description;
+		var imageAttributes = A2(
+			$elm$core$List$filter,
+			function (a) {
+				switch (a.$) {
+					case 'Width':
+						return true;
+					case 'Height':
+						return true;
+					default:
+						return false;
+				}
+			},
+			attrs);
+		return A4(
+			$mdgriffith$elm_ui$Internal$Model$element,
+			$mdgriffith$elm_ui$Internal$Model$asEl,
+			$mdgriffith$elm_ui$Internal$Model$div,
+			A2(
+				$elm$core$List$cons,
+				$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.imageContainer),
+				attrs),
+			$mdgriffith$elm_ui$Internal$Model$Unkeyed(
+				_List_fromArray(
+					[
+						A4(
+						$mdgriffith$elm_ui$Internal$Model$element,
+						$mdgriffith$elm_ui$Internal$Model$asEl,
+						$mdgriffith$elm_ui$Internal$Model$NodeName('img'),
+						_Utils_ap(
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Internal$Model$Attr(
+									$elm$html$Html$Attributes$src(src)),
+									$mdgriffith$elm_ui$Internal$Model$Attr(
+									$elm$html$Html$Attributes$alt(description))
+								]),
+							imageAttributes),
+						$mdgriffith$elm_ui$Internal$Model$Unkeyed(_List_Nil))
+					])));
+	});
+var $mdgriffith$elm_ui$Internal$Model$BorderWidth = F5(
+	function (a, b, c, d, e) {
+		return {$: 'BorderWidth', a: a, b: b, c: c, d: d, e: e};
+	});
+var $mdgriffith$elm_ui$Element$Border$width = function (v) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$borderWidth,
+		A5(
+			$mdgriffith$elm_ui$Internal$Model$BorderWidth,
+			'b-' + $elm$core$String$fromInt(v),
+			v,
+			v,
+			v,
+			v));
+};
+var $author$project$Main$photoGraph = F2(
+	function (width, height) {
+		return A2(
+			$mdgriffith$elm_ui$Element$column,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$Font$color(
+					A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
+					$mdgriffith$elm_ui$Element$Font$heavy,
+					A2($mdgriffith$elm_ui$Element$spacingXY, 10, 15),
+					$mdgriffith$elm_ui$Element$width(
+					A2($mdgriffith$elm_ui$Element$maximum, width - 1, $mdgriffith$elm_ui$Element$fill)),
+					$mdgriffith$elm_ui$Element$height(
+					A2($mdgriffith$elm_ui$Element$minimum, height, $mdgriffith$elm_ui$Element$fill)),
+					$mdgriffith$elm_ui$Element$Border$rounded(20),
+					$mdgriffith$elm_ui$Element$alignRight,
+					$mdgriffith$elm_ui$Element$Border$width(5),
+					$mdgriffith$elm_ui$Element$Border$color(
+					A3($mdgriffith$elm_ui$Element$rgb, 0.7, 0.6, 0.6))
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$mdgriffith$elm_ui$Element$el,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$Border$rounded(200)
+						]),
+					A2(
+						$mdgriffith$elm_ui$Element$image,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$width(
+								A2($mdgriffith$elm_ui$Element$maximum, 400, $mdgriffith$elm_ui$Element$fill))
+							]),
+						{description: '', src: 'images/fatma.jpeg'}))
+				]));
+	});
+var $author$project$Main$aboutPage = F2(
+	function (widthIn, heightIn) {
+		var width = (widthIn / 3) | 0;
+		var height = (widthIn / 4) | 0;
+		return A2(
+			$mdgriffith$elm_ui$Element$row,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$Border$rounded(40),
+					$mdgriffith$elm_ui$Element$Border$color(
+					A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1))
+				]),
+			_List_fromArray(
+				[
+					A2($author$project$Main$introFatma, width, height),
+					A2($author$project$Main$photoGraph, widthIn - width, height)
+				]));
+	});
 var $author$project$Main$displayColumn = function (svgHtml) {
 	return A2(
 		$mdgriffith$elm_ui$Element$column,
@@ -15092,17 +15432,6 @@ var $lemol$ant_design_icons_elm$Ant$Icons$Svg$forwardOutlined = $lemol$ant_desig
 var $lemol$ant_design_icons_elm_ui$Ant$Icons$forwardOutlined = function (attrs) {
 	return A2($lemol$ant_design_icons_elm_ui$Ant$Icon$icon, attrs, $lemol$ant_design_icons_elm$Ant$Icons$Svg$forwardOutlined);
 };
-var $mdgriffith$elm_ui$Internal$Flag$borderRound = $mdgriffith$elm_ui$Internal$Flag$flag(17);
-var $mdgriffith$elm_ui$Element$Border$rounded = function (radius) {
-	return A2(
-		$mdgriffith$elm_ui$Internal$Model$StyleClass,
-		$mdgriffith$elm_ui$Internal$Flag$borderRound,
-		A3(
-			$mdgriffith$elm_ui$Internal$Model$Single,
-			'br-' + $elm$core$String$fromInt(radius),
-			'border-radius',
-			$elm$core$String$fromInt(radius) + 'px'));
-};
 var $author$project$Buttons$nextTask = function () {
 	var theButton = A2(
 		$mdgriffith$elm_ui$Element$Input$button,
@@ -15122,54 +15451,6 @@ var $author$project$Buttons$nextTask = function () {
 		});
 	return A2($author$project$Buttons$buttonWrap, 'Next Task', theButton);
 }();
-var $mdgriffith$elm_ui$Element$paddingXY = F2(
-	function (x, y) {
-		if (_Utils_eq(x, y)) {
-			var f = x;
-			return A2(
-				$mdgriffith$elm_ui$Internal$Model$StyleClass,
-				$mdgriffith$elm_ui$Internal$Flag$padding,
-				A5(
-					$mdgriffith$elm_ui$Internal$Model$PaddingStyle,
-					'p-' + $elm$core$String$fromInt(x),
-					f,
-					f,
-					f,
-					f));
-		} else {
-			var yFloat = y;
-			var xFloat = x;
-			return A2(
-				$mdgriffith$elm_ui$Internal$Model$StyleClass,
-				$mdgriffith$elm_ui$Internal$Flag$padding,
-				A5(
-					$mdgriffith$elm_ui$Internal$Model$PaddingStyle,
-					'p-' + ($elm$core$String$fromInt(x) + ('-' + $elm$core$String$fromInt(y))),
-					yFloat,
-					xFloat,
-					yFloat,
-					xFloat));
-		}
-	});
-var $mdgriffith$elm_ui$Internal$Model$SpacingStyle = F3(
-	function (a, b, c) {
-		return {$: 'SpacingStyle', a: a, b: b, c: c};
-	});
-var $mdgriffith$elm_ui$Internal$Flag$spacing = $mdgriffith$elm_ui$Internal$Flag$flag(3);
-var $mdgriffith$elm_ui$Internal$Model$spacingName = F2(
-	function (x, y) {
-		return 'spacing-' + ($elm$core$String$fromInt(x) + ('-' + $elm$core$String$fromInt(y)));
-	});
-var $mdgriffith$elm_ui$Element$spacing = function (x) {
-	return A2(
-		$mdgriffith$elm_ui$Internal$Model$StyleClass,
-		$mdgriffith$elm_ui$Internal$Flag$spacing,
-		A3(
-			$mdgriffith$elm_ui$Internal$Model$SpacingStyle,
-			A2($mdgriffith$elm_ui$Internal$Model$spacingName, x, x),
-			x,
-			x));
-};
 var $lemol$ant_design_icons_elm$Ant$Icons$Svg$RollbackOutlined$viewWithAttributes = function (attributes) {
 	return A2(
 		$elm$svg$Svg$svg,
@@ -15210,16 +15491,19 @@ var $author$project$Buttons$unColorButton = A2(
 					])),
 			onPress: $elm$core$Maybe$Just($author$project$Messages$VertexNonColor)
 		}));
-var $author$project$GraphColoring$colorButtons = A2(
-	$mdgriffith$elm_ui$Element$row,
-	_List_fromArray(
-		[
-			$mdgriffith$elm_ui$Element$spacing(90),
-			A2($mdgriffith$elm_ui$Element$paddingXY, 300, 40)
-		]),
-	_List_fromArray(
-		[$author$project$Buttons$unColorButton, $author$project$Buttons$nextTask]));
+var $author$project$GraphColoring$colorButtons = function (displaySize) {
+	return A2(
+		$mdgriffith$elm_ui$Element$row,
+		_List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$centerX,
+				$mdgriffith$elm_ui$Element$spacing((displaySize.width / 10) | 0)
+			]),
+		_List_fromArray(
+			[$author$project$Buttons$unColorButton, $author$project$Buttons$nextTask]));
+};
 var $author$project$Explanation$coloringExplanation = '\n   The graph coloring problems objective is to assign colors to the vertices of a graph such that no to adjacent\n   vertices have the same color such that the number of colors utilized are kept at minimum.\n   The graph shown in the picture, needs three colors to color it properly.\n   ';
+var $author$project$FontSize$Emph = {$: 'Emph'};
 var $mdgriffith$elm_ui$Element$rgb255 = F3(
 	function (red, green, blue) {
 		return A4($mdgriffith$elm_ui$Internal$Model$Rgba, red / 255, green / 255, blue / 255, 1);
@@ -15238,20 +15522,20 @@ var $author$project$FontSize$giveFontColor = function (fntcol) {
 			return A3($mdgriffith$elm_ui$Element$rgb, 0.2, 0.2, 1);
 	}
 };
-var $author$project$FontSize$emph = F2(
-	function (fontCol, str) {
+var $author$project$FontSize$emphForScreen = F3(
+	function (deviceType, fontCol, str) {
 		return A2(
 			$mdgriffith$elm_ui$Element$el,
 			_List_fromArray(
 				[
 					$mdgriffith$elm_ui$Element$Font$color(
 					$author$project$FontSize$giveFontColor(fontCol)),
-					$mdgriffith$elm_ui$Element$Font$size(22)
+					$mdgriffith$elm_ui$Element$Font$size(
+					A2($author$project$FontSize$getFontSize, $author$project$FontSize$Emph, deviceType))
 				]),
 			$mdgriffith$elm_ui$Element$text(str));
 	});
-var $mdgriffith$elm_ui$Internal$Flag$fontWeight = $mdgriffith$elm_ui$Internal$Flag$flag(13);
-var $mdgriffith$elm_ui$Element$Font$heavy = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontWeight, $mdgriffith$elm_ui$Internal$Style$classes.textHeavy);
+var $author$project$FontSize$emph = $author$project$FontSize$emphForScreen($author$project$FontSize$XXL);
 var $mdgriffith$elm_ui$Element$Font$bold = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontWeight, $mdgriffith$elm_ui$Internal$Style$classes.bold);
 var $author$project$Buttons$helpGraphColor = _List_fromArray(
 	[
@@ -15502,12 +15786,11 @@ var $author$project$Explanation$howToColor = _List_fromArray(
 		$mdgriffith$elm_ui$Element$text('\n       it to one of the vertices.\n      While coloring the graph make sure that \n      '),
 		$mdgriffith$elm_ui$Element$text('\n      no two adjacent vertices are colored the same. For if they are, the\n      edges connecting them will be displayed differently to let you know of the mistake.\n      ')
 	]);
+var $mdgriffith$elm_ui$Internal$Model$AlignY = function (a) {
+	return {$: 'AlignY', a: a};
+};
 var $mdgriffith$elm_ui$Internal$Model$Bottom = {$: 'Bottom'};
 var $mdgriffith$elm_ui$Element$alignBottom = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$Bottom);
-var $mdgriffith$elm_ui$Internal$Model$Left = {$: 'Left'};
-var $mdgriffith$elm_ui$Element$alignLeft = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$Left);
-var $mdgriffith$elm_ui$Internal$Model$Right = {$: 'Right'};
-var $mdgriffith$elm_ui$Element$alignRight = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$Right);
 var $lemol$ant_design_icons_elm$Ant$Icons$Svg$InfoCircleOutlined$viewWithAttributes = function (attributes) {
 	return A2(
 		$elm$svg$Svg$svg,
@@ -15700,27 +15983,8 @@ var $author$project$GraphColoring$miscolorText = function (e) {
 };
 var $mdgriffith$elm_ui$Internal$Model$Empty = {$: 'Empty'};
 var $mdgriffith$elm_ui$Element$none = $mdgriffith$elm_ui$Internal$Model$Empty;
-var $mdgriffith$elm_ui$Internal$Model$Paragraph = {$: 'Paragraph'};
-var $mdgriffith$elm_ui$Element$paragraph = F2(
-	function (attrs, children) {
-		return A4(
-			$mdgriffith$elm_ui$Internal$Model$element,
-			$mdgriffith$elm_ui$Internal$Model$asParagraph,
-			$mdgriffith$elm_ui$Internal$Model$div,
-			A2(
-				$elm$core$List$cons,
-				$mdgriffith$elm_ui$Internal$Model$Describe($mdgriffith$elm_ui$Internal$Model$Paragraph),
-				A2(
-					$elm$core$List$cons,
-					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
-					A2(
-						$elm$core$List$cons,
-						$mdgriffith$elm_ui$Element$spacing(5),
-						attrs))),
-			$mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
-	});
 var $author$project$GraphColoring$explanationColoring = F3(
-	function (colorDispSer, helpStatus, width) {
+	function (colorDispSer, helpStatus, displaySize) {
 		var verticesOfSameColor = function (edge) {
 			return _Utils_eq(edge.vertexOne.color, edge.vertexTwo.color) && (!_Utils_eq(
 				edge.vertexOne.color,
@@ -15759,7 +16023,7 @@ var $author$project$GraphColoring$explanationColoring = F3(
 					$mdgriffith$elm_ui$Element$Background$color(
 					A3($mdgriffith$elm_ui$Element$rgb, 0.2, 0.2, 0.2)),
 					$mdgriffith$elm_ui$Element$width(
-					A2($mdgriffith$elm_ui$Element$maximum, (width / 2) | 0, $mdgriffith$elm_ui$Element$fill))
+					A2($mdgriffith$elm_ui$Element$maximum, displaySize.width, $mdgriffith$elm_ui$Element$fill))
 				]),
 			_List_fromArray(
 				[
@@ -15768,7 +16032,7 @@ var $author$project$GraphColoring$explanationColoring = F3(
 					_List_fromArray(
 						[
 							$mdgriffith$elm_ui$Element$Font$size(
-							A2($author$project$FontSize$getFontSize, $author$project$FontSize$Head, width)),
+							A2($author$project$FontSize$getFontSize, $author$project$FontSize$Head, displaySize.deviceType)),
 							$mdgriffith$elm_ui$Element$Font$heavy
 						]),
 					$mdgriffith$elm_ui$Element$text('Graph Coloring')),
@@ -15790,7 +16054,7 @@ var $author$project$GraphColoring$explanationColoring = F3(
 						[
 							$mdgriffith$elm_ui$Element$text('\n                     As a challenge you may try to color\n                     the graph with only two colors and see if\n                     it is feasible.\n                     ')
 						])),
-					$author$project$GraphColoring$colorButtons,
+					$author$project$GraphColoring$colorButtons(displaySize),
 					A2(
 					$mdgriffith$elm_ui$Element$paragraph,
 					_List_Nil,
@@ -15908,7 +16172,7 @@ var $author$project$Graph$seperateEdges = function (g) {
 };
 var $author$project$Explanation$vertexCoverExplanation = '\n   Minimum Vertex cover of a graph is the minimum amount of vertices such that,\n   all the edges in the graph must have one of such vertices as at least one of\n   their endpoints.\n   ';
 var $author$project$VertexCover$explanationCover = F3(
-	function (display, helpStatus, width) {
+	function (display, helpStatus, displaySize) {
 		var graph = function () {
 			var _v1 = display.state;
 			if (_v1.$ === 'First') {
@@ -15939,7 +16203,7 @@ var $author$project$VertexCover$explanationCover = F3(
 					$mdgriffith$elm_ui$Element$spacing(20),
 					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
 					$mdgriffith$elm_ui$Element$width(
-					A2($mdgriffith$elm_ui$Element$maximum, (width / 2) | 0, $mdgriffith$elm_ui$Element$fill)),
+					A2($mdgriffith$elm_ui$Element$maximum, displaySize.width, $mdgriffith$elm_ui$Element$fill)),
 					$mdgriffith$elm_ui$Element$Background$color(
 					A3($mdgriffith$elm_ui$Element$rgb, 0.2, 0.2, 0.2))
 				]),
@@ -15950,7 +16214,7 @@ var $author$project$VertexCover$explanationCover = F3(
 					_List_fromArray(
 						[
 							$mdgriffith$elm_ui$Element$Font$size(
-							A2($author$project$FontSize$getFontSize, $author$project$FontSize$Head, width)),
+							A2($author$project$FontSize$getFontSize, $author$project$FontSize$Head, displaySize.deviceType)),
 							$mdgriffith$elm_ui$Element$Font$heavy
 						]),
 					$mdgriffith$elm_ui$Element$text('Vertex Cover')),
@@ -16305,22 +16569,23 @@ var $author$project$Buttons$resetButton = function () {
 		});
 	return A2($author$project$Buttons$buttonWrap, 'Restart', theButton);
 }();
-var $author$project$Isomorphism$mediaButtons = function (shapeTransition) {
-	return A2(
-		$mdgriffith$elm_ui$Element$row,
-		_List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$spacing(90),
-				A2($mdgriffith$elm_ui$Element$paddingXY, 300, 40)
-			]),
-		_List_fromArray(
-			[
-				$author$project$Buttons$playButton(shapeTransition.animationOn),
-				$author$project$Buttons$resetButton
-			]));
-};
+var $author$project$Isomorphism$mediaButtons = F2(
+	function (shapeTransition, displaySize) {
+		return A2(
+			$mdgriffith$elm_ui$Element$row,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$centerX,
+					$mdgriffith$elm_ui$Element$spacing((displaySize.width / 10) | 0)
+				]),
+			_List_fromArray(
+				[
+					$author$project$Buttons$playButton(shapeTransition.animationOn),
+					$author$project$Buttons$resetButton
+				]));
+	});
 var $author$project$Isomorphism$explanationOne = F3(
-	function (shapeTransition, helpStatus, width) {
+	function (shapeTransition, helpStatus, displaySize) {
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
@@ -16332,7 +16597,7 @@ var $author$project$Isomorphism$explanationOne = F3(
 					$mdgriffith$elm_ui$Element$Background$color(
 					A3($mdgriffith$elm_ui$Element$rgb, 0.2, 0.2, 0.2)),
 					$mdgriffith$elm_ui$Element$width(
-					A2($mdgriffith$elm_ui$Element$maximum, (width / 2) | 0, $mdgriffith$elm_ui$Element$fill))
+					A2($mdgriffith$elm_ui$Element$maximum, displaySize.width, $mdgriffith$elm_ui$Element$fill))
 				]),
 			_Utils_ap(
 				_List_fromArray(
@@ -16342,7 +16607,7 @@ var $author$project$Isomorphism$explanationOne = F3(
 						_List_fromArray(
 							[
 								$mdgriffith$elm_ui$Element$Font$size(
-								A2($author$project$FontSize$getFontSize, $author$project$FontSize$Head, width)),
+								A2($author$project$FontSize$getFontSize, $author$project$FontSize$Head, displaySize.deviceType)),
 								$mdgriffith$elm_ui$Element$Font$heavy
 							]),
 						$mdgriffith$elm_ui$Element$text('Graph Isomorphism')),
@@ -16367,7 +16632,7 @@ var $author$project$Isomorphism$explanationOne = F3(
 								A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, 'Restart '),
 								$mdgriffith$elm_ui$Element$text('\n                     button to see it all over again.\n                     ')
 							])),
-						$author$project$Isomorphism$mediaButtons(shapeTransition),
+						A2($author$project$Isomorphism$mediaButtons, shapeTransition, displaySize),
 						A2(
 						$mdgriffith$elm_ui$Element$paragraph,
 						_List_Nil,
@@ -16430,21 +16695,22 @@ var $author$project$Buttons$forwardButton = function () {
 		});
 	return A2($author$project$Buttons$buttonWrap, 'Next Animation', theButton);
 }();
-var $author$project$MaxkCut$mediaButtonsForMaxCut = function (shapeTransition) {
-	return A2(
-		$mdgriffith$elm_ui$Element$row,
-		_List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$spacing(90),
-				A2($mdgriffith$elm_ui$Element$paddingXY, 300, 40)
-			]),
-		_List_fromArray(
-			[
-				$author$project$Buttons$playButton(shapeTransition.animationOn),
-				$author$project$Buttons$resetButton,
-				$author$project$Buttons$forwardButton
-			]));
-};
+var $author$project$MaxkCut$mediaButtonsForMaxCut = F2(
+	function (shapeTransition, displaySize) {
+		return A2(
+			$mdgriffith$elm_ui$Element$row,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$centerX,
+					$mdgriffith$elm_ui$Element$spacing((displaySize.width / 10) | 0)
+				]),
+			_List_fromArray(
+				[
+					$author$project$Buttons$playButton(shapeTransition.animationOn),
+					$author$project$Buttons$resetButton,
+					$author$project$Buttons$forwardButton
+				]));
+	});
 var $lemol$ant_design_icons_elm$Ant$Icons$Svg$MinusOutlined$viewWithAttributes = function (attributes) {
 	return A2(
 		$elm$svg$Svg$svg,
@@ -16470,7 +16736,7 @@ var $lemol$ant_design_icons_elm_ui$Ant$Icons$minusOutlined = function (attrs) {
 	return A2($lemol$ant_design_icons_elm_ui$Ant$Icon$icon, attrs, $lemol$ant_design_icons_elm$Ant$Icons$Svg$minusOutlined);
 };
 var $author$project$MaxkCut$explanationTwo = F3(
-	function (maxCut, helpStatus, width) {
+	function (maxCut, helpStatus, displaySize) {
 		var twoCutLineExplanation = _List_fromArray(
 			[
 				$mdgriffith$elm_ui$Element$text('\n               The Max cut line, \n               seperates the two sets of vertices. The\n               intersection between the cut line and the edges are shown as \n               '),
@@ -16557,7 +16823,7 @@ var $author$project$MaxkCut$explanationTwo = F3(
 					$mdgriffith$elm_ui$Element$Background$color(
 					A3($mdgriffith$elm_ui$Element$rgb, 0.2, 0.2, 0.2)),
 					$mdgriffith$elm_ui$Element$width(
-					A2($mdgriffith$elm_ui$Element$maximum, (width / 2) | 0, $mdgriffith$elm_ui$Element$fill))
+					A2($mdgriffith$elm_ui$Element$maximum, displaySize.width, $mdgriffith$elm_ui$Element$fill))
 				]),
 			_List_fromArray(
 				[
@@ -16566,7 +16832,7 @@ var $author$project$MaxkCut$explanationTwo = F3(
 					_List_fromArray(
 						[
 							$mdgriffith$elm_ui$Element$Font$size(
-							A2($author$project$FontSize$getFontSize, $author$project$FontSize$Head, width)),
+							A2($author$project$FontSize$getFontSize, $author$project$FontSize$Head, displaySize.deviceType)),
 							$mdgriffith$elm_ui$Element$Font$heavy
 						]),
 					$mdgriffith$elm_ui$Element$text('Max Cut')),
@@ -16581,7 +16847,7 @@ var $author$project$MaxkCut$explanationTwo = F3(
 							$mdgriffith$elm_ui$Element$text($author$project$Explanation$maxCutExplanation)
 						])),
 					A2($mdgriffith$elm_ui$Element$paragraph, _List_Nil, buttonExplanation),
-					$author$project$MaxkCut$mediaButtonsForMaxCut(shapeTransition),
+					A2($author$project$MaxkCut$mediaButtonsForMaxCut, shapeTransition, displaySize),
 					A2($mdgriffith$elm_ui$Element$paragraph, _List_Nil, topicTitle),
 					A2(
 					$mdgriffith$elm_ui$Element$paragraph,
@@ -16787,89 +17053,91 @@ var $lemol$ant_design_icons_elm$Ant$Icons$Svg$backwardOutlined = $lemol$ant_desi
 var $lemol$ant_design_icons_elm_ui$Ant$Icons$backwardOutlined = function (attrs) {
 	return A2($lemol$ant_design_icons_elm_ui$Ant$Icon$icon, attrs, $lemol$ant_design_icons_elm$Ant$Icons$Svg$backwardOutlined);
 };
-var $author$project$Buttons$treeWidthButtonRow = function (isPreviousActive) {
-	var forward = A2(
-		$author$project$Buttons$buttonWrap,
-		'Next animation',
-		A2(
-			$mdgriffith$elm_ui$Element$Input$button,
+var $author$project$Buttons$treeWidthButtonRow = F2(
+	function (isPreviousActive, displaySize) {
+		var forward = A2(
+			$author$project$Buttons$buttonWrap,
+			'Next animation',
+			A2(
+				$mdgriffith$elm_ui$Element$Input$button,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$Border$rounded(100),
+						$mdgriffith$elm_ui$Element$centerX
+					]),
+				{
+					label: $lemol$ant_design_icons_elm_ui$Ant$Icons$forwardOutlined(
+						_List_fromArray(
+							[
+								$lemol$ant_design_icons_elm_ui$Ant$Icon$width(40),
+								$lemol$ant_design_icons_elm_ui$Ant$Icon$height(40)
+							])),
+					onPress: $elm$core$Maybe$Just($author$project$Messages$NextAnimation)
+				}));
+		var backwardDead = A2(
+			$author$project$Buttons$buttonWrap,
+			'Previous animation',
+			A2(
+				$mdgriffith$elm_ui$Element$Input$button,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$Border$rounded(100),
+						$mdgriffith$elm_ui$Element$centerX,
+						$mdgriffith$elm_ui$Element$Font$color(
+						A3($mdgriffith$elm_ui$Element$rgb, 0.4, 0.4, 0.4))
+					]),
+				{
+					label: $lemol$ant_design_icons_elm_ui$Ant$Icons$backwardOutlined(
+						_List_fromArray(
+							[
+								$lemol$ant_design_icons_elm_ui$Ant$Icon$width(40),
+								$lemol$ant_design_icons_elm_ui$Ant$Icon$height(40)
+							])),
+					onPress: $elm$core$Maybe$Nothing
+				}));
+		var backward = A2(
+			$author$project$Buttons$buttonWrap,
+			'Previous animation',
+			A2(
+				$mdgriffith$elm_ui$Element$Input$button,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$Border$rounded(100),
+						$mdgriffith$elm_ui$Element$centerX
+					]),
+				{
+					label: $lemol$ant_design_icons_elm_ui$Ant$Icons$backwardOutlined(
+						_List_fromArray(
+							[
+								$lemol$ant_design_icons_elm_ui$Ant$Icon$width(40),
+								$lemol$ant_design_icons_elm_ui$Ant$Icon$height(40)
+							])),
+					onPress: $elm$core$Maybe$Just($author$project$Messages$PreviousTreeWidthAnimation)
+				}));
+		return A2(
+			$mdgriffith$elm_ui$Element$row,
 			_List_fromArray(
 				[
-					$mdgriffith$elm_ui$Element$Border$rounded(100),
-					$mdgriffith$elm_ui$Element$centerX
-				]),
-			{
-				label: $lemol$ant_design_icons_elm_ui$Ant$Icons$forwardOutlined(
-					_List_fromArray(
-						[
-							$lemol$ant_design_icons_elm_ui$Ant$Icon$width(40),
-							$lemol$ant_design_icons_elm_ui$Ant$Icon$height(40)
-						])),
-				onPress: $elm$core$Maybe$Just($author$project$Messages$NextAnimation)
-			}));
-	var backwardDead = A2(
-		$author$project$Buttons$buttonWrap,
-		'Previous animation',
-		A2(
-			$mdgriffith$elm_ui$Element$Input$button,
-			_List_fromArray(
-				[
-					$mdgriffith$elm_ui$Element$Border$rounded(100),
 					$mdgriffith$elm_ui$Element$centerX,
-					$mdgriffith$elm_ui$Element$Font$color(
-					A3($mdgriffith$elm_ui$Element$rgb, 0.4, 0.4, 0.4))
+					$mdgriffith$elm_ui$Element$spacing((displaySize.width / 10) | 0)
 				]),
-			{
-				label: $lemol$ant_design_icons_elm_ui$Ant$Icons$backwardOutlined(
-					_List_fromArray(
-						[
-							$lemol$ant_design_icons_elm_ui$Ant$Icon$width(40),
-							$lemol$ant_design_icons_elm_ui$Ant$Icon$height(40)
-						])),
-				onPress: $elm$core$Maybe$Nothing
-			}));
-	var backward = A2(
-		$author$project$Buttons$buttonWrap,
-		'Previous animation',
-		A2(
-			$mdgriffith$elm_ui$Element$Input$button,
 			_List_fromArray(
 				[
-					$mdgriffith$elm_ui$Element$Border$rounded(100),
-					$mdgriffith$elm_ui$Element$centerX
-				]),
-			{
-				label: $lemol$ant_design_icons_elm_ui$Ant$Icons$backwardOutlined(
-					_List_fromArray(
-						[
-							$lemol$ant_design_icons_elm_ui$Ant$Icon$width(40),
-							$lemol$ant_design_icons_elm_ui$Ant$Icon$height(40)
-						])),
-				onPress: $elm$core$Maybe$Just($author$project$Messages$PreviousTreeWidthAnimation)
-			}));
-	return A2(
-		$mdgriffith$elm_ui$Element$row,
-		_List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$spacing(90),
-				A2($mdgriffith$elm_ui$Element$paddingXY, 300, 40)
-			]),
-		_List_fromArray(
-			[
-				isPreviousActive ? backward : backwardDead,
-				forward
-			]));
-};
-var $author$project$TreeWidth$treeWidthButtons = function (status) {
-	if (status.$ === 'CircularGraph') {
-		return $author$project$Buttons$treeWidthButtonRow(false);
-	} else {
-		return $author$project$Buttons$treeWidthButtonRow(true);
-	}
-};
+					isPreviousActive ? backward : backwardDead,
+					forward
+				]));
+	});
+var $author$project$TreeWidth$treeWidthButtons = F2(
+	function (status, displaySize) {
+		if (status.$ === 'CircularGraph') {
+			return A2($author$project$Buttons$treeWidthButtonRow, false, displaySize);
+		} else {
+			return A2($author$project$Buttons$treeWidthButtonRow, true, displaySize);
+		}
+	});
 var $author$project$Explanation$treeWidthExplanation = '\n   Tree width can be seen a measure of tree-ness of a graph. It shows how well\n   a graph can be interpreted as a tree. This demonstration is broken into two parts.\n   The first part explains the concept of graph decomposition. The second part will\n   build upon the first to explain the definition of tree width more pricisely.\n   ';
 var $author$project$TreeWidth$explanationWidth = F3(
-	function (display, helpStatus, width) {
+	function (display, helpStatus, displaySize) {
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
@@ -16879,7 +17147,7 @@ var $author$project$TreeWidth$explanationWidth = F3(
 					$mdgriffith$elm_ui$Element$spacing(20),
 					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
 					$mdgriffith$elm_ui$Element$width(
-					A2($mdgriffith$elm_ui$Element$maximum, (width / 2) | 0, $mdgriffith$elm_ui$Element$fill)),
+					A2($mdgriffith$elm_ui$Element$maximum, displaySize.width, $mdgriffith$elm_ui$Element$fill)),
 					$mdgriffith$elm_ui$Element$Background$color(
 					A3($mdgriffith$elm_ui$Element$rgb, 0.2, 0.2, 0.2))
 				]),
@@ -16891,7 +17159,7 @@ var $author$project$TreeWidth$explanationWidth = F3(
 						_List_fromArray(
 							[
 								$mdgriffith$elm_ui$Element$Font$size(
-								A2($author$project$FontSize$getFontSize, $author$project$FontSize$Head, width)),
+								A2($author$project$FontSize$getFontSize, $author$project$FontSize$Head, displaySize.deviceType)),
 								$mdgriffith$elm_ui$Element$Font$heavy
 							]),
 						$mdgriffith$elm_ui$Element$text('Tree Width')),
@@ -16915,7 +17183,7 @@ var $author$project$TreeWidth$explanationWidth = F3(
 							[
 								$mdgriffith$elm_ui$Element$text('\n                  Keep pressing the forward and backward buttons to navigate\n                  through this demonstration.\n                  ')
 							])),
-						$author$project$TreeWidth$treeWidthButtons(display.status)
+						A2($author$project$TreeWidth$treeWidthButtons, display.status, displaySize)
 					]),
 				_Utils_ap(
 					A2($author$project$TreeWidth$storyTreeWidth, display.status, helpStatus),
@@ -16924,78 +17192,13 @@ var $author$project$TreeWidth$explanationWidth = F3(
 							A2($author$project$Buttons$lowerNavigation, 'Vertex Cover', 'Isomorphism')
 						]))));
 	});
-var $mdgriffith$elm_ui$Internal$Model$Min = F2(
-	function (a, b) {
-		return {$: 'Min', a: a, b: b};
-	});
-var $mdgriffith$elm_ui$Element$minimum = F2(
-	function (i, l) {
-		return A2($mdgriffith$elm_ui$Internal$Model$Min, i, l);
-	});
-var $mdgriffith$elm_ui$Element$spacingXY = F2(
-	function (x, y) {
-		return A2(
-			$mdgriffith$elm_ui$Internal$Model$StyleClass,
-			$mdgriffith$elm_ui$Internal$Flag$spacing,
-			A3(
-				$mdgriffith$elm_ui$Internal$Model$SpacingStyle,
-				A2($mdgriffith$elm_ui$Internal$Model$spacingName, x, y),
-				x,
-				y));
-	});
-var $author$project$Main$introFatma = F2(
-	function (width, height) {
-		var fatmasIntro = '\n            I am a third year Software Engineering student in University\n            of Glasgow. This web app was build for the as my final year\n            project. My intrests are maths and functional programming.\n            ';
-		return A2(
-			$mdgriffith$elm_ui$Element$column,
-			_List_fromArray(
-				[
-					$mdgriffith$elm_ui$Element$Font$color(
-					A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
-					$mdgriffith$elm_ui$Element$Font$heavy,
-					A2($mdgriffith$elm_ui$Element$spacingXY, 10, 15),
-					A2($mdgriffith$elm_ui$Element$paddingXY, 30, 50),
-					$mdgriffith$elm_ui$Element$width(
-					A2($mdgriffith$elm_ui$Element$maximum, width, $mdgriffith$elm_ui$Element$fill)),
-					$mdgriffith$elm_ui$Element$height(
-					A2($mdgriffith$elm_ui$Element$minimum, height, $mdgriffith$elm_ui$Element$fill)),
-					$mdgriffith$elm_ui$Element$Border$rounded(10),
-					$mdgriffith$elm_ui$Element$alignLeft
-				]),
-			_List_fromArray(
-				[
-					A2(
-					$mdgriffith$elm_ui$Element$el,
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$Font$size(30)
-						]),
-					$mdgriffith$elm_ui$Element$text('Fatma Alsayegh')),
-					A2(
-					$mdgriffith$elm_ui$Element$paragraph,
-					_List_Nil,
-					_List_fromArray(
-						[
-							A2(
-							$mdgriffith$elm_ui$Element$el,
-							_List_Nil,
-							$mdgriffith$elm_ui$Element$text('Hi I am ')),
-							A2(
-							$mdgriffith$elm_ui$Element$el,
-							_List_fromArray(
-								[
-									$mdgriffith$elm_ui$Element$Font$color(
-									A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.9, 0.7)),
-									$mdgriffith$elm_ui$Element$Font$size(25)
-								]),
-							$mdgriffith$elm_ui$Element$text('Fatma! ')),
-							A2(
-							$mdgriffith$elm_ui$Element$el,
-							_List_Nil,
-							$mdgriffith$elm_ui$Element$text(fatmasIntro))
-						]))
-				]));
-	});
+var $author$project$Messages$GotoColoring = {$: 'GotoColoring'};
+var $author$project$Messages$GotoCover = {$: 'GotoCover'};
+var $author$project$Messages$GotoIsomorphism = {$: 'GotoIsomorphism'};
+var $author$project$Messages$GotoMaxkCut = {$: 'GotoMaxkCut'};
+var $author$project$Messages$GotoTreeWidth = {$: 'GotoTreeWidth'};
+var $mdgriffith$elm_ui$Internal$Model$CenterY = {$: 'CenterY'};
+var $mdgriffith$elm_ui$Element$centerY = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$CenterY);
 var $author$project$Main$displayMiniGraph = function (svgHtml) {
 	return A2(
 		$mdgriffith$elm_ui$Element$el,
@@ -17323,22 +17526,6 @@ var $author$project$TreeWidth$miniTreeWidth = function () {
 }();
 var $mdgriffith$elm_ui$Internal$Flag$borderStyle = $mdgriffith$elm_ui$Internal$Flag$flag(11);
 var $mdgriffith$elm_ui$Element$Border$solid = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$borderStyle, $mdgriffith$elm_ui$Internal$Style$classes.borderSolid);
-var $mdgriffith$elm_ui$Internal$Model$BorderWidth = F5(
-	function (a, b, c, d, e) {
-		return {$: 'BorderWidth', a: a, b: b, c: c, d: d, e: e};
-	});
-var $mdgriffith$elm_ui$Element$Border$width = function (v) {
-	return A2(
-		$mdgriffith$elm_ui$Internal$Model$StyleClass,
-		$mdgriffith$elm_ui$Internal$Flag$borderWidth,
-		A5(
-			$mdgriffith$elm_ui$Internal$Model$BorderWidth,
-			'b-' + $elm$core$String$fromInt(v),
-			v,
-			v,
-			v,
-			v));
-};
 var $author$project$Main$makeTopicIcon = function (topicMsg) {
 	var tex = function () {
 		switch (topicMsg.$) {
@@ -17393,6 +17580,114 @@ var $author$project$Main$makeTopicIcon = function (topicMsg) {
 				_List_fromArray(
 					[$mdgriffith$elm_ui$Element$centerX]),
 				$mdgriffith$elm_ui$Element$text(tex))
+			]));
+};
+var $author$project$Main$homePage = function (height) {
+	return A2(
+		$mdgriffith$elm_ui$Element$column,
+		_List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$centerX,
+				$mdgriffith$elm_ui$Element$centerY,
+				$mdgriffith$elm_ui$Element$Font$color(
+				A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
+				$mdgriffith$elm_ui$Element$Font$heavy,
+				A2($mdgriffith$elm_ui$Element$spacingXY, 10, 15)
+			]),
+		_List_fromArray(
+			[
+				A2(
+				$mdgriffith$elm_ui$Element$paragraph,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$Font$size(45),
+						A2($mdgriffith$elm_ui$Element$paddingXY, 5, 20)
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$mdgriffith$elm_ui$Element$el,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$Font$color(
+								A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.9, 0.7)),
+								$mdgriffith$elm_ui$Element$Font$size(70)
+							]),
+						$mdgriffith$elm_ui$Element$text('V')),
+						$mdgriffith$elm_ui$Element$text('isualization of '),
+						A2(
+						$mdgriffith$elm_ui$Element$el,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$Font$color(
+								A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.9, 0.7)),
+								$mdgriffith$elm_ui$Element$Font$size(70)
+							]),
+						$mdgriffith$elm_ui$Element$text('C')),
+						$mdgriffith$elm_ui$Element$text('lassical '),
+						A2(
+						$mdgriffith$elm_ui$Element$el,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$Font$color(
+								A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.9, 0.7)),
+								$mdgriffith$elm_ui$Element$Font$size(70)
+							]),
+						$mdgriffith$elm_ui$Element$text('G')),
+						$mdgriffith$elm_ui$Element$text('raph '),
+						A2(
+						$mdgriffith$elm_ui$Element$el,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$Font$color(
+								A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.9, 0.7)),
+								$mdgriffith$elm_ui$Element$Font$size(70)
+							]),
+						$mdgriffith$elm_ui$Element$text('T')),
+						$mdgriffith$elm_ui$Element$text('heory '),
+						A2(
+						$mdgriffith$elm_ui$Element$el,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$Font$color(
+								A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.9, 0.7)),
+								$mdgriffith$elm_ui$Element$Font$size(70)
+							]),
+						$mdgriffith$elm_ui$Element$text('P')),
+						$mdgriffith$elm_ui$Element$text('roblems')
+					])),
+				A2(
+				$mdgriffith$elm_ui$Element$row,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$centerX,
+						$mdgriffith$elm_ui$Element$centerY,
+						$mdgriffith$elm_ui$Element$Font$color(
+						A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
+						$mdgriffith$elm_ui$Element$Font$heavy,
+						A2($mdgriffith$elm_ui$Element$spacingXY, 10, 15)
+					]),
+				A2(
+					$elm$core$List$map,
+					$author$project$Main$makeTopicIcon,
+					_List_fromArray(
+						[$author$project$Messages$GotoIsomorphism, $author$project$Messages$GotoMaxkCut, $author$project$Messages$GotoColoring]))),
+				A2(
+				$mdgriffith$elm_ui$Element$row,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$centerX,
+						$mdgriffith$elm_ui$Element$centerY,
+						$mdgriffith$elm_ui$Element$Font$color(
+						A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
+						$mdgriffith$elm_ui$Element$Font$heavy,
+						A2($mdgriffith$elm_ui$Element$spacingXY, 10, 15)
+					]),
+				A2(
+					$elm$core$List$map,
+					$author$project$Main$makeTopicIcon,
+					_List_fromArray(
+						[$author$project$Messages$GotoCover, $author$project$Messages$GotoTreeWidth])))
 			]));
 };
 var $author$project$VertexCover$drawGraphForCover = function (g) {
@@ -18399,307 +18694,100 @@ var $author$project$MaxkCut$paneTwo = function (maxCutTrans) {
 		return $author$project$MaxkCut$paneTwoB(maxCutTrans.transitionB);
 	}
 };
-var $elm$html$Html$Attributes$alt = $elm$html$Html$Attributes$stringProperty('alt');
-var $elm$html$Html$Attributes$src = function (url) {
-	return A2(
-		$elm$html$Html$Attributes$stringProperty,
-		'src',
-		_VirtualDom_noJavaScriptOrHtmlUri(url));
+var $author$project$Main$showTopic = function (displaySize) {
+	return $mdgriffith$elm_ui$Element$row(
+		_List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+				$mdgriffith$elm_ui$Element$height(
+				A2($mdgriffith$elm_ui$Element$maximum, displaySize.height, $mdgriffith$elm_ui$Element$fill))
+			]));
 };
-var $mdgriffith$elm_ui$Element$image = F2(
-	function (attrs, _v0) {
-		var src = _v0.src;
-		var description = _v0.description;
-		var imageAttributes = A2(
-			$elm$core$List$filter,
-			function (a) {
-				switch (a.$) {
-					case 'Width':
-						return true;
-					case 'Height':
-						return true;
-					default:
-						return false;
-				}
-			},
-			attrs);
-		return A4(
-			$mdgriffith$elm_ui$Internal$Model$element,
-			$mdgriffith$elm_ui$Internal$Model$asEl,
-			$mdgriffith$elm_ui$Internal$Model$div,
-			A2(
-				$elm$core$List$cons,
-				$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.imageContainer),
-				attrs),
-			$mdgriffith$elm_ui$Internal$Model$Unkeyed(
-				_List_fromArray(
-					[
-						A4(
-						$mdgriffith$elm_ui$Internal$Model$element,
-						$mdgriffith$elm_ui$Internal$Model$asEl,
-						$mdgriffith$elm_ui$Internal$Model$NodeName('img'),
-						_Utils_ap(
-							_List_fromArray(
-								[
-									$mdgriffith$elm_ui$Internal$Model$Attr(
-									$elm$html$Html$Attributes$src(src)),
-									$mdgriffith$elm_ui$Internal$Model$Attr(
-									$elm$html$Html$Attributes$alt(description))
-								]),
-							imageAttributes),
-						$mdgriffith$elm_ui$Internal$Model$Unkeyed(_List_Nil))
-					])));
-	});
-var $author$project$Main$photoGraph = F2(
-	function (width, height) {
-		return A2(
-			$mdgriffith$elm_ui$Element$column,
-			_List_fromArray(
-				[
-					$mdgriffith$elm_ui$Element$Font$color(
-					A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
-					$mdgriffith$elm_ui$Element$Font$heavy,
-					A2($mdgriffith$elm_ui$Element$spacingXY, 10, 15),
-					$mdgriffith$elm_ui$Element$width(
-					A2($mdgriffith$elm_ui$Element$maximum, width - 1, $mdgriffith$elm_ui$Element$fill)),
-					$mdgriffith$elm_ui$Element$height(
-					A2($mdgriffith$elm_ui$Element$minimum, height, $mdgriffith$elm_ui$Element$fill)),
-					$mdgriffith$elm_ui$Element$Border$rounded(20),
-					$mdgriffith$elm_ui$Element$alignRight,
-					$mdgriffith$elm_ui$Element$Border$width(5),
-					$mdgriffith$elm_ui$Element$Border$color(
-					A3($mdgriffith$elm_ui$Element$rgb, 0.7, 0.6, 0.6))
-				]),
-			_List_fromArray(
-				[
-					A2(
+var $author$project$Main$viewTopic = F2(
+	function (model, displaySize) {
+		var explanationSize = _Utils_update(
+			displaySize,
+			{width: (displaySize.width / 2) | 0});
+		var _v0 = model.topic;
+		switch (_v0.$) {
+			case 'Isomorphic':
+				var shapeTransition = _v0.a;
+				return A2(
+					$author$project$Main$showTopic,
+					displaySize,
+					_List_fromArray(
+						[
+							$author$project$Main$displayColumn(
+							A2($author$project$Isomorphism$paneOne, shapeTransition.graphA, shapeTransition.graphB)),
+							A3($author$project$Isomorphism$explanationOne, shapeTransition, model.helpStatus, explanationSize)
+						]));
+			case 'MaxCut':
+				var maxCutTrans = _v0.a;
+				return A2(
+					$author$project$Main$showTopic,
+					displaySize,
+					_List_fromArray(
+						[
+							$author$project$Main$displayColumn(
+							$author$project$MaxkCut$paneTwo(maxCutTrans)),
+							A3($author$project$MaxkCut$explanationTwo, maxCutTrans, model.helpStatus, explanationSize)
+						]));
+			case 'GraphColoring':
+				var display = _v0.a;
+				return A2(
+					$author$project$Main$showTopic,
+					displaySize,
+					_List_fromArray(
+						[
+							$author$project$Main$displayColumn(
+							$author$project$GraphColoring$paneThree(display)),
+							A3($author$project$GraphColoring$explanationColoring, display, model.helpStatus, explanationSize)
+						]));
+			case 'VertexCover':
+				var display = _v0.a;
+				return A2(
+					$author$project$Main$showTopic,
+					displaySize,
+					_List_fromArray(
+						[
+							$author$project$Main$displayColumn(
+							$author$project$VertexCover$paneFour(display)),
+							A3($author$project$VertexCover$explanationCover, display, model.helpStatus, explanationSize)
+						]));
+			case 'TreeWidth':
+				var display = _v0.a;
+				return A2(
+					$author$project$Main$showTopic,
+					displaySize,
+					_List_fromArray(
+						[
+							$author$project$Main$displayColumn(
+							$author$project$TreeWidth$paneTree(display)),
+							A3($author$project$TreeWidth$explanationWidth, display, model.helpStatus, explanationSize)
+						]));
+			case 'HomePage':
+				return $author$project$Main$homePage(displaySize.height);
+			case 'ScreenSize':
+				return A2(
 					$mdgriffith$elm_ui$Element$el,
 					_List_fromArray(
 						[
-							$mdgriffith$elm_ui$Element$Border$rounded(200)
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
 						]),
-					A2(
-						$mdgriffith$elm_ui$Element$image,
-						_List_fromArray(
-							[
-								$mdgriffith$elm_ui$Element$width(
-								A2($mdgriffith$elm_ui$Element$maximum, 400, $mdgriffith$elm_ui$Element$fill))
-							]),
-						{description: '', src: 'images/fatma.jpeg'}))
-				]));
+					$mdgriffith$elm_ui$Element$text(
+						$elm$core$String$fromInt(model.displaySize.width) + (' x ' + $elm$core$String$fromInt(model.displaySize.height))));
+			default:
+				return A2($author$project$Main$aboutPage, model.displaySize.width, model.displaySize.height);
+		}
 	});
-var $author$project$Main$viewTopic = function (model) {
-	var _v0 = model.topic;
-	switch (_v0.$) {
-		case 'Isomorphic':
-			var shapeTransition = _v0.a;
-			return A2(
-				$mdgriffith$elm_ui$Element$row,
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
-					]),
-				_List_fromArray(
-					[
-						$author$project$Main$displayColumn(
-						A2($author$project$Isomorphism$paneOne, shapeTransition.graphA, shapeTransition.graphB)),
-						A3($author$project$Isomorphism$explanationOne, shapeTransition, model.helpStatus, model.width)
-					]));
-		case 'MaxCut':
-			var maxCutTrans = _v0.a;
-			return A2(
-				$mdgriffith$elm_ui$Element$row,
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
-					]),
-				_List_fromArray(
-					[
-						$author$project$Main$displayColumn(
-						$author$project$MaxkCut$paneTwo(maxCutTrans)),
-						A3($author$project$MaxkCut$explanationTwo, maxCutTrans, model.helpStatus, model.width)
-					]));
-		case 'GraphColoring':
-			var display = _v0.a;
-			return A2(
-				$mdgriffith$elm_ui$Element$row,
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
-					]),
-				_List_fromArray(
-					[
-						$author$project$Main$displayColumn(
-						$author$project$GraphColoring$paneThree(display)),
-						A3($author$project$GraphColoring$explanationColoring, display, model.helpStatus, model.width)
-					]));
-		case 'VertexCover':
-			var display = _v0.a;
-			return A2(
-				$mdgriffith$elm_ui$Element$row,
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
-					]),
-				_List_fromArray(
-					[
-						$author$project$Main$displayColumn(
-						$author$project$VertexCover$paneFour(display)),
-						A3($author$project$VertexCover$explanationCover, display, model.helpStatus, model.width)
-					]));
-		case 'TreeWidth':
-			var display = _v0.a;
-			return A2(
-				$mdgriffith$elm_ui$Element$row,
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
-					]),
-				_List_fromArray(
-					[
-						$author$project$Main$displayColumn(
-						$author$project$TreeWidth$paneTree(display)),
-						A3($author$project$TreeWidth$explanationWidth, display, model.helpStatus, model.width)
-					]));
-		case 'HomePage':
-			return A2(
-				$mdgriffith$elm_ui$Element$column,
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$centerX,
-						$mdgriffith$elm_ui$Element$centerY,
-						$mdgriffith$elm_ui$Element$Font$color(
-						A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
-						$mdgriffith$elm_ui$Element$Font$heavy,
-						A2($mdgriffith$elm_ui$Element$spacingXY, 10, 15)
-					]),
-				_List_fromArray(
-					[
-						A2(
-						$mdgriffith$elm_ui$Element$paragraph,
-						_List_fromArray(
-							[
-								$mdgriffith$elm_ui$Element$Font$size(45),
-								A2($mdgriffith$elm_ui$Element$paddingXY, 5, 20)
-							]),
-						_List_fromArray(
-							[
-								A2(
-								$mdgriffith$elm_ui$Element$el,
-								_List_fromArray(
-									[
-										$mdgriffith$elm_ui$Element$Font$color(
-										A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.9, 0.7)),
-										$mdgriffith$elm_ui$Element$Font$size(70)
-									]),
-								$mdgriffith$elm_ui$Element$text('V')),
-								$mdgriffith$elm_ui$Element$text('isualization of '),
-								A2(
-								$mdgriffith$elm_ui$Element$el,
-								_List_fromArray(
-									[
-										$mdgriffith$elm_ui$Element$Font$color(
-										A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.9, 0.7)),
-										$mdgriffith$elm_ui$Element$Font$size(70)
-									]),
-								$mdgriffith$elm_ui$Element$text('C')),
-								$mdgriffith$elm_ui$Element$text('lassical '),
-								A2(
-								$mdgriffith$elm_ui$Element$el,
-								_List_fromArray(
-									[
-										$mdgriffith$elm_ui$Element$Font$color(
-										A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.9, 0.7)),
-										$mdgriffith$elm_ui$Element$Font$size(70)
-									]),
-								$mdgriffith$elm_ui$Element$text('G')),
-								$mdgriffith$elm_ui$Element$text('raph '),
-								A2(
-								$mdgriffith$elm_ui$Element$el,
-								_List_fromArray(
-									[
-										$mdgriffith$elm_ui$Element$Font$color(
-										A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.9, 0.7)),
-										$mdgriffith$elm_ui$Element$Font$size(70)
-									]),
-								$mdgriffith$elm_ui$Element$text('T')),
-								$mdgriffith$elm_ui$Element$text('heory '),
-								A2(
-								$mdgriffith$elm_ui$Element$el,
-								_List_fromArray(
-									[
-										$mdgriffith$elm_ui$Element$Font$color(
-										A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.9, 0.7)),
-										$mdgriffith$elm_ui$Element$Font$size(70)
-									]),
-								$mdgriffith$elm_ui$Element$text('P')),
-								$mdgriffith$elm_ui$Element$text('roblems')
-							])),
-						A2(
-						$mdgriffith$elm_ui$Element$row,
-						_List_fromArray(
-							[
-								$mdgriffith$elm_ui$Element$centerX,
-								$mdgriffith$elm_ui$Element$centerY,
-								$mdgriffith$elm_ui$Element$Font$color(
-								A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
-								$mdgriffith$elm_ui$Element$Font$heavy,
-								A2($mdgriffith$elm_ui$Element$spacingXY, 10, 15)
-							]),
-						A2(
-							$elm$core$List$map,
-							$author$project$Main$makeTopicIcon,
-							_List_fromArray(
-								[$author$project$Messages$GotoIsomorphism, $author$project$Messages$GotoMaxkCut, $author$project$Messages$GotoColoring]))),
-						A2(
-						$mdgriffith$elm_ui$Element$row,
-						_List_fromArray(
-							[
-								$mdgriffith$elm_ui$Element$centerX,
-								$mdgriffith$elm_ui$Element$centerY,
-								$mdgriffith$elm_ui$Element$Font$color(
-								A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
-								$mdgriffith$elm_ui$Element$Font$heavy,
-								A2($mdgriffith$elm_ui$Element$spacingXY, 10, 15)
-							]),
-						A2(
-							$elm$core$List$map,
-							$author$project$Main$makeTopicIcon,
-							_List_fromArray(
-								[$author$project$Messages$GotoCover, $author$project$Messages$GotoTreeWidth])))
-					]));
-		case 'ScreenSize':
-			return A2(
-				$mdgriffith$elm_ui$Element$el,
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
-					]),
-				$mdgriffith$elm_ui$Element$text(
-					$elm$core$String$fromInt(model.width) + (' x ' + $elm$core$String$fromInt(model.height))));
-		default:
-			var width = (model.width / 3) | 0;
-			var height = (model.height / 4) | 0;
-			return A2(
-				$mdgriffith$elm_ui$Element$row,
-				_List_fromArray(
-					[
-						$mdgriffith$elm_ui$Element$Border$rounded(40),
-						$mdgriffith$elm_ui$Element$Border$color(
-						A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1))
-					]),
-				_List_fromArray(
-					[
-						A2($author$project$Main$introFatma, width, height),
-						A2($author$project$Main$photoGraph, model.width - width, height)
-					]));
-	}
-};
 var $author$project$Main$viewbody = function (model) {
+	var heightOfHeader = $elm$core$Basics$round(model.displaySize.height * 0.085);
+	var heightOfRest = model.displaySize.height - heightOfHeader;
+	var displaySize = A3($author$project$FontSize$DisplaySize, model.displaySize.width, heightOfRest, model.displaySize.deviceType);
 	return A3(
 		$mdgriffith$elm_ui$Element$layoutWith,
 		$author$project$Main$layOutOptions,
-		$author$project$Main$layOutAttributes(model.width),
+		$author$project$Main$layOutAttributes(model.displaySize.deviceType),
 		A2(
 			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
@@ -18709,8 +18797,8 @@ var $author$project$Main$viewbody = function (model) {
 				]),
 			_List_fromArray(
 				[
-					$author$project$Main$headerOfPage(model.height),
-					$author$project$Main$viewTopic(model)
+					$author$project$Main$headerOfPage(heightOfHeader),
+					A2($author$project$Main$viewTopic, model, displaySize)
 				])));
 };
 var $author$project$Main$view = function (model) {

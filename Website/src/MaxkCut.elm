@@ -19,6 +19,8 @@ import FontSize exposing
       , FontColor(..)
       , giveFontColor
       , emph
+      , DisplaySize
+      , DeviceType(..)
       )
 
 miniMaxGraph = 
@@ -161,8 +163,8 @@ threeCutGeometry =
       in
       (Graph vertices edges, modifiedGrid)
 
-explanationTwo : MaxCutTransition -> Bool -> Int -> ELE.Element Msg
-explanationTwo maxCut helpStatus width =
+explanationTwo : MaxCutTransition -> Bool -> DisplaySize -> ELE.Element Msg
+explanationTwo maxCut helpStatus displaySize =
       let 
          shapeTransition =
             case maxCut.state of
@@ -330,11 +332,11 @@ explanationTwo maxCut helpStatus width =
          , ELE.spacing 20
          --, ELE.padding 40
          , Background.color <| ELE.rgb 0.2 0.2 0.2
-         , ELE.width (ELE.fill |> ELE.maximum (width//2))
+         , ELE.width (ELE.fill |> ELE.maximum displaySize.width)
          ]
          <|
          [  ELE.el
-               [Font.size (getFontSize Head width), Font.heavy] 
+               [Font.size (getFontSize Head displaySize.deviceType), Font.heavy] 
                (ELE.text "Max Cut")
          ,  ELE.paragraph
                [ELE.spacing 8] 
@@ -344,7 +346,7 @@ explanationTwo maxCut helpStatus width =
               []
               buttonExplanation
 
-         ,  mediaButtonsForMaxCut shapeTransition
+         ,  mediaButtonsForMaxCut shapeTransition displaySize
          , ELE.paragraph
                []
                topicTitle
@@ -567,10 +569,12 @@ drawCutLine cutLine =
     CutLine start end l ->
       [(Graph.line start end)] ++ (Graph.drawIntersectionPoints l)
 
-mediaButtonsForMaxCut : ShapeTransition -> ELE.Element Msg
-mediaButtonsForMaxCut shapeTransition =
+mediaButtonsForMaxCut : ShapeTransition -> DisplaySize -> ELE.Element Msg
+mediaButtonsForMaxCut shapeTransition displaySize =
    ELE.row
-      [ELE.spacing 90, ELE.paddingXY 300 40]
+      [ ELE.centerX
+      , ELE.spacing (displaySize.width//10)
+      ]
       [  playButton shapeTransition.animationOn
       ,  resetButton
       ,  forwardButton

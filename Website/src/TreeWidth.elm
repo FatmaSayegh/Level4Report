@@ -24,6 +24,8 @@ import FontSize exposing
                , FontColor(..)
                , giveFontColor
                , emph
+               , DisplaySize
+               , DeviceType(..)
                )
 
 miniTreeWidth = 
@@ -37,20 +39,20 @@ miniTreeWidth =
       |> Graph.drawGraph
       |> Graph.displaySvg
 
-explanationWidth : TreeWidthDisplay -> Bool -> Int -> ELE.Element Msg
-explanationWidth display helpStatus width =
+explanationWidth : TreeWidthDisplay -> Bool -> DisplaySize -> ELE.Element Msg
+explanationWidth display helpStatus displaySize =
     ELE.column
          [ Font.color (ELE.rgb 1 1 1)
          --, ELE.height ELE.fill
          , ELE.spacing 20
          --, ELE.padding 40
          , ELE.height ELE.fill
-         , ELE.width (ELE.fill |> ELE.maximum (width//2))
+         , ELE.width (ELE.fill |> ELE.maximum displaySize.width)
          , Background.color <| ELE.rgb 0.2 0.2 0.2
          ]
          <|
          [  ELE.el
-               [Font.size (getFontSize Head width), Font.heavy] 
+               [Font.size (getFontSize Head displaySize.deviceType), Font.heavy] 
                (ELE.text "Tree Width")
 
          ,  ELE.paragraph
@@ -66,7 +68,7 @@ explanationWidth display helpStatus width =
                   """
                ]
 
-         ,  treeWidthButtons display.status
+         ,  treeWidthButtons display.status displaySize
 
          ]
 
@@ -441,13 +443,13 @@ storyTreeWidth status helpStatus =
       else
          [ helpParagraph TreeWidthHelp]
 
-treeWidthButtons : TreeWidthStatus -> ELE.Element Msg
-treeWidthButtons status =
+treeWidthButtons : TreeWidthStatus -> DisplaySize -> ELE.Element Msg
+treeWidthButtons status displaySize =
    case status of
       CircularGraph ->
-         treeWidthButtonRow False
+         treeWidthButtonRow False displaySize
       _ ->
-         treeWidthButtonRow True
+         treeWidthButtonRow True displaySize
 
 treeWidthDisplay : TreeWidthDisplay
 treeWidthDisplay =
