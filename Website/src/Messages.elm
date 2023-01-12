@@ -34,4 +34,5 @@ type Msg
     | GotoAbout
     | LinkClicked Browser.UrlRequest
     | UrlChanged Url.Url
+    | GotNewScreen Int Int
     | Other
