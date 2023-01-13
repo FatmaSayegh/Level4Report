@@ -23,7 +23,7 @@ import FontSize exposing
                , FontSize(..)
                , FontColor(..)
                , giveFontColor
-               , emph
+               , emphForScreen
                , DisplaySize
                , DeviceType(..)
                )
@@ -72,12 +72,12 @@ explanationWidth display helpStatus displaySize =
 
          ]
 
-         ++ (storyTreeWidth display.status helpStatus)
+         ++ (storyTreeWidth displaySize.deviceType display.status helpStatus)
 
          ++ [  lowerNavigation "Vertex Cover" "Isomorphism" ]
          
-storyTreeWidth : TreeWidthStatus -> Bool -> List (ELE.Element Msg)
-storyTreeWidth status helpStatus =
+storyTreeWidth : DeviceType -> TreeWidthStatus -> Bool -> List (ELE.Element Msg)
+storyTreeWidth deviceType status helpStatus =
    let 
       para =
          (\l ->
@@ -85,6 +85,9 @@ storyTreeWidth status helpStatus =
                [ ELE.spacing 8 ]
                l
          )
+
+      emph =
+         emphForScreen deviceType
 
       firstComment =
                [ ELE.text

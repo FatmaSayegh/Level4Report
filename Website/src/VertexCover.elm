@@ -22,7 +22,7 @@ import FontSize exposing
                , FontSize(..)
                , FontColor(..)
                , giveFontColor
-               , emph
+               , emphForScreen
                , DisplaySize
                , DeviceType(..)
                )
@@ -100,6 +100,9 @@ goCover display msg =
 explanationCover : VertexCoverDisplay -> Bool -> DisplaySize -> ELE.Element Msg
 explanationCover display helpStatus displaySize =
     let
+        emph =
+            emphForScreen displaySize.deviceType
+
         graph =
             case display.state of
                First ->
@@ -255,7 +258,7 @@ explanationCover display helpStatus displaySize =
                                ]
                             else
                                
-                                  makeCongrats ++
+                                  (makeCongrats displaySize.deviceType) ++
                                [  ELE.text " you have covered all "
                                ,  emph CuteBlue (String.fromInt noCoveredEdges)
                                ,  ELE.text " edges. "

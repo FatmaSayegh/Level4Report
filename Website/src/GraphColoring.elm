@@ -22,7 +22,7 @@ import FontSize exposing
       , FontSize(..)
       , FontColor(..)
       , giveFontColor
-      , emph
+      , emphForScreen
       , DisplaySize
       , DeviceType(..)
       )
@@ -188,6 +188,8 @@ paneThree displaySeries =
 explanationColoring : ColorDisplaySeries -> Bool -> DisplaySize -> ELE.Element Msg
 explanationColoring colorDispSer helpStatus displaySize =
     let
+      emph =
+         emphForScreen displaySize.deviceType
       colorDisp =
          case colorDispSer.state of
             TwoColor ->
@@ -224,10 +226,8 @@ explanationColoring colorDispSer helpStatus displaySize =
                [ ELE.text coloringExplanation ]
 
          ,  ELE.paragraph
-               --[ ELE.spacing 8 ] 
                []
-               --[ ELE.text howToColor ]
-               howToColor
+               <| howToColor displaySize.deviceType
          , ELE.paragraph
                []
                [ ELE.text 
@@ -268,7 +268,7 @@ explanationColoring colorDispSer helpStatus displaySize =
                      then
                         [ ELE.none ]
                      else
-                        List.concat <| List.map miscolorText miscoloredEdges
+                        List.concat <| List.map (miscolorText displaySize.deviceType) miscoloredEdges
 
         , ELE.paragraph
                []
@@ -298,7 +298,7 @@ explanationColoring colorDispSer helpStatus displaySize =
                                  && List.length coloredVertices 
                                     == List.length colorDisp.graphA.vertices)
                                 then
-                                   makeCongrats ++
+                                   (makeCongrats displaySize.deviceType) ++
                                    [ ELE.text
                                        """
                                         Graph has been colored
@@ -337,8 +337,12 @@ colorButtons displaySize =
       [  unColorButton
       ,  nextTask
       ]
-miscolorText : Graph.Edge -> List (ELE.Element msg)
-miscolorText e =
+miscolorText : DeviceType -> Graph.Edge -> List (ELE.Element msg)
+miscolorText deviceType e =
+   let
+      emph =
+         emphForScreen deviceType
+   in
    [ ELE.text "Vertex " 
    , emph Pink (String.fromInt e.vertexOne.name) 
    , ELE.text " and vertex "

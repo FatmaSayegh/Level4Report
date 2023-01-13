@@ -207,6 +207,7 @@ update msg model =
                model.helpStatus
             _ ->
                False
+
       oldDisplaySize =
          model.displaySize
 

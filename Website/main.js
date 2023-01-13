@@ -15535,7 +15535,6 @@ var $author$project$FontSize$emphForScreen = F3(
 				]),
 			$mdgriffith$elm_ui$Element$text(str));
 	});
-var $author$project$FontSize$emph = $author$project$FontSize$emphForScreen($author$project$FontSize$XXL);
 var $mdgriffith$elm_ui$Element$Font$bold = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontWeight, $mdgriffith$elm_ui$Internal$Style$classes.bold);
 var $author$project$Buttons$helpGraphColor = _List_fromArray(
 	[
@@ -15776,16 +15775,19 @@ var $author$project$Buttons$helpParagraph = function (helpkind) {
 				]),
 			helpdetails));
 };
-var $author$project$Explanation$howToColor = _List_fromArray(
-	[
-		A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '\n      Choose \n      '),
-		$mdgriffith$elm_ui$Element$text('\n      a color from the color palette by \n      '),
-		A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, '\n      clicking \n      '),
-		$mdgriffith$elm_ui$Element$text('\n      on one of the colors and \n      '),
-		A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, 'apply'),
-		$mdgriffith$elm_ui$Element$text('\n       it to one of the vertices.\n      While coloring the graph make sure that \n      '),
-		$mdgriffith$elm_ui$Element$text('\n      no two adjacent vertices are colored the same. For if they are, the\n      edges connecting them will be displayed differently to let you know of the mistake.\n      ')
-	]);
+var $author$project$Explanation$howToColor = function (deviceType) {
+	var emph = $author$project$FontSize$emphForScreen(deviceType);
+	return _List_fromArray(
+		[
+			A2(emph, $author$project$FontSize$CuteGreen, '\n      Choose \n      '),
+			$mdgriffith$elm_ui$Element$text('\n      a color from the color palette by \n      '),
+			A2(emph, $author$project$FontSize$CuteBlue, '\n      clicking \n      '),
+			$mdgriffith$elm_ui$Element$text('\n      on one of the colors and \n      '),
+			A2(emph, $author$project$FontSize$CuteGreen, 'apply'),
+			$mdgriffith$elm_ui$Element$text('\n       it to one of the vertices.\n      While coloring the graph make sure that \n      '),
+			$mdgriffith$elm_ui$Element$text('\n      no two adjacent vertices are colored the same. For if they are, the\n      edges connecting them will be displayed differently to let you know of the mistake.\n      ')
+		]);
+};
 var $mdgriffith$elm_ui$Internal$Model$AlignY = function (a) {
 	return {$: 'AlignY', a: a};
 };
@@ -15943,44 +15945,49 @@ var $author$project$Buttons$lowerNavigation = F2(
 					})
 				]));
 	});
-var $author$project$Explanation$makeCongrats = _List_fromArray(
-	[
-		A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, 'C'),
-		A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, 'o'),
-		A2($author$project$FontSize$emph, $author$project$FontSize$Pink, 'n'),
-		A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, 'g'),
-		A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, 'r'),
-		A2($author$project$FontSize$emph, $author$project$FontSize$Pink, 'a'),
-		A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, 't'),
-		A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, 'u'),
-		A2($author$project$FontSize$emph, $author$project$FontSize$Pink, 'l'),
-		A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, 'a'),
-		A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, 't'),
-		A2($author$project$FontSize$emph, $author$project$FontSize$Pink, 'i'),
-		A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, 'o'),
-		A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, 'n'),
-		A2($author$project$FontSize$emph, $author$project$FontSize$Pink, 's'),
-		A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '!')
-	]);
-var $author$project$GraphColoring$miscolorText = function (e) {
+var $author$project$Explanation$makeCongrats = function (deviceType) {
+	var emph = $author$project$FontSize$emphForScreen(deviceType);
 	return _List_fromArray(
 		[
-			$mdgriffith$elm_ui$Element$text('Vertex '),
-			A2(
-			$author$project$FontSize$emph,
-			$author$project$FontSize$Pink,
-			$elm$core$String$fromInt(e.vertexOne.name)),
-			$mdgriffith$elm_ui$Element$text(' and vertex '),
-			A2(
-			$author$project$FontSize$emph,
-			$author$project$FontSize$Pink,
-			$elm$core$String$fromInt(e.vertexTwo.name)),
-			$mdgriffith$elm_ui$Element$text(' which are '),
-			A2($author$project$FontSize$emph, $author$project$FontSize$Pink, 'adjacent '),
-			$mdgriffith$elm_ui$Element$text('to each other are colored with the '),
-			A2($author$project$FontSize$emph, $author$project$FontSize$Pink, 'same color. ')
+			A2(emph, $author$project$FontSize$CuteGreen, 'C'),
+			A2(emph, $author$project$FontSize$CuteBlue, 'o'),
+			A2(emph, $author$project$FontSize$Pink, 'n'),
+			A2(emph, $author$project$FontSize$CuteGreen, 'g'),
+			A2(emph, $author$project$FontSize$CuteBlue, 'r'),
+			A2(emph, $author$project$FontSize$Pink, 'a'),
+			A2(emph, $author$project$FontSize$CuteGreen, 't'),
+			A2(emph, $author$project$FontSize$CuteBlue, 'u'),
+			A2(emph, $author$project$FontSize$Pink, 'l'),
+			A2(emph, $author$project$FontSize$CuteGreen, 'a'),
+			A2(emph, $author$project$FontSize$CuteBlue, 't'),
+			A2(emph, $author$project$FontSize$Pink, 'i'),
+			A2(emph, $author$project$FontSize$CuteGreen, 'o'),
+			A2(emph, $author$project$FontSize$CuteBlue, 'n'),
+			A2(emph, $author$project$FontSize$Pink, 's'),
+			A2(emph, $author$project$FontSize$CuteGreen, '!')
 		]);
 };
+var $author$project$GraphColoring$miscolorText = F2(
+	function (deviceType, e) {
+		var emph = $author$project$FontSize$emphForScreen(deviceType);
+		return _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('Vertex '),
+				A2(
+				emph,
+				$author$project$FontSize$Pink,
+				$elm$core$String$fromInt(e.vertexOne.name)),
+				$mdgriffith$elm_ui$Element$text(' and vertex '),
+				A2(
+				emph,
+				$author$project$FontSize$Pink,
+				$elm$core$String$fromInt(e.vertexTwo.name)),
+				$mdgriffith$elm_ui$Element$text(' which are '),
+				A2(emph, $author$project$FontSize$Pink, 'adjacent '),
+				$mdgriffith$elm_ui$Element$text('to each other are colored with the '),
+				A2(emph, $author$project$FontSize$Pink, 'same color. ')
+			]);
+	});
 var $mdgriffith$elm_ui$Internal$Model$Empty = {$: 'Empty'};
 var $mdgriffith$elm_ui$Element$none = $mdgriffith$elm_ui$Internal$Model$Empty;
 var $author$project$GraphColoring$explanationColoring = F3(
@@ -15990,6 +15997,7 @@ var $author$project$GraphColoring$explanationColoring = F3(
 				edge.vertexOne.color,
 				A3($avh4$elm_color$Color$rgb, 1, 1, 1)));
 		};
+		var emph = $author$project$FontSize$emphForScreen(displaySize.deviceType);
 		var colorDisp = function () {
 			var _v0 = colorDispSer.state;
 			if (_v0.$ === 'TwoColor') {
@@ -16046,7 +16054,10 @@ var $author$project$GraphColoring$explanationColoring = F3(
 						[
 							$mdgriffith$elm_ui$Element$text($author$project$Explanation$coloringExplanation)
 						])),
-					A2($mdgriffith$elm_ui$Element$paragraph, _List_Nil, $author$project$Explanation$howToColor),
+					A2(
+					$mdgriffith$elm_ui$Element$paragraph,
+					_List_Nil,
+					$author$project$Explanation$howToColor(displaySize.deviceType)),
 					A2(
 					$mdgriffith$elm_ui$Element$paragraph,
 					_List_Nil,
@@ -16068,7 +16079,7 @@ var $author$project$GraphColoring$explanationColoring = F3(
 					_List_Nil,
 					(($elm$core$List$length(coloredVertices) > 1) && (!$elm$core$List$length(miscoloredEdges))) ? _List_fromArray(
 						[
-							A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, 'Good going! '),
+							A2(emph, $author$project$FontSize$CuteGreen, 'Good going! '),
 							$mdgriffith$elm_ui$Element$text('Adjacent Vertices are colored differently.')
 						]) : _List_fromArray(
 						[$mdgriffith$elm_ui$Element$none])),
@@ -16077,17 +16088,20 @@ var $author$project$GraphColoring$explanationColoring = F3(
 					_List_Nil,
 					$elm$core$List$isEmpty(miscoloredEdges) ? _List_fromArray(
 						[$mdgriffith$elm_ui$Element$none]) : $elm$core$List$concat(
-						A2($elm$core$List$map, $author$project$GraphColoring$miscolorText, miscoloredEdges))),
+						A2(
+							$elm$core$List$map,
+							$author$project$GraphColoring$miscolorText(displaySize.deviceType),
+							miscoloredEdges))),
 					A2(
 					$mdgriffith$elm_ui$Element$paragraph,
 					_List_Nil,
 					$elm$core$List$isEmpty(miscoloredEdges) ? _List_fromArray(
 						[$mdgriffith$elm_ui$Element$none]) : _List_fromArray(
 						[
-							A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, 'Try '),
+							A2(emph, $author$project$FontSize$CuteBlue, 'Try '),
 							$mdgriffith$elm_ui$Element$text('another color combination. '),
-							A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, 'Remember the rule;'),
-							A2($author$project$FontSize$emph, $author$project$FontSize$Pink, '\n                                       No two adjacent\n                                       '),
+							A2(emph, $author$project$FontSize$CuteGreen, 'Remember the rule;'),
+							A2(emph, $author$project$FontSize$Pink, '\n                                       No two adjacent\n                                       '),
 							$mdgriffith$elm_ui$Element$text('\n                                       vertices must have the same color!\n                                       ')
 						])),
 					A2(
@@ -16096,13 +16110,13 @@ var $author$project$GraphColoring$explanationColoring = F3(
 					($elm$core$List$isEmpty(miscoloredEdges) && _Utils_eq(
 						$elm$core$List$length(coloredVertices),
 						$elm$core$List$length(colorDisp.graphA.vertices))) ? _Utils_ap(
-						$author$project$Explanation$makeCongrats,
+						$author$project$Explanation$makeCongrats(displaySize.deviceType),
 						_List_fromArray(
 							[
 								$mdgriffith$elm_ui$Element$text('\n                                        Graph has been colored\n                                       '),
-								A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '\n                                       fully \n                                       '),
+								A2(emph, $author$project$FontSize$CuteGreen, '\n                                       fully \n                                       '),
 								$mdgriffith$elm_ui$Element$text('\n                                       and \n                                       '),
-								A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '\n                                       correctly.\n                                       '),
+								A2(emph, $author$project$FontSize$CuteGreen, '\n                                       correctly.\n                                       '),
 								$mdgriffith$elm_ui$Element$text('\n                                       i.e. No two adjacent vertices have the same color.\n                                       ')
 							])) : _List_fromArray(
 						[$mdgriffith$elm_ui$Element$none])),
@@ -16190,6 +16204,7 @@ var $author$project$VertexCover$explanationCover = F3(
 		var noOfSelectedVertices = $elm$core$List$length(selected_vertices);
 		var totalEdges = $elm$core$List$length(graph.edges);
 		var totalVertices = $elm$core$List$length(graph.vertices);
+		var emph = $author$project$FontSize$emphForScreen(displaySize.deviceType);
 		var _v0 = $author$project$Graph$seperateEdges(graph);
 		var coveredEdges = _v0.a;
 		var noCoveredEdges = $elm$core$List$length(coveredEdges);
@@ -16234,9 +16249,9 @@ var $author$project$VertexCover$explanationCover = F3(
 					_List_fromArray(
 						[
 							$mdgriffith$elm_ui$Element$text('\n                     In the task on the right, selecting a vertex will cover all\n                     the edges\n                     '),
-							A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '\n                     incident \n                     '),
+							A2(emph, $author$project$FontSize$CuteGreen, '\n                     incident \n                     '),
 							$mdgriffith$elm_ui$Element$text('\n                     on it. Your objective is to select the\n                     '),
-							A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '\n                     minimum \n                     '),
+							A2(emph, $author$project$FontSize$CuteGreen, '\n                     minimum \n                     '),
 							$mdgriffith$elm_ui$Element$text('\n                     number of vertices such that, all the edges of the\n                     graph are covered.\n                     ')
 						])),
 					A2(
@@ -16245,11 +16260,11 @@ var $author$project$VertexCover$explanationCover = F3(
 					_List_fromArray(
 						[
 							$mdgriffith$elm_ui$Element$text('\n                     To select a vertex you can \n                     '),
-							A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, '\n                      press \n                     '),
+							A2(emph, $author$project$FontSize$CuteBlue, '\n                      press \n                     '),
 							$mdgriffith$elm_ui$Element$text('\n                     , the vertex \n                     '),
-							A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, '\n                      number\n                     '),
+							A2(emph, $author$project$FontSize$CuteBlue, '\n                      number\n                     '),
 							$mdgriffith$elm_ui$Element$text('\n                     on the keyboard. To \n                     '),
-							A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, '\n                     de-select \n                     '),
+							A2(emph, $author$project$FontSize$CuteBlue, '\n                     de-select \n                     '),
 							$mdgriffith$elm_ui$Element$text('\n                     , press the same key again.\n                     ')
 						])),
 					A2(
@@ -16260,13 +16275,13 @@ var $author$project$VertexCover$explanationCover = F3(
 						[
 							$mdgriffith$elm_ui$Element$text('You have selected a total of '),
 							A2(
-							$author$project$FontSize$emph,
+							emph,
 							$author$project$FontSize$Pink,
 							$elm$core$String$fromInt(noOfSelectedVertices)),
 							$mdgriffith$elm_ui$Element$text(' vertices '),
-							A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, 'out of '),
+							A2(emph, $author$project$FontSize$CuteGreen, 'out of '),
 							A2(
-							$author$project$FontSize$emph,
+							emph,
 							$author$project$FontSize$Pink,
 							$elm$core$String$fromInt(totalVertices)),
 							$mdgriffith$elm_ui$Element$text(' vertices. ')
@@ -16279,14 +16294,14 @@ var $author$project$VertexCover$explanationCover = F3(
 						[
 							$mdgriffith$elm_ui$Element$text('You have covered a total of '),
 							A2(
-							$author$project$FontSize$emph,
+							emph,
 							$author$project$FontSize$Pink,
 							$elm$core$String$fromInt(noCoveredEdges)),
 							$mdgriffith$elm_ui$Element$text(' edges '),
-							A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, 'out of '),
+							A2(emph, $author$project$FontSize$CuteGreen, 'out of '),
 							$mdgriffith$elm_ui$Element$text('a total of '),
 							A2(
-							$author$project$FontSize$emph,
+							emph,
 							$author$project$FontSize$Pink,
 							$elm$core$String$fromInt(totalEdges)),
 							$mdgriffith$elm_ui$Element$text(' edges. ')
@@ -16298,30 +16313,30 @@ var $author$project$VertexCover$explanationCover = F3(
 						[
 							$mdgriffith$elm_ui$Element$text('\n                                  You have covered all the edges.\n                                  but\n                                  you have done so by selecting\n                                  '),
 							A2(
-							$author$project$FontSize$emph,
+							emph,
 							$author$project$FontSize$Pink,
 							$elm$core$String$fromInt(noOfSelectedVertices)),
 							$mdgriffith$elm_ui$Element$text('\n                                  vertices. The graph could have been covered by\n                                  selecting only four! Try again to see that\n                                  you can do it in just four.\n                                  ')
 						]) : _Utils_ap(
-						$author$project$Explanation$makeCongrats,
+						$author$project$Explanation$makeCongrats(displaySize.deviceType),
 						_List_fromArray(
 							[
 								$mdgriffith$elm_ui$Element$text(' you have covered all '),
 								A2(
-								$author$project$FontSize$emph,
+								emph,
 								$author$project$FontSize$CuteBlue,
 								$elm$core$String$fromInt(noCoveredEdges)),
 								$mdgriffith$elm_ui$Element$text(' edges. '),
 								$mdgriffith$elm_ui$Element$text('You have done so by selecting the vertices '),
 								A2(
-								$author$project$FontSize$emph,
+								emph,
 								$author$project$FontSize$CuteBlue,
 								$author$project$Graph$getStringFromVertices(selected_vertices)),
 								$mdgriffith$elm_ui$Element$text('. Therefore a vertex cover of this graph is the'),
-								A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, ' set '),
+								A2(emph, $author$project$FontSize$CuteGreen, ' set '),
 								$mdgriffith$elm_ui$Element$text(' of vertices '),
 								A2(
-								$author$project$FontSize$emph,
+								emph,
 								$author$project$FontSize$CuteBlue,
 								$author$project$Graph$getStringFromVertices(selected_vertices)),
 								$mdgriffith$elm_ui$Element$text('.')
@@ -16329,7 +16344,7 @@ var $author$project$VertexCover$explanationCover = F3(
 						[$mdgriffith$elm_ui$Element$none]) : _List_fromArray(
 						[
 							A2(
-							$author$project$FontSize$emph,
+							emph,
 							$author$project$FontSize$Pink,
 							$elm$core$String$fromInt(edgesRemainig)),
 							$mdgriffith$elm_ui$Element$text(' edges more to be covered!')
@@ -16417,8 +16432,8 @@ var $jorgengranseth$elm_string_format$String$Format$value = function (val) {
 			return val;
 		});
 };
-var $author$project$Isomorphism$makeStory = F2(
-	function (shapeTransition, helpStatus) {
+var $author$project$Isomorphism$makeStory = F3(
+	function (deviceType, shapeTransition, helpStatus) {
 		var whichYouCanSee = ' Which you can see is true for both graphs.';
 		var putyourmouse = '\n            Go ahead and put your mouse over a vertex of the graph.\n            Or press a number on the keyboard corresponding to a Vertex number.\n            ';
 		var glowing_vertices = A2(
@@ -16436,6 +16451,7 @@ var $author$project$Isomorphism$makeStory = F2(
 				return '\n                  You may want to visit other vertices to see that, each vertex\n                  is connected to the same vertices in both graphs.\n                  Inspecting each vertices connectivity with other vertices, in both graphs you can \n                  convince your self that the graphs are isomorphic to each other.\n                  ';
 			}
 		}();
+		var emph = $author$project$FontSize$emphForScreen(deviceType);
 		var connectedToThis = function (v) {
 			return A2(
 				$jorgengranseth$elm_string_format$String$Format$value,
@@ -16455,15 +16471,15 @@ var $author$project$Isomorphism$makeStory = F2(
 				return _List_fromArray(
 					[
 						$mdgriffith$elm_ui$Element$text('You have selected '),
-						A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, 'Vertex '),
+						A2(emph, $author$project$FontSize$CuteGreen, 'Vertex '),
 						A2(
-						$author$project$FontSize$emph,
+						emph,
 						$author$project$FontSize$Pink,
 						$elm$core$String$fromInt(x.name)),
 						$mdgriffith$elm_ui$Element$text('. Connected to this vertex are'),
-						A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, ' Vertices '),
+						A2(emph, $author$project$FontSize$CuteGreen, ' Vertices '),
 						A2(
-						$author$project$FontSize$emph,
+						emph,
 						$author$project$FontSize$Pink,
 						$author$project$Graph$getStringFromVertices(relatedVertices)),
 						$mdgriffith$elm_ui$Element$text('.'),
@@ -16586,6 +16602,7 @@ var $author$project$Isomorphism$mediaButtons = F2(
 	});
 var $author$project$Isomorphism$explanationOne = F3(
 	function (shapeTransition, helpStatus, displaySize) {
+		var emph = $author$project$FontSize$emphForScreen(displaySize.deviceType);
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
@@ -16627,9 +16644,9 @@ var $author$project$Isomorphism$explanationOne = F3(
 						_List_fromArray(
 							[
 								$mdgriffith$elm_ui$Element$text('You should now press the '),
-								A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, 'Play'),
+								A2(emph, $author$project$FontSize$CuteBlue, 'Play'),
 								$mdgriffith$elm_ui$Element$text('\n                      button, to set the animation rolling.\n                     Press the \n                     '),
-								A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, 'Restart '),
+								A2(emph, $author$project$FontSize$CuteBlue, 'Restart '),
 								$mdgriffith$elm_ui$Element$text('\n                     button to see it all over again.\n                     ')
 							])),
 						A2($author$project$Isomorphism$mediaButtons, shapeTransition, displaySize),
@@ -16639,14 +16656,14 @@ var $author$project$Isomorphism$explanationOne = F3(
 						_List_fromArray(
 							[
 								$mdgriffith$elm_ui$Element$text('\n                     Go ahead and put your mouse over a \n                     '),
-								A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, 'vertex'),
+								A2(emph, $author$project$FontSize$CuteGreen, 'vertex'),
 								$mdgriffith$elm_ui$Element$text('\n                     of the graph. \n                     Or \n                     '),
-								A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, 'press'),
+								A2(emph, $author$project$FontSize$CuteBlue, 'press'),
 								$mdgriffith$elm_ui$Element$text('\n                      a number on the keyboard corresponding to a Vertex number.\n                     ')
 							]))
 					]),
 				_Utils_ap(
-					A2($author$project$Isomorphism$makeStory, shapeTransition, helpStatus),
+					A3($author$project$Isomorphism$makeStory, displaySize.deviceType, shapeTransition, helpStatus),
 					_List_fromArray(
 						[
 							A2($author$project$Buttons$lowerNavigation, 'Tree Width', 'Max Cut')
@@ -16737,44 +16754,6 @@ var $lemol$ant_design_icons_elm_ui$Ant$Icons$minusOutlined = function (attrs) {
 };
 var $author$project$MaxkCut$explanationTwo = F3(
 	function (maxCut, helpStatus, displaySize) {
-		var twoCutLineExplanation = _List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$text('\n               The Max cut line, \n               seperates the two sets of vertices. The\n               intersection between the cut line and the edges are shown as \n               '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, '\n               blue\n               '),
-				$mdgriffith$elm_ui$Element$text('\n               dots. As you should verify, they are \n               '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$Pink, '\n               9 \n               '),
-				$mdgriffith$elm_ui$Element$text('\n               in number. This number is\n               equal to number of edges from the set of vertices at the top going\n               to the vertices at the bottom.\n               ')
-			]);
-		var twoCutExplanation = _List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$text('\n               In the animation, the \n               '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, 'vertices'),
-				$mdgriffith$elm_ui$Element$text(' are being '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, 'segregated'),
-				$mdgriffith$elm_ui$Element$text('\n                  into two sets,\n                  such that the number of edges passing from vertices in one set to\n                  the vertices in another set is more than \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$Pink, '\n                  any other way \n                  '),
-				$mdgriffith$elm_ui$Element$text('\n                  the vertices\n                  of the graph could have been segregated.  In other words the\n                  problem of max cut is to \n                  '),
-				$mdgriffith$elm_ui$Element$text('\n                  identify such partition \n                  '),
-				$mdgriffith$elm_ui$Element$text('\n                  of the vertices of\n                  the graph that the above objective is satisfied.\n                  ')
-			]);
-		var threeCutLineExplanation = _List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$text('\n               The three Max cut lines, seperates their respective sets from the\n               rest of the graph. The intersection between the cut lines and the\n               edges are shown as \n               '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, '\n               blue \n               '),
-				$mdgriffith$elm_ui$Element$text('\n               dots. As you should verify, they are \n               '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$Pink, '\n               18 \n               '),
-				$mdgriffith$elm_ui$Element$text('\n               in\n               number for each set. This 3 cut is visually trivial as the graph\n               was tripartite.\n               ')
-			]);
-		var threeCutExplanation = _List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$text('\n               In the \n               animation, the vertices are being segregated into \n               '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '\n               three sets\n               '),
-				$mdgriffith$elm_ui$Element$text('\n               , such that the number of edges \n               '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, 'passing'),
-				$mdgriffith$elm_ui$Element$text('\n               from vertices in one\n               set to the vertices in all other sets is more than \n               '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$Pink, 'any other way'),
-				$mdgriffith$elm_ui$Element$text('\n               the vertices of the graph could have been segregated.  In other\n               words the problem of max 3 cut is to identify such partition of the\n               vertices of the graph that the above objective is satisfied.\n               ')
-			]);
 		var state = maxCut.state;
 		var shapeTransition = function () {
 			var _v0 = maxCut.state;
@@ -16784,32 +16763,71 @@ var $author$project$MaxkCut$explanationTwo = F3(
 				return maxCut.transitionB;
 			}
 		}();
-		var max3CutTitle = _List_fromArray(
-			[
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, 'Max'),
-				A2($author$project$FontSize$emph, $author$project$FontSize$Pink, ' 3 '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, 'Cut')
-			]);
+		var emph = $author$project$FontSize$emphForScreen(displaySize.deviceType);
 		var max2CutTitle = _List_fromArray(
 			[
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, 'Max'),
-				A2($author$project$FontSize$emph, $author$project$FontSize$Pink, ' 2 '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, 'Cut')
+				A2(emph, $author$project$FontSize$CuteBlue, 'Max'),
+				A2(emph, $author$project$FontSize$Pink, ' 2 '),
+				A2(emph, $author$project$FontSize$CuteBlue, 'Cut')
+			]);
+		var max3CutTitle = _List_fromArray(
+			[
+				A2(emph, $author$project$FontSize$CuteBlue, 'Max'),
+				A2(emph, $author$project$FontSize$Pink, ' 3 '),
+				A2(emph, $author$project$FontSize$CuteBlue, 'Cut')
 			]);
 		var topicTitle = _Utils_eq(state, $author$project$MaxkCut$TwoCut) ? max2CutTitle : max3CutTitle;
+		var threeCutExplanation = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('\n               In the \n               animation, the vertices are being segregated into \n               '),
+				A2(emph, $author$project$FontSize$CuteGreen, '\n               three sets\n               '),
+				$mdgriffith$elm_ui$Element$text('\n               , such that the number of edges \n               '),
+				A2(emph, $author$project$FontSize$CuteGreen, 'passing'),
+				$mdgriffith$elm_ui$Element$text('\n               from vertices in one\n               set to the vertices in all other sets is more than \n               '),
+				A2(emph, $author$project$FontSize$Pink, 'any other way'),
+				$mdgriffith$elm_ui$Element$text('\n               the vertices of the graph could have been segregated.  In other\n               words the problem of max 3 cut is to identify such partition of the\n               vertices of the graph that the above objective is satisfied.\n               ')
+			]);
+		var threeCutLineExplanation = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('\n               The three Max cut lines, seperates their respective sets from the\n               rest of the graph. The intersection between the cut lines and the\n               edges are shown as \n               '),
+				A2(emph, $author$project$FontSize$CuteBlue, '\n               blue \n               '),
+				$mdgriffith$elm_ui$Element$text('\n               dots. As you should verify, they are \n               '),
+				A2(emph, $author$project$FontSize$Pink, '\n               18 \n               '),
+				$mdgriffith$elm_ui$Element$text('\n               in\n               number for each set. This 3 cut is visually trivial as the graph\n               was tripartite.\n               ')
+			]);
+		var twoCutExplanation = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('\n               In the animation, the \n               '),
+				A2(emph, $author$project$FontSize$CuteGreen, 'vertices'),
+				$mdgriffith$elm_ui$Element$text(' are being '),
+				A2(emph, $author$project$FontSize$CuteGreen, 'segregated'),
+				$mdgriffith$elm_ui$Element$text('\n                  into two sets,\n                  such that the number of edges passing from vertices in one set to\n                  the vertices in another set is more than \n                  '),
+				A2(emph, $author$project$FontSize$Pink, '\n                  any other way \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  the vertices\n                  of the graph could have been segregated.  In other words the\n                  problem of max cut is to \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  identify such partition \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  of the vertices of\n                  the graph that the above objective is satisfied.\n                  ')
+			]);
+		var twoCutLineExplanation = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('\n               The Max cut line, \n               seperates the two sets of vertices. The\n               intersection between the cut line and the edges are shown as \n               '),
+				A2(emph, $author$project$FontSize$CuteBlue, '\n               blue\n               '),
+				$mdgriffith$elm_ui$Element$text('\n               dots. As you should verify, they are \n               '),
+				A2(emph, $author$project$FontSize$Pink, '\n               9 \n               '),
+				$mdgriffith$elm_ui$Element$text('\n               in number. This number is\n               equal to number of edges from the set of vertices at the top going\n               to the vertices at the bottom.\n               ')
+			]);
 		var drawCutLineExplanation = _List_fromArray(
 			[
 				$mdgriffith$elm_ui$Element$text('For a clear cut seperation of the sets '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, 'Press'),
+				A2(emph, $author$project$FontSize$CuteBlue, 'Press'),
 				$mdgriffith$elm_ui$Element$text(' the cut line below.')
 			]);
 		var buttonExplanation = _List_fromArray(
 			[
 				$mdgriffith$elm_ui$Element$text('Press the '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, 'Play '),
+				A2(emph, $author$project$FontSize$CuteBlue, 'Play '),
 				$mdgriffith$elm_ui$Element$text('button to start the animation. '),
 				$mdgriffith$elm_ui$Element$text('Press the '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, 'Restart '),
+				A2(emph, $author$project$FontSize$CuteBlue, 'Restart '),
 				$mdgriffith$elm_ui$Element$text('button to see it all over again.')
 			]);
 		return A2(
@@ -16880,58 +16898,11 @@ var $author$project$MaxkCut$explanationTwo = F3(
 	});
 var $author$project$FontSize$Gold = {$: 'Gold'};
 var $author$project$Buttons$TreeWidthHelp = {$: 'TreeWidthHelp'};
-var $author$project$TreeWidth$storyTreeWidth = F2(
-	function (status, helpStatus) {
-		var treeWidthFormula = _List_fromArray(
-			[
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '\n                  Tree Width \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, '\n                  = \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$Pink, '\n                  ( Maximum Number of Vertices in a piece ) \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, '\n                  - \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '\n                  1\n                  ')
-			]);
+var $author$project$TreeWidth$storyTreeWidth = F3(
+	function (deviceType, status, helpStatus) {
 		var treeWidthDef = _List_fromArray(
 			[
 				$mdgriffith$elm_ui$Element$text('\n                  Tree width of the graph is related to the maximum number of vertices\n                  associated with a piece. It is given by the formula:\n                  ')
-			]);
-		var treeDetails = _List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$text('\n                  The \n                  golden \n                  line \n                  '),
-				$mdgriffith$elm_ui$Element$text('\n                  joining the \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '\n                  pieces \n                  '),
-				$mdgriffith$elm_ui$Element$text('\n                  is a \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$Gold, '\n                  tree \n                  '),
-				$mdgriffith$elm_ui$Element$text('\n                  as it has \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$Pink, '\n                  no\n                  cycles.\n                  ')
-			]);
-		var theoreticalComments = _List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$text('\n                  The division of the graph in pieces such as these such that\n                  the pieces together form a tree is called \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '\n                  tree decomposition \n                  '),
-				$mdgriffith$elm_ui$Element$text('\n                  of a\n                  graph. The pieces hence formed have associated a number of\n                  vertices. Here all the pieces have \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$Pink, '\n                  3 \n                  '),
-				$mdgriffith$elm_ui$Element$text('\n                  vertices associated\n                  with them.\n                  ')
-			]);
-		var showOnePieceComment = _List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$text('\n                  The graph can now be divided into \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '\n                  pieces. \n                  '),
-				$mdgriffith$elm_ui$Element$text('\n                  The first piece for example\n                  is the \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '\n                  sub graph \n                  '),
-				$mdgriffith$elm_ui$Element$text('\n                  made up by Vertices \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$Pink, '\n                  1, 2  \n                  '),
-				$mdgriffith$elm_ui$Element$text('\n                  and \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$Pink, '\n                  3\n                  '),
-				$mdgriffith$elm_ui$Element$text('\n                  . This is marked by\n                  golden vertices and edges. To make life easier in further\n                  explanations, a piece will be represented by a \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, '\n                  blue \n                  '),
-				$mdgriffith$elm_ui$Element$text('\n                  dot present at the\n                  center of the subgraph.\n                  ')
-			]);
-		var secondComment = _List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$text('\n                  Which is now \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, '\n                  transforming \n                  '),
-				$mdgriffith$elm_ui$Element$text('\n                  into a new graph, which is more\n                  tree-like \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, '\n                  visually.\n                  ')
 			]);
 		var piecesMarkedComment = _List_fromArray(
 			[
@@ -16946,54 +16917,102 @@ var $author$project$TreeWidth$storyTreeWidth = F2(
 					]),
 				l);
 		};
-		var honeyCombFirstComment = _List_fromArray(
+		var emph = $author$project$FontSize$emphForScreen(deviceType);
+		var finalComment = _List_fromArray(
 			[
-				$mdgriffith$elm_ui$Element$text('\n                  The circular graph is now transformed to a \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '\n                  cellular\n                  '),
-				$mdgriffith$elm_ui$Element$text('\n                  structure. Which is more like a \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '\n                  tree-like \n                  '),
-				$mdgriffith$elm_ui$Element$text('\n                  structure visually.\n                  ')
+				$mdgriffith$elm_ui$Element$text('\n                  The number of vertices in all the pieces is equal to 3. Therefore the maximum\n                  number of vertices in any piece in the present graph is also 3.\n                  Hence the tree width of the graph is \n                  '),
+				A2(emph, $author$project$FontSize$Pink, '\n                  3 \n                  '),
+				A2(emph, $author$project$FontSize$CuteBlue, '\n                  - \n                  '),
+				A2(emph, $author$project$FontSize$CuteGreen, '\n                  1 \n                  '),
+				A2(emph, $author$project$FontSize$CuteBlue, '\n                  = \n                  '),
+				A2(emph, $author$project$FontSize$Pink, '\n                  2\n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  .\n                  ')
 			]);
 		var firstComment = _List_fromArray(
 			[
 				$mdgriffith$elm_ui$Element$text('\n                  The graph on the left seems very \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '\n                  un-tree \n                  '),
+				A2(emph, $author$project$FontSize$CuteGreen, '\n                  un-tree \n                  '),
 				$mdgriffith$elm_ui$Element$text('\n                  like. Lets \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '\n                  morph \n                  '),
+				A2(emph, $author$project$FontSize$CuteGreen, '\n                  morph \n                  '),
 				$mdgriffith$elm_ui$Element$text('\n                  it to another \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '\n                  shape. \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, '\n                  Press \n                  '),
+				A2(emph, $author$project$FontSize$CuteGreen, '\n                  shape. \n                  '),
+				A2(emph, $author$project$FontSize$CuteBlue, '\n                  Press \n                  '),
 				$mdgriffith$elm_ui$Element$text('\n                  forward button\n                  above to make it look a little different. \n                  ')
 			]);
-		var finalComment = _List_fromArray(
+		var honeyCombFirstComment = _List_fromArray(
 			[
-				$mdgriffith$elm_ui$Element$text('\n                  The number of vertices in all the pieces is equal to 3. Therefore the maximum\n                  number of vertices in any piece in the present graph is also 3.\n                  Hence the tree width of the graph is \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$Pink, '\n                  3 \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, '\n                  - \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '\n                  1 \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, '\n                  = \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$Pink, '\n                  2\n                  '),
-				$mdgriffith$elm_ui$Element$text('\n                  .\n                  ')
+				$mdgriffith$elm_ui$Element$text('\n                  The circular graph is now transformed to a \n                  '),
+				A2(emph, $author$project$FontSize$CuteGreen, '\n                  cellular\n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  structure. Which is more like a \n                  '),
+				A2(emph, $author$project$FontSize$CuteGreen, '\n                  tree-like \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  structure visually.\n                  ')
+			]);
+		var secondComment = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('\n                  Which is now \n                  '),
+				A2(emph, $author$project$FontSize$CuteBlue, '\n                  transforming \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  into a new graph, which is more\n                  tree-like \n                  '),
+				A2(emph, $author$project$FontSize$CuteBlue, '\n                  visually.\n                  ')
+			]);
+		var showOnePieceComment = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('\n                  The graph can now be divided into \n                  '),
+				A2(emph, $author$project$FontSize$CuteGreen, '\n                  pieces. \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  The first piece for example\n                  is the \n                  '),
+				A2(emph, $author$project$FontSize$CuteGreen, '\n                  sub graph \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  made up by Vertices \n                  '),
+				A2(emph, $author$project$FontSize$Pink, '\n                  1, 2  \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  and \n                  '),
+				A2(emph, $author$project$FontSize$Pink, '\n                  3\n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  . This is marked by\n                  golden vertices and edges. To make life easier in further\n                  explanations, a piece will be represented by a \n                  '),
+				A2(emph, $author$project$FontSize$CuteBlue, '\n                  blue \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  dot present at the\n                  center of the subgraph.\n                  ')
+			]);
+		var theoreticalComments = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('\n                  The division of the graph in pieces such as these such that\n                  the pieces together form a tree is called \n                  '),
+				A2(emph, $author$project$FontSize$CuteGreen, '\n                  tree decomposition \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  of a\n                  graph. The pieces hence formed have associated a number of\n                  vertices. Here all the pieces have \n                  '),
+				A2(emph, $author$project$FontSize$Pink, '\n                  3 \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  vertices associated\n                  with them.\n                  ')
+			]);
+		var treeDetails = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('\n                  The \n                  golden \n                  line \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  joining the \n                  '),
+				A2(emph, $author$project$FontSize$CuteGreen, '\n                  pieces \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  is a \n                  '),
+				A2(emph, $author$project$FontSize$Gold, '\n                  tree \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  as it has \n                  '),
+				A2(emph, $author$project$FontSize$Pink, '\n                  no\n                  cycles.\n                  ')
+			]);
+		var treeWidthFormula = _List_fromArray(
+			[
+				A2(emph, $author$project$FontSize$CuteGreen, '\n                  Tree Width \n                  '),
+				A2(emph, $author$project$FontSize$CuteBlue, '\n                  = \n                  '),
+				A2(emph, $author$project$FontSize$Pink, '\n                  ( Maximum Number of Vertices in a piece ) \n                  '),
+				A2(emph, $author$project$FontSize$CuteBlue, '\n                  - \n                  '),
+				A2(emph, $author$project$FontSize$CuteGreen, '\n                  1\n                  ')
 			]);
 		var bigPieceExplanation = _List_fromArray(
 			[
-				A2($author$project$FontSize$emph, $author$project$FontSize$Pink, '\n                  However,\n                  '),
+				A2(emph, $author$project$FontSize$Pink, '\n                  However,\n                  '),
 				$mdgriffith$elm_ui$Element$text('\n                  if the decomposition of a graph was done\n                  by deriving \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteGreen, '\n                  bigger \n                  '),
+				A2(emph, $author$project$FontSize$CuteGreen, '\n                  bigger \n                  '),
 				$mdgriffith$elm_ui$Element$text('\n                  pieces like the one shown in\n                  the figure, then the tree-width would\n                  have been equal to \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$Pink, '\n                  4 \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, '\n                  - \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$Pink, '\n                  1 \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, '\n                  = \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$Pink, '\n                  3\n                  '),
+				A2(emph, $author$project$FontSize$Pink, '\n                  4 \n                  '),
+				A2(emph, $author$project$FontSize$CuteBlue, '\n                  - \n                  '),
+				A2(emph, $author$project$FontSize$Pink, '\n                  1 \n                  '),
+				A2(emph, $author$project$FontSize$CuteBlue, '\n                  = \n                  '),
+				A2(emph, $author$project$FontSize$Pink, '\n                  3\n                  '),
 				$mdgriffith$elm_ui$Element$text('\n                  .\n                  ')
 			]);
 		var altTreeExplanation = _List_fromArray(
 			[
 				$mdgriffith$elm_ui$Element$text('\n                  Therefore, a tree can be decomposed\n                  in \n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, '\n                  many ways\n                  '),
+				A2(emph, $author$project$FontSize$CuteBlue, '\n                  many ways\n                  '),
 				$mdgriffith$elm_ui$Element$text('\n                  It can even be decomposed by keeping the\n                  whole graph in a single piece. For the graph shown\n                  in the figure The tree\n                  width in that case would be equal to 12 - 1 = 11.\n                  '),
-				A2($author$project$FontSize$emph, $author$project$FontSize$CuteBlue, '\n                  Ideally,\n                  '),
+				A2(emph, $author$project$FontSize$CuteBlue, '\n                  Ideally,\n                  '),
 				$mdgriffith$elm_ui$Element$text('\n                  the pieces, should be derived from the\n                  graph such that the tree width is the minimum.\n                  ')
 			]);
 		var output = function () {
@@ -17186,7 +17205,7 @@ var $author$project$TreeWidth$explanationWidth = F3(
 						A2($author$project$TreeWidth$treeWidthButtons, display.status, displaySize)
 					]),
 				_Utils_ap(
-					A2($author$project$TreeWidth$storyTreeWidth, display.status, helpStatus),
+					A3($author$project$TreeWidth$storyTreeWidth, displaySize.deviceType, display.status, helpStatus),
 					_List_fromArray(
 						[
 							A2($author$project$Buttons$lowerNavigation, 'Vertex Cover', 'Isomorphism')

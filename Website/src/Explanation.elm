@@ -2,12 +2,16 @@ module Explanation exposing (..)
 
 import Element as ELE
 import FontSize exposing
-               ( getFontSize
-               , FontSize(..)
-               , FontColor(..)
-               , giveFontColor
-               , emph
-               )
+   ( getFontSize
+   , FontSize(..)
+   , FontColor(..)
+   , DisplaySize
+   , DeviceType(..)
+   , giveFontColor
+   , getDeviceType
+   , emphForScreen
+   )
+
 isomorphismExplanation =
    """
    Two graphs G1 and G2 are isomorphic if there is a one-one correspondence
@@ -54,7 +58,11 @@ coloringExplanation =
    The graph shown in the picture, needs three colors to color it properly.
    """
 
-howToColor =
+howToColor deviceType =
+   let
+      emph =
+         emphForScreen deviceType
+   in
    [ emph CuteGreen
       """
       Choose 
@@ -103,7 +111,11 @@ treeWidthExplanation =
    The first part explains the concept of graph decomposition. The second part will
    build upon the first to explain the definition of tree width more pricisely.
    """
-makeCongrats =
+makeCongrats deviceType =
+   let
+      emph =
+         emphForScreen deviceType
+   in
    [ emph CuteGreen "C"
    , emph CuteBlue "o"
    , emph Pink "n"

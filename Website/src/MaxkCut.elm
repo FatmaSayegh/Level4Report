@@ -18,7 +18,7 @@ import FontSize exposing
       , FontSize(..)
       , FontColor(..)
       , giveFontColor
-      , emph
+      , emphForScreen
       , DisplaySize
       , DeviceType(..)
       )
@@ -174,6 +174,9 @@ explanationTwo maxCut helpStatus displaySize =
                   maxCut.transitionB
          state =
             maxCut.state
+
+         emph =
+            emphForScreen displaySize.deviceType
 
          max2CutTitle =
             [ emph CuteBlue "Max"

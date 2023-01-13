@@ -15,7 +15,7 @@ import FontSize exposing
                , FontSize(..)
                , FontColor(..)
                , giveFontColor
-               , emph
+               , emphForScreen
                , DisplaySize
                , DeviceType(..)
                )
@@ -196,6 +196,10 @@ type ScreenSize
 
 explanationOne : ShapeTransition -> Bool -> DisplaySize -> ELE.Element Msg
 explanationOne shapeTransition helpStatus displaySize =
+      let
+         emph =
+            emphForScreen displaySize.deviceType
+      in
       ELE.column
          [ Font.color (ELE.rgb 1 1 1)
          , ELE.height ELE.fill
@@ -256,18 +260,20 @@ explanationOne shapeTransition helpStatus displaySize =
          ]
 
          ++  
-            (makeStory shapeTransition helpStatus)
+            (makeStory displaySize.deviceType shapeTransition helpStatus)
          ++
 
 
          [ lowerNavigation "Tree Width" "Max Cut" ]
 
-makeStory : ShapeTransition -> Bool -> List (ELE.Element Msg)
-makeStory shapeTransition helpStatus =
+makeStory : DeviceType -> ShapeTransition -> Bool -> List (ELE.Element Msg)
+makeStory deviceType shapeTransition helpStatus =
     let
         glowing_vertices =
             List.filter (\ver -> ver.glow) shapeTransition.graphB.vertices
-
+        
+        emph =
+            emphForScreen deviceType
 
         putyourmouse =
             """

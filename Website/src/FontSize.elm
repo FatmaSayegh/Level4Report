@@ -6,7 +6,8 @@ module FontSize exposing
    , DeviceType(..)
    , giveFontColor
    , getDeviceType
-   , emph
+   --, emph
+   , emphForScreen
    )
 
 import Element as ELE
@@ -119,9 +120,9 @@ giveFontColor fntcol =
          ELE.rgb 0.2 0.2 1
 
 
-emph : FontColor -> String -> ELE.Element msg
-emph =
-   emphForScreen XXL
+--emph : FontColor -> String -> ELE.Element msg
+--emph =
+--   emphForScreen XXL
 
 emphForScreen : DeviceType -> FontColor -> String -> ELE.Element msg
 emphForScreen deviceType fontCol str =

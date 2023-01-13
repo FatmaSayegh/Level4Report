@@ -13,7 +13,7 @@ import FontSize exposing
                , FontSize(..)
                , FontColor(..)
                , giveFontColor
-               , emph
+               , emphForScreen
                , DisplaySize
                , DeviceType(..)
                )
