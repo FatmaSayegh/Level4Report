@@ -15263,6 +15263,55 @@ var $author$project$Main$introFatma = F2(
 	});
 var $mdgriffith$elm_ui$Internal$Model$Right = {$: 'Right'};
 var $mdgriffith$elm_ui$Element$alignRight = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$Right);
+var $author$project$Main$introSuperVisor = F2(
+	function (width, height) {
+		var intro = '\n             Olaosebikan is a Lecturer in Algorithms and Complexity in the\n            School of Computing Science at the University of Glasgow. She has a\n            PhD in Computing Science from the University of Glasgow, Scotland;\n            an MSc in Mathematical Sciences from the African Institute for\n            Mathematical Sciences (AIMS), Ghana; and a BSc in Mathematics from\n            the University of Ibadan, Nigeria.  In her spare time she finds\n            myself reflecting on how best to inspire and pass on computing\n            skills to young Africans in STEM, with the hope that they can also\n            grow to become creative thinkers.  ';
+		return A2(
+			$mdgriffith$elm_ui$Element$column,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$Font$color(
+					A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
+					$mdgriffith$elm_ui$Element$Font$heavy,
+					A2($mdgriffith$elm_ui$Element$spacingXY, 10, 15),
+					A2($mdgriffith$elm_ui$Element$paddingXY, 30, 50),
+					$mdgriffith$elm_ui$Element$width(
+					A2($mdgriffith$elm_ui$Element$maximum, width, $mdgriffith$elm_ui$Element$fill)),
+					$mdgriffith$elm_ui$Element$height(
+					A2($mdgriffith$elm_ui$Element$minimum, height, $mdgriffith$elm_ui$Element$fill)),
+					$mdgriffith$elm_ui$Element$Border$rounded(10),
+					$mdgriffith$elm_ui$Element$alignRight
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$mdgriffith$elm_ui$Element$el,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$Font$size(30)
+						]),
+					$mdgriffith$elm_ui$Element$text('My Supervisor.')),
+					A2(
+					$mdgriffith$elm_ui$Element$paragraph,
+					_List_Nil,
+					_List_fromArray(
+						[
+							A2(
+							$mdgriffith$elm_ui$Element$el,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$Font$color(
+									A3($mdgriffith$elm_ui$Element$rgb, 0.5, 0.9, 0.7)),
+									$mdgriffith$elm_ui$Element$Font$size(25)
+								]),
+							$mdgriffith$elm_ui$Element$text('Sofiat ')),
+							A2(
+							$mdgriffith$elm_ui$Element$el,
+							_List_Nil,
+							$mdgriffith$elm_ui$Element$text(intro))
+						]))
+				]));
+	});
 var $elm$html$Html$Attributes$alt = $elm$html$Html$Attributes$stringProperty('alt');
 var $elm$html$Html$Attributes$src = function (url) {
 	return A2(
@@ -15368,11 +15417,62 @@ var $author$project$Main$photoGraph = F2(
 						{description: '', src: 'images/fatma.jpeg'}))
 				]));
 	});
+var $author$project$Main$photoGraphSuperVisor = F2(
+	function (width, height) {
+		return A2(
+			$mdgriffith$elm_ui$Element$column,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$Font$color(
+					A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
+					$mdgriffith$elm_ui$Element$Font$heavy,
+					A2($mdgriffith$elm_ui$Element$spacingXY, 10, 15),
+					$mdgriffith$elm_ui$Element$width(
+					A2($mdgriffith$elm_ui$Element$maximum, width - 1, $mdgriffith$elm_ui$Element$fill)),
+					$mdgriffith$elm_ui$Element$height(
+					A2($mdgriffith$elm_ui$Element$minimum, height, $mdgriffith$elm_ui$Element$fill)),
+					$mdgriffith$elm_ui$Element$Border$rounded(20),
+					$mdgriffith$elm_ui$Element$alignRight,
+					$mdgriffith$elm_ui$Element$Border$width(5),
+					$mdgriffith$elm_ui$Element$Border$color(
+					A3($mdgriffith$elm_ui$Element$rgb, 0.7, 0.6, 0.6))
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$mdgriffith$elm_ui$Element$el,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$Border$rounded(200)
+						]),
+					A2(
+						$mdgriffith$elm_ui$Element$image,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$width(
+								A2($mdgriffith$elm_ui$Element$maximum, 400, $mdgriffith$elm_ui$Element$fill))
+							]),
+						{description: '', src: 'images/sofiat.jpg'}))
+				]));
+	});
 var $author$project$Main$aboutPage = F2(
 	function (widthIn, heightIn) {
 		var width = (widthIn / 3) | 0;
-		var height = (widthIn / 4) | 0;
-		return A2(
+		var height = (heightIn / 4) | 0;
+		var superVisor = A2(
+			$mdgriffith$elm_ui$Element$row,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$Border$rounded(40),
+					$mdgriffith$elm_ui$Element$Border$color(
+					A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1))
+				]),
+			_List_fromArray(
+				[
+					A2($author$project$Main$introSuperVisor, width, height),
+					A2($author$project$Main$photoGraphSuperVisor, widthIn - width, height)
+				]));
+		var fatmasDetails = A2(
 			$mdgriffith$elm_ui$Element$row,
 			_List_fromArray(
 				[
@@ -15385,6 +15485,11 @@ var $author$project$Main$aboutPage = F2(
 					A2($author$project$Main$introFatma, width, height),
 					A2($author$project$Main$photoGraph, widthIn - width, height)
 				]));
+		return A2(
+			$mdgriffith$elm_ui$Element$column,
+			_List_Nil,
+			_List_fromArray(
+				[fatmasDetails, superVisor]));
 	});
 var $author$project$Main$displayColumn = function (svgHtml) {
 	return A2(

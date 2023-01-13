@@ -449,15 +449,32 @@ aboutPage : Int -> Int -> ELE.Element Msg
 aboutPage widthIn heightIn =
    let
       width = widthIn//3
-      height = widthIn//4
-   in
-   ELE.row
-      [ Border.rounded 40
-      , Border.color (ELE.rgb 1 1 1)
-      ]
-      [ introFatma width (height)
-      , photoGraph (widthIn - width) height
-      ]
+      height = heightIn//4
+
+      fatmasDetails = 
+         ELE.row
+            [ Border.rounded 40
+            , Border.color (ELE.rgb 1 1 1)
+            ]
+            [ introFatma width (height)
+            , photoGraph (widthIn - width) height
+            ]
+     
+      superVisor =
+         ELE.row
+            [ Border.rounded 40
+            , Border.color (ELE.rgb 1 1 1)
+            ]
+            [ introSuperVisor width height
+            , photoGraphSuperVisor (widthIn - width) height
+            ]
+  in
+  ELE.column
+   []
+   [ fatmasDetails
+   , superVisor
+   ]
+
 
 photoGraph width height =
       ELE.column
@@ -478,6 +495,30 @@ photoGraph width height =
                (ELE.image [ ELE.width (ELE.fill |> ELE.maximum 400)
                           ] 
                      { src = "images/fatma.jpeg" 
+                     , description = ""
+                     }
+               )
+         ]
+
+photoGraphSuperVisor width height =
+      ELE.column
+         [ Font.color <| ELE.rgb 1 1 1
+         , Font.heavy
+         , ELE.spacingXY 10 15
+         --, ELE.paddingXY 30 50
+         , ELE.width (ELE.fill |> ELE.maximum (width - 1))
+         , ELE.height (ELE.fill |> ELE.minimum (height))
+         , Border.rounded 20
+         , ELE.alignRight
+         , Border.width 5
+         , Border.color (ELE.rgb 0.7 0.6 0.6)
+         ]
+         [ ELE.el 
+               [ Border.rounded 200
+               ]
+               (ELE.image [ ELE.width (ELE.fill |> ELE.maximum 400)
+                          ] 
+                     { src = "images/sofiat.jpg" 
                      , description = ""
                      }
                )
@@ -519,6 +560,45 @@ introFatma width height =
                            , ELE.el 
                                      []
                                      (ELE.text fatmasIntro)
+                           ]
+            ]
+
+introSuperVisor width height =
+      let
+         intro =
+            """
+             Olaosebikan is a Lecturer in Algorithms and Complexity in the
+            School of Computing Science at the University of Glasgow. She has a
+            PhD in Computing Science from the University of Glasgow, Scotland;
+            an MSc in Mathematical Sciences from the African Institute for
+            Mathematical Sciences (AIMS), Ghana; and a BSc in Mathematics from
+            the University of Ibadan, Nigeria.  In her spare time she finds
+            myself reflecting on how best to inspire and pass on computing
+            skills to young Africans in STEM, with the hope that they can also
+            grow to become creative thinkers.  """
+      in
+      ELE.column
+         [ Font.color <| ELE.rgb 1 1 1
+         , Font.heavy
+         , ELE.spacingXY 10 15
+         , ELE.paddingXY 30 50
+         , ELE.width (ELE.fill |> ELE.maximum (width))
+         , ELE.height (ELE.fill |> ELE.minimum (height))
+         , Border.rounded 10
+         , ELE.alignRight
+         ]
+         <| [ ELE.el [ Font.size 30]
+                  (ELE.text "My Supervisor.")
+            , ELE.paragraph [
+                            ] 
+                           [ ELE.el 
+                                     [ Font.color <| ELE.rgb 0.5 0.9 0.7
+                                     , Font.size 25
+                                     ]
+                                     (ELE.text "Sofiat ")
+                           , ELE.el 
+                                     []
+                                     (ELE.text intro)
                            ]
             ]
 
