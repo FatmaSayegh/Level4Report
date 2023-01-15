@@ -29,8 +29,9 @@ import Element.Input as Input
 import Element.Events as Events
 import Ant.Icon as Ant
 import Ant.Icons as Icons
+import Emoji
 import Messages exposing (Msg(..))
-import Isomorphism exposing (explanationOne, paneOne, animateIsomorphicTransition, isomorphicTransition, miniIsoGraph )
+import Isomorphism exposing (IsomorphicTopic, explanationOne, paneOne, animateIsomorphicTransition, isomorphicTransition, miniIsoGraph, isomorphicTopic, animateIsomorphicTopic, isomorphicDisplay)
 import MaxkCut exposing (MaxCutTransition, explanationTwo, paneTwo, animateMaxCutCompound, maxCutTransition, miniMaxGraph)
 import GraphColoring exposing (ColorDisplaySeries, paneThree, explanationColoring, colorDisplaySeries, goColorSeries, miniColGraph)
 import VertexCover exposing (VertexCoverDisplay, paneFour, explanationCover, vertexCoverDisplay, goCover)
@@ -88,7 +89,7 @@ type alias Model =
 
 
 type Topic =
-   Isomorphic ShapeTransition
+   Isomorphic IsomorphicTopic
    | MaxCut MaxCutTransition
    | GraphColoring ColorDisplaySeries
    | VertexCover VertexCoverDisplay
@@ -158,6 +159,12 @@ keyToMsg value =
                          GotoSize
                      'a' ->
                          GotoAbout
+                     'z' ->
+                         IsoChoiceOne
+                     'Z' ->
+                         IsoChoiceTwo
+                     'C' ->
+                         IsoCheck
                      _ ->
                          Other
         _ ->
@@ -184,8 +191,8 @@ update msg model =
 
            _ ->
               case topic of
-                Isomorphic shapeTransition ->
-                   ( Isomorphic (animateIsomorphicTransition msg shapeTransition))
+                Isomorphic isotopic ->
+                   ( Isomorphic (animateIsomorphicTopic msg isotopic))
                 MaxCut maxcutTrans ->
                    ( MaxCut (animateMaxCutCompound msg maxcutTrans))
                 GraphColoring displaySeries ->
@@ -296,7 +303,7 @@ getTopic : Url.Url -> Topic
 getTopic url =
    case (url.path) of
       "/isomorphism" ->
-         Isomorphic isomorphicTransition
+         Isomorphic isomorphicTopic
       "/maxkcut" ->
          MaxCut maxCutTransition
       "/coloring" ->
@@ -403,10 +410,10 @@ viewTopic model displaySize =
          {displaySize | width = displaySize.width//2}
    in
    case model.topic of
-      Isomorphic shapeTransition ->
+      Isomorphic isoTopic ->
             showTopic displaySize
-                  [ displayColumn (paneOne shapeTransition.graphA shapeTransition.graphB)
-                  , explanationOne shapeTransition model.helpStatus explanationSize
+                  [ displayColumn (isomorphicDisplay isoTopic)
+                  , explanationOne isoTopic model.helpStatus explanationSize
                   ]
 
       MaxCut maxCutTrans ->
@@ -448,13 +455,16 @@ viewTopic model displaySize =
 aboutPage : Int -> Int -> ELE.Element Msg
 aboutPage widthIn heightIn =
    let
+
       width = widthIn//3
+
       height = heightIn//4
 
       fatmasDetails = 
          ELE.row
             [ Border.rounded 40
             , Border.color (ELE.rgb 1 1 1)
+            , ELE.alignLeft
             ]
             [ introFatma width (height)
             , photoGraph (widthIn - width) height
@@ -464,24 +474,73 @@ aboutPage widthIn heightIn =
          ELE.row
             [ Border.rounded 40
             , Border.color (ELE.rgb 1 1 1)
+            , ELE.alignRight
             ]
             [ introSuperVisor width height
             , photoGraphSuperVisor (widthIn - width) height
             ]
+
+      project =
+         ELE.row
+            [ Border.rounded 40
+            , Border.color (ELE.rgb 1 1 1)
+            , ELE.centerX
+            ]
+            [ aboutProject width height
+            ]
+
+      acknowledge =
+         ELE.row
+            [ Border.rounded 40
+            , Border.color (ELE.rgb 1 1 1)
+            , ELE.alignLeft
+            ]
+            [ acknowledgement width height
+            , emoji width height
+            ]
   in
   ELE.column
-   []
-   [ fatmasDetails
+   [
+     ELE.spacingXY 40 50
+   , ELE.width ELE.fill
+   , ELE.height ELE.fill
+   , ELE.padding 40
+   , ELE.scrollbarY
+   , ELE.centerX
+   , ELE.centerY
+   ]
+   [ project
+   , fatmasDetails
    , superVisor
+   , acknowledge
    ]
 
 
+emoji width height =
+      ELE.column
+         [ Font.color <| ELE.rgb 1 1 1
+         , Font.heavy
+         , ELE.spacingXY 10 15
+         , ELE.width (ELE.fill |> ELE.maximum (width - 1))
+         , ELE.height (ELE.fill |> ELE.minimum (height*2))
+         , Border.rounded 20
+         , ELE.alignLeft
+         , ELE.centerY
+         ]
+         [ ELE.el
+            [ Font.size 250
+            , ELE.centerY
+            ]
+            ( ELE.text 
+                --" \u{1F389}"
+                " \u{1F64F}"
+            )
+         ]
 photoGraph width height =
       ELE.column
          [ Font.color <| ELE.rgb 1 1 1
          , Font.heavy
          , ELE.spacingXY 10 15
-         --, ELE.paddingXY 30 50
          , ELE.width (ELE.fill |> ELE.maximum (width - 1))
          , ELE.height (ELE.fill |> ELE.minimum (height))
          , Border.rounded 20
@@ -493,6 +552,7 @@ photoGraph width height =
                [ Border.rounded 200
                ]
                (ELE.image [ ELE.width (ELE.fill |> ELE.maximum 400)
+                          , Border.rounded 200
                           ] 
                      { src = "images/fatma.jpeg" 
                      , description = ""
@@ -505,7 +565,6 @@ photoGraphSuperVisor width height =
          [ Font.color <| ELE.rgb 1 1 1
          , Font.heavy
          , ELE.spacingXY 10 15
-         --, ELE.paddingXY 30 50
          , ELE.width (ELE.fill |> ELE.maximum (width - 1))
          , ELE.height (ELE.fill |> ELE.minimum (height))
          , Border.rounded 20
@@ -517,6 +576,7 @@ photoGraphSuperVisor width height =
                [ Border.rounded 200
                ]
                (ELE.image [ ELE.width (ELE.fill |> ELE.maximum 400)
+                          , ELE.height (ELE.fill |> ELE.maximum 380)
                           ] 
                      { src = "images/sofiat.jpg" 
                      , description = ""
@@ -524,13 +584,147 @@ photoGraphSuperVisor width height =
                )
          ]
 
+acknowledgement width height =
+      let
+         sofiat =
+            """
+            I would like to thank my supervisor Sofiat for giving me a
+            wonderful opportunity to explore the topics of Graph Theory.  Her
+            constant support and guidance throughout the project was
+            detrimental in building the app.
+            """
+         father =
+            """
+            I would also like to thank my father for encouraging, believing and
+            supporting me constantly in both the good and bad days.
+            """
+         shrey =
+            """
+            Finaly, I would like to thank my friend Shrey for guiding me and introducing
+            me to the Elm programming language.
+            """
+         thanks =
+            """
+            This project would not have been possible without the
+            the help, aid and advice of friends and family.
+            """
+      in
+      ELE.column
+         [ Font.color <| ELE.rgb 1 1 1
+         , Font.heavy
+         , ELE.spacingXY 10 15
+         , ELE.paddingXY 30 50
+         , ELE.width (ELE.fill |> ELE.maximum (round <| (toFloat width)))
+         , ELE.height (ELE.fill |> ELE.minimum (height))
+         , Border.rounded 10
+         --, ELE.centerX
+         --, ELE.alignLeft
+         , ELE.paddingEach 
+               { top = 10, 
+                 right = 10,
+                 bottom = 50,
+                 left = 10
+               }
+         ]
+         <| [ ELE.el [ Font.size 30
+                     , ELE.centerX
+                     ]
+                  (ELE.text "Acknowledgement")
+            , ELE.paragraph [ ELE.centerX
+                            ] 
+                           [ ELE.text
+                                 sofiat
+                           ]
+            , ELE.paragraph [ ELE.centerX
+                            ] 
+                           [ ELE.text
+                                 father
+                           ]
+
+            , ELE.paragraph [ ELE.centerX
+                            ] 
+                           [ ELE.text
+                                 shrey
+                           ]
+
+            , ELE.paragraph [ ELE.centerX
+                            ] 
+                           [ ELE.text
+                                 thanks
+                           ]
+            ]
+
+aboutProject width height =
+      let
+         capitalT =
+            """
+            T
+            """
+         aboutText =
+            """ 
+            here are numerous phenomenon in science which can be best
+            studied when they are abstracted as graphs. Graphs can be used to
+            represent a social networks, a biological networks such as protien
+            - protien interaction in cells, neural networks and ecological
+            networks.  
+            """
+
+         aim =
+            """
+            The aim of this project is to develop visual intuition for some of
+            the popular graph theory problems. Although, in mathematics formal
+            methods are used to describe terms, definitions and theorems.
+            Visual representation of the concepts can act as an aid to the
+            practioner to enrich his understanding or look at the same concept
+            in a different light.
+            """
+            
+      in
+      ELE.column
+         [ Font.color <| ELE.rgb 1 1 1
+         , Font.heavy
+         , ELE.spacingXY 10 15
+         , ELE.paddingXY 30 50
+         , ELE.width (ELE.fill |> ELE.maximum (width*2))
+         , ELE.height (ELE.fill |> ELE.minimum (height))
+         , Border.rounded 10
+         , ELE.centerX
+         , ELE.paddingEach 
+               { top = 10, 
+                 right = 10,
+                 bottom = 50,
+                 left = 10
+               }
+         ]
+         <| [ ELE.el [ Font.size 30
+                     , ELE.centerX
+                     ]
+                  (ELE.text "Visualization of Classical ")
+            , ELE.el [ Font.size 45 
+                     , ELE.centerX
+                     ]
+                  (ELE.text "Graph Theory Problems")
+            , ELE.paragraph [ ELE.centerX
+                            ] 
+                           [ ELE.el [ELE.alignLeft
+                                    , Font.size 40
+                                    ]
+                                    (ELE.text capitalT)
+                           , ELE.text
+                                 aboutText
+                           , ELE.text
+                                 aim
+                           ]
+
+            ]
+
 introFatma width height =
       let
          fatmasIntro =
             """
-            I am a third year Software Engineering student in University
-            of Glasgow. This web app was build for the as my final year
-            project. My intrests are maths and functional programming.
+            I am a fourth year Software Engineering student in University
+            of Glasgow. This web app was built for the as my final year
+            project. My intrests are maths, functional programming and drawing.
             """
             
       in
@@ -585,7 +779,6 @@ introSuperVisor width height =
          , ELE.width (ELE.fill |> ELE.maximum (width))
          , ELE.height (ELE.fill |> ELE.minimum (height))
          , Border.rounded 10
-         , ELE.alignRight
          ]
          <| [ ELE.el [ Font.size 30]
                   (ELE.text "My Supervisor.")

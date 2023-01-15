@@ -173,6 +173,36 @@ executeShapeTransition delta shapeTransition =
             , time = accumulatedTime
          }
 
+type alias InPlaceTransition =
+   { graph : Graph
+   , backupGraph : Graph
+   , grid : Grid
+   , animationOn : Bool
+   , time : Float
+   }
+
+executeInPlaceShapeTransition : Float -> InPlaceTransition -> InPlaceTransition
+executeInPlaceShapeTransition delta inplaceTrans =
+   if (distanceBetweenGraphAndGrid inplaceTrans.graph inplaceTrans.grid < 10)
+   then { inplaceTrans 
+            | animationOn = False
+            , graph = morphGraph inplaceTrans.graph inplaceTrans.grid
+            , time = 0.0
+        }
+
+   else 
+      let
+         accumulatedTime =
+            inplaceTrans.time + delta
+
+         calculatedTime =
+            delta/(2000 -  0.78 * accumulatedTime)
+      in
+         { inplaceTrans 
+            | graph = moveTowards calculatedTime inplaceTrans.graph inplaceTrans.grid
+            , time = accumulatedTime
+         }
+
 
 distanceBetweenGraphAndGrid : Graph -> Grid -> Float
 distanceBetweenGraphAndGrid graph grid =
@@ -181,6 +211,7 @@ distanceBetweenGraphAndGrid graph grid =
          List.map2 (\ver pos -> distance pos ver.pos) graph.vertices grid
    in
       List.sum listOfDistances
+
 changeColorOfVertex : Int -> Color -> Graph -> Graph
 changeColorOfVertex name color graph =
    let 
@@ -409,7 +440,9 @@ makelinear n =
         divider =
             toFloat (n - 1)
     in
-    List.range 0 (n - 1) |> List.map (toFloat >> (\y -> y / divider)) |> List.map (\y -> vec3 0 y 0)
+    List.range 0 (n - 1) 
+    |> List.map (toFloat >> (\y -> y / divider)) 
+    |> List.map (\y -> vec3 0 y 0)
 
 
 situateShape : Vec3 -> Vec3 -> List Vec3 -> List Vec3

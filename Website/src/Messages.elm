@@ -35,4 +35,8 @@ type Msg
     | LinkClicked Browser.UrlRequest
     | UrlChanged Url.Url
     | GotNewScreen Int Int
+    | IsoChoiceOne
+    | IsoChoiceTwo
+    | IsoCheck
+    | IsoReset
     | Other

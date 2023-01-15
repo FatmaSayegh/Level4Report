@@ -18,7 +18,8 @@
             "ianmackenzie/elm-units": "2.9.0",
             "jorgengranseth/elm-string-format": "1.0.1",
             "lemol/ant-design-icons-elm-ui": "1.0.0",
-            "mdgriffith/elm-ui": "1.1.8"
+            "mdgriffith/elm-ui": "1.1.8",
+            "stephenreddek/elm-emoji": "1.0.0"
         },
         "indirect": {
             "elm/random": "1.0.0",

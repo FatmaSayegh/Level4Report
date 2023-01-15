@@ -91,6 +91,30 @@ unColorButton =
               , label = Icons.rollbackOutlined [ Ant.width 70, Ant.height 50 ]
               }
 
+isoCheckButton : ELE.Element Msg
+isoCheckButton =
+         buttonWrap "Check your Choice" 
+         <| Input.button
+              [
+                ELE.centerX
+              ] 
+              { onPress = Just IsoCheck
+              , label = Icons.checkOutlined [ Ant.width 70, Ant.height 50 ]
+              --, label = Icons.bulbOutlined [ Ant.width 70, Ant.height 50 ]
+              }
+
+isoResetButton : ELE.Element Msg
+isoResetButton =
+         buttonWrap "Start Over" 
+         <| Input.button
+              [
+                ELE.centerX
+              ] 
+              { onPress = Just IsoReset
+              , label = Icons.rollbackOutlined [ Ant.width 70, Ant.height 50 ]
+              --, label = Icons.bulbOutlined [ Ant.width 70, Ant.height 50 ]
+              }
+
 playButton : Bool -> ELE.Element Msg
 playButton animationOn =
    let
@@ -163,9 +187,47 @@ forwardButton =
     in
     buttonWrap "Next Animation" theButton
 
+
+taskButton : Bool -> ELE.Element Msg
+taskButton status =
+   let
+      text =
+         if status
+            then
+               "Previous Animation"
+            else
+               "Next Task"
+      theButton =
+         Input.button
+            [
+               Border.rounded 100
+            ,  ELE.centerX
+            ] 
+            { onPress = Just NextAnimation
+            , label = Icons.forwardOutlined [ Ant.width 40, Ant.height 40 ]
+            }
+    in
+    buttonWrap text theButton
+
+
+tryDifferent : ELE.Element Msg
+tryDifferent =
+    let 
+      theButton =
+         Input.button
+            [
+               Border.rounded 100
+            ,  ELE.centerX
+            ] 
+            { onPress = Just NextAnimation
+            , label = Icons.forwardOutlined [ Ant.width 50, Ant.height 50 ]
+            }
+    in
+    buttonWrap "Try a different task" theButton
+
 nextTask : ELE.Element Msg
 nextTask =
-   let
+    let 
       theButton =
          Input.button
             [

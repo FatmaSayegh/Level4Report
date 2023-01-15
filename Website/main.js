@@ -6804,8 +6804,210 @@ var $author$project$GraphColoring$colorDisplayB = function () {
 		A3($avh4$elm_color$Color$rgb, 1, 1, 1));
 }();
 var $author$project$GraphColoring$colorDisplaySeries = {colorDisplayA: $author$project$GraphColoring$colorDisplayA, colorDisplayB: $author$project$GraphColoring$colorDisplayB, state: $author$project$GraphColoring$TwoColor};
-var $author$project$Graph$NoToken = {$: 'NoToken'};
+var $author$project$Isomorphism$Transition = {$: 'Transition'};
+var $author$project$Isomorphism$NoCheck = {$: 'NoCheck'};
+var $author$project$Isomorphism$NoChoice = {$: 'NoChoice'};
 var $elm$core$Basics$compare = _Utils_compare;
+var $author$project$Isomorphism$linearGridLeftInPlaceSecond = A3(
+	$author$project$Graph$linearGrid,
+	4,
+	A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 250, 50, 0),
+	A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 120, 0));
+var $author$project$Isomorphism$linearGridRightInPlaceSecond = A3(
+	$author$project$Graph$linearGrid,
+	4,
+	A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 350, 50, 0),
+	A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 120, 0));
+var $author$project$Isomorphism$setLeft = _List_fromArray(
+	[3, 8, 6, 1]);
+var $author$project$Isomorphism$setRight = _List_fromArray(
+	[7, 4, 2, 5]);
+var $elm$core$List$sortWith = _List_sortWith;
+var $author$project$Isomorphism$bipartiteGridInPlaceSecond = function () {
+	var rightTupled = A3(
+		$elm$core$List$map2,
+		F2(
+			function (x, y) {
+				return _Utils_Tuple2(x, y);
+			}),
+		$author$project$Isomorphism$setRight,
+		$author$project$Isomorphism$linearGridRightInPlaceSecond);
+	var leftTupled = A3(
+		$elm$core$List$map2,
+		F2(
+			function (x, y) {
+				return _Utils_Tuple2(x, y);
+			}),
+		$author$project$Isomorphism$setLeft,
+		$author$project$Isomorphism$linearGridLeftInPlaceSecond);
+	var totalGrid = _Utils_ap(leftTupled, rightTupled);
+	return A2(
+		$elm$core$List$map,
+		function (_v0) {
+			var x = _v0.a;
+			var y = _v0.b;
+			return y;
+		},
+		A2(
+			$elm$core$List$sortWith,
+			F2(
+				function (t1, t2) {
+					return A2($elm$core$Basics$compare, t1.a, t2.a);
+				}),
+			totalGrid));
+}();
+var $author$project$Isomorphism$linearGridLeftInPlaceThird = A3(
+	$author$project$Graph$linearGrid,
+	4,
+	A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 250, 250, 0),
+	A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 120, 0));
+var $author$project$Isomorphism$linearGridRightInPlaceThird = A3(
+	$author$project$Graph$linearGrid,
+	4,
+	A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 350, 250, 0),
+	A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 120, 0));
+var $author$project$Isomorphism$bipartiteGridInPlaceThird = function () {
+	var rightTupled = A3(
+		$elm$core$List$map2,
+		F2(
+			function (x, y) {
+				return _Utils_Tuple2(x, y);
+			}),
+		$author$project$Isomorphism$setRight,
+		$author$project$Isomorphism$linearGridRightInPlaceThird);
+	var leftTupled = A3(
+		$elm$core$List$map2,
+		F2(
+			function (x, y) {
+				return _Utils_Tuple2(x, y);
+			}),
+		$author$project$Isomorphism$setLeft,
+		$author$project$Isomorphism$linearGridLeftInPlaceThird);
+	var totalGrid = _Utils_ap(leftTupled, rightTupled);
+	return A2(
+		$elm$core$List$map,
+		function (_v0) {
+			var x = _v0.a;
+			var y = _v0.b;
+			return y;
+		},
+		A2(
+			$elm$core$List$sortWith,
+			F2(
+				function (t1, t2) {
+					return A2($elm$core$Basics$compare, t1.a, t2.a);
+				}),
+			totalGrid));
+}();
+var $author$project$Isomorphism$linearGridLeftInPlace = A3(
+	$author$project$Graph$linearGrid,
+	4,
+	A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 50, 50, 0),
+	A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 120, 0));
+var $author$project$Isomorphism$linearGridRightInPlace = A3(
+	$author$project$Graph$linearGrid,
+	4,
+	A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 150, 50, 0),
+	A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 120, 0));
+var $author$project$Isomorphism$bipartiteGridInPlace = function () {
+	var rightTupled = A3(
+		$elm$core$List$map2,
+		F2(
+			function (x, y) {
+				return _Utils_Tuple2(x, y);
+			}),
+		$author$project$Isomorphism$setRight,
+		$author$project$Isomorphism$linearGridRightInPlace);
+	var leftTupled = A3(
+		$elm$core$List$map2,
+		F2(
+			function (x, y) {
+				return _Utils_Tuple2(x, y);
+			}),
+		$author$project$Isomorphism$setLeft,
+		$author$project$Isomorphism$linearGridLeftInPlace);
+	var totalGrid = _Utils_ap(leftTupled, rightTupled);
+	return A2(
+		$elm$core$List$map,
+		function (_v0) {
+			var x = _v0.a;
+			var y = _v0.b;
+			return y;
+		},
+		A2(
+			$elm$core$List$sortWith,
+			F2(
+				function (t1, t2) {
+					return A2($elm$core$Basics$compare, t1.a, t2.a);
+				}),
+			totalGrid));
+}();
+var $author$project$Isomorphism$inplaceTransition = function () {
+	var graph = A4(
+		$author$project$Graph$makeGraph,
+		$author$project$Graph$PolygonCycleDoll(4),
+		A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 100, 200, 0),
+		A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 80, 80, 0),
+		$elm$core$Basics$pi / 4);
+	return {animationOn: false, backupGraph: graph, graph: graph, grid: $author$project$Isomorphism$bipartiteGridInPlace, time: 0.0};
+}();
+var $author$project$Graph$updatePositionVertex = F2(
+	function (ver, position) {
+		return A4($author$project$Graph$Vertex, ver.name, position, ver.color, ver.glow);
+	});
+var $author$project$Graph$morphGraph = F2(
+	function (graph, grid) {
+		var updatedVertices = A3($elm$core$List$map2, $author$project$Graph$updatePositionVertex, graph.vertices, grid);
+		var createEdge = $author$project$Graph$updateEdge(updatedVertices);
+		var updatedEdges = A2($elm$core$List$map, createEdge, graph.edges);
+		return A2($author$project$Graph$Graph, updatedVertices, updatedEdges);
+	});
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
+var $author$project$Isomorphism$removeFirstEdge = function (graph) {
+	var newEdges = A2(
+		$elm$core$Maybe$withDefault,
+		_List_Nil,
+		$elm$core$List$tail(graph.edges));
+	return _Utils_update(
+		graph,
+		{edges: newEdges});
+};
+var $author$project$Isomorphism$isomorphicGame = function () {
+	var initialGraph = function (pos) {
+		return A4(
+			$author$project$Graph$makeGraph,
+			$author$project$Graph$PolygonCycleDoll(4),
+			pos,
+			A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 80, 80, 0),
+			$elm$core$Basics$pi / 4);
+	};
+	var removedEdgeGraph = $author$project$Isomorphism$removeFirstEdge(
+		A2(
+			$author$project$Graph$morphGraph,
+			initialGraph(
+				A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 300, 300, 0)),
+			$author$project$Isomorphism$bipartiteGridInPlaceThird));
+	return {
+		choiceState: $author$project$Isomorphism$NoChoice,
+		gameState: $author$project$Isomorphism$NoCheck,
+		graphB: A2(
+			$author$project$Graph$morphGraph,
+			initialGraph(
+				A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 300, 100, 0)),
+			$author$project$Isomorphism$bipartiteGridInPlaceSecond),
+		graphC: removedEdgeGraph,
+		transition: $author$project$Isomorphism$inplaceTransition
+	};
+}();
+var $author$project$Graph$NoToken = {$: 'NoToken'};
 var $author$project$Isomorphism$linearGridLeft = A3(
 	$author$project$Graph$linearGrid,
 	4,
@@ -6816,11 +7018,6 @@ var $author$project$Isomorphism$linearGridRight = A3(
 	4,
 	A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 250, 250, 0),
 	A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 120, 0));
-var $author$project$Isomorphism$setLeft = _List_fromArray(
-	[3, 8, 6, 1]);
-var $author$project$Isomorphism$setRight = _List_fromArray(
-	[7, 4, 2, 5]);
-var $elm$core$List$sortWith = _List_sortWith;
 var $author$project$Isomorphism$bipartiteGrid = function () {
 	var rightTupled = A3(
 		$elm$core$List$map2,
@@ -6863,6 +7060,7 @@ var $author$project$Isomorphism$isomorphicTransition = function () {
 		$elm$core$Basics$pi / 4);
 	return {animationOn: false, finalGrid: $author$project$Isomorphism$bipartiteGrid, graphA: initialGraph, graphB: initialGraph, specialToken: $author$project$Graph$NoToken, time: 0.0};
 }();
+var $author$project$Isomorphism$isomorphicTopic = {isomorphicGame: $author$project$Isomorphism$isomorphicGame, shapeTransition: $author$project$Isomorphism$isomorphicTransition, topicState: $author$project$Isomorphism$Transition};
 var $author$project$MaxkCut$TwoCut = {$: 'TwoCut'};
 var $elm_explorations$linear_algebra$Math$Vector3$add = _MJS_v3add;
 var $author$project$Graph$makeEdgeWithTuple = F2(
@@ -7331,7 +7529,7 @@ var $author$project$Main$getTopic = function (url) {
 	var _v0 = url.path;
 	switch (_v0) {
 		case '/isomorphism':
-			return $author$project$Main$Isomorphic($author$project$Isomorphism$isomorphicTransition);
+			return $author$project$Main$Isomorphic($author$project$Isomorphism$isomorphicTopic);
 		case '/maxkcut':
 			return $author$project$Main$MaxCut($author$project$MaxkCut$maxCutTransition);
 		case '/coloring':
@@ -7383,6 +7581,9 @@ var $author$project$Messages$AnimationToggle = {$: 'AnimationToggle'};
 var $author$project$Messages$GotoAbout = {$: 'GotoAbout'};
 var $author$project$Messages$GotoHome = {$: 'GotoHome'};
 var $author$project$Messages$GotoSize = {$: 'GotoSize'};
+var $author$project$Messages$IsoCheck = {$: 'IsoCheck'};
+var $author$project$Messages$IsoChoiceOne = {$: 'IsoChoiceOne'};
+var $author$project$Messages$IsoChoiceTwo = {$: 'IsoChoiceTwo'};
 var $author$project$Messages$MaxCutLine = {$: 'MaxCutLine'};
 var $author$project$Messages$NextAnimation = {$: 'NextAnimation'};
 var $author$project$Messages$NextTopic = {$: 'NextTopic'};
@@ -7439,6 +7640,12 @@ var $author$project$Main$keyToMsg = function (value) {
 					return $author$project$Messages$GotoSize;
 				case 'a':
 					return $author$project$Messages$GotoAbout;
+				case 'z':
+					return $author$project$Messages$IsoChoiceOne;
+				case 'Z':
+					return $author$project$Messages$IsoChoiceTwo;
+				case 'C':
+					return $author$project$Messages$IsoCheck;
 				default:
 					return $author$project$Messages$Other;
 			}
@@ -8007,6 +8214,7 @@ var $author$project$Main$subscription = function (_v0) {
 					}))
 			]));
 };
+var $author$project$Isomorphism$Game = {$: 'Game'};
 var $author$project$Graph$changeGlowVertex = F3(
 	function (status, name, graph) {
 		var new_vertices = function (vs) {
@@ -8043,17 +8251,6 @@ var $author$project$Graph$distanceBetweenGraphAndGrid = F2(
 			graph.vertices,
 			grid);
 		return $elm$core$List$sum(listOfDistances);
-	});
-var $author$project$Graph$updatePositionVertex = F2(
-	function (ver, position) {
-		return A4($author$project$Graph$Vertex, ver.name, position, ver.color, ver.glow);
-	});
-var $author$project$Graph$morphGraph = F2(
-	function (graph, grid) {
-		var updatedVertices = A3($elm$core$List$map2, $author$project$Graph$updatePositionVertex, graph.vertices, grid);
-		var createEdge = $author$project$Graph$updateEdge(updatedVertices);
-		var updatedEdges = A2($elm$core$List$map, createEdge, graph.edges);
-		return A2($author$project$Graph$Graph, updatedVertices, updatedEdges);
 	});
 var $author$project$Graph$advanceVertexTowardsPosition = F3(
 	function (time, vertex, position) {
@@ -8223,6 +8420,125 @@ var $author$project$Isomorphism$animateIsomorphicTransition = F2(
 				return shapeTransition;
 			default:
 				return shapeTransition;
+		}
+	});
+var $author$project$Isomorphism$Check = {$: 'Check'};
+var $author$project$Isomorphism$FirstGraph = {$: 'FirstGraph'};
+var $author$project$Isomorphism$SecondGraph = {$: 'SecondGraph'};
+var $author$project$Graph$executeInPlaceShapeTransition = F2(
+	function (delta, inplaceTrans) {
+		if (A2($author$project$Graph$distanceBetweenGraphAndGrid, inplaceTrans.graph, inplaceTrans.grid) < 10) {
+			return _Utils_update(
+				inplaceTrans,
+				{
+					animationOn: false,
+					graph: A2($author$project$Graph$morphGraph, inplaceTrans.graph, inplaceTrans.grid),
+					time: 0.0
+				});
+		} else {
+			var accumulatedTime = inplaceTrans.time + delta;
+			var calculatedTime = delta / (2000 - (0.78 * accumulatedTime));
+			return _Utils_update(
+				inplaceTrans,
+				{
+					graph: A3($author$project$Graph$moveTowards, calculatedTime, inplaceTrans.graph, inplaceTrans.grid),
+					time: accumulatedTime
+				});
+		}
+	});
+var $author$project$Isomorphism$animateIsomorphicGameTrans = F2(
+	function (msg, inPlaceTran) {
+		switch (msg.$) {
+			case 'TimeDelta':
+				var delta = msg.a;
+				var _v1 = inPlaceTran.animationOn;
+				if (_v1) {
+					return A2($author$project$Graph$executeInPlaceShapeTransition, delta, inPlaceTran);
+				} else {
+					return inPlaceTran;
+				}
+			case 'AnimationStartOver':
+				return _Utils_update(
+					inPlaceTran,
+					{graph: inPlaceTran.backupGraph, time: 0.0});
+			default:
+				return inPlaceTran;
+		}
+	});
+var $author$project$Isomorphism$getNewGame = F2(
+	function (msg, game) {
+		switch (msg.$) {
+			case 'IsoChoiceOne':
+				return _Utils_update(
+					game,
+					{
+						choiceState: $author$project$Isomorphism$FirstGraph,
+						gameState: $author$project$Isomorphism$NoCheck,
+						graphB: A3($author$project$Graph$changeGlowVertex, false, 1, game.graphB),
+						graphC: A3($author$project$Graph$changeGlowVertex, false, 1, game.graphC),
+						transition: A2($author$project$Isomorphism$animateIsomorphicGameTrans, $author$project$Messages$AnimationStartOver, game.transition)
+					});
+			case 'IsoChoiceTwo':
+				return _Utils_update(
+					game,
+					{
+						choiceState: $author$project$Isomorphism$SecondGraph,
+						gameState: $author$project$Isomorphism$NoCheck,
+						graphB: A3($author$project$Graph$changeGlowVertex, false, 1, game.graphB),
+						graphC: A3($author$project$Graph$changeGlowVertex, false, 1, game.graphC),
+						transition: A2($author$project$Isomorphism$animateIsomorphicGameTrans, $author$project$Messages$AnimationStartOver, game.transition)
+					});
+			case 'IsoCheck':
+				var transition = game.transition;
+				var gameState = game.gameState;
+				return _Utils_update(
+					game,
+					{
+						gameState: _Utils_eq(gameState, $author$project$Isomorphism$NoCheck) ? $author$project$Isomorphism$Check : $author$project$Isomorphism$NoCheck,
+						graphB: _Utils_eq(game.choiceState, $author$project$Isomorphism$NoChoice) ? game.graphB : A3($author$project$Graph$changeGlowVertex, true, 1, game.graphB),
+						graphC: _Utils_eq(game.choiceState, $author$project$Isomorphism$NoChoice) ? game.graphC : A3($author$project$Graph$changeGlowVertex, true, 1, game.graphC),
+						transition: _Utils_update(
+							transition,
+							{
+								animationOn: _Utils_eq(game.choiceState, $author$project$Isomorphism$NoChoice) ? transition.animationOn : (!transition.animationOn),
+								graph: _Utils_eq(game.choiceState, $author$project$Isomorphism$NoChoice) ? transition.graph : A3($author$project$Graph$changeGlowVertex, true, 1, transition.graph)
+							})
+					});
+			case 'IsoReset':
+				return $author$project$Isomorphism$isomorphicGame;
+			default:
+				var transition = A2($author$project$Isomorphism$animateIsomorphicGameTrans, msg, game.transition);
+				return _Utils_update(
+					game,
+					{transition: transition});
+		}
+	});
+var $author$project$Isomorphism$animateIsomorphicTopic = F2(
+	function (msg, topic) {
+		if (msg.$ === 'NextAnimation') {
+			var _v1 = topic.topicState;
+			if (_v1.$ === 'Transition') {
+				return _Utils_update(
+					topic,
+					{topicState: $author$project$Isomorphism$Game});
+			} else {
+				return _Utils_update(
+					topic,
+					{topicState: $author$project$Isomorphism$Transition});
+			}
+		} else {
+			var _v2 = topic.topicState;
+			if (_v2.$ === 'Transition') {
+				var shapeTransition = A2($author$project$Isomorphism$animateIsomorphicTransition, msg, topic.shapeTransition);
+				return _Utils_update(
+					topic,
+					{shapeTransition: shapeTransition});
+			} else {
+				var newGame = A2($author$project$Isomorphism$getNewGame, msg, topic.isomorphicGame);
+				return _Utils_update(
+					topic,
+					{isomorphicGame: newGame});
+			}
 		}
 	});
 var $author$project$MaxkCut$ThreeCut = {$: 'ThreeCut'};
@@ -8592,9 +8908,9 @@ var $author$project$Main$update = F2(
 			} else {
 				switch (topic.$) {
 					case 'Isomorphic':
-						var shapeTransition = topic.a;
+						var isotopic = topic.a;
 						return $author$project$Main$Isomorphic(
-							A2($author$project$Isomorphism$animateIsomorphicTransition, msg, shapeTransition));
+							A2($author$project$Isomorphism$animateIsomorphicTopic, msg, isotopic));
 					case 'MaxCut':
 						var maxcutTrans = topic.a;
 						return $author$project$Main$MaxCut(
@@ -8922,15 +9238,6 @@ var $mdgriffith$elm_ui$Internal$Model$transformClass = function (transform) {
 				'tfrm-' + ($mdgriffith$elm_ui$Internal$Model$floatClass(tx) + ('-' + ($mdgriffith$elm_ui$Internal$Model$floatClass(ty) + ('-' + ($mdgriffith$elm_ui$Internal$Model$floatClass(tz) + ('-' + ($mdgriffith$elm_ui$Internal$Model$floatClass(sx) + ('-' + ($mdgriffith$elm_ui$Internal$Model$floatClass(sy) + ('-' + ($mdgriffith$elm_ui$Internal$Model$floatClass(sz) + ('-' + ($mdgriffith$elm_ui$Internal$Model$floatClass(ox) + ('-' + ($mdgriffith$elm_ui$Internal$Model$floatClass(oy) + ('-' + ($mdgriffith$elm_ui$Internal$Model$floatClass(oz) + ('-' + $mdgriffith$elm_ui$Internal$Model$floatClass(angle))))))))))))))))))));
 	}
 };
-var $elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
 var $mdgriffith$elm_ui$Internal$Model$getStyleName = function (style) {
 	switch (style.$) {
 		case 'Shadows':
@@ -15096,17 +15403,6 @@ var $mdgriffith$elm_ui$Element$layoutWith = F3(
 				_Utils_ap($mdgriffith$elm_ui$Internal$Model$rootStyle, attrs)),
 			child);
 	});
-var $mdgriffith$elm_ui$Internal$Flag$borderColor = $mdgriffith$elm_ui$Internal$Flag$flag(28);
-var $mdgriffith$elm_ui$Element$Border$color = function (clr) {
-	return A2(
-		$mdgriffith$elm_ui$Internal$Model$StyleClass,
-		$mdgriffith$elm_ui$Internal$Flag$borderColor,
-		A3(
-			$mdgriffith$elm_ui$Internal$Model$Colored,
-			'bc-' + $mdgriffith$elm_ui$Internal$Model$formatColorClass(clr),
-			'border-color',
-			clr));
-};
 var $mdgriffith$elm_ui$Internal$Model$Left = {$: 'Left'};
 var $mdgriffith$elm_ui$Element$alignLeft = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$Left);
 var $mdgriffith$elm_ui$Internal$Flag$fontWeight = $mdgriffith$elm_ui$Internal$Flag$flag(13);
@@ -15119,6 +15415,40 @@ var $mdgriffith$elm_ui$Element$minimum = F2(
 	function (i, l) {
 		return A2($mdgriffith$elm_ui$Internal$Model$Min, i, l);
 	});
+var $mdgriffith$elm_ui$Internal$Model$paddingName = F4(
+	function (top, right, bottom, left) {
+		return 'pad-' + ($elm$core$String$fromInt(top) + ('-' + ($elm$core$String$fromInt(right) + ('-' + ($elm$core$String$fromInt(bottom) + ('-' + $elm$core$String$fromInt(left)))))));
+	});
+var $mdgriffith$elm_ui$Element$paddingEach = function (_v0) {
+	var top = _v0.top;
+	var right = _v0.right;
+	var bottom = _v0.bottom;
+	var left = _v0.left;
+	if (_Utils_eq(top, right) && (_Utils_eq(top, bottom) && _Utils_eq(top, left))) {
+		var topFloat = top;
+		return A2(
+			$mdgriffith$elm_ui$Internal$Model$StyleClass,
+			$mdgriffith$elm_ui$Internal$Flag$padding,
+			A5(
+				$mdgriffith$elm_ui$Internal$Model$PaddingStyle,
+				'p-' + $elm$core$String$fromInt(top),
+				topFloat,
+				topFloat,
+				topFloat,
+				topFloat));
+	} else {
+		return A2(
+			$mdgriffith$elm_ui$Internal$Model$StyleClass,
+			$mdgriffith$elm_ui$Internal$Flag$padding,
+			A5(
+				$mdgriffith$elm_ui$Internal$Model$PaddingStyle,
+				A4($mdgriffith$elm_ui$Internal$Model$paddingName, top, right, bottom, left),
+				top,
+				right,
+				bottom,
+				left));
+	}
+};
 var $mdgriffith$elm_ui$Element$paddingXY = F2(
 	function (x, y) {
 		if (_Utils_eq(x, y)) {
@@ -15208,9 +15538,187 @@ var $mdgriffith$elm_ui$Element$spacingXY = F2(
 				x,
 				y));
 	});
+var $author$project$Main$aboutProject = F2(
+	function (width, height) {
+		var capitalT = '\n            T\n            ';
+		var aim = '\n            The aim of this project is to develop visual intuition for some of\n            the popular graph theory problems. Although, in mathematics formal\n            methods are used to describe terms, definitions and theorems.\n            Visual representation of the concepts can act as an aid to the\n            practioner to enrich his understanding or look at the same concept\n            in a different light.\n            ';
+		var aboutText = ' \n            here are numerous phenomenon in science which can be best\n            studied when they are abstracted as graphs. Graphs can be used to\n            represent a social networks, a biological networks such as protien\n            - protien interaction in cells, neural networks and ecological\n            networks.  \n            ';
+		return A2(
+			$mdgriffith$elm_ui$Element$column,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$Font$color(
+					A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
+					$mdgriffith$elm_ui$Element$Font$heavy,
+					A2($mdgriffith$elm_ui$Element$spacingXY, 10, 15),
+					A2($mdgriffith$elm_ui$Element$paddingXY, 30, 50),
+					$mdgriffith$elm_ui$Element$width(
+					A2($mdgriffith$elm_ui$Element$maximum, width * 2, $mdgriffith$elm_ui$Element$fill)),
+					$mdgriffith$elm_ui$Element$height(
+					A2($mdgriffith$elm_ui$Element$minimum, height, $mdgriffith$elm_ui$Element$fill)),
+					$mdgriffith$elm_ui$Element$Border$rounded(10),
+					$mdgriffith$elm_ui$Element$centerX,
+					$mdgriffith$elm_ui$Element$paddingEach(
+					{bottom: 50, left: 10, right: 10, top: 10})
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$mdgriffith$elm_ui$Element$el,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$Font$size(30),
+							$mdgriffith$elm_ui$Element$centerX
+						]),
+					$mdgriffith$elm_ui$Element$text('Visualization of Classical ')),
+					A2(
+					$mdgriffith$elm_ui$Element$el,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$Font$size(45),
+							$mdgriffith$elm_ui$Element$centerX
+						]),
+					$mdgriffith$elm_ui$Element$text('Graph Theory Problems')),
+					A2(
+					$mdgriffith$elm_ui$Element$paragraph,
+					_List_fromArray(
+						[$mdgriffith$elm_ui$Element$centerX]),
+					_List_fromArray(
+						[
+							A2(
+							$mdgriffith$elm_ui$Element$el,
+							_List_fromArray(
+								[
+									$mdgriffith$elm_ui$Element$alignLeft,
+									$mdgriffith$elm_ui$Element$Font$size(40)
+								]),
+							$mdgriffith$elm_ui$Element$text(capitalT)),
+							$mdgriffith$elm_ui$Element$text(aboutText),
+							$mdgriffith$elm_ui$Element$text(aim)
+						]))
+				]));
+	});
+var $author$project$Main$acknowledgement = F2(
+	function (width, height) {
+		var thanks = '\n            This project would not have been possible without the\n            the help, aid and advice of friends and family.\n            ';
+		var sofiat = '\n            I would like to thank my supervisor Sofiat for giving me a\n            wonderful opportunity to explore the topics of Graph Theory.  Her\n            constant support and guidance throughout the project was\n            detrimental in building the app.\n            ';
+		var shrey = '\n            Finaly, I would like to thank my friend Shrey for guiding me and introducing\n            me to the Elm programming language.\n            ';
+		var father = '\n            I would also like to thank my father for encouraging, believing and\n            supporting me constantly in both the good and bad days.\n            ';
+		return A2(
+			$mdgriffith$elm_ui$Element$column,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$Font$color(
+					A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
+					$mdgriffith$elm_ui$Element$Font$heavy,
+					A2($mdgriffith$elm_ui$Element$spacingXY, 10, 15),
+					A2($mdgriffith$elm_ui$Element$paddingXY, 30, 50),
+					$mdgriffith$elm_ui$Element$width(
+					A2(
+						$mdgriffith$elm_ui$Element$maximum,
+						$elm$core$Basics$round(width),
+						$mdgriffith$elm_ui$Element$fill)),
+					$mdgriffith$elm_ui$Element$height(
+					A2($mdgriffith$elm_ui$Element$minimum, height, $mdgriffith$elm_ui$Element$fill)),
+					$mdgriffith$elm_ui$Element$Border$rounded(10),
+					$mdgriffith$elm_ui$Element$paddingEach(
+					{bottom: 50, left: 10, right: 10, top: 10})
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$mdgriffith$elm_ui$Element$el,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$Font$size(30),
+							$mdgriffith$elm_ui$Element$centerX
+						]),
+					$mdgriffith$elm_ui$Element$text('Acknowledgement')),
+					A2(
+					$mdgriffith$elm_ui$Element$paragraph,
+					_List_fromArray(
+						[$mdgriffith$elm_ui$Element$centerX]),
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$text(sofiat)
+						])),
+					A2(
+					$mdgriffith$elm_ui$Element$paragraph,
+					_List_fromArray(
+						[$mdgriffith$elm_ui$Element$centerX]),
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$text(father)
+						])),
+					A2(
+					$mdgriffith$elm_ui$Element$paragraph,
+					_List_fromArray(
+						[$mdgriffith$elm_ui$Element$centerX]),
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$text(shrey)
+						])),
+					A2(
+					$mdgriffith$elm_ui$Element$paragraph,
+					_List_fromArray(
+						[$mdgriffith$elm_ui$Element$centerX]),
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$text(thanks)
+						]))
+				]));
+	});
+var $mdgriffith$elm_ui$Internal$Model$Right = {$: 'Right'};
+var $mdgriffith$elm_ui$Element$alignRight = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$Right);
+var $mdgriffith$elm_ui$Internal$Model$AlignY = function (a) {
+	return {$: 'AlignY', a: a};
+};
+var $mdgriffith$elm_ui$Internal$Model$CenterY = {$: 'CenterY'};
+var $mdgriffith$elm_ui$Element$centerY = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$CenterY);
+var $mdgriffith$elm_ui$Internal$Flag$borderColor = $mdgriffith$elm_ui$Internal$Flag$flag(28);
+var $mdgriffith$elm_ui$Element$Border$color = function (clr) {
+	return A2(
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$borderColor,
+		A3(
+			$mdgriffith$elm_ui$Internal$Model$Colored,
+			'bc-' + $mdgriffith$elm_ui$Internal$Model$formatColorClass(clr),
+			'border-color',
+			clr));
+};
+var $author$project$Main$emoji = F2(
+	function (width, height) {
+		return A2(
+			$mdgriffith$elm_ui$Element$column,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$Font$color(
+					A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
+					$mdgriffith$elm_ui$Element$Font$heavy,
+					A2($mdgriffith$elm_ui$Element$spacingXY, 10, 15),
+					$mdgriffith$elm_ui$Element$width(
+					A2($mdgriffith$elm_ui$Element$maximum, width - 1, $mdgriffith$elm_ui$Element$fill)),
+					$mdgriffith$elm_ui$Element$height(
+					A2($mdgriffith$elm_ui$Element$minimum, height * 2, $mdgriffith$elm_ui$Element$fill)),
+					$mdgriffith$elm_ui$Element$Border$rounded(20),
+					$mdgriffith$elm_ui$Element$alignLeft,
+					$mdgriffith$elm_ui$Element$centerY
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$mdgriffith$elm_ui$Element$el,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$Font$size(250),
+							$mdgriffith$elm_ui$Element$centerY
+						]),
+					$mdgriffith$elm_ui$Element$text(' \uD83D\uDE4F'))
+				]));
+	});
 var $author$project$Main$introFatma = F2(
 	function (width, height) {
-		var fatmasIntro = '\n            I am a third year Software Engineering student in University\n            of Glasgow. This web app was build for the as my final year\n            project. My intrests are maths and functional programming.\n            ';
+		var fatmasIntro = '\n            I am a fourth year Software Engineering student in University\n            of Glasgow. This web app was built for the as my final year\n            project. My intrests are maths, functional programming and drawing.\n            ';
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
@@ -15261,8 +15769,6 @@ var $author$project$Main$introFatma = F2(
 						]))
 				]));
 	});
-var $mdgriffith$elm_ui$Internal$Model$Right = {$: 'Right'};
-var $mdgriffith$elm_ui$Element$alignRight = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$Right);
 var $author$project$Main$introSuperVisor = F2(
 	function (width, height) {
 		var intro = '\n             Olaosebikan is a Lecturer in Algorithms and Complexity in the\n            School of Computing Science at the University of Glasgow. She has a\n            PhD in Computing Science from the University of Glasgow, Scotland;\n            an MSc in Mathematical Sciences from the African Institute for\n            Mathematical Sciences (AIMS), Ghana; and a BSc in Mathematics from\n            the University of Ibadan, Nigeria.  In her spare time she finds\n            myself reflecting on how best to inspire and pass on computing\n            skills to young Africans in STEM, with the hope that they can also\n            grow to become creative thinkers.  ';
@@ -15279,8 +15785,7 @@ var $author$project$Main$introSuperVisor = F2(
 					A2($mdgriffith$elm_ui$Element$maximum, width, $mdgriffith$elm_ui$Element$fill)),
 					$mdgriffith$elm_ui$Element$height(
 					A2($mdgriffith$elm_ui$Element$minimum, height, $mdgriffith$elm_ui$Element$fill)),
-					$mdgriffith$elm_ui$Element$Border$rounded(10),
-					$mdgriffith$elm_ui$Element$alignRight
+					$mdgriffith$elm_ui$Element$Border$rounded(10)
 				]),
 			_List_fromArray(
 				[
@@ -15412,7 +15917,8 @@ var $author$project$Main$photoGraph = F2(
 						_List_fromArray(
 							[
 								$mdgriffith$elm_ui$Element$width(
-								A2($mdgriffith$elm_ui$Element$maximum, 400, $mdgriffith$elm_ui$Element$fill))
+								A2($mdgriffith$elm_ui$Element$maximum, 400, $mdgriffith$elm_ui$Element$fill)),
+								$mdgriffith$elm_ui$Element$Border$rounded(200)
 							]),
 						{description: '', src: 'images/fatma.jpeg'}))
 				]));
@@ -15450,22 +15956,40 @@ var $author$project$Main$photoGraphSuperVisor = F2(
 						_List_fromArray(
 							[
 								$mdgriffith$elm_ui$Element$width(
-								A2($mdgriffith$elm_ui$Element$maximum, 400, $mdgriffith$elm_ui$Element$fill))
+								A2($mdgriffith$elm_ui$Element$maximum, 400, $mdgriffith$elm_ui$Element$fill)),
+								$mdgriffith$elm_ui$Element$height(
+								A2($mdgriffith$elm_ui$Element$maximum, 380, $mdgriffith$elm_ui$Element$fill))
 							]),
 						{description: '', src: 'images/sofiat.jpg'}))
 				]));
 	});
+var $mdgriffith$elm_ui$Internal$Flag$overflow = $mdgriffith$elm_ui$Internal$Flag$flag(20);
+var $mdgriffith$elm_ui$Element$scrollbarY = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$overflow, $mdgriffith$elm_ui$Internal$Style$classes.scrollbarsY);
 var $author$project$Main$aboutPage = F2(
 	function (widthIn, heightIn) {
 		var width = (widthIn / 3) | 0;
 		var height = (heightIn / 4) | 0;
+		var project = A2(
+			$mdgriffith$elm_ui$Element$row,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$Border$rounded(40),
+					$mdgriffith$elm_ui$Element$Border$color(
+					A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
+					$mdgriffith$elm_ui$Element$centerX
+				]),
+			_List_fromArray(
+				[
+					A2($author$project$Main$aboutProject, width, height)
+				]));
 		var superVisor = A2(
 			$mdgriffith$elm_ui$Element$row,
 			_List_fromArray(
 				[
 					$mdgriffith$elm_ui$Element$Border$rounded(40),
 					$mdgriffith$elm_ui$Element$Border$color(
-					A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1))
+					A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
+					$mdgriffith$elm_ui$Element$alignRight
 				]),
 			_List_fromArray(
 				[
@@ -15478,18 +16002,42 @@ var $author$project$Main$aboutPage = F2(
 				[
 					$mdgriffith$elm_ui$Element$Border$rounded(40),
 					$mdgriffith$elm_ui$Element$Border$color(
-					A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1))
+					A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
+					$mdgriffith$elm_ui$Element$alignLeft
 				]),
 			_List_fromArray(
 				[
 					A2($author$project$Main$introFatma, width, height),
 					A2($author$project$Main$photoGraph, widthIn - width, height)
 				]));
+		var acknowledge = A2(
+			$mdgriffith$elm_ui$Element$row,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$Border$rounded(40),
+					$mdgriffith$elm_ui$Element$Border$color(
+					A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
+					$mdgriffith$elm_ui$Element$alignLeft
+				]),
+			_List_fromArray(
+				[
+					A2($author$project$Main$acknowledgement, width, height),
+					A2($author$project$Main$emoji, width, height)
+				]));
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
-			_List_Nil,
 			_List_fromArray(
-				[fatmasDetails, superVisor]));
+				[
+					A2($mdgriffith$elm_ui$Element$spacingXY, 40, 50),
+					$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill),
+					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+					$mdgriffith$elm_ui$Element$padding(40),
+					$mdgriffith$elm_ui$Element$scrollbarY,
+					$mdgriffith$elm_ui$Element$centerX,
+					$mdgriffith$elm_ui$Element$centerY
+				]),
+			_List_fromArray(
+				[project, fatmasDetails, superVisor, acknowledge]));
 	});
 var $author$project$Main$displayColumn = function (svgHtml) {
 	return A2(
@@ -15893,9 +16441,6 @@ var $author$project$Explanation$howToColor = function (deviceType) {
 			$mdgriffith$elm_ui$Element$text('\n      no two adjacent vertices are colored the same. For if they are, the\n      edges connecting them will be displayed differently to let you know of the mistake.\n      ')
 		]);
 };
-var $mdgriffith$elm_ui$Internal$Model$AlignY = function (a) {
-	return {$: 'AlignY', a: a};
-};
 var $mdgriffith$elm_ui$Internal$Model$Bottom = {$: 'Bottom'};
 var $mdgriffith$elm_ui$Element$alignBottom = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$Bottom);
 var $lemol$ant_design_icons_elm$Ant$Icons$Svg$InfoCircleOutlined$viewWithAttributes = function (attributes) {
@@ -16289,7 +16834,32 @@ var $author$project$Graph$seperateEdges = function (g) {
 		g.edges);
 	return _Utils_Tuple2(specialEdges, normalEdges);
 };
-var $author$project$Explanation$vertexCoverExplanation = '\n   Minimum Vertex cover of a graph is the minimum amount of vertices such that,\n   all the edges in the graph must have one of such vertices as at least one of\n   their endpoints.\n   ';
+var $author$project$Buttons$tryDifferent = function () {
+	var theButton = A2(
+		$mdgriffith$elm_ui$Element$Input$button,
+		_List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$Border$rounded(100),
+				$mdgriffith$elm_ui$Element$centerX
+			]),
+		{
+			label: $lemol$ant_design_icons_elm_ui$Ant$Icons$forwardOutlined(
+				_List_fromArray(
+					[
+						$lemol$ant_design_icons_elm_ui$Ant$Icon$width(50),
+						$lemol$ant_design_icons_elm_ui$Ant$Icon$height(50)
+					])),
+			onPress: $elm$core$Maybe$Just($author$project$Messages$NextAnimation)
+		});
+	return A2($author$project$Buttons$buttonWrap, 'Try a different task', theButton);
+}();
+var $author$project$VertexCover$vertexButtons = A2(
+	$mdgriffith$elm_ui$Element$row,
+	_List_fromArray(
+		[$mdgriffith$elm_ui$Element$centerX]),
+	_List_fromArray(
+		[$author$project$Buttons$tryDifferent]));
+var $author$project$Explanation$vertexCoverExplanation = '\n   Minimum Vertex cover of a graph is the minimum amount of vertices such that,\n   all the edges in the graph must have one of such vertices as one of\n   their endpoints.\n   ';
 var $author$project$VertexCover$explanationCover = F3(
 	function (display, helpStatus, displaySize) {
 		var graph = function () {
@@ -16455,10 +17025,211 @@ var $author$project$VertexCover$explanationCover = F3(
 							$mdgriffith$elm_ui$Element$text(' edges more to be covered!')
 						]))),
 					helpStatus ? $author$project$Buttons$helpParagraph($author$project$Buttons$VertexCoverHelp) : $mdgriffith$elm_ui$Element$none,
+					$author$project$VertexCover$vertexButtons,
 					A2($author$project$Buttons$lowerNavigation, 'Graph Coloring', 'Tree Width')
 				]));
 	});
+var $lemol$ant_design_icons_elm$Ant$Icons$Svg$CheckOutlined$viewWithAttributes = function (attributes) {
+	return A2(
+		$elm$svg$Svg$svg,
+		_Utils_ap(
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$viewBox('64 64 896 896')
+				]),
+			attributes),
+		_List_fromArray(
+			[
+				A2(
+				$elm$svg$Svg$path,
+				_List_fromArray(
+					[
+						$elm$svg$Svg$Attributes$d('M912 190h-69.9c-9.8 0-19.1 4.5-25.1 12.2L404.7 724.5 207 474a32 32 0 00-25.1-12.2H112c-6.7 0-10.4 7.7-6.3 12.9l273.9 347c12.8 16.2 37.4 16.2 50.3 0l488.4-618.9c4.1-5.1.4-12.8-6.3-12.8z')
+					]),
+				_List_Nil)
+			]));
+};
+var $lemol$ant_design_icons_elm$Ant$Icons$Svg$checkOutlined = $lemol$ant_design_icons_elm$Ant$Icons$Svg$CheckOutlined$viewWithAttributes;
+var $lemol$ant_design_icons_elm_ui$Ant$Icons$checkOutlined = function (attrs) {
+	return A2($lemol$ant_design_icons_elm_ui$Ant$Icon$icon, attrs, $lemol$ant_design_icons_elm$Ant$Icons$Svg$checkOutlined);
+};
+var $author$project$Buttons$isoCheckButton = A2(
+	$author$project$Buttons$buttonWrap,
+	'Check your Choice',
+	A2(
+		$mdgriffith$elm_ui$Element$Input$button,
+		_List_fromArray(
+			[$mdgriffith$elm_ui$Element$centerX]),
+		{
+			label: $lemol$ant_design_icons_elm_ui$Ant$Icons$checkOutlined(
+				_List_fromArray(
+					[
+						$lemol$ant_design_icons_elm_ui$Ant$Icon$width(70),
+						$lemol$ant_design_icons_elm_ui$Ant$Icon$height(50)
+					])),
+			onPress: $elm$core$Maybe$Just($author$project$Messages$IsoCheck)
+		}));
+var $author$project$Messages$IsoReset = {$: 'IsoReset'};
+var $author$project$Buttons$isoResetButton = A2(
+	$author$project$Buttons$buttonWrap,
+	'Start Over',
+	A2(
+		$mdgriffith$elm_ui$Element$Input$button,
+		_List_fromArray(
+			[$mdgriffith$elm_ui$Element$centerX]),
+		{
+			label: $lemol$ant_design_icons_elm_ui$Ant$Icons$rollbackOutlined(
+				_List_fromArray(
+					[
+						$lemol$ant_design_icons_elm_ui$Ant$Icon$width(70),
+						$lemol$ant_design_icons_elm_ui$Ant$Icon$height(50)
+					])),
+			onPress: $elm$core$Maybe$Just($author$project$Messages$IsoReset)
+		}));
+var $author$project$Buttons$taskButton = function (status) {
+	var theButton = A2(
+		$mdgriffith$elm_ui$Element$Input$button,
+		_List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$Border$rounded(100),
+				$mdgriffith$elm_ui$Element$centerX
+			]),
+		{
+			label: $lemol$ant_design_icons_elm_ui$Ant$Icons$forwardOutlined(
+				_List_fromArray(
+					[
+						$lemol$ant_design_icons_elm_ui$Ant$Icon$width(40),
+						$lemol$ant_design_icons_elm_ui$Ant$Icon$height(40)
+					])),
+			onPress: $elm$core$Maybe$Just($author$project$Messages$NextAnimation)
+		});
+	var text = status ? 'Previous Animation' : 'Next Task';
+	return A2($author$project$Buttons$buttonWrap, text, theButton);
+};
+var $author$project$Isomorphism$gameButtons = function (displaySize) {
+	return A2(
+		$mdgriffith$elm_ui$Element$row,
+		_List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$centerX,
+				$mdgriffith$elm_ui$Element$spacing((displaySize.width / 10) | 0)
+			]),
+		_List_fromArray(
+			[
+				$author$project$Buttons$isoCheckButton,
+				$author$project$Buttons$isoResetButton,
+				$author$project$Buttons$taskButton(true)
+			]));
+};
+var $author$project$Isomorphism$gameStatusExplanation = function (game) {
+	var youAreWrong = '\n         It\'s incorrect! Maybe, go back to the explanation.\n         ';
+	var youAreRight = '\n         Yes it\'s correct! Well done.\n         ';
+	var makeAChoice = '\n         Make a choice by clicking on one of the boxed graphs and then\n         press the check button.\n         ';
+	var choiceMadeSecond = '\n         You have chosen the second graph.\n         ';
+	var choiceMadeFirst = '\n         You have chosen the first graph.\n         ';
+	var choiceText = function () {
+		var _v5 = _Utils_Tuple2(game.choiceState, game.gameState);
+		switch (_v5.a.$) {
+			case 'NoChoice':
+				var _v6 = _v5.a;
+				return $mdgriffith$elm_ui$Element$text(makeAChoice);
+			case 'FirstGraph':
+				var _v7 = _v5.a;
+				return $mdgriffith$elm_ui$Element$text(choiceMadeFirst);
+			default:
+				var _v8 = _v5.a;
+				return $mdgriffith$elm_ui$Element$text(choiceMadeSecond);
+		}
+	}();
+	var checkText = function () {
+		var _v0 = _Utils_Tuple2(game.choiceState, game.gameState);
+		_v0$2:
+		while (true) {
+			if (_v0.b.$ === 'Check') {
+				switch (_v0.a.$) {
+					case 'FirstGraph':
+						var _v1 = _v0.a;
+						var _v2 = _v0.b;
+						return $mdgriffith$elm_ui$Element$text(youAreRight);
+					case 'SecondGraph':
+						var _v3 = _v0.a;
+						var _v4 = _v0.b;
+						return $mdgriffith$elm_ui$Element$text(youAreWrong);
+					default:
+						break _v0$2;
+				}
+			} else {
+				break _v0$2;
+			}
+		}
+		return $mdgriffith$elm_ui$Element$none;
+	}();
+	return _List_fromArray(
+		[
+			_List_fromArray(
+			[choiceText]),
+			_List_fromArray(
+			[checkText])
+		]);
+};
 var $author$project$Explanation$isomorphismExplanation = '\n   Two graphs G1 and G2 are isomorphic if there is a one-one correspondence\n   between the vertices of G1 and G2 such that the number of edges between any\n   two vertices in G1 is equal to the number of edges joining the corresponding\n   vertices of G2. \n   Although the graphs may appear to be different in appearance and in\n   the labeling of the nodes and edges. But the way one vertex is connected to\n   another in one graph is same as another. \n\n   The animation shown here takes a graph and changes the positions of the\n   vertices without changing the edges which still connect the same vertices\n   throughout the motion. In the animation if there is an edge between any two\n   vertices in a graph, then there is a edge between the corresponding vertices\n   in the other graphs as well.\n   ';
+var $author$project$Isomorphism$explanationGame = F3(
+	function (game, helpStatus, displaySize) {
+		var emph = $author$project$FontSize$emphForScreen(displaySize.deviceType);
+		return A2(
+			$mdgriffith$elm_ui$Element$column,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$Font$color(
+					A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
+					$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+					$mdgriffith$elm_ui$Element$spacing(20),
+					$mdgriffith$elm_ui$Element$Background$color(
+					A3($mdgriffith$elm_ui$Element$rgb, 0.2, 0.2, 0.2)),
+					$mdgriffith$elm_ui$Element$width(
+					A2($mdgriffith$elm_ui$Element$maximum, displaySize.width, $mdgriffith$elm_ui$Element$fill))
+				]),
+			_Utils_ap(
+				_List_fromArray(
+					[
+						A2(
+						$mdgriffith$elm_ui$Element$el,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$Font$size(
+								A2($author$project$FontSize$getFontSize, $author$project$FontSize$Head, displaySize.deviceType)),
+								$mdgriffith$elm_ui$Element$Font$heavy
+							]),
+						$mdgriffith$elm_ui$Element$text('Graph Isomorphism')),
+						A2(
+						$mdgriffith$elm_ui$Element$paragraph,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$spacing(8)
+							]),
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$text($author$project$Explanation$isomorphismExplanation)
+							])),
+						A2(
+						$mdgriffith$elm_ui$Element$paragraph,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$mdgriffith$elm_ui$Element$text('\n                     Choose which graph is isomorphic to the first one.\n                     ')
+							])),
+						$author$project$Isomorphism$gameButtons(displaySize)
+					]),
+				_Utils_ap(
+					A2(
+						$elm$core$List$map,
+						$mdgriffith$elm_ui$Element$paragraph(_List_Nil),
+						$author$project$Isomorphism$gameStatusExplanation(game)),
+					_List_fromArray(
+						[
+							A2($author$project$Buttons$lowerNavigation, 'Tree Width', 'Max Cut')
+						]))));
+	});
 var $author$project$Buttons$IsomorphismHelp = {$: 'IsomorphismHelp'};
 var $author$project$Graph$isVertexInEdges = F2(
 	function (v, es) {
@@ -16702,10 +17473,11 @@ var $author$project$Isomorphism$mediaButtons = F2(
 			_List_fromArray(
 				[
 					$author$project$Buttons$playButton(shapeTransition.animationOn),
-					$author$project$Buttons$resetButton
+					$author$project$Buttons$resetButton,
+					$author$project$Buttons$taskButton(false)
 				]));
 	});
-var $author$project$Isomorphism$explanationOne = F3(
+var $author$project$Isomorphism$explanationTransition = F3(
 	function (shapeTransition, helpStatus, displaySize) {
 		var emph = $author$project$FontSize$emphForScreen(displaySize.deviceType);
 		return A2(
@@ -16773,6 +17545,15 @@ var $author$project$Isomorphism$explanationOne = F3(
 						[
 							A2($author$project$Buttons$lowerNavigation, 'Tree Width', 'Max Cut')
 						]))));
+	});
+var $author$project$Isomorphism$explanationOne = F3(
+	function (isoTopic, helpStatus, displaySize) {
+		var _v0 = isoTopic.topicState;
+		if (_v0.$ === 'Transition') {
+			return A3($author$project$Isomorphism$explanationTransition, isoTopic.shapeTransition, helpStatus, displaySize);
+		} else {
+			return A3($author$project$Isomorphism$explanationGame, isoTopic.isomorphicGame, helpStatus, displaySize);
+		}
 	});
 var $author$project$Buttons$MaxCutHelp = {$: 'MaxCutHelp'};
 var $author$project$MaxkCut$buttonWrap = F2(
@@ -17321,8 +18102,6 @@ var $author$project$Messages$GotoCover = {$: 'GotoCover'};
 var $author$project$Messages$GotoIsomorphism = {$: 'GotoIsomorphism'};
 var $author$project$Messages$GotoMaxkCut = {$: 'GotoMaxkCut'};
 var $author$project$Messages$GotoTreeWidth = {$: 'GotoTreeWidth'};
-var $mdgriffith$elm_ui$Internal$Model$CenterY = {$: 'CenterY'};
-var $mdgriffith$elm_ui$Element$centerY = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$CenterY);
 var $author$project$Main$displayMiniGraph = function (svgHtml) {
 	return A2(
 		$mdgriffith$elm_ui$Element$el,
@@ -17814,6 +18593,149 @@ var $author$project$Main$homePage = function (height) {
 						[$author$project$Messages$GotoCover, $author$project$Messages$GotoTreeWidth])))
 			]));
 };
+var $elm$svg$Svg$Attributes$opacity = _VirtualDom_attribute('opacity');
+var $elm$svg$Svg$rect = $elm$svg$Svg$trustedNode('rect');
+var $author$project$Isomorphism$drawSquares = F2(
+	function (choice, gameState) {
+		var squareTwoColor = function () {
+			var _v7 = _Utils_Tuple2(choice, gameState);
+			_v7$2:
+			while (true) {
+				if (_v7.b.$ === 'Check') {
+					switch (_v7.a.$) {
+						case 'FirstGraph':
+							var _v8 = _v7.a;
+							var _v9 = _v7.b;
+							return 'red';
+						case 'SecondGraph':
+							var _v10 = _v7.a;
+							var _v11 = _v7.b;
+							return 'red';
+						default:
+							break _v7$2;
+					}
+				} else {
+					break _v7$2;
+				}
+			}
+			return 'gray';
+		}();
+		var squareOneColor = function () {
+			var _v2 = _Utils_Tuple2(choice, gameState);
+			_v2$2:
+			while (true) {
+				if (_v2.b.$ === 'Check') {
+					switch (_v2.a.$) {
+						case 'FirstGraph':
+							var _v3 = _v2.a;
+							var _v4 = _v2.b;
+							return 'green';
+						case 'SecondGraph':
+							var _v5 = _v2.a;
+							var _v6 = _v2.b;
+							return 'green';
+						default:
+							break _v2$2;
+					}
+				} else {
+					break _v2$2;
+				}
+			}
+			return 'gray';
+		}();
+		var circleTwoColor = function () {
+			if (choice.$ === 'SecondGraph') {
+				return 'blue';
+			} else {
+				return 'gray';
+			}
+		}();
+		var circleOneColor = function () {
+			if (choice.$ === 'FirstGraph') {
+				return 'blue';
+			} else {
+				return 'gray';
+			}
+		}();
+		return _List_fromArray(
+			[
+				A2(
+				$elm$svg$Svg$rect,
+				_List_fromArray(
+					[
+						$elm$svg$Svg$Attributes$x('220'),
+						$elm$svg$Svg$Attributes$y('30'),
+						$elm$svg$Svg$Attributes$width('155'),
+						$elm$svg$Svg$Attributes$height('160'),
+						$elm$svg$Svg$Attributes$opacity('0.2'),
+						$elm$svg$Svg$Attributes$stroke('white'),
+						$elm$svg$Svg$Events$onClick($author$project$Messages$IsoChoiceOne),
+						$elm$svg$Svg$Attributes$fill(squareOneColor)
+					]),
+				_List_Nil),
+				A2(
+				$elm$svg$Svg$rect,
+				_List_fromArray(
+					[
+						$elm$svg$Svg$Attributes$x('220'),
+						$elm$svg$Svg$Attributes$y('230'),
+						$elm$svg$Svg$Attributes$width('155'),
+						$elm$svg$Svg$Attributes$height('160'),
+						$elm$svg$Svg$Attributes$opacity('0.2'),
+						$elm$svg$Svg$Attributes$stroke('white'),
+						$elm$svg$Svg$Events$onClick($author$project$Messages$IsoChoiceTwo),
+						$elm$svg$Svg$Attributes$fill(squareTwoColor)
+					]),
+				_List_Nil),
+				A2(
+				$elm$svg$Svg$circle,
+				_List_fromArray(
+					[
+						$elm$svg$Svg$Attributes$cx('229'),
+						$elm$svg$Svg$Attributes$cy('180'),
+						$elm$svg$Svg$Attributes$r('5'),
+						$elm$svg$Svg$Attributes$stroke('white'),
+						$elm$svg$Svg$Attributes$opacity('0.2'),
+						$elm$svg$Svg$Attributes$fill(circleOneColor),
+						$elm$svg$Svg$Events$onClick($author$project$Messages$IsoChoiceOne)
+					]),
+				_List_Nil),
+				A2(
+				$elm$svg$Svg$circle,
+				_List_fromArray(
+					[
+						$elm$svg$Svg$Attributes$cx('229'),
+						$elm$svg$Svg$Attributes$cy('380'),
+						$elm$svg$Svg$Attributes$r('5'),
+						$elm$svg$Svg$Attributes$stroke('white'),
+						$elm$svg$Svg$Attributes$opacity('0.2'),
+						$elm$svg$Svg$Attributes$fill(circleTwoColor),
+						$elm$svg$Svg$Events$onClick($author$project$Messages$IsoChoiceTwo)
+					]),
+				_List_Nil)
+			]);
+	});
+var $author$project$Isomorphism$isomorphicDisplay = function (topic) {
+	var _v0 = topic.topicState;
+	if (_v0.$ === 'Transition') {
+		return $author$project$Graph$displaySvg(
+			_Utils_ap(
+				$author$project$Isomorphism$drawGraph(topic.shapeTransition.graphA),
+				$author$project$Isomorphism$drawGraph(topic.shapeTransition.graphB)));
+	} else {
+		var game = topic.isomorphicGame;
+		var gameState = game.gameState;
+		var choice = game.choiceState;
+		return $author$project$Graph$displaySvg(
+			_Utils_ap(
+				$author$project$Isomorphism$drawGraph(topic.isomorphicGame.transition.graph),
+				_Utils_ap(
+					A2($author$project$Isomorphism$drawSquares, choice, gameState),
+					_Utils_ap(
+						$author$project$Isomorphism$drawGraph(topic.isomorphicGame.graphB),
+						$author$project$Isomorphism$drawGraph(topic.isomorphicGame.graphC)))));
+	}
+};
 var $author$project$VertexCover$drawGraphForCover = function (g) {
 	var selectedVertices = A2(
 		$elm$core$List$filter,
@@ -17845,17 +18767,9 @@ var $author$project$VertexCover$paneFour = function (display) {
 			$author$project$VertexCover$drawGraphForCover(display.graphB));
 	}
 };
-var $author$project$Isomorphism$paneOne = F2(
-	function (graphA, graphB) {
-		return $author$project$Graph$displaySvg(
-			_Utils_ap(
-				$author$project$Isomorphism$drawGraph(graphA),
-				$author$project$Isomorphism$drawGraph(graphB)));
-	});
 var $author$project$Messages$ColoringSelectColor = function (a) {
 	return {$: 'ColoringSelectColor', a: a};
 };
-var $elm$svg$Svg$rect = $elm$svg$Svg$trustedNode('rect');
 var $author$project$GraphColoring$makeSquare = F3(
 	function (pos, size, color) {
 		return A2(
@@ -18835,15 +19749,15 @@ var $author$project$Main$viewTopic = F2(
 		var _v0 = model.topic;
 		switch (_v0.$) {
 			case 'Isomorphic':
-				var shapeTransition = _v0.a;
+				var isoTopic = _v0.a;
 				return A2(
 					$author$project$Main$showTopic,
 					displaySize,
 					_List_fromArray(
 						[
 							$author$project$Main$displayColumn(
-							A2($author$project$Isomorphism$paneOne, shapeTransition.graphA, shapeTransition.graphB)),
-							A3($author$project$Isomorphism$explanationOne, shapeTransition, model.helpStatus, explanationSize)
+							$author$project$Isomorphism$isomorphicDisplay(isoTopic)),
+							A3($author$project$Isomorphism$explanationOne, isoTopic, model.helpStatus, explanationSize)
 						]));
 			case 'MaxCut':
 				var maxCutTrans = _v0.a;

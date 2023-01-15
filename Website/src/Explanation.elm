@@ -99,7 +99,7 @@ howToColor deviceType =
 vertexCoverExplanation =
    """
    Minimum Vertex cover of a graph is the minimum amount of vertices such that,
-   all the edges in the graph must have one of such vertices as at least one of
+   all the edges in the graph must have one of such vertices as one of
    their endpoints.
    """
 

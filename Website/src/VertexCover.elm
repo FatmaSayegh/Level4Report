@@ -281,8 +281,13 @@ explanationCover display helpStatus displaySize =
                             ]
 
          ,  (if helpStatus == True then (helpParagraph VertexCoverHelp) else ELE.none)
+         , vertexButtons
           , lowerNavigation "Graph Coloring" "Tree Width"
        ]
+vertexButtons =
+   ELE.row
+      [ELE.centerX]
+      [ tryDifferent ]
 
 drawGraphForCover g =
     let

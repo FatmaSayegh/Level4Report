@@ -1,6 +1,6 @@
 module Isomorphism exposing (..)
 
-import Graph exposing (Graph, linearGrid, parametricPolygon, Grid, makeGraph, Gtype(..), ShapeTransition, Token(..))
+import Graph exposing (Graph, InPlaceTransition, linearGrid, parametricPolygon, Grid, makeGraph, Gtype(..), ShapeTransition, Token(..))
 import Math.Vector3 exposing (..)
 import Messages exposing (Msg(..))
 import Element as ELE
@@ -10,6 +10,9 @@ import Explanation exposing (..)
 import Buttons exposing (..)
 import String.Format
 import Html as H exposing (div, h1, p, text)
+import Svg as S exposing (..)
+import Svg.Attributes as SA exposing (..)
+import Svg.Events as SE exposing (..)
 import FontSize exposing
                ( getFontSize
                , FontSize(..)
@@ -26,6 +29,24 @@ miniIsoGraph =
       |> drawGraph
       |> Graph.displaySvg
 
+type IsoState =
+   Transition
+   | Game
+
+type alias IsomorphicTopic =
+   { shapeTransition : ShapeTransition
+   , isomorphicGame : IsomorphicGame
+   , topicState : IsoState
+   }
+
+isomorphicTopic : IsomorphicTopic
+isomorphicTopic =
+   { shapeTransition = isomorphicTransition
+   , isomorphicGame = isomorphicGame
+   , topicState = Transition
+   }
+      
+
 isomorphicTransition : ShapeTransition
 isomorphicTransition =
     let
@@ -39,6 +60,185 @@ isomorphicTransition =
         , specialToken = NoToken
         , time = 0.0
         }
+
+type alias IsomorphicGame =
+   { transition : InPlaceTransition
+   , graphB : Graph
+   , graphC : Graph
+   , choiceState : ChoiceState
+   , gameState : GameState
+   }
+
+type ChoiceState =   
+   NoChoice
+   | FirstGraph
+   | SecondGraph
+
+type GameState =
+   NoCheck
+   | Check
+
+inplaceTransition : InPlaceTransition
+inplaceTransition =
+   let
+      graph =
+            makeGraph (PolygonCycleDoll 4) (vec3 100 200 0) (vec3 80 80 0) (pi / 4)
+   in
+   { graph = graph
+   , backupGraph = graph
+   , grid = bipartiteGridInPlace
+   , animationOn = False
+   , time = 0.0
+   }
+
+removeFirstEdge : Graph -> Graph
+removeFirstEdge graph =
+   let
+      newEdges =
+         Maybe.withDefault [] <| List.tail graph.edges
+   in
+      { graph |
+         edges = newEdges }
+
+isomorphicGame : IsomorphicGame
+isomorphicGame =
+    let
+        initialGraph pos =
+            makeGraph (PolygonCycleDoll 4) pos (vec3 80 80 0) (pi / 4)
+
+        removedEdgeGraph =
+            Graph.morphGraph (initialGraph (vec3 300 300 0)) bipartiteGridInPlaceThird
+            |> removeFirstEdge
+         
+        
+
+    in
+    { transition = inplaceTransition
+    , graphB = Graph.morphGraph (initialGraph (vec3 300 100 0)) bipartiteGridInPlaceSecond
+    , graphC = removedEdgeGraph
+    , choiceState = NoChoice
+    , gameState = NoCheck
+    }
+
+animateIsomorphicTopic : Msg -> IsomorphicTopic -> IsomorphicTopic
+animateIsomorphicTopic msg topic =
+   case msg of
+      NextAnimation ->
+         case topic.topicState of
+            Transition ->
+               {topic | topicState = Game }
+            Game ->
+               {topic | topicState = Transition}
+      _ ->
+            
+         case topic.topicState of 
+            Transition ->
+                let
+                  shapeTransition =
+                        animateIsomorphicTransition msg topic.shapeTransition
+                in
+                {topic | shapeTransition = shapeTransition } 
+            
+            Game ->
+               let
+                  newGame =
+                     getNewGame msg topic.isomorphicGame 
+               in
+               {topic | isomorphicGame = newGame }
+            
+            
+getNewGame : Msg -> IsomorphicGame -> IsomorphicGame
+getNewGame msg game =
+   case msg of
+      IsoChoiceOne ->
+         { game | choiceState = FirstGraph 
+                , gameState = NoCheck
+                , transition = animateIsomorphicGameTrans AnimationStartOver game.transition
+                , graphB = Graph.changeGlowVertex False 1 game.graphB
+                , graphC = Graph.changeGlowVertex False 1 game.graphC
+         }
+      IsoChoiceTwo ->
+         { game | choiceState = SecondGraph
+                , gameState = NoCheck
+                , transition = animateIsomorphicGameTrans AnimationStartOver game.transition
+                , graphB = Graph.changeGlowVertex False 1 game.graphB
+                , graphC = Graph.changeGlowVertex False 1 game.graphC
+         }
+
+      IsoCheck ->
+         let
+            gameState =
+               game.gameState
+            transition =
+               game.transition
+         in
+         { game | gameState =
+                     if gameState == NoCheck  
+                        then 
+                           Check
+                        else 
+                           NoCheck
+                , transition =
+                  { transition | animationOn = if game.choiceState == NoChoice
+                                                   then
+                                                      transition.animationOn
+                                                   else
+                                                      not transition.animationOn
+                               , graph =  if game.choiceState == NoChoice
+                                             then
+                                                transition.graph
+                                             else
+                                                Graph.changeGlowVertex True 1 transition.graph
+                  }
+
+                , graphB =    if game.choiceState == NoChoice
+                              then
+                                 game.graphB
+                              else
+                              Graph.changeGlowVertex True 1 game.graphB
+
+                , graphC =    if game.choiceState == NoChoice
+                              then
+                                 game.graphC
+                              else
+                              Graph.changeGlowVertex True 1 game.graphC
+         }
+
+      IsoReset ->
+         isomorphicGame
+      _ ->
+         let
+            transition =
+               animateIsomorphicGameTrans msg game.transition
+         in
+         { game | transition = transition }
+
+-- changeGlowVertex : Bool -> Int -> Graph -> Graph
+
+animateIsomorphicGameTrans : Msg -> InPlaceTransition -> InPlaceTransition
+animateIsomorphicGameTrans msg inPlaceTran =
+   case msg of
+       TimeDelta delta ->
+           case inPlaceTran.animationOn of
+               True ->
+                   Graph.executeInPlaceShapeTransition delta inPlaceTran
+               False ->
+                   inPlaceTran
+
+--       AnimationToggle ->
+--           { inPlaceTran
+--               | animationOn = not inPlaceTran.animationOn
+--           }
+
+       AnimationStartOver ->
+           { inPlaceTran
+               | graph = inPlaceTran.backupGraph
+               , time = 0.0
+           }
+
+       _ ->
+           inPlaceTran
+      
 
 animateIsomorphicTransition : Msg -> ShapeTransition -> ShapeTransition
 animateIsomorphicTransition msg shapeTransition =
@@ -125,12 +325,67 @@ drawGraph g =
 paneOne graphA graphB =
     Graph.displaySvg ((drawGraph graphA) ++ (drawGraph graphB))
 
+-- isomorphicDisplay : IsomorphicTopic -> 
+isomorphicDisplay topic =
+   case topic.topicState of
+      Transition ->
+         Graph.displaySvg ( (drawGraph topic.shapeTransition.graphA) 
+                            ++ (drawGraph topic.shapeTransition.graphB) )
+      Game ->
+         let
+            game =
+               topic.isomorphicGame
+
+            choice = 
+               game.choiceState
+
+            gameState =
+               game.gameState
+         in
+         Graph.displaySvg ( (drawGraph topic.isomorphicGame.transition.graph) 
+                            --++ (Graph.drawCheckBoxes)
+                            ++ (drawSquares choice gameState)
+                            ++ (drawGraph topic.isomorphicGame.graphB) 
+                            ++ (drawGraph topic.isomorphicGame.graphC) 
+                          )
+
+
+
 linearGridLeft =
     linearGrid 4 (vec3 150 250 0) (vec3 0 120 0)
 
 
 linearGridRight =
     linearGrid 4 (vec3 250 250 0) (vec3 0 120 0)
+
+linearGridLeftInPlace =
+    linearGrid 4 (vec3 50 50 0) (vec3 0 120 0)
+
+
+linearGridRightInPlace =
+    linearGrid 4 (vec3 150 50 0) (vec3 0 120 0)
+--linearGridLeftInPlace =
+--    linearGrid 4 (vec3 50 150 0) (vec3 0 120 0)
+--
+--
+--linearGridRightInPlace =
+--    linearGrid 4 (vec3 150 150 0) (vec3 0 120 0)
+------------------------------------------
+
+linearGridLeftInPlaceSecond =
+    linearGrid 4 (vec3 250 50 0) (vec3 0 120 0)
+
+
+linearGridRightInPlaceSecond =
+    linearGrid 4 (vec3 350 50 0) (vec3 0 120 0)
+
+linearGridLeftInPlaceThird =
+    linearGrid 4 (vec3 250 250 0) (vec3 0 120 0)
+
+
+linearGridRightInPlaceThird =
+    linearGrid 4 (vec3 350 250 0) (vec3 0 120 0)
+
 
 
 
@@ -161,6 +416,47 @@ setOuter =
 -- This gives node 6 its vector at position left of bipartite graph
 -- What it does is that the vector on the second position on the left grid goes to 6th on the final grid
 -- Vector on the 3rd position of the left grid goes to the 8th on the final grid
+
+bipartiteGridInPlace =
+    let
+        leftTupled =
+            List.map2 (\x y -> ( x, y )) setLeft linearGridLeftInPlace
+
+        rightTupled =
+            List.map2 (\x y -> ( x, y )) setRight linearGridRightInPlace
+
+        totalGrid =
+            leftTupled ++ rightTupled
+    in
+    List.map (\( x, y ) -> y) (List.sortWith (\t1 t2 -> compare (Tuple.first t1) (Tuple.first t2)) totalGrid)
+
+bipartiteGridInPlaceSecond =
+    let
+        leftTupled =
+            List.map2 (\x y -> ( x, y )) setLeft linearGridLeftInPlaceSecond
+
+        rightTupled =
+            List.map2 (\x y -> ( x, y )) setRight linearGridRightInPlaceSecond
+
+        totalGrid =
+            leftTupled ++ rightTupled
+    in
+    List.map (\( x, y ) -> y) (List.sortWith (\t1 t2 -> compare (Tuple.first t1) (Tuple.first t2)) totalGrid)
+
+
+bipartiteGridInPlaceThird =
+    let
+        leftTupled =
+            List.map2 (\x y -> ( x, y )) setLeft linearGridLeftInPlaceThird
+
+        rightTupled =
+            List.map2 (\x y -> ( x, y )) setRight linearGridRightInPlaceThird
+
+        totalGrid =
+            leftTupled ++ rightTupled
+    in
+    List.map (\( x, y ) -> y) (List.sortWith (\t1 t2 -> compare (Tuple.first t1) (Tuple.first t2)) totalGrid)
+
 
 
 bipartiteGrid =
@@ -194,8 +490,114 @@ type ScreenSize
    | Smaller
 
 
-explanationOne : ShapeTransition -> Bool -> DisplaySize -> ELE.Element Msg
-explanationOne shapeTransition helpStatus displaySize =
+explanationOne : IsomorphicTopic -> Bool -> DisplaySize -> ELE.Element Msg
+explanationOne isoTopic helpStatus displaySize =
+   case isoTopic.topicState of
+      Transition ->
+         explanationTransition isoTopic.shapeTransition helpStatus displaySize
+      Game ->
+         explanationGame isoTopic.isomorphicGame helpStatus displaySize
+
+explanationGame :  IsomorphicGame -> Bool -> DisplaySize -> ELE.Element Msg
+explanationGame game helpStatus displaySize =
+      let
+         emph =
+            emphForScreen displaySize.deviceType
+      in
+      ELE.column
+         [ Font.color (ELE.rgb 1 1 1)
+         , ELE.height ELE.fill
+         , ELE.spacing 20
+         , Background.color <| ELE.rgb 0.2 0.2 0.2
+         , ELE.width (ELE.fill |> ELE.maximum (displaySize.width))
+         ]
+         <|
+         [  ELE.el
+               [Font.size (getFontSize Head displaySize.deviceType), Font.heavy]
+               (ELE.text "Graph Isomorphism")
+         ,  ELE.paragraph
+               [ELE.spacing 8] 
+               [ELE.text isomorphismExplanation]
+         , ELE.paragraph
+               []
+               [ ELE.text
+                     """
+                     Choose which graph is isomorphic to the first one.
+                     """
+               ]
+
+         , gameButtons displaySize
+
+         ]
+
+         ++ (List.map (ELE.paragraph [])
+               (gameStatusExplanation game))
+
+
+         ++ [ lowerNavigation "Tree Width" "Max Cut"
+            ]
+
+
+
+gameStatusExplanation : IsomorphicGame -> List (List (ELE.Element Msg))
+gameStatusExplanation game =
+   let
+      makeAChoice =
+         """
+         Make a choice by clicking on one of the boxed graphs and then
+         press the check button.
+         """
+      choiceMadeFirst =
+         """
+         You have chosen the first graph.
+         """
+      choiceMadeSecond =
+         """
+         You have chosen the second graph.
+         """
+      youAreWrong =
+         """
+         It's incorrect! Maybe, go back to the explanation.
+         """
+
+      youAreRight =
+         """
+         Yes it's correct! Well done.
+         """
+
+      choiceText =
+         case (game.choiceState, game.gameState) of
+            (NoChoice, _) ->
+               ELE.text makeAChoice
+            (FirstGraph, _) ->
+               ELE.text choiceMadeFirst 
+            (SecondGraph, _) ->
+               ELE.text choiceMadeSecond 
+
+      checkText =
+         case (game.choiceState, game.gameState) of
+            (FirstGraph, Check) ->
+               ELE.text youAreRight
+            (SecondGraph, Check) ->
+               ELE.text youAreWrong
+            (_, _) ->
+               ELE.none
+      in
+      [ [choiceText]
+      , [checkText]
+      ]
+
+gameButtons displaySize =
+   ELE.row
+      [ ELE.centerX
+      , ELE.spacing (displaySize.width//10)
+      ]
+      [ isoCheckButton
+      , isoResetButton
+      , taskButton True
+      ]
+explanationTransition : ShapeTransition -> Bool -> DisplaySize -> ELE.Element Msg
+explanationTransition shapeTransition helpStatus displaySize =
       let
          emph =
             emphForScreen displaySize.deviceType
@@ -336,4 +738,90 @@ mediaButtons shapeTransition displaySize =
       ]
       [  playButton shapeTransition.animationOn
       ,  resetButton
+      ,  taskButton False
       ]
+
+drawSquares : ChoiceState -> GameState -> List (S.Svg Msg)
+drawSquares choice gameState =
+   let
+      circleOneColor =
+         case choice of
+            FirstGraph ->
+               "blue"
+            _ ->
+               "gray"
+
+      circleTwoColor =
+         case choice of
+            SecondGraph ->
+               "blue"
+            _ ->
+               "gray"
+
+
+      squareOneColor =
+          case (choice, gameState) of
+               (FirstGraph, Check) ->
+                  "green"
+               (SecondGraph, Check) ->
+                  "green"
+               (_, _) ->
+                  "gray"
+
+      squareTwoColor =
+          case (choice, gameState) of
+               (FirstGraph, Check) ->
+                  "red"
+               (SecondGraph, Check) ->
+                  "red"
+               (_, _) ->
+                  "gray"
+
+   in
+   [
+      S.rect
+         [ SA.x "220"
+         , SA.y "30"
+         , SA.width "155"
+         , SA.height "160"
+         , SA.opacity "0.2"
+         , SA.stroke "white"
+         , SE.onClick IsoChoiceOne
+         , SA.fill squareOneColor
+         ]
+         []
+   , 
+      S.rect
+         [ SA.x "220"
+         , SA.y "230"
+         , SA.width "155"
+         , SA.height "160"
+         , SA.opacity "0.2"
+         , SA.stroke "white"
+         , SE.onClick IsoChoiceTwo
+         , SA.fill squareTwoColor
+         ]
+         []
+
+    , S.circle
+         [ SA.cx "229"
+         , SA.cy "180"
+         , SA.r "5"
+         , SA.stroke "white"
+         , SA.opacity "0.2"
+         , SA.fill circleOneColor
+         , SE.onClick IsoChoiceOne
+         ]
+         []
+
+    , S.circle
+         [ SA.cx "229"
+         , SA.cy "380"
+         , SA.r "5"
+         , SA.stroke "white"
+         , SA.opacity "0.2"
+         , SA.fill circleTwoColor
+         , SE.onClick IsoChoiceTwo
+         ]
+         []
+    ]
