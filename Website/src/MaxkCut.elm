@@ -336,6 +336,7 @@ explanationTwo maxCut helpStatus displaySize =
          --, ELE.padding 40
          , Background.color <| ELE.rgb 0.2 0.2 0.2
          , ELE.width (ELE.fill |> ELE.maximum displaySize.width)
+         , ELE.scrollbarY
          ]
          <|
          [  ELE.el

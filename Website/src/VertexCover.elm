@@ -139,6 +139,7 @@ explanationCover display helpStatus displaySize =
          , ELE.height ELE.fill
          , ELE.width (ELE.fill |> ELE.maximum displaySize.width)
          , Background.color <| ELE.rgb 0.2 0.2 0.2
+         , ELE.scrollbarY
          ]
          <|
          [  ELE.el

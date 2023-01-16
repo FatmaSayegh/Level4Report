@@ -43,6 +43,7 @@ import FontSize exposing
    , DisplaySize
    , DeviceType(..)
    , getDeviceType
+   , emphForScreen
    )
 import Buttons exposing(homeButton, aboutButton)
 
@@ -587,27 +588,56 @@ photoGraphSuperVisor width height =
 acknowledgement width height =
       let
          sofiat =
-            """
-            I would like to thank my supervisor Sofiat for giving me a
-            wonderful opportunity to explore the topics of Graph Theory.  Her
-            constant support and guidance throughout the project was
-            detrimental in building the app.
-            """
+            [ ELE.text
+                  """
+                  I would like to thank my supervisor 
+                  """
+            , (ELE.text
+                     "Sofiat")
+                  
+            , ELE.text
+                  """
+                  for giving me a
+                  wonderful opportunity to explore the topics of Graph Theory.  Her
+                  constant support and guidance throughout the project was
+                  detrimental in building the app.
+                  """
+            ]
          father =
-            """
-            I would also like to thank my father for encouraging, believing and
-            supporting me constantly in both the good and bad days.
-            """
+            [ ELE.text
+                  """
+                  I would also like to thank my 
+                  """
+             
+            , (ELE.text "father")
+
+            , ELE.text
+                  """
+                  for encouraging, believing and
+                  supporting me constantly in both the good and bad days.
+                  """
+            ]
          shrey =
-            """
-            Finaly, I would like to thank my friend Shrey for guiding me and introducing
-            me to the Elm programming language.
-            """
+            [ ELE.text
+               """
+               Finaly, I would like to thank my friend 
+               """
+            , (ELE.text "Shrey")
+            , ELE.text
+               """
+               for introducing
+               me to the Elm programming language.
+               """
+           ]
          thanks =
-            """
-            This project would not have been possible without the
-            the help, aid and advice of friends and family.
-            """
+            [ ELE.text
+               (
+                  """
+                  This project would not have been possible without the
+                  the help, aid and advice of friends and family.
+                  """
+               )
+           ]
       in
       ELE.column
          [ Font.color <| ELE.rgb 1 1 1
@@ -632,26 +662,18 @@ acknowledgement width height =
                   (ELE.text "Acknowledgement")
             , ELE.paragraph [ ELE.centerX
                             ] 
-                           [ ELE.text
-                                 sofiat
-                           ]
+                            sofiat
             , ELE.paragraph [ ELE.centerX
                             ] 
-                           [ ELE.text
-                                 father
-                           ]
+                            father
 
             , ELE.paragraph [ ELE.centerX
                             ] 
-                           [ ELE.text
-                                 shrey
-                           ]
+                            shrey
 
             , ELE.paragraph [ ELE.centerX
                             ] 
-                           [ ELE.text
-                                 thanks
-                           ]
+                            thanks
             ]
 
 aboutProject width height =
@@ -688,6 +710,7 @@ aboutProject width height =
          , ELE.width (ELE.fill |> ELE.maximum (width*2))
          , ELE.height (ELE.fill |> ELE.minimum (height))
          , Border.rounded 10
+         , ELE.centerY
          , ELE.centerX
          , ELE.paddingEach 
                { top = 10, 
@@ -717,6 +740,44 @@ aboutProject width height =
                            ]
 
             ]
+         --<| [ ELE.paragraph [ Font.size 30
+         --                   , ELE.centerX
+         --                   ]
+         --                 [ ELE.el 
+         --                     [ Font.color <| ELE.rgb 0.5 0.9 0.7
+         --                     , Font.size 40
+         --                     , ELE.centerX
+         --                     ]
+         --                     (ELE.text "V")
+         --                 , ELE.el [ELE.centerX] (ELE.text
+         --                     ("isualization of Classical "))
+         --                 ]
+         --   , ELE.paragraph [ Font.size 45
+         --                   , ELE.centerX
+         --                   ]
+         --                   [ ELE.el  [ Font.size 50 
+         --                             , Font.color <| ELE.rgb 0.5 0.9 0.7
+         --                             , ELE.centerX
+         --                             ]
+         --                             (ELE.text "G")
+         --                   , ELE.el [ELE.centerX] (ELE.text
+         --                               ("raph Theory Problems"))
+         --                   ]
+
+         --   , ELE.paragraph [ ELE.centerX
+         --                   ] 
+         --                   [ ELE.el [ELE.alignLeft
+         --                            , Font.size 40
+         --                            , ELE.centerX
+         --                            ]
+         --                            (ELE.text capitalT)
+         --                   , ELE.el [ELE.centerX] (ELE.text
+         --                                          aboutText)
+         --                   , ELE.el [ELE.centerX] (ELE.text
+         --                                 aim)
+         --                   ]
+
+         --   ]
 
 introFatma width height =
       let
@@ -781,7 +842,7 @@ introSuperVisor width height =
          , Border.rounded 10
          ]
          <| [ ELE.el [ Font.size 30]
-                  (ELE.text "My Supervisor.")
+                  (ELE.text "My Supervisor")
             , ELE.paragraph [
                             ] 
                            [ ELE.el 

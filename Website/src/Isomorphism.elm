@@ -510,6 +510,7 @@ explanationGame game helpStatus displaySize =
          , ELE.spacing 20
          , Background.color <| ELE.rgb 0.2 0.2 0.2
          , ELE.width (ELE.fill |> ELE.maximum (displaySize.width))
+         , ELE.scrollbarY
          ]
          <|
          [  ELE.el
@@ -696,6 +697,7 @@ explanationTransition shapeTransition helpStatus displaySize =
          , ELE.spacing 20
          , Background.color <| ELE.rgb 0.2 0.2 0.2
          , ELE.width (ELE.fill |> ELE.maximum (displaySize.width))
+         , ELE.scrollbarY
          ]
          <|
          [  ELE.el

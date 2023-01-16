@@ -216,6 +216,7 @@ explanationColoring colorDispSer helpStatus displaySize =
          , ELE.height ELE.fill
          , Background.color <| ELE.rgb 0.2 0.2 0.2
          , ELE.width (ELE.fill |> ELE.maximum displaySize.width)
+         , ELE.scrollbarY
          ]
          <|
          [  ELE.el

@@ -15405,6 +15405,11 @@ var $mdgriffith$elm_ui$Element$layoutWith = F3(
 	});
 var $mdgriffith$elm_ui$Internal$Model$Left = {$: 'Left'};
 var $mdgriffith$elm_ui$Element$alignLeft = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$Left);
+var $mdgriffith$elm_ui$Internal$Model$AlignY = function (a) {
+	return {$: 'AlignY', a: a};
+};
+var $mdgriffith$elm_ui$Internal$Model$CenterY = {$: 'CenterY'};
+var $mdgriffith$elm_ui$Element$centerY = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$CenterY);
 var $mdgriffith$elm_ui$Internal$Flag$fontWeight = $mdgriffith$elm_ui$Internal$Flag$flag(13);
 var $mdgriffith$elm_ui$Element$Font$heavy = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$fontWeight, $mdgriffith$elm_ui$Internal$Style$classes.textHeavy);
 var $mdgriffith$elm_ui$Internal$Model$Min = F2(
@@ -15557,6 +15562,7 @@ var $author$project$Main$aboutProject = F2(
 					$mdgriffith$elm_ui$Element$height(
 					A2($mdgriffith$elm_ui$Element$minimum, height, $mdgriffith$elm_ui$Element$fill)),
 					$mdgriffith$elm_ui$Element$Border$rounded(10),
+					$mdgriffith$elm_ui$Element$centerY,
 					$mdgriffith$elm_ui$Element$centerX,
 					$mdgriffith$elm_ui$Element$paddingEach(
 					{bottom: 50, left: 10, right: 10, top: 10})
@@ -15600,10 +15606,28 @@ var $author$project$Main$aboutProject = F2(
 	});
 var $author$project$Main$acknowledgement = F2(
 	function (width, height) {
-		var thanks = '\n            This project would not have been possible without the\n            the help, aid and advice of friends and family.\n            ';
-		var sofiat = '\n            I would like to thank my supervisor Sofiat for giving me a\n            wonderful opportunity to explore the topics of Graph Theory.  Her\n            constant support and guidance throughout the project was\n            detrimental in building the app.\n            ';
-		var shrey = '\n            Finaly, I would like to thank my friend Shrey for guiding me and introducing\n            me to the Elm programming language.\n            ';
-		var father = '\n            I would also like to thank my father for encouraging, believing and\n            supporting me constantly in both the good and bad days.\n            ';
+		var thanks = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('\n                  This project would not have been possible without the\n                  the help, aid and advice of friends and family.\n                  ')
+			]);
+		var sofiat = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('\n                  I would like to thank my supervisor \n                  '),
+				$mdgriffith$elm_ui$Element$text('Sofiat'),
+				$mdgriffith$elm_ui$Element$text('\n                  for giving me a\n                  wonderful opportunity to explore the topics of Graph Theory.  Her\n                  constant support and guidance throughout the project was\n                  detrimental in building the app.\n                  ')
+			]);
+		var shrey = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('\n               Finaly, I would like to thank my friend \n               '),
+				$mdgriffith$elm_ui$Element$text('Shrey'),
+				$mdgriffith$elm_ui$Element$text('\n               for introducing\n               me to the Elm programming language.\n               ')
+			]);
+		var father = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('\n                  I would also like to thank my \n                  '),
+				$mdgriffith$elm_ui$Element$text('father'),
+				$mdgriffith$elm_ui$Element$text('\n                  for encouraging, believing and\n                  supporting me constantly in both the good and bad days.\n                  ')
+			]);
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
@@ -15638,43 +15662,26 @@ var $author$project$Main$acknowledgement = F2(
 					$mdgriffith$elm_ui$Element$paragraph,
 					_List_fromArray(
 						[$mdgriffith$elm_ui$Element$centerX]),
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$text(sofiat)
-						])),
+					sofiat),
 					A2(
 					$mdgriffith$elm_ui$Element$paragraph,
 					_List_fromArray(
 						[$mdgriffith$elm_ui$Element$centerX]),
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$text(father)
-						])),
+					father),
 					A2(
 					$mdgriffith$elm_ui$Element$paragraph,
 					_List_fromArray(
 						[$mdgriffith$elm_ui$Element$centerX]),
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$text(shrey)
-						])),
+					shrey),
 					A2(
 					$mdgriffith$elm_ui$Element$paragraph,
 					_List_fromArray(
 						[$mdgriffith$elm_ui$Element$centerX]),
-					_List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$text(thanks)
-						]))
+					thanks)
 				]));
 	});
 var $mdgriffith$elm_ui$Internal$Model$Right = {$: 'Right'};
 var $mdgriffith$elm_ui$Element$alignRight = $mdgriffith$elm_ui$Internal$Model$AlignX($mdgriffith$elm_ui$Internal$Model$Right);
-var $mdgriffith$elm_ui$Internal$Model$AlignY = function (a) {
-	return {$: 'AlignY', a: a};
-};
-var $mdgriffith$elm_ui$Internal$Model$CenterY = {$: 'CenterY'};
-var $mdgriffith$elm_ui$Element$centerY = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$CenterY);
 var $mdgriffith$elm_ui$Internal$Flag$borderColor = $mdgriffith$elm_ui$Internal$Flag$flag(28);
 var $mdgriffith$elm_ui$Element$Border$color = function (clr) {
 	return A2(
@@ -15795,7 +15802,7 @@ var $author$project$Main$introSuperVisor = F2(
 						[
 							$mdgriffith$elm_ui$Element$Font$size(30)
 						]),
-					$mdgriffith$elm_ui$Element$text('My Supervisor.')),
+					$mdgriffith$elm_ui$Element$text('My Supervisor')),
 					A2(
 					$mdgriffith$elm_ui$Element$paragraph,
 					_List_Nil,
@@ -16681,7 +16688,8 @@ var $author$project$GraphColoring$explanationColoring = F3(
 					$mdgriffith$elm_ui$Element$Background$color(
 					A3($mdgriffith$elm_ui$Element$rgb, 0.2, 0.2, 0.2)),
 					$mdgriffith$elm_ui$Element$width(
-					A2($mdgriffith$elm_ui$Element$maximum, displaySize.width, $mdgriffith$elm_ui$Element$fill))
+					A2($mdgriffith$elm_ui$Element$maximum, displaySize.width, $mdgriffith$elm_ui$Element$fill)),
+					$mdgriffith$elm_ui$Element$scrollbarY
 				]),
 			_List_fromArray(
 				[
@@ -16895,7 +16903,8 @@ var $author$project$VertexCover$explanationCover = F3(
 					$mdgriffith$elm_ui$Element$width(
 					A2($mdgriffith$elm_ui$Element$maximum, displaySize.width, $mdgriffith$elm_ui$Element$fill)),
 					$mdgriffith$elm_ui$Element$Background$color(
-					A3($mdgriffith$elm_ui$Element$rgb, 0.2, 0.2, 0.2))
+					A3($mdgriffith$elm_ui$Element$rgb, 0.2, 0.2, 0.2)),
+					$mdgriffith$elm_ui$Element$scrollbarY
 				]),
 			_List_fromArray(
 				[
@@ -17216,7 +17225,8 @@ var $author$project$Isomorphism$explanationGame = F3(
 					$mdgriffith$elm_ui$Element$Background$color(
 					A3($mdgriffith$elm_ui$Element$rgb, 0.2, 0.2, 0.2)),
 					$mdgriffith$elm_ui$Element$width(
-					A2($mdgriffith$elm_ui$Element$maximum, displaySize.width, $mdgriffith$elm_ui$Element$fill))
+					A2($mdgriffith$elm_ui$Element$maximum, displaySize.width, $mdgriffith$elm_ui$Element$fill)),
+					$mdgriffith$elm_ui$Element$scrollbarY
 				]),
 			_Utils_ap(
 				_List_fromArray(
@@ -17523,7 +17533,8 @@ var $author$project$Isomorphism$explanationTransition = F3(
 					$mdgriffith$elm_ui$Element$Background$color(
 					A3($mdgriffith$elm_ui$Element$rgb, 0.2, 0.2, 0.2)),
 					$mdgriffith$elm_ui$Element$width(
-					A2($mdgriffith$elm_ui$Element$maximum, displaySize.width, $mdgriffith$elm_ui$Element$fill))
+					A2($mdgriffith$elm_ui$Element$maximum, displaySize.width, $mdgriffith$elm_ui$Element$fill)),
+					$mdgriffith$elm_ui$Element$scrollbarY
 				]),
 			_Utils_ap(
 				_List_fromArray(
@@ -17759,7 +17770,8 @@ var $author$project$MaxkCut$explanationTwo = F3(
 					$mdgriffith$elm_ui$Element$Background$color(
 					A3($mdgriffith$elm_ui$Element$rgb, 0.2, 0.2, 0.2)),
 					$mdgriffith$elm_ui$Element$width(
-					A2($mdgriffith$elm_ui$Element$maximum, displaySize.width, $mdgriffith$elm_ui$Element$fill))
+					A2($mdgriffith$elm_ui$Element$maximum, displaySize.width, $mdgriffith$elm_ui$Element$fill)),
+					$mdgriffith$elm_ui$Element$scrollbarY
 				]),
 			_List_fromArray(
 				[
@@ -18086,7 +18098,8 @@ var $author$project$TreeWidth$explanationWidth = F3(
 					$mdgriffith$elm_ui$Element$width(
 					A2($mdgriffith$elm_ui$Element$maximum, displaySize.width, $mdgriffith$elm_ui$Element$fill)),
 					$mdgriffith$elm_ui$Element$Background$color(
-					A3($mdgriffith$elm_ui$Element$rgb, 0.2, 0.2, 0.2))
+					A3($mdgriffith$elm_ui$Element$rgb, 0.2, 0.2, 0.2)),
+					$mdgriffith$elm_ui$Element$scrollbarY
 				]),
 			_Utils_ap(
 				_List_fromArray(
