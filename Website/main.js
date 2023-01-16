@@ -17121,57 +17121,86 @@ var $author$project$Isomorphism$gameButtons = function (displaySize) {
 				$author$project$Buttons$taskButton(true)
 			]));
 };
-var $author$project$Isomorphism$gameStatusExplanation = function (game) {
-	var youAreWrong = '\n         It\'s incorrect! Maybe, go back to the explanation.\n         ';
-	var youAreRight = '\n         Yes it\'s correct! Well done.\n         ';
-	var makeAChoice = '\n         Make a choice by clicking on one of the boxed graphs and then\n         press the check button.\n         ';
-	var choiceMadeSecond = '\n         You have chosen the second graph.\n         ';
-	var choiceMadeFirst = '\n         You have chosen the first graph.\n         ';
-	var choiceText = function () {
-		var _v5 = _Utils_Tuple2(game.choiceState, game.gameState);
-		switch (_v5.a.$) {
-			case 'NoChoice':
-				var _v6 = _v5.a;
-				return $mdgriffith$elm_ui$Element$text(makeAChoice);
-			case 'FirstGraph':
-				var _v7 = _v5.a;
-				return $mdgriffith$elm_ui$Element$text(choiceMadeFirst);
-			default:
-				var _v8 = _v5.a;
-				return $mdgriffith$elm_ui$Element$text(choiceMadeSecond);
-		}
-	}();
-	var checkText = function () {
-		var _v0 = _Utils_Tuple2(game.choiceState, game.gameState);
-		_v0$2:
-		while (true) {
-			if (_v0.b.$ === 'Check') {
-				switch (_v0.a.$) {
-					case 'FirstGraph':
-						var _v1 = _v0.a;
-						var _v2 = _v0.b;
-						return $mdgriffith$elm_ui$Element$text(youAreRight);
-					case 'SecondGraph':
-						var _v3 = _v0.a;
-						var _v4 = _v0.b;
-						return $mdgriffith$elm_ui$Element$text(youAreWrong);
-					default:
-						break _v0$2;
-				}
-			} else {
-				break _v0$2;
+var $author$project$Isomorphism$gameStatusExplanation = F2(
+	function (game, displaySize) {
+		var emph = $author$project$FontSize$emphForScreen(displaySize.deviceType);
+		var makeAChoice = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('\n            Make a choice by \n            '),
+				A2(emph, $author$project$FontSize$CuteBlue, '\n            clicking \n            '),
+				$mdgriffith$elm_ui$Element$text('\n            on one of the boxed graphs and then\n            '),
+				A2(emph, $author$project$FontSize$CuteBlue, '\n            press \n            '),
+				$mdgriffith$elm_ui$Element$text('\n            the check button.\n            ')
+			]);
+		var youAreRight = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('\n               Yes it\'s \n               '),
+				A2(emph, $author$project$FontSize$Pink, '\n               correct! \n               '),
+				$mdgriffith$elm_ui$Element$text('\n               Well done.\n               ')
+			]);
+		var youAreWrong = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('\n            It\'s \n            '),
+				A2(emph, $author$project$FontSize$Pink, '\n            incorrect! \n            '),
+				$mdgriffith$elm_ui$Element$text('\n            Maybe, go back to the explanation.\n            ')
+			]);
+		var choiceMadeSecond = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('\n            You have \n            '),
+				A2(emph, $author$project$FontSize$CuteBlue, '\n            chosen \n            '),
+				$mdgriffith$elm_ui$Element$text('\n            the \n            '),
+				A2(emph, $author$project$FontSize$CuteGreen, '\n            second \n            '),
+				$mdgriffith$elm_ui$Element$text('\n            graph.\n            ')
+			]);
+		var choiceMadeFirst = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('\n               You have \n               '),
+				A2(emph, $author$project$FontSize$CuteBlue, '\n               chosen \n               '),
+				$mdgriffith$elm_ui$Element$text('\n               the \n               '),
+				A2(emph, $author$project$FontSize$CuteGreen, '\n               first \n               '),
+				$mdgriffith$elm_ui$Element$text('\n               graph.\n               ')
+			]);
+		var choiceText = function () {
+			var _v5 = _Utils_Tuple2(game.choiceState, game.gameState);
+			switch (_v5.a.$) {
+				case 'NoChoice':
+					var _v6 = _v5.a;
+					return makeAChoice;
+				case 'FirstGraph':
+					var _v7 = _v5.a;
+					return choiceMadeFirst;
+				default:
+					var _v8 = _v5.a;
+					return choiceMadeSecond;
 			}
-		}
-		return $mdgriffith$elm_ui$Element$none;
-	}();
-	return _List_fromArray(
-		[
-			_List_fromArray(
-			[choiceText]),
-			_List_fromArray(
-			[checkText])
-		]);
-};
+		}();
+		var checkText = function () {
+			var _v0 = _Utils_Tuple2(game.choiceState, game.gameState);
+			_v0$2:
+			while (true) {
+				if (_v0.b.$ === 'Check') {
+					switch (_v0.a.$) {
+						case 'FirstGraph':
+							var _v1 = _v0.a;
+							var _v2 = _v0.b;
+							return youAreRight;
+						case 'SecondGraph':
+							var _v3 = _v0.a;
+							var _v4 = _v0.b;
+							return youAreWrong;
+						default:
+							break _v0$2;
+					}
+				} else {
+					break _v0$2;
+				}
+			}
+			return _List_fromArray(
+				[$mdgriffith$elm_ui$Element$none]);
+		}();
+		return _List_fromArray(
+			[choiceText, checkText]);
+	});
 var $author$project$Explanation$isomorphismExplanation = '\n   Two graphs G1 and G2 are isomorphic if there is a one-one correspondence\n   between the vertices of G1 and G2 such that the number of edges between any\n   two vertices in G1 is equal to the number of edges joining the corresponding\n   vertices of G2. \n   Although the graphs may appear to be different in appearance and in\n   the labeling of the nodes and edges. But the way one vertex is connected to\n   another in one graph is same as another. \n\n   The animation shown here takes a graph and changes the positions of the\n   vertices without changing the edges which still connect the same vertices\n   throughout the motion. In the animation if there is an edge between any two\n   vertices in a graph, then there is a edge between the corresponding vertices\n   in the other graphs as well.\n   ';
 var $author$project$Isomorphism$explanationGame = F3(
 	function (game, helpStatus, displaySize) {
@@ -17216,7 +17245,10 @@ var $author$project$Isomorphism$explanationGame = F3(
 						_List_Nil,
 						_List_fromArray(
 							[
-								$mdgriffith$elm_ui$Element$text('\n                     Choose which graph is isomorphic to the first one.\n                     ')
+								A2(emph, $author$project$FontSize$CuteBlue, '\n                     Choose \n                     '),
+								$mdgriffith$elm_ui$Element$text('\n                     which graph is isomorphic to the first one\n                     by \n                     '),
+								A2(emph, $author$project$FontSize$CuteBlue, '\n                     clicking \n                     '),
+								$mdgriffith$elm_ui$Element$text('\n                     on them.\n                     ')
 							])),
 						$author$project$Isomorphism$gameButtons(displaySize)
 					]),
@@ -17224,7 +17256,7 @@ var $author$project$Isomorphism$explanationGame = F3(
 					A2(
 						$elm$core$List$map,
 						$mdgriffith$elm_ui$Element$paragraph(_List_Nil),
-						$author$project$Isomorphism$gameStatusExplanation(game)),
+						A2($author$project$Isomorphism$gameStatusExplanation, game, displaySize)),
 					_List_fromArray(
 						[
 							A2($author$project$Buttons$lowerNavigation, 'Tree Width', 'Max Cut')

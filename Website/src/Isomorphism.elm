@@ -520,9 +520,22 @@ explanationGame game helpStatus displaySize =
                [ELE.text isomorphismExplanation]
          , ELE.paragraph
                []
-               [ ELE.text
+               [ emph CuteBlue
                      """
-                     Choose which graph is isomorphic to the first one.
+                     Choose 
+                     """
+               , ELE.text
+                     """
+                     which graph is isomorphic to the first one
+                     by 
+                     """
+               , emph CuteBlue
+                     """
+                     clicking 
+                     """
+               , ELE.text
+                     """
+                     on them.
                      """
                ]
 
@@ -531,7 +544,7 @@ explanationGame game helpStatus displaySize =
          ]
 
          ++ (List.map (ELE.paragraph [])
-               (gameStatusExplanation game))
+               (gameStatusExplanation game displaySize))
 
 
          ++ [ lowerNavigation "Tree Width" "Max Cut"
@@ -539,52 +552,127 @@ explanationGame game helpStatus displaySize =
 
 
 
-gameStatusExplanation : IsomorphicGame -> List (List (ELE.Element Msg))
-gameStatusExplanation game =
+gameStatusExplanation : IsomorphicGame -> DisplaySize -> List (List (ELE.Element Msg))
+gameStatusExplanation game displaySize =
    let
+      emph =
+         emphForScreen displaySize.deviceType
       makeAChoice =
-         """
-         Make a choice by clicking on one of the boxed graphs and then
-         press the check button.
-         """
+         [ ELE.text  
+            """
+            Make a choice by 
+            """
+         , emph CuteBlue
+            """
+            clicking 
+            """
+         , ELE.text
+            """
+            on one of the boxed graphs and then
+            """
+         , emph CuteBlue
+            """
+            press 
+            """
+         , ELE.text
+            """
+            the check button.
+            """
+         ]
       choiceMadeFirst =
-         """
-         You have chosen the first graph.
-         """
+         [ ELE.text
+               """
+               You have 
+               """
+         , emph CuteBlue
+               """
+               chosen 
+               """
+         , ELE.text
+               """
+               the 
+               """
+         , emph CuteGreen
+               """
+               first 
+               """
+         , ELE.text
+               """
+               graph.
+               """
+         ]
       choiceMadeSecond =
-         """
-         You have chosen the second graph.
-         """
+         [ ELE.text
+            """
+            You have 
+            """
+         , emph CuteBlue
+            """
+            chosen 
+            """
+         , ELE.text
+            """
+            the 
+            """
+         , emph CuteGreen
+            """
+            second 
+            """
+         , ELE.text
+            """
+            graph.
+            """
+        ]
       youAreWrong =
-         """
-         It's incorrect! Maybe, go back to the explanation.
-         """
+         [ ELE.text
+            """
+            It's 
+            """
+         , emph Pink
+            """
+            incorrect! 
+            """
+         , ELE.text
+            """
+            Maybe, go back to the explanation.
+            """
+         ]
 
       youAreRight =
-         """
-         Yes it's correct! Well done.
-         """
+         [ ELE.text
+               """
+               Yes it's 
+               """
+         , emph Pink
+               """
+               correct! 
+               """
+         , ELE.text
+               """
+               Well done.
+               """
+         ]
 
       choiceText =
          case (game.choiceState, game.gameState) of
             (NoChoice, _) ->
-               ELE.text makeAChoice
+               makeAChoice
             (FirstGraph, _) ->
-               ELE.text choiceMadeFirst 
+               choiceMadeFirst 
             (SecondGraph, _) ->
-               ELE.text choiceMadeSecond 
+               choiceMadeSecond 
 
       checkText =
          case (game.choiceState, game.gameState) of
             (FirstGraph, Check) ->
-               ELE.text youAreRight
+               youAreRight
             (SecondGraph, Check) ->
-               ELE.text youAreWrong
+               youAreWrong
             (_, _) ->
-               ELE.none
+               [ ELE.none ]
       in
-      [ [choiceText]
-      , [checkText]
+      [ choiceText
+      , checkText
       ]
 
 gameButtons displaySize =
