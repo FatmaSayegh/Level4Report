@@ -18546,7 +18546,8 @@ var $author$project$Main$homePage = function (height) {
 				A2($mdgriffith$elm_ui$Element$spacingXY, 10, 30),
 				$mdgriffith$elm_ui$Element$scrollbarY,
 				$mdgriffith$elm_ui$Element$scrollbarX,
-				$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill)
+				$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill),
+				$mdgriffith$elm_ui$Element$padding(10)
 			]),
 		_List_fromArray(
 			[
@@ -18555,7 +18556,7 @@ var $author$project$Main$homePage = function (height) {
 				_List_fromArray(
 					[
 						$mdgriffith$elm_ui$Element$Font$size(45),
-						A2($mdgriffith$elm_ui$Element$paddingXY, 5, 20)
+						A2($mdgriffith$elm_ui$Element$paddingXY, 5, 10)
 					]),
 				_List_fromArray(
 					[

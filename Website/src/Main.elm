@@ -926,9 +926,11 @@ homePage height =
       , ELE.scrollbarY
       , ELE.scrollbarX
       , ELE.height ELE.fill
+      , ELE.padding 10
+      --, ELE.width ELE.fill
       ]
       <|[ ELE.paragraph [ Font.size 45
-                        , ELE.paddingXY 5 20
+                        , ELE.paddingXY 5 10
                         ] 
                         [ ELE.el 
                             [ Font.color <| ELE.rgb 0.5 0.9 0.7
