@@ -688,7 +688,7 @@ aboutProject width height =
             """ 
             here are numerous phenomenon in science which can be best
             studied when they are abstracted as graphs. Graphs can be used to
-            represent a social networks, a biological networks such as protien
+            represent social networks, biological networks such as protien
             - protien interaction in cells, neural networks and ecological
             networks.  
             """
