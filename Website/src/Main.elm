@@ -546,8 +546,9 @@ photoGraph width height =
          , ELE.height (ELE.fill |> ELE.minimum (height))
          , Border.rounded 20
          , ELE.alignRight
-         , Border.width 5
-         , Border.color (ELE.rgb 0.7 0.6 0.6)
+         --, Border.width 5
+         --, Border.color (ELE.rgb 0.7 0.6 0.6)
+         , ELE.clip
          ]
          [ ELE.el 
                [ Border.rounded 200
@@ -570,8 +571,9 @@ photoGraphSuperVisor width height =
          , ELE.height (ELE.fill |> ELE.minimum (height))
          , Border.rounded 20
          , ELE.alignRight
-         , Border.width 5
-         , Border.color (ELE.rgb 0.7 0.6 0.6)
+         --, Border.width 5
+         --, Border.color (ELE.rgb 0.7 0.6 0.6)
+         , ELE.clip
          ]
          [ ELE.el 
                [ Border.rounded 200
@@ -857,8 +859,8 @@ introSuperVisor width height =
             ]
 
 
-makeTopicIcon : Msg -> ELE.Element Msg
-makeTopicIcon topicMsg =  
+makeTopicIcon : Int -> Msg -> ELE.Element Msg
+makeTopicIcon height topicMsg =  
    let
       tex =
          case topicMsg of
@@ -896,7 +898,10 @@ makeTopicIcon topicMsg =
               , Border.solid
               , Border.width 2
               , Border.rounded 15
-              , ELE.width (ELE.fill |> ELE.minimum 200)
+              --, ELE.width (ELE.fill |> ELE.minimum 200)
+              , ELE.width (ELE.fill |> ELE.minimum (height//4))
+              , ELE.height (ELE.fill |> ELE.minimum (height//4))
+              , ELE.clip
               ] 
               [ displayMiniGraph miniGraph
               , ELE.el [ELE.centerX] <| ELE.text tex
@@ -917,7 +922,10 @@ homePage height =
       , ELE.centerY
       , Font.color <| ELE.rgb 1 1 1
       , Font.heavy
-      , ELE.spacingXY 10 15
+      , ELE.spacingXY 10 30
+      , ELE.scrollbarY
+      , ELE.scrollbarX
+      , ELE.height ELE.fill
       ]
       <|[ ELE.paragraph [ Font.size 45
                         , ELE.paddingXY 5 20
@@ -958,9 +966,11 @@ homePage height =
                , ELE.centerY
                , Font.color <| ELE.rgb 1 1 1
                , Font.heavy
-               , ELE.spacingXY 10 15
+               , ELE.spacingXY 30 30
+               , ELE.scrollbarY
+               , ELE.scrollbars
                ]
-               <| List.map makeTopicIcon 
+               <| List.map (makeTopicIcon height)
                   [ GotoIsomorphism
                   , GotoMaxkCut
                   , GotoColoring
@@ -970,9 +980,9 @@ homePage height =
                , ELE.centerY
                , Font.color <| ELE.rgb 1 1 1
                , Font.heavy
-               , ELE.spacingXY 10 15
+               , ELE.spacingXY 30 15
                ]
-               <| List.map makeTopicIcon 
+               <| List.map (makeTopicIcon height)
                   [ GotoCover
                   , GotoTreeWidth
                   ]

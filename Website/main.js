@@ -15824,6 +15824,8 @@ var $author$project$Main$introSuperVisor = F2(
 						]))
 				]));
 	});
+var $mdgriffith$elm_ui$Internal$Flag$overflow = $mdgriffith$elm_ui$Internal$Flag$flag(20);
+var $mdgriffith$elm_ui$Element$clip = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$overflow, $mdgriffith$elm_ui$Internal$Style$classes.clip);
 var $elm$html$Html$Attributes$alt = $elm$html$Html$Attributes$stringProperty('alt');
 var $elm$html$Html$Attributes$src = function (url) {
 	return A2(
@@ -15875,22 +15877,6 @@ var $mdgriffith$elm_ui$Element$image = F2(
 						$mdgriffith$elm_ui$Internal$Model$Unkeyed(_List_Nil))
 					])));
 	});
-var $mdgriffith$elm_ui$Internal$Model$BorderWidth = F5(
-	function (a, b, c, d, e) {
-		return {$: 'BorderWidth', a: a, b: b, c: c, d: d, e: e};
-	});
-var $mdgriffith$elm_ui$Element$Border$width = function (v) {
-	return A2(
-		$mdgriffith$elm_ui$Internal$Model$StyleClass,
-		$mdgriffith$elm_ui$Internal$Flag$borderWidth,
-		A5(
-			$mdgriffith$elm_ui$Internal$Model$BorderWidth,
-			'b-' + $elm$core$String$fromInt(v),
-			v,
-			v,
-			v,
-			v));
-};
 var $author$project$Main$photoGraph = F2(
 	function (width, height) {
 		return A2(
@@ -15907,9 +15893,7 @@ var $author$project$Main$photoGraph = F2(
 					A2($mdgriffith$elm_ui$Element$minimum, height, $mdgriffith$elm_ui$Element$fill)),
 					$mdgriffith$elm_ui$Element$Border$rounded(20),
 					$mdgriffith$elm_ui$Element$alignRight,
-					$mdgriffith$elm_ui$Element$Border$width(5),
-					$mdgriffith$elm_ui$Element$Border$color(
-					A3($mdgriffith$elm_ui$Element$rgb, 0.7, 0.6, 0.6))
+					$mdgriffith$elm_ui$Element$clip
 				]),
 			_List_fromArray(
 				[
@@ -15946,9 +15930,7 @@ var $author$project$Main$photoGraphSuperVisor = F2(
 					A2($mdgriffith$elm_ui$Element$minimum, height, $mdgriffith$elm_ui$Element$fill)),
 					$mdgriffith$elm_ui$Element$Border$rounded(20),
 					$mdgriffith$elm_ui$Element$alignRight,
-					$mdgriffith$elm_ui$Element$Border$width(5),
-					$mdgriffith$elm_ui$Element$Border$color(
-					A3($mdgriffith$elm_ui$Element$rgb, 0.7, 0.6, 0.6))
+					$mdgriffith$elm_ui$Element$clip
 				]),
 			_List_fromArray(
 				[
@@ -15970,7 +15952,6 @@ var $author$project$Main$photoGraphSuperVisor = F2(
 						{description: '', src: 'images/sofiat.jpg'}))
 				]));
 	});
-var $mdgriffith$elm_ui$Internal$Flag$overflow = $mdgriffith$elm_ui$Internal$Flag$flag(20);
 var $mdgriffith$elm_ui$Element$scrollbarY = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$overflow, $mdgriffith$elm_ui$Internal$Style$classes.scrollbarsY);
 var $author$project$Main$aboutPage = F2(
 	function (widthIn, heightIn) {
@@ -18474,62 +18455,84 @@ var $author$project$TreeWidth$miniTreeWidth = function () {
 }();
 var $mdgriffith$elm_ui$Internal$Flag$borderStyle = $mdgriffith$elm_ui$Internal$Flag$flag(11);
 var $mdgriffith$elm_ui$Element$Border$solid = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$borderStyle, $mdgriffith$elm_ui$Internal$Style$classes.borderSolid);
-var $author$project$Main$makeTopicIcon = function (topicMsg) {
-	var tex = function () {
-		switch (topicMsg.$) {
-			case 'GotoIsomorphism':
-				return 'Graph Isomorphism.';
-			case 'GotoMaxkCut':
-				return 'Max k Cut.';
-			case 'GotoColoring':
-				return 'Graph Coloring.';
-			case 'GotoCover':
-				return 'Vertex Cover.';
-			case 'GotoTreeWidth':
-				return 'Tree Width.';
-			default:
-				return 'Oops';
-		}
-	}();
-	var miniGraph = function () {
-		switch (topicMsg.$) {
-			case 'GotoIsomorphism':
-				return $author$project$Isomorphism$miniIsoGraph;
-			case 'GotoMaxkCut':
-				return $author$project$MaxkCut$miniMaxGraph;
-			case 'GotoColoring':
-				return $author$project$GraphColoring$miniColGraph;
-			case 'GotoCover':
-				return $author$project$Isomorphism$miniIsoGraph;
-			case 'GotoTreeWidth':
-				return $author$project$TreeWidth$miniTreeWidth;
-			default:
-				return $author$project$Isomorphism$miniIsoGraph;
-		}
-	}();
+var $mdgriffith$elm_ui$Internal$Model$BorderWidth = F5(
+	function (a, b, c, d, e) {
+		return {$: 'BorderWidth', a: a, b: b, c: c, d: d, e: e};
+	});
+var $mdgriffith$elm_ui$Element$Border$width = function (v) {
 	return A2(
-		$mdgriffith$elm_ui$Element$column,
-		_List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$Events$onClick(topicMsg),
-				$mdgriffith$elm_ui$Element$pointer,
-				A2($mdgriffith$elm_ui$Element$paddingXY, 13, 15),
-				$mdgriffith$elm_ui$Element$Border$solid,
-				$mdgriffith$elm_ui$Element$Border$width(2),
-				$mdgriffith$elm_ui$Element$Border$rounded(15),
-				$mdgriffith$elm_ui$Element$width(
-				A2($mdgriffith$elm_ui$Element$minimum, 200, $mdgriffith$elm_ui$Element$fill))
-			]),
-		_List_fromArray(
-			[
-				$author$project$Main$displayMiniGraph(miniGraph),
-				A2(
-				$mdgriffith$elm_ui$Element$el,
-				_List_fromArray(
-					[$mdgriffith$elm_ui$Element$centerX]),
-				$mdgriffith$elm_ui$Element$text(tex))
-			]));
+		$mdgriffith$elm_ui$Internal$Model$StyleClass,
+		$mdgriffith$elm_ui$Internal$Flag$borderWidth,
+		A5(
+			$mdgriffith$elm_ui$Internal$Model$BorderWidth,
+			'b-' + $elm$core$String$fromInt(v),
+			v,
+			v,
+			v,
+			v));
 };
+var $author$project$Main$makeTopicIcon = F2(
+	function (height, topicMsg) {
+		var tex = function () {
+			switch (topicMsg.$) {
+				case 'GotoIsomorphism':
+					return 'Graph Isomorphism.';
+				case 'GotoMaxkCut':
+					return 'Max k Cut.';
+				case 'GotoColoring':
+					return 'Graph Coloring.';
+				case 'GotoCover':
+					return 'Vertex Cover.';
+				case 'GotoTreeWidth':
+					return 'Tree Width.';
+				default:
+					return 'Oops';
+			}
+		}();
+		var miniGraph = function () {
+			switch (topicMsg.$) {
+				case 'GotoIsomorphism':
+					return $author$project$Isomorphism$miniIsoGraph;
+				case 'GotoMaxkCut':
+					return $author$project$MaxkCut$miniMaxGraph;
+				case 'GotoColoring':
+					return $author$project$GraphColoring$miniColGraph;
+				case 'GotoCover':
+					return $author$project$Isomorphism$miniIsoGraph;
+				case 'GotoTreeWidth':
+					return $author$project$TreeWidth$miniTreeWidth;
+				default:
+					return $author$project$Isomorphism$miniIsoGraph;
+			}
+		}();
+		return A2(
+			$mdgriffith$elm_ui$Element$column,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$Events$onClick(topicMsg),
+					$mdgriffith$elm_ui$Element$pointer,
+					A2($mdgriffith$elm_ui$Element$paddingXY, 13, 15),
+					$mdgriffith$elm_ui$Element$Border$solid,
+					$mdgriffith$elm_ui$Element$Border$width(2),
+					$mdgriffith$elm_ui$Element$Border$rounded(15),
+					$mdgriffith$elm_ui$Element$width(
+					A2($mdgriffith$elm_ui$Element$minimum, (height / 4) | 0, $mdgriffith$elm_ui$Element$fill)),
+					$mdgriffith$elm_ui$Element$height(
+					A2($mdgriffith$elm_ui$Element$minimum, (height / 4) | 0, $mdgriffith$elm_ui$Element$fill)),
+					$mdgriffith$elm_ui$Element$clip
+				]),
+			_List_fromArray(
+				[
+					$author$project$Main$displayMiniGraph(miniGraph),
+					A2(
+					$mdgriffith$elm_ui$Element$el,
+					_List_fromArray(
+						[$mdgriffith$elm_ui$Element$centerX]),
+					$mdgriffith$elm_ui$Element$text(tex))
+				]));
+	});
+var $mdgriffith$elm_ui$Element$scrollbarX = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$overflow, $mdgriffith$elm_ui$Internal$Style$classes.scrollbarsX);
+var $mdgriffith$elm_ui$Element$scrollbars = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$overflow, $mdgriffith$elm_ui$Internal$Style$classes.scrollbars);
 var $author$project$Main$homePage = function (height) {
 	return A2(
 		$mdgriffith$elm_ui$Element$column,
@@ -18540,7 +18543,10 @@ var $author$project$Main$homePage = function (height) {
 				$mdgriffith$elm_ui$Element$Font$color(
 				A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
 				$mdgriffith$elm_ui$Element$Font$heavy,
-				A2($mdgriffith$elm_ui$Element$spacingXY, 10, 15)
+				A2($mdgriffith$elm_ui$Element$spacingXY, 10, 30),
+				$mdgriffith$elm_ui$Element$scrollbarY,
+				$mdgriffith$elm_ui$Element$scrollbarX,
+				$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$fill)
 			]),
 		_List_fromArray(
 			[
@@ -18613,11 +18619,13 @@ var $author$project$Main$homePage = function (height) {
 						$mdgriffith$elm_ui$Element$Font$color(
 						A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
 						$mdgriffith$elm_ui$Element$Font$heavy,
-						A2($mdgriffith$elm_ui$Element$spacingXY, 10, 15)
+						A2($mdgriffith$elm_ui$Element$spacingXY, 30, 30),
+						$mdgriffith$elm_ui$Element$scrollbarY,
+						$mdgriffith$elm_ui$Element$scrollbars
 					]),
 				A2(
 					$elm$core$List$map,
-					$author$project$Main$makeTopicIcon,
+					$author$project$Main$makeTopicIcon(height),
 					_List_fromArray(
 						[$author$project$Messages$GotoIsomorphism, $author$project$Messages$GotoMaxkCut, $author$project$Messages$GotoColoring]))),
 				A2(
@@ -18629,11 +18637,11 @@ var $author$project$Main$homePage = function (height) {
 						$mdgriffith$elm_ui$Element$Font$color(
 						A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
 						$mdgriffith$elm_ui$Element$Font$heavy,
-						A2($mdgriffith$elm_ui$Element$spacingXY, 10, 15)
+						A2($mdgriffith$elm_ui$Element$spacingXY, 30, 15)
 					]),
 				A2(
 					$elm$core$List$map,
-					$author$project$Main$makeTopicIcon,
+					$author$project$Main$makeTopicIcon(height),
 					_List_fromArray(
 						[$author$project$Messages$GotoCover, $author$project$Messages$GotoTreeWidth])))
 			]));
