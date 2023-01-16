@@ -15547,7 +15547,7 @@ var $author$project$Main$aboutProject = F2(
 	function (width, height) {
 		var capitalT = '\n            T\n            ';
 		var aim = '\n            The aim of this project is to develop visual intuition for some of\n            the popular graph theory problems. Although, in mathematics formal\n            methods are used to describe terms, definitions and theorems.\n            Visual representation of the concepts can act as an aid to the\n            practioner to enrich his understanding or look at the same concept\n            in a different light.\n            ';
-		var aboutText = ' \n            here are numerous phenomenon in science which can be best\n            studied when they are abstracted as graphs. Graphs can be used to\n            represent a social networks, a biological networks such as protien\n            - protien interaction in cells, neural networks and ecological\n            networks.  \n            ';
+		var aboutText = ' \n            here are numerous phenomenon in science which can be best\n            studied when they are abstracted as graphs. Graphs can be used to\n            represent social networks, biological networks such as protien\n            - protien interaction in cells, neural networks and ecological\n            networks.  \n            ';
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
@@ -18472,7 +18472,7 @@ var $mdgriffith$elm_ui$Element$Border$width = function (v) {
 			v));
 };
 var $author$project$Main$makeTopicIcon = F2(
-	function (height, topicMsg) {
+	function (displaySize, topicMsg) {
 		var tex = function () {
 			switch (topicMsg.$) {
 				case 'GotoIsomorphism':
@@ -18505,6 +18505,7 @@ var $author$project$Main$makeTopicIcon = F2(
 					return $author$project$Isomorphism$miniIsoGraph;
 			}
 		}();
+		var dimension = A2($elm$core$Basics$min, displaySize.height, displaySize.width);
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
@@ -18516,9 +18517,9 @@ var $author$project$Main$makeTopicIcon = F2(
 					$mdgriffith$elm_ui$Element$Border$width(2),
 					$mdgriffith$elm_ui$Element$Border$rounded(15),
 					$mdgriffith$elm_ui$Element$width(
-					A2($mdgriffith$elm_ui$Element$minimum, (height / 4) | 0, $mdgriffith$elm_ui$Element$fill)),
+					A2($mdgriffith$elm_ui$Element$minimum, (dimension / 4) | 0, $mdgriffith$elm_ui$Element$fill)),
 					$mdgriffith$elm_ui$Element$height(
-					A2($mdgriffith$elm_ui$Element$minimum, (height / 4) | 0, $mdgriffith$elm_ui$Element$fill)),
+					A2($mdgriffith$elm_ui$Element$minimum, (dimension / 4) | 0, $mdgriffith$elm_ui$Element$fill)),
 					$mdgriffith$elm_ui$Element$clip
 				]),
 			_List_fromArray(
@@ -18532,8 +18533,195 @@ var $author$project$Main$makeTopicIcon = F2(
 				]));
 	});
 var $mdgriffith$elm_ui$Element$scrollbarX = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$overflow, $mdgriffith$elm_ui$Internal$Style$classes.scrollbarsX);
-var $mdgriffith$elm_ui$Element$scrollbars = A2($mdgriffith$elm_ui$Internal$Model$Class, $mdgriffith$elm_ui$Internal$Flag$overflow, $mdgriffith$elm_ui$Internal$Style$classes.scrollbars);
-var $author$project$Main$homePage = function (height) {
+var $mdgriffith$elm_ui$Internal$Model$Padding = F5(
+	function (a, b, c, d, e) {
+		return {$: 'Padding', a: a, b: b, c: c, d: d, e: e};
+	});
+var $mdgriffith$elm_ui$Internal$Model$Spaced = F3(
+	function (a, b, c) {
+		return {$: 'Spaced', a: a, b: b, c: c};
+	});
+var $mdgriffith$elm_ui$Internal$Model$extractSpacingAndPadding = function (attrs) {
+	return A3(
+		$elm$core$List$foldr,
+		F2(
+			function (attr, _v0) {
+				var pad = _v0.a;
+				var spacing = _v0.b;
+				return _Utils_Tuple2(
+					function () {
+						if (pad.$ === 'Just') {
+							var x = pad.a;
+							return pad;
+						} else {
+							if ((attr.$ === 'StyleClass') && (attr.b.$ === 'PaddingStyle')) {
+								var _v3 = attr.b;
+								var name = _v3.a;
+								var t = _v3.b;
+								var r = _v3.c;
+								var b = _v3.d;
+								var l = _v3.e;
+								return $elm$core$Maybe$Just(
+									A5($mdgriffith$elm_ui$Internal$Model$Padding, name, t, r, b, l));
+							} else {
+								return $elm$core$Maybe$Nothing;
+							}
+						}
+					}(),
+					function () {
+						if (spacing.$ === 'Just') {
+							var x = spacing.a;
+							return spacing;
+						} else {
+							if ((attr.$ === 'StyleClass') && (attr.b.$ === 'SpacingStyle')) {
+								var _v6 = attr.b;
+								var name = _v6.a;
+								var x = _v6.b;
+								var y = _v6.c;
+								return $elm$core$Maybe$Just(
+									A3($mdgriffith$elm_ui$Internal$Model$Spaced, name, x, y));
+							} else {
+								return $elm$core$Maybe$Nothing;
+							}
+						}
+					}());
+			}),
+		_Utils_Tuple2($elm$core$Maybe$Nothing, $elm$core$Maybe$Nothing),
+		attrs);
+};
+var $mdgriffith$elm_ui$Internal$Model$paddingNameFloat = F4(
+	function (top, right, bottom, left) {
+		return 'pad-' + ($mdgriffith$elm_ui$Internal$Model$floatClass(top) + ('-' + ($mdgriffith$elm_ui$Internal$Model$floatClass(right) + ('-' + ($mdgriffith$elm_ui$Internal$Model$floatClass(bottom) + ('-' + $mdgriffith$elm_ui$Internal$Model$floatClass(left)))))));
+	});
+var $mdgriffith$elm_ui$Element$wrappedRow = F2(
+	function (attrs, children) {
+		var _v0 = $mdgriffith$elm_ui$Internal$Model$extractSpacingAndPadding(attrs);
+		var padded = _v0.a;
+		var spaced = _v0.b;
+		if (spaced.$ === 'Nothing') {
+			return A4(
+				$mdgriffith$elm_ui$Internal$Model$element,
+				$mdgriffith$elm_ui$Internal$Model$asRow,
+				$mdgriffith$elm_ui$Internal$Model$div,
+				A2(
+					$elm$core$List$cons,
+					$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.contentLeft + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.contentCenterY + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.wrapped)))),
+					A2(
+						$elm$core$List$cons,
+						$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$shrink),
+						A2(
+							$elm$core$List$cons,
+							$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$shrink),
+							attrs))),
+				$mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
+		} else {
+			var _v2 = spaced.a;
+			var spaceName = _v2.a;
+			var x = _v2.b;
+			var y = _v2.c;
+			var newPadding = function () {
+				if (padded.$ === 'Just') {
+					var _v5 = padded.a;
+					var name = _v5.a;
+					var t = _v5.b;
+					var r = _v5.c;
+					var b = _v5.d;
+					var l = _v5.e;
+					if ((_Utils_cmp(r, x / 2) > -1) && (_Utils_cmp(b, y / 2) > -1)) {
+						var newTop = t - (y / 2);
+						var newRight = r - (x / 2);
+						var newLeft = l - (x / 2);
+						var newBottom = b - (y / 2);
+						return $elm$core$Maybe$Just(
+							A2(
+								$mdgriffith$elm_ui$Internal$Model$StyleClass,
+								$mdgriffith$elm_ui$Internal$Flag$padding,
+								A5(
+									$mdgriffith$elm_ui$Internal$Model$PaddingStyle,
+									A4($mdgriffith$elm_ui$Internal$Model$paddingNameFloat, newTop, newRight, newBottom, newLeft),
+									newTop,
+									newRight,
+									newBottom,
+									newLeft)));
+					} else {
+						return $elm$core$Maybe$Nothing;
+					}
+				} else {
+					return $elm$core$Maybe$Nothing;
+				}
+			}();
+			if (newPadding.$ === 'Just') {
+				var pad = newPadding.a;
+				return A4(
+					$mdgriffith$elm_ui$Internal$Model$element,
+					$mdgriffith$elm_ui$Internal$Model$asRow,
+					$mdgriffith$elm_ui$Internal$Model$div,
+					A2(
+						$elm$core$List$cons,
+						$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.contentLeft + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.contentCenterY + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.wrapped)))),
+						A2(
+							$elm$core$List$cons,
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$shrink),
+							A2(
+								$elm$core$List$cons,
+								$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$shrink),
+								_Utils_ap(
+									attrs,
+									_List_fromArray(
+										[pad]))))),
+					$mdgriffith$elm_ui$Internal$Model$Unkeyed(children));
+			} else {
+				var halfY = -(y / 2);
+				var halfX = -(x / 2);
+				return A4(
+					$mdgriffith$elm_ui$Internal$Model$element,
+					$mdgriffith$elm_ui$Internal$Model$asEl,
+					$mdgriffith$elm_ui$Internal$Model$div,
+					attrs,
+					$mdgriffith$elm_ui$Internal$Model$Unkeyed(
+						_List_fromArray(
+							[
+								A4(
+								$mdgriffith$elm_ui$Internal$Model$element,
+								$mdgriffith$elm_ui$Internal$Model$asRow,
+								$mdgriffith$elm_ui$Internal$Model$div,
+								A2(
+									$elm$core$List$cons,
+									$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.contentLeft + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.contentCenterY + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.wrapped)))),
+									A2(
+										$elm$core$List$cons,
+										$mdgriffith$elm_ui$Internal$Model$Attr(
+											A2(
+												$elm$html$Html$Attributes$style,
+												'margin',
+												$elm$core$String$fromFloat(halfY) + ('px' + (' ' + ($elm$core$String$fromFloat(halfX) + 'px'))))),
+										A2(
+											$elm$core$List$cons,
+											$mdgriffith$elm_ui$Internal$Model$Attr(
+												A2(
+													$elm$html$Html$Attributes$style,
+													'width',
+													'calc(100% + ' + ($elm$core$String$fromInt(x) + 'px)'))),
+											A2(
+												$elm$core$List$cons,
+												$mdgriffith$elm_ui$Internal$Model$Attr(
+													A2(
+														$elm$html$Html$Attributes$style,
+														'height',
+														'calc(100% + ' + ($elm$core$String$fromInt(y) + 'px)'))),
+												A2(
+													$elm$core$List$cons,
+													A2(
+														$mdgriffith$elm_ui$Internal$Model$StyleClass,
+														$mdgriffith$elm_ui$Internal$Flag$spacing,
+														A3($mdgriffith$elm_ui$Internal$Model$SpacingStyle, spaceName, x, y)),
+													_List_Nil))))),
+								$mdgriffith$elm_ui$Internal$Model$Unkeyed(children))
+							])));
+			}
+		}
+	});
+var $author$project$Main$homePage = function (displaySize) {
 	return A2(
 		$mdgriffith$elm_ui$Element$column,
 		_List_fromArray(
@@ -18620,17 +18808,15 @@ var $author$project$Main$homePage = function (height) {
 						$mdgriffith$elm_ui$Element$Font$color(
 						A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
 						$mdgriffith$elm_ui$Element$Font$heavy,
-						A2($mdgriffith$elm_ui$Element$spacingXY, 30, 30),
-						$mdgriffith$elm_ui$Element$scrollbarY,
-						$mdgriffith$elm_ui$Element$scrollbars
+						A2($mdgriffith$elm_ui$Element$spacingXY, 30, 30)
 					]),
 				A2(
 					$elm$core$List$map,
-					$author$project$Main$makeTopicIcon(height),
+					$author$project$Main$makeTopicIcon(displaySize),
 					_List_fromArray(
 						[$author$project$Messages$GotoIsomorphism, $author$project$Messages$GotoMaxkCut, $author$project$Messages$GotoColoring]))),
 				A2(
-				$mdgriffith$elm_ui$Element$row,
+				$mdgriffith$elm_ui$Element$wrappedRow,
 				_List_fromArray(
 					[
 						$mdgriffith$elm_ui$Element$centerX,
@@ -18642,7 +18828,7 @@ var $author$project$Main$homePage = function (height) {
 					]),
 				A2(
 					$elm$core$List$map,
-					$author$project$Main$makeTopicIcon(height),
+					$author$project$Main$makeTopicIcon(displaySize),
 					_List_fromArray(
 						[$author$project$Messages$GotoCover, $author$project$Messages$GotoTreeWidth])))
 			]));
@@ -19858,7 +20044,7 @@ var $author$project$Main$viewTopic = F2(
 							A3($author$project$TreeWidth$explanationWidth, display, model.helpStatus, explanationSize)
 						]));
 			case 'HomePage':
-				return $author$project$Main$homePage(displaySize.height);
+				return $author$project$Main$homePage(displaySize);
 			case 'ScreenSize':
 				return A2(
 					$mdgriffith$elm_ui$Element$el,

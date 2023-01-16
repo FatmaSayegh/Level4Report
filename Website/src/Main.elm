@@ -441,7 +441,7 @@ viewTopic model displaySize =
                   , explanationWidth display model.helpStatus explanationSize
                   ]
       HomePage ->
-            homePage displaySize.height
+            homePage displaySize
 
       ScreenSize ->
             ELE.el
@@ -859,8 +859,8 @@ introSuperVisor width height =
             ]
 
 
-makeTopicIcon : Int -> Msg -> ELE.Element Msg
-makeTopicIcon height topicMsg =  
+makeTopicIcon : DisplaySize -> Msg -> ELE.Element Msg
+makeTopicIcon displaySize topicMsg =  
    let
       tex =
          case topicMsg of
@@ -876,6 +876,8 @@ makeTopicIcon height topicMsg =
                "Tree Width."
             _ ->
                "Oops"
+      dimension =
+            Basics.min displaySize.height displaySize.width
                
       miniGraph =
          case topicMsg of
@@ -899,8 +901,8 @@ makeTopicIcon height topicMsg =
               , Border.width 2
               , Border.rounded 15
               --, ELE.width (ELE.fill |> ELE.minimum 200)
-              , ELE.width (ELE.fill |> ELE.minimum (height//4))
-              , ELE.height (ELE.fill |> ELE.minimum (height//4))
+              , ELE.width (ELE.fill |> ELE.minimum (dimension//4))
+              , ELE.height (ELE.fill |> ELE.minimum (dimension//4))
               , ELE.clip
               ] 
               [ displayMiniGraph miniGraph
@@ -915,8 +917,8 @@ displayMiniGraph svgHtml =
       , Background.color <| ELE.rgb 0.2 0.2 0.2
       ] (ELE.html svgHtml)
 
-homePage : Int -> ELE.Element Msg
-homePage height =
+homePage : DisplaySize -> ELE.Element Msg
+homePage displaySize =
    ELE.column
       [ ELE.centerX
       , ELE.centerY
@@ -969,22 +971,20 @@ homePage height =
                , Font.color <| ELE.rgb 1 1 1
                , Font.heavy
                , ELE.spacingXY 30 30
-               , ELE.scrollbarY
-               , ELE.scrollbars
                ]
-               <| List.map (makeTopicIcon height)
+               <| List.map (makeTopicIcon displaySize)
                   [ GotoIsomorphism
                   , GotoMaxkCut
                   , GotoColoring
                   ]
-        , ELE.row
+        , ELE.wrappedRow
                [ ELE.centerX
                , ELE.centerY
                , Font.color <| ELE.rgb 1 1 1
                , Font.heavy
                , ELE.spacingXY 30 15
                ]
-               <| List.map (makeTopicIcon height)
+               <| List.map (makeTopicIcon displaySize)
                   [ GotoCover
                   , GotoTreeWidth
                   ]
