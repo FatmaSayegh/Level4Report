@@ -16852,8 +16852,8 @@ var $author$project$Explanation$vertexCoverExplanation = '\n   Minimum Vertex co
 var $author$project$VertexCover$explanationCover = F3(
 	function (display, helpStatus, displaySize) {
 		var graph = function () {
-			var _v1 = display.state;
-			if (_v1.$ === 'First') {
+			var _v2 = display.state;
+			if (_v2.$ === 'First') {
 				return display.graphA;
 			} else {
 				return display.graphB;
@@ -16974,46 +16974,97 @@ var $author$project$VertexCover$explanationCover = F3(
 					A2(
 					$mdgriffith$elm_ui$Element$paragraph,
 					_List_Nil,
-					(!edgesRemainig) ? ((noOfSelectedVertices > 4) ? _List_fromArray(
-						[
-							$mdgriffith$elm_ui$Element$text('\n                                  You have covered all the edges.\n                                  but\n                                  you have done so by selecting\n                                  '),
-							A2(
-							emph,
-							$author$project$FontSize$Pink,
-							$elm$core$String$fromInt(noOfSelectedVertices)),
-							$mdgriffith$elm_ui$Element$text('\n                                  vertices. The graph could have been covered by\n                                  selecting only four! Try again to see that\n                                  you can do it in just four.\n                                  ')
-						]) : _Utils_ap(
-						$author$project$Explanation$makeCongrats(displaySize.deviceType),
-						_List_fromArray(
-							[
-								$mdgriffith$elm_ui$Element$text(' you have covered all '),
-								A2(
-								emph,
-								$author$project$FontSize$CuteBlue,
-								$elm$core$String$fromInt(noCoveredEdges)),
-								$mdgriffith$elm_ui$Element$text(' edges. '),
-								$mdgriffith$elm_ui$Element$text('You have done so by selecting the vertices '),
-								A2(
-								emph,
-								$author$project$FontSize$CuteBlue,
-								$author$project$Graph$getStringFromVertices(selected_vertices)),
-								$mdgriffith$elm_ui$Element$text('. Therefore a vertex cover of this graph is the'),
-								A2(emph, $author$project$FontSize$CuteGreen, ' set '),
-								$mdgriffith$elm_ui$Element$text(' of vertices '),
-								A2(
-								emph,
-								$author$project$FontSize$CuteBlue,
-								$author$project$Graph$getStringFromVertices(selected_vertices)),
-								$mdgriffith$elm_ui$Element$text('.')
-							]))) : (_Utils_eq(edgesRemainig, totalEdges) ? _List_fromArray(
-						[$mdgriffith$elm_ui$Element$none]) : _List_fromArray(
-						[
-							A2(
-							emph,
-							$author$project$FontSize$Pink,
-							$elm$core$String$fromInt(edgesRemainig)),
-							$mdgriffith$elm_ui$Element$text(' edges more to be covered!')
-						]))),
+					function () {
+						if (!edgesRemainig) {
+							var _v1 = display.state;
+							if (_v1.$ === 'First') {
+								return (noOfSelectedVertices > 4) ? _List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$text('\n                                          You have covered all the edges.\n                                          but\n                                          you have done so by selecting\n                                          '),
+										A2(
+										emph,
+										$author$project$FontSize$Pink,
+										$elm$core$String$fromInt(noOfSelectedVertices)),
+										$mdgriffith$elm_ui$Element$text('\n                                          vertices. The graph could have been covered by\n                                          selecting only \n                                          '),
+										A2(emph, $author$project$FontSize$Pink, '\n                                          four! \n                                          '),
+										$mdgriffith$elm_ui$Element$text('\n                                          Try again to see that\n                                          you can do it in just four.\n                                          ')
+									]) : _Utils_ap(
+									$author$project$Explanation$makeCongrats(displaySize.deviceType),
+									_List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$text(' you have covered all '),
+											A2(
+											emph,
+											$author$project$FontSize$CuteBlue,
+											$elm$core$String$fromInt(noCoveredEdges)),
+											$mdgriffith$elm_ui$Element$text(' edges. '),
+											$mdgriffith$elm_ui$Element$text('You have done so by selecting the vertices '),
+											A2(
+											emph,
+											$author$project$FontSize$CuteBlue,
+											$author$project$Graph$getStringFromVertices(selected_vertices)),
+											$mdgriffith$elm_ui$Element$text('. Therefore a vertex cover of this graph is the'),
+											A2(emph, $author$project$FontSize$CuteGreen, ' set '),
+											$mdgriffith$elm_ui$Element$text(' of vertices '),
+											A2(
+											emph,
+											$author$project$FontSize$CuteBlue,
+											$author$project$Graph$getStringFromVertices(selected_vertices)),
+											$mdgriffith$elm_ui$Element$text('.')
+										]));
+							} else {
+								return (noOfSelectedVertices > 6) ? _List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$text('\n                                          You have covered all the edges.\n                                          but\n                                          you have done so by selecting\n                                          '),
+										A2(
+										emph,
+										$author$project$FontSize$Pink,
+										$elm$core$String$fromInt(noOfSelectedVertices)),
+										$mdgriffith$elm_ui$Element$text('\n                                          vertices. The graph could have been covered by\n                                          selecting only \n                                          '),
+										A2(emph, $author$project$FontSize$Pink, '\n                                          six! \n                                          '),
+										$mdgriffith$elm_ui$Element$text('\n                                          Try again to see that\n                                          you can do it in just \n                                          '),
+										A2(emph, $author$project$FontSize$Pink, '\n                                          six.\n                                          ')
+									]) : _Utils_ap(
+									$author$project$Explanation$makeCongrats(displaySize.deviceType),
+									_List_fromArray(
+										[
+											$mdgriffith$elm_ui$Element$text(' you have covered all '),
+											A2(
+											emph,
+											$author$project$FontSize$CuteBlue,
+											$elm$core$String$fromInt(noCoveredEdges)),
+											$mdgriffith$elm_ui$Element$text(' edges. '),
+											$mdgriffith$elm_ui$Element$text('You have done so by selecting the vertices '),
+											A2(
+											emph,
+											$author$project$FontSize$CuteBlue,
+											$author$project$Graph$getStringFromVertices(selected_vertices)),
+											$mdgriffith$elm_ui$Element$text('. Therefore a vertex cover of this graph is the'),
+											A2(emph, $author$project$FontSize$CuteGreen, ' set '),
+											$mdgriffith$elm_ui$Element$text(' of vertices '),
+											A2(
+											emph,
+											$author$project$FontSize$CuteBlue,
+											$author$project$Graph$getStringFromVertices(selected_vertices)),
+											$mdgriffith$elm_ui$Element$text('.')
+										]));
+							}
+						} else {
+							if (_Utils_eq(edgesRemainig, totalEdges)) {
+								return _List_fromArray(
+									[$mdgriffith$elm_ui$Element$none]);
+							} else {
+								return _List_fromArray(
+									[
+										A2(
+										emph,
+										$author$project$FontSize$Pink,
+										$elm$core$String$fromInt(edgesRemainig)),
+										$mdgriffith$elm_ui$Element$text(' edges more to be covered!')
+									]);
+							}
+						}
+					}()),
 					helpStatus ? $author$project$Buttons$helpParagraph($author$project$Buttons$VertexCoverHelp) : $mdgriffith$elm_ui$Element$none,
 					$author$project$VertexCover$vertexButtons,
 					A2($author$project$Buttons$lowerNavigation, 'Graph Coloring', 'Tree Width')

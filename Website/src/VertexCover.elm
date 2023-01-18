@@ -241,36 +241,89 @@ explanationCover display helpStatus displaySize =
                []
                <| if edgesRemainig == 0
                       then
-                         if noOfSelectedVertices > 4
-                            then
-                               [ ELE.text
-                                  """
-                                  You have covered all the edges.
-                                  but
-                                  you have done so by selecting
-                                  """
-                               , emph Pink (String.fromInt noOfSelectedVertices)
-                               , ELE.text 
-                                  """
-                                  vertices. The graph could have been covered by
-                                  selecting only four! Try again to see that
-                                  you can do it in just four.
-                                  """
-                               ]
-                            else
-                               
-                                  (makeCongrats displaySize.deviceType) ++
-                               [  ELE.text " you have covered all "
-                               ,  emph CuteBlue (String.fromInt noCoveredEdges)
-                               ,  ELE.text " edges. "
-                               ,  ELE.text "You have done so by selecting the vertices "
-                               ,  emph CuteBlue (Graph.getStringFromVertices selected_vertices)
-                               ,  ELE.text ". Therefore a vertex cover of this graph is the"
-                               ,  emph CuteGreen " set " 
-                               ,  ELE.text " of vertices "
-                               ,  emph CuteBlue (Graph.getStringFromVertices selected_vertices)
-                               ,  ELE.text "."
-                               ]
+                         case display.state of
+                              First ->
+                                 if noOfSelectedVertices > 4
+                                    then
+                                       [ ELE.text
+                                          """
+                                          You have covered all the edges.
+                                          but
+                                          you have done so by selecting
+                                          """
+                                       , emph Pink (String.fromInt noOfSelectedVertices)
+                                       , ELE.text 
+                                          """
+                                          vertices. The graph could have been covered by
+                                          selecting only 
+                                          """
+                                       , emph Pink
+                                          """
+                                          four! 
+                                          """
+                                       , ELE.text
+                                          """
+                                          Try again to see that
+                                          you can do it in just four.
+                                          """
+                                       ]
+                                    else
+                                       
+                                          (makeCongrats displaySize.deviceType) ++
+                                       [  ELE.text " you have covered all "
+                                       ,  emph CuteBlue (String.fromInt noCoveredEdges)
+                                       ,  ELE.text " edges. "
+                                       ,  ELE.text "You have done so by selecting the vertices "
+                                       ,  emph CuteBlue (Graph.getStringFromVertices selected_vertices)
+                                       ,  ELE.text ". Therefore a vertex cover of this graph is the"
+                                       ,  emph CuteGreen " set " 
+                                       ,  ELE.text " of vertices "
+                                       ,  emph CuteBlue (Graph.getStringFromVertices selected_vertices)
+                                       ,  ELE.text "."
+                                       ]
+                              Second ->
+                                 if noOfSelectedVertices > 6
+                                    then
+                                       [ ELE.text
+                                          """
+                                          You have covered all the edges.
+                                          but
+                                          you have done so by selecting
+                                          """
+                                       , emph Pink (String.fromInt noOfSelectedVertices)
+                                       , ELE.text 
+                                          """
+                                          vertices. The graph could have been covered by
+                                          selecting only 
+                                          """
+                                       , emph Pink
+                                          """
+                                          six! 
+                                          """
+                                       , ELE.text
+                                          """
+                                          Try again to see that
+                                          you can do it in just 
+                                          """
+                                       , emph Pink
+                                          """
+                                          six.
+                                          """
+                                       ]
+                                    else
+                                       
+                                          (makeCongrats displaySize.deviceType) ++
+                                       [  ELE.text " you have covered all "
+                                       ,  emph CuteBlue (String.fromInt noCoveredEdges)
+                                       ,  ELE.text " edges. "
+                                       ,  ELE.text "You have done so by selecting the vertices "
+                                       ,  emph CuteBlue (Graph.getStringFromVertices selected_vertices)
+                                       ,  ELE.text ". Therefore a vertex cover of this graph is the"
+                                       ,  emph CuteGreen " set " 
+                                       ,  ELE.text " of vertices "
+                                       ,  emph CuteBlue (Graph.getStringFromVertices selected_vertices)
+                                       ,  ELE.text "."
+                                       ]
 
                       else
                          if edgesRemainig == totalEdges
