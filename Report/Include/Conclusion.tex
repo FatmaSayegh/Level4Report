@@ -1,40 +1,45 @@
 % Conclusion
 
 \section{Reflections}
+
+%\subsection{On Learning Impact}
+%\subsection{On Problem Explanation}
+%\subsection{}
+
 \subsection{Experience of using Functional programming for Front End Programming} 
 
-The developer of the application has some experience in programming in
-imperative languages. Therefore here is a reflection on how functional
-programming for this project actually felt like. 
+Here is a reflection on the experience of using functional programming for this
+project. This experience will also be compared to past experience in
+programming in imperative languages.
 
 A web app today is one of the primary means of human computer interaction
 (HCI). To model something as complex as a HCI a programming paradigm which can
-model this complexity efficiently is needed.  While imperative programming
-however \emph{high-level} it might be is much closer to the Von-Nueman machine
-in terms how a computer program is reasoned about. This paradigm implements
-most of it's logic by control mechanisms and less in logic itself. Functional
-programming on the other hand is much more efficient in modelling the domain
-you want to represent. It implements logic more in terms of logic and less in
-terms of control.
+model this complexity efficiently is needed. 
+
+An imperative programming language, however \emph{high-level} it might be, is
+much closer to the Von-Nueman machine in terms of how a computer program is
+reasoned about by the programmer. There is a tape and it has to be read one
+step at a time. The programmer implements most of the logic in terms of control
+mechanisms and less in terms of logic itself. Therefore the program becomes far
+more complex than the actual complexity it has to represent. 
+
+Functional programming on the other hand was much more efficient in modelling
+the domain to be represented. It implemented logic more in terms of logic and
+less in terms of control structures. Such that while reading the program one
+mostly saw logic and not boiler-plate code.
 
 Using Elm in representing the world inside the application and the signals
-which could be received from the outside world was simple and elegant. The
-state of the program and the inputs it recieves are represented by $Types$.
-The Types are declared in a modular way in which a larger type represents the
-model of the application. The type situated inside the former represents the
-topics and so on. The topic itself might be composed of otner types themselves
-representing various states of the pages.
+which are received from the outside was simple and elegant. The functional
+\emph{type system} gave a structure for organizing, extending and refactoring
+the project which continued to grow in size and complexity. The ease of
+extending the application nudged the development style towards more of a
+bottom-up style. Functionality of the animations were coded before pages, and
+pages were done before the whole of the app.
 
-Usually extending the functionality of the app requires one to add a data
-constructor (here a constructor is not the same as object oriented programming)
-of a type or a field in the record of a type alias.
-
-Pattern matching on the inputs of the functions is used extensively in the code
-to take logical decisions. Pattern matching is used to implement different
-functionality of the functions for inputs indentified by different data
-constructors. This was one of the main method of programming for this project.
-
-Another important method was pipeling the output of a function to the input of
-another function. Reading a series of pipelined functions, is easy to reason
-with as it seems like data is being processed on an assembly line with
-functions acting on it in turn.
+While types made modelling the domain efficient. Functions made the rules of
+physics in the web application explicit. Pattern matching on the inputs of the
+functions was used extensively in the code to take logical decisions. Another
+important method was pipeling the output of a function to the input of another
+function. Reading a series of pipelined functions, was easy to reason with as
+it seemed like data is being processed on an assembly line with functions
+acting on it in turn.
