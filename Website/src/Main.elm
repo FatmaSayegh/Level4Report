@@ -786,7 +786,7 @@ introFatma width height =
          fatmasIntro =
             """
             I am a fourth year Software Engineering student in University
-            of Glasgow. This web app was built for the as my final year
+            of Glasgow. This web app was built for my final year
             project. My intrests are maths, functional programming and drawing.
             """
             
