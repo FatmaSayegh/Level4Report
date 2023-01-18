@@ -78,8 +78,8 @@ deals with just pure functions. This allows him to exploit the perfectness of
 pure functional programming.
 
 This separation of concerns of pure and impure code in the context of the Elm
-programming language is discussed in the \autoref{elm: architecture} called \emph{the Elm
-Architecture}.
+programming language is discussed in the \autoref{elm: architecture} called
+\emph{the Elm Architecture}.
 
 \subsection{Why Elm Programming Language for This Project?}
 
@@ -89,18 +89,26 @@ substantial.  Unlike JavaScript, Elm does not require any external framework
 such as Angular or React. This makes the program easier to reason with and
 maintainable.
 
-The wireframe layout of an app in Elm can be done using HTML and CSS directly
-by using an Elm library called Elm-Ui. This package frees the programmer
-from using CSS styling and gives intuitive control of the page layout with
-the help of rows and columns.
+\subsubsection{Friendly Compiler Errors}
+It has a compiler which gives friendly error messages almost guiding the
+programmer for correct usage of the language. Refactoring code in Elm is easy
+as the friendly compiler errors guide the programmer to each line of the code
+which need modification while refactoring.
 
-Although, Elm is a releatively new language which may not have as much
-community support as JavaScript and it's various frameworks have, it has a
-compiler which gives friendly error messages almost guiding the programmer for
-correct usage of the language. Refactoring code in Elm is easy as the friendly
-compiler errors guide the programmer to each line of the code which need
-modification while refactoring.
+\subsubsection{Elm-Ui}
+The layout of the application on the screen can be done without any direct
+usage HTML/CSS by using an Elm library called Elm-Ui. This package frees the
+programmer from using CSS styling and gives intuitive control of the page
+layout with the help of rows and columns (Pure functions). With Elm-Ui,
+multiple rows can be situated in a column and multiple columns can be situated
+in a row and so on and on. When elements are put in a row they are stacked side
+by side horizontally. When the elements are put in a column they are stacked
+one below each other. The elements in such a row or a column can be put at a
+definite alignment and spacing from each other.
 
+\subsubsection{Libraries and Community}
+Elm also has rich liblraries for linear algebra, graphics and Scalar Vector
+Graphics which can aid in creating a \emph{2D} graphics web app like this one.
 
 \subsection{The Elm Architecture}
 \label{elm: architecture}
@@ -492,16 +500,15 @@ in turn updates the model (state of the program). The updated model of the
 program is reflected on the screen by the view function.
 
 \subsection{Home Page}
-The home page is the landing page for the user. It gives the user clickable
-icons for navigation to the topics in the application. The icons contain
-miniaturized version of the graphs for the corresponding topics. The
-miniaturized versions of the graph are borrowed from the implementation of the
-various animations and user interactive tasks in the app. The miniatization is
-implemented by giving the SVGs small spaces to occupy on the page. As the
-graphics is scalable, it adopts the size of the parent. Clicking on the Graph
-Isomorphism icon, for example triggers the $GoToIsomorphism$ message which is
-used by the $update$ function to change the state of the model to contain
-the $Isomorphim$ topic.
+For the layout of the Home page, see it's design in \autoref{design :home}.
+The icons contain miniaturized version of the graphs for the corresponding
+topics. The miniaturized versions of the graph are borrowed from the
+implementation of the various animations and user interactive tasks in the app.
+The miniatization is implemented by giving the SVGs small spaces to occupy on
+the page. As the graphics is scalable, it adopts the size of the parent.
+Clicking on the Graph Isomorphism icon, for example triggers the
+$GoToIsomorphism$ message which is used by the $update$ function to change the
+state of the model to contain the $Isomorphim$ topic.
 
 
 \subsection{URL Management}
@@ -564,23 +571,25 @@ This topic is elucidated by two user interactive animations. Refer to
 
 
 \subsubsection{Isomorphic Definition Animation}
-The first animation consists of two
-Graphs which are the same.
+The first animation consists of two Graphs which are the same.  In the
+beginning the two graphs are superimposed with each other positionally.  Each
+graph is constructed by merging two polygons and connecting their vertices in a
+wheel like structure. As the animation begins one graph leaves it's position
+and transforms to another shape.  This is achieved by instantiating the two
+graphs with same position and form. An empty grid is also provided as the
+target set of positions for the vertices of the second graph. 
 
-In the beginning the two graphs are superimposed with each other positionally.
-Each graph is constructed by merging two polygons and connecting their vertices
-in a wheel like structure.
-As the animation begins one graph leaves it's position and transforms to
-another shape.  This is achieved by instantiating the two graphs with same
-position and form. An empty grid is also provided as the target set of
-positions for the vertices of the second graph. 
+When the user presses the play button the message $AnimationToggle$ is
+generated. When the update function recieves this message, it cheks for the
+state of the program which is set at $IsomorphicTransition$. It starts the
+animation if it is not already in progress.  
 
 When the animation is started, with each tick of the animation clock, the
 vertices of the second graph move towards the target grid points with a
 constant velocity. For the kinematics involved in this transition see
 \emph{Morphing Geometry of a Graph} in \autoref{animation: morphing}.
 
-%PICTURE of Isomorphic Animation
+%PICTURE of Isomorphic Quiz
 \begin{figure}[h]
 \centering
 \includegraphics[width=4in]{isogame}
@@ -589,15 +598,15 @@ constant velocity. For the kinematics involved in this transition see
         }
 \label{animationfigure: isomorphicGame}
 \end{figure}
-For the user interaction part, when the user hovers over a vertex, or selects
-it by pressing the corresponding numerical key on the keyboard, a Boolean
-variable associated with the vertex is turned \emph{True}. A function filters
-the list of vertices to find the selected vertex. Another function finds the
-edges incident on the vertex and also the vertices adjacent to the selected
-vertex by filtering over the list of edges in the graph. These are shown
-differently in a highlighted color in both the graphs in the display section.
-The explanation section also uses this data to explain how the selected vertex
-is connected to the same adjacent vertices in both the graphs.
+The animation is also user interactive, when the user hovers over a vertex, or
+selects it by pressing the corresponding numerical key on the keyboard, a
+Boolean variable associated with the vertex is turned \emph{True}. A function
+filters the list of vertices to find the selected vertex. Another function
+finds the edges incident on the vertex and also the vertices adjacent to the
+selected vertex by filtering over the list of edges in the graph. These are
+shown differently in a highlighted color in both the graphs in the display
+section.  The explanation section also uses this data to explain how the
+selected vertex is connected to the same adjacent vertices in both the graphs.
 
 \subsubsection{Animated Quiz for Graph Isomorphism}
 The second activity gives the user three graphs. The first graph is a reference
