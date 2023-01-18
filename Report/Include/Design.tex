@@ -70,9 +70,8 @@ one topic to another.
 \subsection{Home Page, About Page and Header Bar}
 \label{design: home}
 The home page is the landing page of the application. It gives the user
-clickable icons for navigation to the topics in the application. The icons must
-have the name of the topic and a miniature graph which best represents the
-topic. 
+clickable icons for navigation to the topics. The icons must have the name of
+the topic and a miniature graph which best represents the topic. 
 
 The about page has a short description of the purpose of the application with a
 short write up introducing the developer and the supervisor of the project. It
@@ -213,6 +212,13 @@ advised to inspect other vertices of the graphs and convince herself that each
 vertex of the graph has the same adjacent vertices in both the isomorphic
 counterparts.
 
+\subsubsection{Quiz:}
+The user can with a click of a button go to the quize page which resides within
+the topic of Isomporphism. The page asks her to select a graph (among more than
+one graphs) which she thinks is isomorphic to a given reference graph.  When
+she makes her choice, she is shown the right answer along with an animation on
+how the correct answer is isomorphic to the reference graph.
+
 \subsubsection{Learning Impact:}
 The transformation of a graph into a radically different looking graph but
 being essentially the same as far as the connectivity between the vertices go
@@ -262,7 +268,12 @@ points which tell the user the number of edges passing from one set to another.
 \begin{figure}[h]
 \centering
 \includegraphics[scale=0.2]{maxcutdes}
-\caption{Initial design of Max 2 Cut}
+\caption{
+         Initial design of Max 2 Cut. The inital graph is shown in the left. It
+         must go through a a transformation such that the two sets of the Max
+         Cut are seperated form each other as shown in the right. Preferably
+         there should be a line between the two sets for visual seperation.
+        }
 \end{figure}
 
 \subsubsection{Max 3 Cut Animation:}
@@ -290,9 +301,9 @@ imaginative student to want to investigate the subject further.
 \subsection{Graph Coloring}
 \label{story: coloring}
 \subsubsection{User Interaction:}
-A user-interactive task was chosen for explaining Graph Coloring as the nature
-of the problem lends naturally for such.  The user is presented with a graph
-which has all the vertices in color white.  On the explanation panel to the
+User-interactive task was chosen for explaining Graph Coloring as the nature
+of the problem lends naturally for such. The user is presented with a graph
+which has all the vertices in color white. On the explanation panel to the
 right he is given the definition of the problem and advice on how to complete
 the task.  
 
@@ -303,12 +314,7 @@ vertices the same color the text panel warns them to make amends. There is a
 reset button in the explanation panel to un-color all the vertices to start all
 over again if the user wants to start from the beginning.
 
-The user is challenged to first challenged to color the graph successfully in
-just two colors but as it would be soon clear to the user it can only be done
-in three.
-
-A user-interactive task was chosen for explaining Graph Coloring as the nature
-of the problem lends naturally for such.
+There is another task alike the one above, albeit for 2 colors.
 
 \subsubsection{Learning Impact:}
 The user interactive task will help the student retain the meaning of the Graph
@@ -331,6 +337,9 @@ cover all the edges in the graph. When the user covers all the edges by only
 selecting four vertices, he is given a congratulatory message for having done
 the task right. If he covers the graph by selecting more than four vertices
 then he is advised to do the same in just four.
+
+There is another task alike the one above, albeit with greater
+number of vertices and edges to make the problem marginally harder.
 
 \subsubsection{Learning Impact:}
 Just like Graph coloring, in the case of Minimum Vertex Cover too, it is
@@ -358,15 +367,22 @@ The piece is also represented by a blue dot at the centroid of the three
 vertices. In the next part of the animation the whole of the graph is marked by
 it's constituent pieces by blue dots. 
 
-In the final part, the pieces form the nodes of a tree. The tree's edges
+In the second last part, the pieces form the nodes of a tree. The tree's edges
 (branches) are colored in golden color to make it stand out from the graph in
 the background. At this point, the definition of the tree width is given in
 the explanation panel.
+
+The final part gives a different tree decomposition to the one mentioned
+earlier with size of a piece increaded to four. This shows that a graph can be
+decomposed in more than one way. Hence the tree-width corresponding to this
+decomposition would be four. Ideally, though the tree decomposition of a graph
+should be performed in such way that the tree-width is kept at the minimum
+among all possible tree decompositions. Therefore the tree-width of three
+corresponding to the earlier tree decomposition was the correct value of
+tree-width for the graph.
 
 \subsubsection{Learning Impact:}
 The user is expected to learn the concept of tree decomposition of a graph.
 Also, by the help of animations, he will be inspired to learn abstract
 thinking: how a \emph{form} of a tree can be derived out of an unassuming
 typical graph.
-
-
