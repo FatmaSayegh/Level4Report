@@ -35,7 +35,11 @@
         }
     },
     "test-dependencies": {
-        "direct": {},
-        "indirect": {}
+        "direct": {
+            "elm-explorations/test": "2.1.0"
+        },
+        "indirect": {
+            "elm/bytes": "1.0.8"
+        }
     }
 }

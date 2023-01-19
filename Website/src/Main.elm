@@ -599,10 +599,9 @@ acknowledgement width height =
                   
             , ELE.text
                   """
-                  for giving me a
-                  wonderful opportunity to explore the topics of Graph Theory.  Her
-                  constant support and guidance throughout the project was
-                  detrimental in building the app.
+                  for giving me a wonderful opportunity to explore the topics
+                  of Graph Theory.  Her constant support and guidance
+                  throughout the project was essential in building the app.
                   """
             ]
          father =
