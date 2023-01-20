@@ -152,7 +152,7 @@ graphGridTestAdapter thatFunction name =
    describe ("testing distanceBetweenGraphAndGrid function " ++ name) <|
       let
          sizes =
-            List.range 3 100
+            List.range 3 200
          pos =
             (vec3 100 100 0)
          sizeVec =
@@ -193,6 +193,7 @@ graphGridDistTest name graph grid =
          in
          Expect.within (Expect.Absolute 0.001) listOfDifference distBwGrGrid
                               
+                              
 graphGridDistValueTest : String -> Graph -> Grid -> Test
 graphGridDistValueTest name graph grid =
    test ("testing graphGridDistTest is greater than zero for sizes " ++ name) <|
@@ -206,9 +207,152 @@ graphGridDistValueTest name graph grid =
          Expect.greaterThan 0.0 distBwGrGrid
 
 
+makeGraphNoVerticesSuite : Test
+makeGraphNoVerticesSuite =
+   describe "Checking if correct number of vertices is made correctly " <|
+      let
+         polygonSizes =
+            List.range 3 200
+
+         polygonCycles =
+            List.map PolygonCycle polygonSizes
+
+         fullyConnecteds =
+            List.map PolygonFullyConnected polygonSizes
+
+         dolls =
+            List.map PolygonCycleDoll polygonSizes
+
+         combinedGtypes =
+            polygonCycles ++ fullyConnecteds ++ dolls
+      in
+      List.map
+         makeGraphNoOfVerticesTest combinedGtypes
+         
 
 
---suite : Test
+makeGraphNoOfVerticesTest : Gtype -> Test
+makeGraphNoOfVerticesTest gtype =
+      let
+         sizeOfGraph =
+            (vec3 150 150 0)
+
+         positionOfGraph =
+            (vec3 150 150 0)
+
+         graph =
+            makeGraph gtype positionOfGraph sizeOfGraph 0
+
+         (expNoVer, gtypeStr) =
+            case gtype of
+               PolygonCycle n ->
+                  (n, "Cycle")
+               PolygonFullyConnected n ->
+                  (n, "Fully Connected")
+               PolygonCycleDoll n ->
+                  (2*n, "Doll")
+      in
+      test 
+         ("No. of vertices according to type of graph " 
+            ++ String.fromInt expNoVer
+            ++ gtypeStr)  <|
+         \_ ->
+            graph
+            |> .vertices
+            |> List.length
+            |> Expect.equal expNoVer
+
+      
+
+isLookUpVertexNameSameSuit : Test
+isLookUpVertexNameSameSuit =
+   describe "Checking if lookUpVertexName finds a vertex with correct name" <|
+   let
+      name =
+         1
+      polyGonVertices =
+         List.range 3 200
+
+      sizeOfGraph =
+         (vec3 150 150 0)
+
+      positionOfGraph =
+         (vec3 150 150 0)
+
+      gtypes =
+         List.map
+            PolygonCycle polyGonVertices
+
+      graphs =
+         gtypes
+         |> List.map (\t ->
+             makeGraph t sizeOfGraph positionOfGraph 0)
+
+   in
+   List.map
+      (isLookUpVertexNameSame name)
+      graphs
+
+isLookUpVertexNameSame : Int -> Graph -> Test         
+isLookUpVertexNameSame  name graph =
+   let
+      expectedName =
+         name
+      
+      nameOfTest =
+         String.fromInt <| List.length graph.vertices
+
+      foundVertex =
+         graph.vertices
+         |> lookUpVertex name
+
+      foundName =
+         case foundVertex of
+            Just v ->
+               v.name
+            Nothing ->
+               0
+  in
+  test ("lookUpVertexName test for " ++ (String.fromInt foundName) ++ nameOfTest) <|
+      \_ ->
+         Expect.equal expectedName foundName
+         
+fullyConnectedGraphEdgeCountSuite : Test         
+fullyConnectedGraphEdgeCountSuite =
+   describe "fully connected graph edge count suite " <|
+   let
+      polySize =
+         List.range 3 100
+   in
+   List.map
+      fullyConnectedGraphEdgeCountTest         
+      polySize
+
+fullyConnectedGraphEdgeCountTest : Int -> Test         
+fullyConnectedGraphEdgeCountTest n =
+   let
+      size = (vec3 100 100 0)
+
+      pos = (vec3 100 100 0)
+
+      graph =
+         makeGraph
+            (PolygonFullyConnected n)
+            size
+            pos
+            0
+
+      noOfEdges =
+         graph.edges
+         |> List.length
+
+  in
+  test ("fully connected graph edge count " ++ (String.fromInt n)) <|
+   \_ ->
+      Expect.equal 
+         (( n * ( n - 1) )//2)
+         noOfEdges
+         
 --suite =
 --   describe "Tests for numerical literacy"
 --      [
