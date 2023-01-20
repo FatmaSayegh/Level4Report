@@ -1,0 +1,40 @@
+% Evaluation
+
+\section{Testing}
+
+Automation of testing for this project was done by using a mix of Property
+based Testing and Unit Testing. Both paradigms of testing can be implemented
+for Elm projects using the library called \emph{elm-test} and a cli-tool which
+goes by the same name. Writing test files in Elm is the same as writing any
+other program. The test functions can generate input test cases (specially in
+the case of property based testing) and use boolean predicates to generate the
+output in terms of $Pass$ or $Fail$.
+
+\subsection{Property based Testing}
+Testing of components of Graph module was done using Property based testing.
+This paradigm of testing was introduced for the first time for Haskell (a
+functional programming language). It checks if the output of a function
+satisfies certain prescribed properties. These properties are specified as
+boolean predicates.
+
+For example, a function which constructs a fully connected graph (a graph in
+which all the vertices are connected to each other by one edge) with $n$
+vertices, will form $n \times (n - 1) / 2$ edges. The number of edges of the output
+graph are matched up against this mathematical reality. The function passed
+the test against a vast number of auto generated inputs.
+
+Similarily, a cyclical graph i.e one in which the vertices are connected in a
+pattern such as this: A -- B -- C -- D -- A, with n vertices will have the
+number of edges equal to $n$. A function which constructs such a graph can be
+property based tested by comparing the number of edges it has with the number
+of vertices, which in this case should be equal.
+
+\subsection{Unit testing}
+
+\subsection{Manual System Testing}
+The system was continously tested manually during the development of the
+project. Regardless, towards the end of the development a planned scheme for
+interacting with the system for the black box testing of the application was
+executed to search for unexpected behaviour. See \autoref{appendix:
+manualTesting} for the details of the test and results. The application's
+behaviour against all the tests was as expected.
