@@ -18,7 +18,7 @@ experiencing the application.
 The unsupervised survey was conducted among peers mainly in the field of
 computer science, mathematics and education. The participants were given the
 URL of the application and an online feedback form. The useres were asked to
-visit the application and and answer the questionaire on the feedback form.
+visit the application and and answer a questionaire.
 
 Although the survey was anonymous, i.e. the names of the participants remained
 unknown, but details such as their academic qualification and familiarity with
@@ -36,7 +36,7 @@ Therefore the feedback on the application brought a substantive quantity and
 quality of opinions, criticism and even some praise.
 
 The feedback ranged from opinions on UI/UX to 
-opinions on effectiveness of various particular topic.
+opinions on effectiveness of a particular topic.
 
 \subsection{Supervised Survey}
 The supervised survey consisted of the same questions the as unsupervised
@@ -115,7 +115,7 @@ interactivity between topics, such as clicking the cutline for max cut .. ''}
 
 The first criticism in the list above points out that the different topics had
 different styles for interactivity.  Although, it is agreed that all the pages
-should have a consistency as far as the buttons for interaction are concerned
+should have consistency in the number and nature of interactable buttons
 but the different demands of each topic made it difficult.  For example the max
 cut page has a cut-line button and others don't. This was unavoidable.
 However, it is understood well that a variation in button layout and
@@ -125,7 +125,8 @@ each page, though it may have it's own drawbacks in terms of visibility and
 accessibility.
 
 However most criticism of the UI/UX like clickable names on the navigation bar
-were actionable. Changes in the implementation were made for the same. For
+were actionable.  For example, the users tend to click the workds on the
+navigation bar. Change in the implementation was made for the same. For
 spelling errors in the explanation panel, they were combed out and corrected.
 
 
@@ -136,14 +137,18 @@ that the application in learning effectiveness.
 \subsubsection{Most Effective Topic:}
 To obtain what the respondents think about the learning effectiveness of the
 application they were asked which topic in the app did they find most effective
-for learning. The answers were ranged over all the topics. This might be due to
-the personal biases. This also means that every topic had something to impress
-the respondents in terms of learning efficacy.
+for learning. The answers ranged over all the topics. This indiacates that every
+topic had something to impress the respondents in terms of learning efficacy.
+
 
 The respondents who are familiar with the field of graph theory mentioned
 \emph{Tree Width}, and \emph{Max k Cut} the most. Although they mentioned rest
-of the topics at least once. They made to the top spot as they are difficult
-concepts to understand.
+of the topics at least once. The two topics made to the top spot as they are
+two most difficult topics to understand.
+
+They were also asked about the least effective topic and the reason of their choice. 
+This revealed some of the weaknesses in topic explanation. Again Tree width
+faced the most criticism for lack of clarity in the explanation panel. 
 
 \subsubsection{Graph Isomorphism:}
 Graph Isomorphism was mentioned in the feedback positively for having both an
@@ -239,16 +244,43 @@ the concept of tree width is clearly and correctly understood by the users.
 
 
 \subsection{Extra Feedback from the Respondents}
-The application was commended for being clear and colorful and being potentially
-extensible to other concepts of graph theory. There were a few suggestions
-for extending the functionality such as 
+The application was commended for being clear and colorful and being
+potentially extensible to other concepts of graph theory by most participants.
+There were a few suggestions for extending the functionality such as:
 \begin{enumerate}
-\item Animations showing non-optimal solutions.
 \item Custom user graphs.
 \item Detail on algorithms to compute these problems like vertex covers.
+\item Animations showing non-optimal solutions.
 \end{enumerate}
 
 
+\subsection{Limitations}
+
+The application has several fundamental limitaions some of which are pointed
+out in the survey by the participants. Others are have been deduced
+independently.
+
+\subsubsection{Absence of Algorithmic Solutions:}
+Since the objective of the application was to define and state the problems
+clearly and not to solve them algorithmically, the explanation of algorithms to
+solve the problems have been steered clear of. This limitiation in the scope of
+the project remains a limitation of the application.
+
+\subsubsection{Easy Examples:}
+The examples used to explain the topics are simple. For instance, the exmaple
+chosen to explain the max 3 cut problem was a tripartite graph.  It's solution
+is trivial. These examples were chosen to clarify the definitions of the
+problems, even though complicated examples could have given an uninitiated user
+a flavor of complexity and hardness of the problems.
+
+\subsubsection{Absence of Custom User Graphs Functionality:}
+There are web applications on the internet, which allow the user to instantiate
+their own graphs, with user instantiated vertices and edges. Although such
+functionality has been avoided as the application's objective is to clarify the
+definition of the problems. For this purpose in the application there are only
+concrete examples which lend themselves to easy explanation of the problem at
+the hand. However if in the future, algorithmic solutions to such problems, is
+also included, then functionality of defining custom graphs can be added.
 
 \section{Testing}
 Automation of testing for this project was done by using a mix of Property
@@ -259,8 +291,8 @@ other program. The test functions can generate input test cases (specially in
 the case of property based testing) and use boolean predicates to generate the
 output in terms of $Pass$ or $Fail$.
 
-\subsection{Property based Testing}
-Testing of components of Graph module was done using Property based testing.
+\subsection{Property Based Testing}
+Testing of components of Graph module was done using Property Based Testing (PBT).
 This paradigm of testing was introduced for the first time for Haskell (a
 functional programming language). It checks if the output of a function
 satisfies certain prescribed properties. These properties are specified as
@@ -278,7 +310,11 @@ number of edges equal to $n$. A function which constructs such a graph can be
 property based tested by comparing the number of edges it has with the number
 of vertices, which in this case should be equal.
 
-\subsection{Unit testing}
+\subsection{Unit Testing}
+Unit testing was done on for the functionality of graph animations and
+functions reponsible for navigation in the application against possible inputs
+and referece outputs. This test was written using the \emph{elm-test} library
+and run via a \emph{cli-tool} which goes by the same name.
 
 \subsection{Manual System Testing}
 The system was continuously tested manually during the development of the
