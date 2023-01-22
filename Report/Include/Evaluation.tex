@@ -17,8 +17,9 @@ experiencing the application.
 \subsection{Unsupervised Survey}
 The unsupervised survey was conducted among peers mainly in the field of
 computer science, mathematics and education. The participants were given the
-URL of the application and an online feedback form. The useres were asked to
-visit the application and and answer a questionaire.
+URL of the application and an online feedback form. See \autoref{links:
+unsupervised} for the summary. The useres were asked to visit the application
+and and answer a questionaire.
 
 Although the survey was anonymous, i.e. the names of the participants remained
 unknown, but details such as their academic qualification and familiarity with
@@ -38,14 +39,15 @@ quality of opinions, criticism and even some praise.
 The feedback ranged from opinions on UI/UX to 
 opinions on effectiveness of a particular topic.
 
+
 \subsection{Supervised Survey}
 The supervised survey consisted of the same questions the as unsupervised
-survey . Though, unlike the former survey the web application was visited by
-the participants by sharing their computer screen. The participants unlike the
-unsupervised survey belonged to a variety of education backgrounds like
-humanities, sciences and other fields. Therefore the participants were
-frequently assisted while understanding the animations and attempting the
-quizes and tasks.
+survey. See \autoref{links: supervised} for the summary. Though, unlike the
+former survey the web application was visited by the participants by sharing
+their computer screen. The participants unlike the unsupervised survey belonged
+to a variety of education backgrounds like humanities, sciences and other
+fields. Therefore the participants were frequently assisted while understanding
+the animations and attempting the quizes and tasks.
 
 This gave the opportunity to see closely how the users navigate the app and
 which aspects of the UI and the learning material they find confusing.
@@ -53,8 +55,9 @@ which aspects of the UI and the learning material they find confusing.
 The Unsupervised Survey indicated that this application may be usable by high
 school and mid school students. Therefore a supervised survey with young
 participants was also done to explore the reach of the application's
-effectiveness in that age group. This was done after appropriate consent from
-their parents.
+effectiveness in that age group. See \autoref{links: supervisedvids}. This was
+done after appropriate consent from their parents.
+
 
 \subsection{Evaluation of UI/UX}
 The survey was divided into two sections. The first part dealt with the user interface
@@ -62,27 +65,23 @@ and experience aspect of the application. There was both praise and criticism
 from the participants. Both were taken into consideration and analysed
 in this section.
 
-
-
 \subsubsection{Praise for UI/UX:}
 Positive feedback for the UI/UX include the following comments:
 
 \begin{quote}
 \emph{``Very fluid. I like the single-page-application feel, rather than
-       needing to reload different pages.''}
+needing to reload different pages.''}
 \end{quote}
 
-
-
+\vspace{0.06 in}
 \begin{quote}
 \emph{``The visuals and animation were pleasant. Quite easy to navigate.''}
 \end{quote}
 
-
-
+\vspace{0.06 in}
 \begin{quote}
 \emph{``.. it was intuitive and clear how to
-      interact with the application.''}
+interact with the application.''}
 \end{quote}
 
 
@@ -98,16 +97,18 @@ There was constructive criticism of the UI/UX of the application as well.
 Most of these criticisms were actionable while one criticism, given the
 constraints put by the requirement of the topics was not.
 
-
 \begin{quote}
 \emph{``One thing I found a bit frustrating was the varying levels and styles of
 interactivity between topics, such as clicking the cutline for max cut .. ''}
 \end{quote}
 
+\vspace{0.06 in}
+
 \begin{quote}
 \emph{``Maybe the topic words could be clickable to make navigation easier.''}
 \end{quote}
 
+\vspace{0.06 in}
 \begin{quote}
 \emph{``There are occasional spelling errors that
    could be corrected ..'' }
@@ -168,7 +169,7 @@ comments on that from the respondents.
 
 \begin{quote}
 \emph{``Thought that max k cut was very well explained - the use of cutlines is
-rather nice.'}
+rather nice.''}
 \end{quote}
 
 \begin{quote}
@@ -191,6 +192,7 @@ containing a user interactive task.
 Tree width was in the special focus of the respondents who are researchers in
 the field.  Tree width received both praise and criticism. It received praise
 for being at a different level of difficulty from the rest of the topics.
+
 \begin{quote}
 \emph{``
 Tree Width is a hard problem to understand , you
@@ -240,7 +242,8 @@ you can try choosing better choice of words in the `explanation panel'  such as
 \end{quote}
 
 Following their advice, the text in the animation panel was changed so that
-the concept of tree width is clearly and correctly understood by the users.
+the concept of tree width is clearly and correctly stated removing ambiguities
+in the definition.
 
 
 \subsection{Extra Feedback from the Respondents}
@@ -300,7 +303,7 @@ boolean predicates.
 
 For example, a function which constructs a fully connected graph (a graph in
 which all the vertices are connected to each other by one edge) with $n$
-vertices, will form $n \times (n - 1) / 2$ edges. The number of edges of the output
+vertices, will form $n (n - 1) / 2$ edges. The number of edges of the output
 graph are matched up against this mathematical reality. The function passed
 the test against a vast number of auto generated inputs.
 
@@ -313,8 +316,7 @@ of vertices, which in this case should be equal.
 \subsection{Unit Testing}
 Unit testing was done on for the functionality of graph animations and
 functions reponsible for navigation in the application against possible inputs
-and referece outputs. This test was written using the \emph{elm-test} library
-and run via a \emph{cli-tool} which goes by the same name.
+and referece outputs. 
 
 \subsection{Manual System Testing}
 The system was continuously tested manually during the development of the
@@ -322,4 +324,47 @@ project. Regardless, towards the end of the development a planned scheme for
 interacting with the system for the black box testing of the application was
 executed to search for unexpected behavior. See \autoref{appendix:
 manualTesting} for the details of the test and results. The application's
-behaviour against all the tests was as expected.
+behavior against all the tests was as expected.
+
+\section{Verification of Satisfaction of Requirements}
+
+\subsubsection{Verification of Development of Interactive Animations:}
+The requirements mentioned in \autoref{requirements: requirements} have been
+primarily satisfied by this application.  The application has covered all the
+topics it had set out to achieve. As can be seen in the
+\href{https://visualise-graph-problems-with-me.netlify.app/} {\textbf{application}}.
+
+
+
+\subsubsection{Verification of Development of Data Structures and Functions:}
+The data structures and the function to represent the graphs and it's elements
+in the program; drawing of the graphs on screen; animating translation and
+shape transformation of graphs; handling of events generated by elements in the
+graph and explanation panel and synchronization of the explanation panel with
+the state of the graphs was achieved as dictated by the requirements. The
+code of the program can found in \autoref{links: repository}.
+ 
+
+\subsubsection{Verification of Learning Impact:}
+Although evaluating a learning method for it's effectiveness is a subjective
+issue, the respondents of the evaluation survey have expressed their
+satisfaction in the quality of the animations and tasks. Several have
+commented that it could be a learning tool in reality.
+
+\subsubsection{Verification of the Quality of User Experience:}
+The respondents and the first users have evaluated UI/UX of the application as
+simple and intuitive. The Single page application feel has been appreciated for
+fluid and unobstructive. 
+
+\subsubsection{Verification of Should Have Requirements:}
+Fon satisfaction of \emph{Device Compatibility} requirement, the application has been
+tested on various screen sizes of desktop computers, laptop computers, modile
+devices and fits those screen sizes by properly placing the display and
+explanation divisions.
+For satisfaction of \emph{Pleasing Aesthetics}, see \emph{Verification of the Quality of
+User Experience} in this section.
+For satifaction of the \emph{Contribution Friendliness} requirement, the code
+is published publically on GitHub and will invite public contribution
+after the completion of the dissertation. See \autoref{links: repository}.  The
+program is well modularized and new sections can be added to it by adding
+another elm file for a new topic and making a few changes in $Main.elm$.
