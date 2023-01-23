@@ -15614,7 +15614,7 @@ var $author$project$Main$acknowledgement = F2(
 			[
 				$mdgriffith$elm_ui$Element$text('\n                  I would like to thank my supervisor \n                  '),
 				$mdgriffith$elm_ui$Element$text('Sofiat'),
-				$mdgriffith$elm_ui$Element$text('\n                  for giving me a\n                  wonderful opportunity to explore the topics of Graph Theory.  Her\n                  constant support and guidance throughout the project was\n                  detrimental in building the app.\n                  ')
+				$mdgriffith$elm_ui$Element$text('\n                  for giving me a wonderful opportunity to explore the topics\n                  of Graph Theory.  Her constant support and guidance\n                  throughout the project was essential in building the app.\n                  ')
 			]);
 		var shrey = _List_fromArray(
 			[
@@ -15725,7 +15725,7 @@ var $author$project$Main$emoji = F2(
 	});
 var $author$project$Main$introFatma = F2(
 	function (width, height) {
-		var fatmasIntro = '\n            I am a fourth year Software Engineering student in University\n            of Glasgow. This web app was built for the as my final year\n            project. My intrests are maths, functional programming and drawing.\n            ';
+		var fatmasIntro = '\n            I am a fourth year Software Engineering student in University\n            of Glasgow. This web app was built for my final year\n            project. My intrests are maths, functional programming and drawing.\n            ';
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
@@ -16462,6 +16462,11 @@ var $lemol$ant_design_icons_elm$Ant$Icons$Svg$infoCircleOutlined = $lemol$ant_de
 var $lemol$ant_design_icons_elm_ui$Ant$Icons$infoCircleOutlined = function (attrs) {
 	return A2($lemol$ant_design_icons_elm_ui$Ant$Icon$icon, attrs, $lemol$ant_design_icons_elm$Ant$Icons$Svg$infoCircleOutlined);
 };
+var $mdgriffith$elm_ui$Element$htmlAttribute = $mdgriffith$elm_ui$Internal$Model$Attr;
+var $phollyer$elm_cursor$Element$Cursor$cursor = $mdgriffith$elm_ui$Element$htmlAttribute;
+var $phollyer$elm_cursor$Html$Cursor$cursor = $elm$html$Html$Attributes$style('cursor');
+var $phollyer$elm_cursor$Html$Cursor$pointer = $phollyer$elm_cursor$Html$Cursor$cursor('pointer');
+var $phollyer$elm_cursor$Element$Cursor$pointer = $phollyer$elm_cursor$Element$Cursor$cursor($phollyer$elm_cursor$Html$Cursor$pointer);
 var $lemol$ant_design_icons_elm$Ant$Icons$Svg$VerticalLeftOutlined$viewWithAttributes = function (attributes) {
 	return A2(
 		$elm$svg$Svg$svg,
@@ -16542,7 +16547,11 @@ var $author$project$Buttons$lowerNavigation = F2(
 					A2(
 					$mdgriffith$elm_ui$Element$el,
 					_List_fromArray(
-						[$mdgriffith$elm_ui$Element$alignLeft]),
+						[
+							$mdgriffith$elm_ui$Element$alignLeft,
+							$mdgriffith$elm_ui$Element$Events$onClick($author$project$Messages$PreviousTopic),
+							$phollyer$elm_cursor$Element$Cursor$pointer
+						]),
 					$mdgriffith$elm_ui$Element$text(leftTitle)),
 					A2(
 					$mdgriffith$elm_ui$Element$Input$button,
@@ -16563,7 +16572,11 @@ var $author$project$Buttons$lowerNavigation = F2(
 					A2(
 					$mdgriffith$elm_ui$Element$el,
 					_List_fromArray(
-						[$mdgriffith$elm_ui$Element$alignRight]),
+						[
+							$mdgriffith$elm_ui$Element$alignRight,
+							$mdgriffith$elm_ui$Element$Events$onClick($author$project$Messages$NextTopic),
+							$phollyer$elm_cursor$Element$Cursor$pointer
+						]),
 					$mdgriffith$elm_ui$Element$text(rightTitle)),
 					A2(
 					$mdgriffith$elm_ui$Element$Input$button,

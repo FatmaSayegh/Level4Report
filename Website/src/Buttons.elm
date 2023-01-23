@@ -8,6 +8,8 @@ import Ant.Icons as Icons
 import Messages exposing (Msg(..))
 import Element.Font as Font
 import Element.Background as Background
+import Element.Events as Events
+import Element.Cursor as Cursor
 import FontSize exposing
                ( getFontSize
                , FontSize(..)
@@ -258,7 +260,12 @@ lowerNavigation leftTitle rightTitle =
          , label = Icons.verticalRightOutlined [ Ant.width 40, Ant.height 40 ]
          }
          
-     ,  ELE.el [ ELE.alignLeft ] <| ELE.text leftTitle    
+     ,  ELE.el 
+            [ ELE.alignLeft
+            , Events.onClick PreviousTopic 
+            , Cursor.pointer
+            ] 
+            <| ELE.text leftTitle    
 
      ,   Input.button
          [
@@ -269,7 +276,12 @@ lowerNavigation leftTitle rightTitle =
          , label = Icons.infoCircleOutlined [ Ant.width 40, Ant.height 40 ]
          }
 
-     ,  ELE.el [ ELE.alignRight ] <| ELE.text rightTitle    
+     ,  ELE.el 
+            [ ELE.alignRight
+            , Events.onClick NextTopic 
+            , Cursor.pointer
+            ] 
+            <| ELE.text rightTitle    
      ,
          Input.button
          [
