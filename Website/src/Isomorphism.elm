@@ -165,6 +165,61 @@ getNewGame msg game =
                 , graphC = Graph.changeGlowVertex False 1 game.graphC
          }
 
+      HoverOver name ->
+           case game.gameState of
+               NoCheck ->
+                  let
+                     transition = game.transition
+                  in
+                  { game
+                      | graphB =
+                            game.graphB
+                            |> Graph.makeUnglowAllVertices
+                            |> Graph.changeGlowVertex True name
+                      , graphC = 
+                            game.graphC
+                            |> Graph.makeUnglowAllVertices
+                            |> Graph.changeGlowVertex True name
+
+                      , transition =
+                            { transition |
+                                 graph = 
+                                    transition.graph
+                                    |> Graph.makeUnglowAllVertices
+                                    |> Graph.changeGlowVertex True name
+                             }
+                  }
+
+               _ ->
+                  game
+   
+      MouseOut name ->
+           case game.gameState of
+               NoCheck ->
+                  let
+                     transition = game.transition
+                  in
+                  { game
+                    | graphC = 
+                         game.graphC
+                         |> Graph.changeGlowVertex False name
+
+                    , graphB = 
+                         game.graphB
+                         |> Graph.changeGlowVertex False name
+
+                    , transition =
+                          let
+                            graph = 
+                               transition.graph
+                               |> Graph.makeUnglowAllVertices
+                          in
+                          { transition | graph = graph }
+                  }
+               _ ->
+                  game
+   
+
       IsoCheck ->
          let
             gameState =
@@ -225,10 +280,6 @@ animateIsomorphicGameTrans msg inPlaceTran =
                False ->
                    inPlaceTran
 
---       AnimationToggle ->
---           { inPlaceTran
---               | animationOn = not inPlaceTran.animationOn
---           }
 
        AnimationStartOver ->
            { inPlaceTran

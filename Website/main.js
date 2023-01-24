@@ -8488,6 +8488,57 @@ var $author$project$Isomorphism$getNewGame = F2(
 						graphC: A3($author$project$Graph$changeGlowVertex, false, 1, game.graphC),
 						transition: A2($author$project$Isomorphism$animateIsomorphicGameTrans, $author$project$Messages$AnimationStartOver, game.transition)
 					});
+			case 'HoverOver':
+				var name = msg.a;
+				var _v1 = game.gameState;
+				if (_v1.$ === 'NoCheck') {
+					var transition = game.transition;
+					return _Utils_update(
+						game,
+						{
+							graphB: A3(
+								$author$project$Graph$changeGlowVertex,
+								true,
+								name,
+								$author$project$Graph$makeUnglowAllVertices(game.graphB)),
+							graphC: A3(
+								$author$project$Graph$changeGlowVertex,
+								true,
+								name,
+								$author$project$Graph$makeUnglowAllVertices(game.graphC)),
+							transition: _Utils_update(
+								transition,
+								{
+									graph: A3(
+										$author$project$Graph$changeGlowVertex,
+										true,
+										name,
+										$author$project$Graph$makeUnglowAllVertices(transition.graph))
+								})
+						});
+				} else {
+					return game;
+				}
+			case 'MouseOut':
+				var name = msg.a;
+				var _v2 = game.gameState;
+				if (_v2.$ === 'NoCheck') {
+					var transition = game.transition;
+					return _Utils_update(
+						game,
+						{
+							graphB: A3($author$project$Graph$changeGlowVertex, false, name, game.graphB),
+							graphC: A3($author$project$Graph$changeGlowVertex, false, name, game.graphC),
+							transition: function () {
+								var graph = $author$project$Graph$makeUnglowAllVertices(transition.graph);
+								return _Utils_update(
+									transition,
+									{graph: graph});
+							}()
+						});
+				} else {
+					return game;
+				}
 			case 'IsoCheck':
 				var transition = game.transition;
 				var gameState = game.gameState;
@@ -15728,6 +15779,135 @@ var $author$project$Main$emoji = F2(
 					$mdgriffith$elm_ui$Element$text(' \uD83D\uDE4F'))
 				]));
 	});
+var $lemol$ant_design_icons_elm$Ant$Icons$Svg$GithubFilled$viewWithAttributes = function (attributes) {
+	return A2(
+		$elm$svg$Svg$svg,
+		_Utils_ap(
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$viewBox('64 64 896 896')
+				]),
+			attributes),
+		_List_fromArray(
+			[
+				A2(
+				$elm$svg$Svg$path,
+				_List_fromArray(
+					[
+						$elm$svg$Svg$Attributes$d('M511.6 76.3C264.3 76.2 64 276.4 64 523.5 64 718.9 189.3 885 363.8 946c23.5 5.9 19.9-10.8 19.9-22.2v-77.5c-135.7 15.9-141.2-73.9-150.3-88.9C215 726 171.5 718 184.5 703c30.9-15.9 62.4 4 98.9 57.9 26.4 39.1 77.9 32.5 104 26 5.7-23.5 17.9-44.5 34.7-60.8-140.6-25.2-199.2-111-199.2-213 0-49.5 16.3-95 48.3-131.7-20.4-60.5 1.9-112.3 4.9-120 58.1-5.2 118.5 41.6 123.2 45.3 33-8.9 70.7-13.6 112.9-13.6 42.4 0 80.2 4.9 113.5 13.9 11.3-8.6 67.3-48.8 121.3-43.9 2.9 7.7 24.7 58.3 5.5 118 32.4 36.8 48.9 82.7 48.9 132.3 0 102.2-59 188.1-200 212.9a127.5 127.5 0 0138.1 91v112.5c.8 9 0 17.9 15 17.9 177.1-59.7 304.6-227 304.6-424.1 0-247.2-200.4-447.3-447.5-447.3z')
+					]),
+				_List_Nil)
+			]));
+};
+var $lemol$ant_design_icons_elm$Ant$Icons$Svg$githubFilled = $lemol$ant_design_icons_elm$Ant$Icons$Svg$GithubFilled$viewWithAttributes;
+var $lemol$ant_design_icons_elm_ui$Ant$Icons$githubFilled = function (attrs) {
+	return A2($lemol$ant_design_icons_elm_ui$Ant$Icon$icon, attrs, $lemol$ant_design_icons_elm$Ant$Icons$Svg$githubFilled);
+};
+var $elm$html$Html$Attributes$href = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'href',
+		_VirtualDom_noJavaScriptUri(url));
+};
+var $elm$html$Html$Attributes$rel = _VirtualDom_attribute('rel');
+var $elm$html$Html$Attributes$target = $elm$html$Html$Attributes$stringProperty('target');
+var $mdgriffith$elm_ui$Element$newTabLink = F2(
+	function (attrs, _v0) {
+		var url = _v0.url;
+		var label = _v0.label;
+		return A4(
+			$mdgriffith$elm_ui$Internal$Model$element,
+			$mdgriffith$elm_ui$Internal$Model$asEl,
+			$mdgriffith$elm_ui$Internal$Model$NodeName('a'),
+			A2(
+				$elm$core$List$cons,
+				$mdgriffith$elm_ui$Internal$Model$Attr(
+					$elm$html$Html$Attributes$href(url)),
+				A2(
+					$elm$core$List$cons,
+					$mdgriffith$elm_ui$Internal$Model$Attr(
+						$elm$html$Html$Attributes$rel('noopener noreferrer')),
+					A2(
+						$elm$core$List$cons,
+						$mdgriffith$elm_ui$Internal$Model$Attr(
+							$elm$html$Html$Attributes$target('_blank')),
+						A2(
+							$elm$core$List$cons,
+							$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$shrink),
+							A2(
+								$elm$core$List$cons,
+								$mdgriffith$elm_ui$Element$height($mdgriffith$elm_ui$Element$shrink),
+								A2(
+									$elm$core$List$cons,
+									$mdgriffith$elm_ui$Internal$Model$htmlClass($mdgriffith$elm_ui$Internal$Style$classes.contentCenterX + (' ' + ($mdgriffith$elm_ui$Internal$Style$classes.contentCenterY + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.link)))),
+									attrs)))))),
+			$mdgriffith$elm_ui$Internal$Model$Unkeyed(
+				_List_fromArray(
+					[label])));
+	});
+var $author$project$Buttons$gitHubButton = function () {
+	var github = A2(
+		$mdgriffith$elm_ui$Element$newTabLink,
+		_List_Nil,
+		{
+			label: $lemol$ant_design_icons_elm_ui$Ant$Icons$githubFilled(
+				_List_fromArray(
+					[
+						$lemol$ant_design_icons_elm_ui$Ant$Icon$width(40),
+						$lemol$ant_design_icons_elm_ui$Ant$Icon$height(40)
+					])),
+			url: 'https://github.com/FatmaSayegh/'
+		});
+	return A2($author$project$Buttons$buttonWrap, 'GitHub', github);
+}();
+var $lemol$ant_design_icons_elm$Ant$Icons$Svg$LinkedinFilled$viewWithAttributes = function (attributes) {
+	return A2(
+		$elm$svg$Svg$svg,
+		_Utils_ap(
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$viewBox('64 64 896 896')
+				]),
+			attributes),
+		_List_fromArray(
+			[
+				A2(
+				$elm$svg$Svg$path,
+				_List_fromArray(
+					[
+						$elm$svg$Svg$Attributes$d('M880 112H144c-17.7 0-32 14.3-32 32v736c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zM349.3 793.7H230.6V411.9h118.7v381.8zm-59.3-434a68.8 68.8 0 1168.8-68.8c-.1 38-30.9 68.8-68.8 68.8zm503.7 434H675.1V608c0-44.3-.8-101.2-61.7-101.2-61.7 0-71.2 48.2-71.2 98v188.9H423.7V411.9h113.8v52.2h1.6c15.8-30 54.5-61.7 112.3-61.7 120.2 0 142.3 79.1 142.3 181.9v209.4z')
+					]),
+				_List_Nil)
+			]));
+};
+var $lemol$ant_design_icons_elm$Ant$Icons$Svg$linkedinFilled = $lemol$ant_design_icons_elm$Ant$Icons$Svg$LinkedinFilled$viewWithAttributes;
+var $lemol$ant_design_icons_elm_ui$Ant$Icons$linkedinFilled = function (attrs) {
+	return A2($lemol$ant_design_icons_elm_ui$Ant$Icon$icon, attrs, $lemol$ant_design_icons_elm$Ant$Icons$Svg$linkedinFilled);
+};
+var $author$project$Buttons$linkedInFatmaButton = function () {
+	var linkedIn = A2(
+		$mdgriffith$elm_ui$Element$newTabLink,
+		_List_Nil,
+		{
+			label: $lemol$ant_design_icons_elm_ui$Ant$Icons$linkedinFilled(
+				_List_fromArray(
+					[
+						$lemol$ant_design_icons_elm_ui$Ant$Icon$width(40),
+						$lemol$ant_design_icons_elm_ui$Ant$Icon$height(40)
+					])),
+			url: 'https://www.linkedin.com/in/fatma-alsayegh-1a060220a/'
+		});
+	return A2($author$project$Buttons$buttonWrap, 'LinkedIn', linkedIn);
+}();
+var $author$project$Buttons$fatmaButtons = A2(
+	$mdgriffith$elm_ui$Element$row,
+	_List_fromArray(
+		[
+			$mdgriffith$elm_ui$Element$centerX,
+			$mdgriffith$elm_ui$Element$spacing(20)
+		]),
+	_List_fromArray(
+		[$author$project$Buttons$linkedInFatmaButton, $author$project$Buttons$gitHubButton]));
 var $author$project$Main$introFatma = F2(
 	function (width, height) {
 		var fatmasIntro = '\n            I am a fourth year Software Engineering student in University\n            of Glasgow. This web app was built for my final year\n            project. My intrests are maths, functional programming and drawing.\n            ';
@@ -15778,12 +15958,53 @@ var $author$project$Main$introFatma = F2(
 							$mdgriffith$elm_ui$Element$el,
 							_List_Nil,
 							$mdgriffith$elm_ui$Element$text(fatmasIntro))
-						]))
+						])),
+					$author$project$Buttons$fatmaButtons
 				]));
 	});
+var $author$project$Buttons$linkedInSofiat = function () {
+	var linkedIn = A2(
+		$mdgriffith$elm_ui$Element$newTabLink,
+		_List_Nil,
+		{
+			label: $lemol$ant_design_icons_elm_ui$Ant$Icons$linkedinFilled(
+				_List_fromArray(
+					[
+						$lemol$ant_design_icons_elm_ui$Ant$Icon$width(40),
+						$lemol$ant_design_icons_elm_ui$Ant$Icon$height(40)
+					])),
+			url: 'https://www.linkedin.com/in/sofiatolaosebikan/'
+		});
+	return A2($author$project$Buttons$buttonWrap, 'LinkedIn', linkedIn);
+}();
+var $author$project$Buttons$websiteSofiat = function () {
+	var website = A2(
+		$mdgriffith$elm_ui$Element$newTabLink,
+		_List_Nil,
+		{
+			label: A2(
+				$mdgriffith$elm_ui$Element$el,
+				_List_fromArray(
+					[
+						$mdgriffith$elm_ui$Element$Font$size(40)
+					]),
+				$mdgriffith$elm_ui$Element$text('W')),
+			url: 'https://www.dcs.gla.ac.uk/~sofiat/'
+		});
+	return A2($author$project$Buttons$buttonWrap, 'Website', website);
+}();
+var $author$project$Buttons$sofiatButtons = A2(
+	$mdgriffith$elm_ui$Element$row,
+	_List_fromArray(
+		[
+			$mdgriffith$elm_ui$Element$centerX,
+			$mdgriffith$elm_ui$Element$spacing(20)
+		]),
+	_List_fromArray(
+		[$author$project$Buttons$linkedInSofiat, $author$project$Buttons$websiteSofiat]));
 var $author$project$Main$introSuperVisor = F2(
 	function (width, height) {
-		var intro = '\n             Olaosebikan is a Lecturer in Algorithms and Complexity in the\n            School of Computing Science at the University of Glasgow. She has a\n            PhD in Computing Science from the University of Glasgow, Scotland;\n            an MSc in Mathematical Sciences from the African Institute for\n            Mathematical Sciences (AIMS), Ghana; and a BSc in Mathematics from\n            the University of Ibadan, Nigeria.  In her spare time she finds\n            myself reflecting on how best to inspire and pass on computing\n            skills to young Africans in STEM, with the hope that they can also\n            grow to become creative thinkers.  ';
+		var intro = '\n             Olaosebikan is a Lecturer in Algorithms and Complexity in the\n            School of Computing Science at the University of Glasgow. She has a\n            PhD in Computing Science from the University of Glasgow, Scotland;\n            an MSc in Mathematical Sciences from the African Institute for\n            Mathematical Sciences (AIMS), Ghana; and a BSc in Mathematics from\n            the University of Ibadan, Nigeria.  \n            ';
 		return A2(
 			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
@@ -15826,7 +16047,8 @@ var $author$project$Main$introSuperVisor = F2(
 							$mdgriffith$elm_ui$Element$el,
 							_List_Nil,
 							$mdgriffith$elm_ui$Element$text(intro))
-						]))
+						])),
+					$author$project$Buttons$sofiatButtons
 				]));
 	});
 var $mdgriffith$elm_ui$Internal$Flag$overflow = $mdgriffith$elm_ui$Internal$Flag$flag(20);
@@ -15963,13 +16185,15 @@ var $author$project$Main$aboutPage = F2(
 		var width = (widthIn / 3) | 0;
 		var height = (heightIn / 4) | 0;
 		var project = A2(
-			$mdgriffith$elm_ui$Element$row,
+			$mdgriffith$elm_ui$Element$column,
 			_List_fromArray(
 				[
 					$mdgriffith$elm_ui$Element$Border$rounded(40),
 					$mdgriffith$elm_ui$Element$Border$color(
 					A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1)),
-					$mdgriffith$elm_ui$Element$centerX
+					$mdgriffith$elm_ui$Element$centerX,
+					$mdgriffith$elm_ui$Element$Font$color(
+					A3($mdgriffith$elm_ui$Element$rgb, 1, 1, 1))
 				]),
 			_List_fromArray(
 				[

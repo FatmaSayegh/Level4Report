@@ -36,6 +36,80 @@ buttonWrap description button =
    , ELE.el descriptionStyle (ELE.text description)
    ]
 
+linkedInFatmaButton =
+   let
+      linkedIn =
+         ELE.newTabLink
+            []
+            { url = "https://www.linkedin.com/in/fatma-alsayegh-1a060220a/"
+            --, label = Icons.linkedinOutlined [ Ant.width 40, Ant.height 40 ]
+            , label = Icons.linkedinFilled [ Ant.width 40, Ant.height 40 ]
+            }
+   in
+   buttonWrap "LinkedIn" linkedIn
+
+websiteSofiat =
+   let
+      website =
+         ELE.newTabLink
+            []
+            { url = "https://www.dcs.gla.ac.uk/~sofiat/"
+            ,  label =  
+                       ELE.el [Font.size 40] (ELE.text "W")
+            }
+   in
+   buttonWrap "Website" website
+
+linkedInSofiat =
+   let
+      linkedIn =
+         ELE.newTabLink
+            []
+            { url = "https://www.linkedin.com/in/sofiatolaosebikan/"
+            --, label = Icons.linkedinOutlined [ Ant.width 40, Ant.height 40 ]
+            , label = Icons.linkedinFilled [ Ant.width 40, Ant.height 40 ]
+            }
+   in
+   buttonWrap "LinkedIn" linkedIn
+gitHubButton =
+   let
+      github =
+         ELE.newTabLink
+            []
+            { url = "https://github.com/FatmaSayegh/"
+            , label = Icons.githubFilled [ Ant.width 40, Ant.height 40 ]
+            }
+   in
+   buttonWrap "GitHub" github
+
+projectGitHub =
+   let
+      github =
+         ELE.newTabLink
+            []
+            { url = "https://github.com/FatmaSayegh/Level4Report"
+            , label = Icons.githubFilled [ Ant.width 40, Ant.height 40 ]
+            }
+   in
+   buttonWrap "GitHub" github
+
+fatmaButtons =
+   ELE.row [ ELE.centerX, ELE.spacing 20]
+      [ linkedInFatmaButton
+      , gitHubButton
+      ]
+
+sofiatButtons =
+   ELE.row [ ELE.centerX, ELE.spacing 20]
+      [ linkedInSofiat
+      , websiteSofiat
+      ]
+
+
+projectLinks =
+   ELE.row [ ELE.centerX, ELE.spacing 20]
+      [ projectGitHub
+      ]
 
 treeWidthButtonRow : Bool -> DisplaySize -> ELE.Element Msg
 treeWidthButtonRow  isPreviousActive displaySize =
@@ -102,7 +176,6 @@ isoCheckButton =
               ] 
               { onPress = Just IsoCheck
               , label = Icons.checkOutlined [ Ant.width 70, Ant.height 50 ]
-              --, label = Icons.bulbOutlined [ Ant.width 70, Ant.height 50 ]
               }
 
 isoResetButton : ELE.Element Msg

@@ -45,7 +45,13 @@ import FontSize exposing
    , getDeviceType
    , emphForScreen
    )
-import Buttons exposing(homeButton, aboutButton)
+import Buttons exposing
+   ( homeButton
+   , aboutButton
+   , fatmaButtons
+   , sofiatButtons
+   , projectLinks
+   )
 
 main : Program Flags Model Msg
 main =
@@ -481,13 +487,24 @@ aboutPage widthIn heightIn =
             , photoGraphSuperVisor (widthIn - width) height
             ]
 
+      --project =
+      --   ELE.row
+      --      [ Border.rounded 40
+      --      , Border.color (ELE.rgb 1 1 1)
+      --      , ELE.centerX
+      --      ]
+      --      [ aboutProject width height
+      --      ]
+
       project =
-         ELE.row
+         ELE.column
             [ Border.rounded 40
             , Border.color (ELE.rgb 1 1 1)
             , ELE.centerX
+            , Font.color (ELE.rgb 1 1 1)
             ]
             [ aboutProject width height
+            --, projectLinks
             ]
 
       acknowledge =
@@ -817,6 +834,8 @@ introFatma width height =
                                      []
                                      (ELE.text fatmasIntro)
                            ]
+
+            , fatmaButtons
             ]
 
 introSuperVisor width height =
@@ -828,10 +847,8 @@ introSuperVisor width height =
             PhD in Computing Science from the University of Glasgow, Scotland;
             an MSc in Mathematical Sciences from the African Institute for
             Mathematical Sciences (AIMS), Ghana; and a BSc in Mathematics from
-            the University of Ibadan, Nigeria.  In her spare time she finds
-            myself reflecting on how best to inspire and pass on computing
-            skills to young Africans in STEM, with the hope that they can also
-            grow to become creative thinkers.  """
+            the University of Ibadan, Nigeria.  
+            """
       in
       ELE.column
          [ Font.color <| ELE.rgb 1 1 1
@@ -855,6 +872,7 @@ introSuperVisor width height =
                                      []
                                      (ELE.text intro)
                            ]
+            , sofiatButtons
             ]
 
 
