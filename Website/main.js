@@ -8744,6 +8744,7 @@ var $author$project$VertexCover$goCover = F2(
 		}
 	});
 var $author$project$TreeWidth$AltTree = {$: 'AltTree'};
+var $author$project$TreeWidth$FinalSlide = {$: 'FinalSlide'};
 var $author$project$TreeWidth$HoneyCombGraph = {$: 'HoneyCombGraph'};
 var $author$project$TreeWidth$MorphingIntoHoneyComb = {$: 'MorphingIntoHoneyComb'};
 var $author$project$TreeWidth$PiecesMarked = {$: 'PiecesMarked'};
@@ -8792,6 +8793,8 @@ var $author$project$TreeWidth$goTree = F2(
 							return $author$project$TreeWidth$ShowLargePiece;
 						case 'ShowLargePiece':
 							return $author$project$TreeWidth$AltTree;
+						case 'AltTree':
+							return $author$project$TreeWidth$FinalSlide;
 						default:
 							return $author$project$TreeWidth$CircularGraph;
 					}
@@ -8827,8 +8830,10 @@ var $author$project$TreeWidth$goTree = F2(
 							return $author$project$TreeWidth$PiecesMarked;
 						case 'ShowLargePiece':
 							return $author$project$TreeWidth$TreeDrawnGraph;
-						default:
+						case 'AltTree':
 							return $author$project$TreeWidth$ShowLargePiece;
+						default:
+							return $author$project$TreeWidth$AltTree;
 					}
 				}();
 				var newGraph = function () {
@@ -17875,10 +17880,6 @@ var $author$project$FontSize$Gold = {$: 'Gold'};
 var $author$project$Buttons$TreeWidthHelp = {$: 'TreeWidthHelp'};
 var $author$project$TreeWidth$storyTreeWidth = F3(
 	function (deviceType, status, helpStatus) {
-		var treeWidthDef = _List_fromArray(
-			[
-				$mdgriffith$elm_ui$Element$text('\n                  Tree width of the graph is related to the maximum number of vertices\n                  associated with a piece. It is given by the formula:\n                  ')
-			]);
 		var piecesMarkedComment = _List_fromArray(
 			[
 				$mdgriffith$elm_ui$Element$text('\n                  Similarily all the other pieces are marked by blue dots\n                  representing the subgraphs they are situated inside.\n                  ')
@@ -17895,13 +17896,26 @@ var $author$project$TreeWidth$storyTreeWidth = F3(
 		var emph = $author$project$FontSize$emphForScreen(deviceType);
 		var finalComment = _List_fromArray(
 			[
-				$mdgriffith$elm_ui$Element$text('\n                  The number of vertices in all the pieces is equal to 3. Therefore the maximum\n                  number of vertices in any piece in the present graph is also 3.\n                  Hence the tree width of the graph is \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  The number of vertices in all the pieces is equal to 3. Therefore the maximum\n                  number of vertices in any piece in the present graph is also 3.\n                  Hence the \n                  '),
+				A2(emph, $author$project$FontSize$Pink, '\n                  Possible\n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  tree width for corresponding tree decomposition is\n                  '),
 				A2(emph, $author$project$FontSize$Pink, '\n                  3 \n                  '),
 				A2(emph, $author$project$FontSize$CuteBlue, '\n                  - \n                  '),
 				A2(emph, $author$project$FontSize$CuteGreen, '\n                  1 \n                  '),
 				A2(emph, $author$project$FontSize$CuteBlue, '\n                  = \n                  '),
 				A2(emph, $author$project$FontSize$Pink, '\n                  2\n                  '),
 				$mdgriffith$elm_ui$Element$text('\n                  .\n                  ')
+			]);
+		var finalJudgement = _List_fromArray(
+			[
+				A2(emph, $author$project$FontSize$CuteBlue, '\n                  Therefore, \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  the tree width of the graph, is the one corresponding to the\n                  '),
+				A2(emph, $author$project$FontSize$CuteGreen, '\n                  first\n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  decomposition which has the maximum size of the piece equal to 3.\n                  As it has the \n                  '),
+				A2(emph, $author$project$FontSize$Pink, '\n                  minimum \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  size of the \n                  '),
+				A2(emph, $author$project$FontSize$CuteGreen, '\n                  biggest \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  piece accross all tree\n                  decompositions. So tree width of a graph can finally be\n                  defined in the following way:\n                  ')
 			]);
 		var firstComment = _List_fromArray(
 			[
@@ -17914,13 +17928,28 @@ var $author$project$TreeWidth$storyTreeWidth = F3(
 				A2(emph, $author$project$FontSize$CuteBlue, '\n                  Press \n                  '),
 				$mdgriffith$elm_ui$Element$text('\n                  forward button\n                  above to make it look a little different. \n                  ')
 			]);
+		var formulaFinal = _List_fromArray(
+			[
+				A2(emph, $author$project$FontSize$CuteGreen, '\n                  Tree Width \n                  '),
+				A2(emph, $author$project$FontSize$CuteBlue, '\n                  = \n                  '),
+				A2(emph, $author$project$FontSize$Pink, '\n                  S\n                  '),
+				A2(emph, $author$project$FontSize$CuteBlue, '\n                  - \n                  '),
+				A2(emph, $author$project$FontSize$CuteGreen, '\n                  1\n                  ')
+			]);
 		var honeyCombFirstComment = _List_fromArray(
 			[
 				$mdgriffith$elm_ui$Element$text('\n                  The circular graph is now transformed to a \n                  '),
 				A2(emph, $author$project$FontSize$CuteGreen, '\n                  cellular\n                  '),
-				$mdgriffith$elm_ui$Element$text('\n                  structure. Which is more like a \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  structure. Which is visually more like a \n                  '),
 				A2(emph, $author$project$FontSize$CuteGreen, '\n                  tree-like \n                  '),
-				$mdgriffith$elm_ui$Element$text('\n                  structure visually.\n                  ')
+				$mdgriffith$elm_ui$Element$text('\n                  structure.\n                  ')
+			]);
+		var letSBe = _List_fromArray(
+			[
+				A2(emph, $author$project$FontSize$CuteBlue, 'Let'),
+				A2(emph, $author$project$FontSize$Pink, ' S '),
+				$mdgriffith$elm_ui$Element$text('be the smallest of the biggest piece accross all the tree decompositions'),
+				A2(emph, $author$project$FontSize$CuteBlue, ' in: ')
 			]);
 		var secondComment = _List_fromArray(
 			[
@@ -17953,28 +17982,51 @@ var $author$project$TreeWidth$storyTreeWidth = F3(
 			]);
 		var treeDetails = _List_fromArray(
 			[
-				$mdgriffith$elm_ui$Element$text('\n                  The \n                  golden \n                  line \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  The \n                  golden \n                  lines \n                  '),
 				$mdgriffith$elm_ui$Element$text('\n                  joining the \n                  '),
 				A2(emph, $author$project$FontSize$CuteGreen, '\n                  pieces \n                  '),
-				$mdgriffith$elm_ui$Element$text('\n                  is a \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  form a \n                  '),
 				A2(emph, $author$project$FontSize$Gold, '\n                  tree \n                  '),
-				$mdgriffith$elm_ui$Element$text('\n                  as it has \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  as this structure \n                  '),
 				A2(emph, $author$project$FontSize$Pink, '\n                  no\n                  cycles.\n                  ')
+			]);
+		var treeWidthDef = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('\n                  Tree width of the graph is related to the maximum number of vertices\n                  associated with a piece for a \n                  '),
+				A2(emph, $author$project$FontSize$Pink, '\n                  particular \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  decomposition is given by the formula:\n                  ')
+			]);
+		var treeWidthDefNew = _List_fromArray(
+			[
+				A2(emph, $author$project$FontSize$CuteBlue, '\n                  Tree Width,\n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                   should be derived from such a tree decomposition\n                  whose biggest piece is of the minimum size across all decompositions.\n                  ')
 			]);
 		var treeWidthFormula = _List_fromArray(
 			[
-				A2(emph, $author$project$FontSize$CuteGreen, '\n                  Tree Width \n                  '),
+				A2(emph, $author$project$FontSize$CuteGreen, '\n                  Possibe Tree Width \n                  '),
 				A2(emph, $author$project$FontSize$CuteBlue, '\n                  = \n                  '),
 				A2(emph, $author$project$FontSize$Pink, '\n                  ( Maximum Number of Vertices in a piece ) \n                  '),
 				A2(emph, $author$project$FontSize$CuteBlue, '\n                  - \n                  '),
 				A2(emph, $author$project$FontSize$CuteGreen, '\n                  1\n                  ')
+			]);
+		var concludingComment = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('\n                  Hence, the tree width of the present graph =\n                  '),
+				A2(emph, $author$project$FontSize$CuteGreen, '3 '),
+				A2(emph, $author$project$FontSize$CuteBlue, '-'),
+				A2(emph, $author$project$FontSize$CuteGreen, ' 1 '),
+				A2(emph, $author$project$FontSize$CuteBlue, '='),
+				A2(emph, $author$project$FontSize$CuteGreen, ' 2 '),
+				$mdgriffith$elm_ui$Element$text('.')
 			]);
 		var bigPieceExplanation = _List_fromArray(
 			[
 				A2(emph, $author$project$FontSize$Pink, '\n                  However,\n                  '),
 				$mdgriffith$elm_ui$Element$text('\n                  if the decomposition of a graph was done\n                  by deriving \n                  '),
 				A2(emph, $author$project$FontSize$CuteGreen, '\n                  bigger \n                  '),
-				$mdgriffith$elm_ui$Element$text('\n                  pieces like the one shown in\n                  the figure, then the tree-width would\n                  have been equal to \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  pieces like the one shown in\n                  the figure, then the \n                  '),
+				A2(emph, $author$project$FontSize$Pink, '\n                  candidate \n                  '),
+				$mdgriffith$elm_ui$Element$text('\n                  tree-width would\n                  have been equal to \n                  '),
 				A2(emph, $author$project$FontSize$Pink, '\n                  4 \n                  '),
 				A2(emph, $author$project$FontSize$CuteBlue, '\n                  - \n                  '),
 				A2(emph, $author$project$FontSize$Pink, '\n                  1 \n                  '),
@@ -17986,9 +18038,7 @@ var $author$project$TreeWidth$storyTreeWidth = F3(
 			[
 				$mdgriffith$elm_ui$Element$text('\n                  Therefore, a tree can be decomposed\n                  in \n                  '),
 				A2(emph, $author$project$FontSize$CuteBlue, '\n                  many ways\n                  '),
-				$mdgriffith$elm_ui$Element$text('\n                  It can even be decomposed by keeping the\n                  whole graph in a single piece. For the graph shown\n                  in the figure The tree\n                  width in that case would be equal to 12 - 1 = 11.\n                  '),
-				A2(emph, $author$project$FontSize$CuteBlue, '\n                  Ideally,\n                  '),
-				$mdgriffith$elm_ui$Element$text('\n                  the pieces, should be derived from the\n                  graph such that the tree width is the minimum.\n                  ')
+				$mdgriffith$elm_ui$Element$text('\n                  It can even be decomposed by keeping the\n                  whole graph in a single piece. For the graph shown\n                  in the figure the candidate tree\n                  width in that case would be equal to 12 - 1 = 11.\n                  ')
 			]);
 		var output = function () {
 			switch (status.$) {
@@ -18013,11 +18063,18 @@ var $author$project$TreeWidth$storyTreeWidth = F3(
 				case 'ShowLargePiece':
 					return _List_fromArray(
 						[bigPieceExplanation]);
+				case 'AltTree':
+					return _List_fromArray(
+						[bigPieceExplanation, altTreeExplanation, treeWidthDefNew, finalJudgement]);
 				default:
 					return _List_fromArray(
-						[bigPieceExplanation, altTreeExplanation]);
+						[finalJudgement, letSBe, formulaFinal, concludingComment]);
 			}
 		}();
+		var acrossDecompositions = _List_fromArray(
+			[
+				$mdgriffith$elm_ui$Element$text('\n                  There can be multiple tree decompositions, for which the number of pieces in the\n                  larges piece is greater than 3.\n                  ')
+			]);
 		return (!helpStatus) ? A2($elm$core$List$map, para, output) : _List_fromArray(
 			[
 				$author$project$Buttons$helpParagraph($author$project$Buttons$TreeWidthHelp)
@@ -19374,9 +19431,9 @@ var $author$project$TreeWidth$drawGraphForTreeWidth = function (display) {
 				return _List_Nil;
 			} else {
 				var x = xs.a;
-				var _v24 = xs.b;
-				var y = _v24.a;
-				var xss = _v24.b;
+				var _v25 = xs.b;
+				var y = _v25.a;
+				var xss = _v25.b;
 				return xss;
 			}
 		}
@@ -19392,13 +19449,13 @@ var $author$project$TreeWidth$drawGraphForTreeWidth = function (display) {
 	};
 	var g = display.graph;
 	var onePieceCenter = function () {
-		var _v20 = display.status;
-		if (_v20.$ === 'ShowOnePiece') {
-			var _v21 = A4($author$project$Graph$findCenterOfTriple, 1, 2, 3, g.vertices);
-			if (_v21.$ === 'Nothing') {
+		var _v21 = display.status;
+		if (_v21.$ === 'ShowOnePiece') {
+			var _v22 = A4($author$project$Graph$findCenterOfTriple, 1, 2, 3, g.vertices);
+			if (_v22.$ === 'Nothing') {
 				return _List_Nil;
 			} else {
-				var x = _v21.a;
+				var x = _v22.a;
 				return _List_fromArray(
 					[x]);
 			}
@@ -19407,8 +19464,8 @@ var $author$project$TreeWidth$drawGraphForTreeWidth = function (display) {
 		}
 	}();
 	var showBigPieceEdges = function () {
-		var _v19 = display.status;
-		if (_v19.$ === 'ShowLargePiece') {
+		var _v20 = display.status;
+		if (_v20.$ === 'ShowLargePiece') {
 			return A2(
 				$author$project$Graph$makeEdgesWithTuples,
 				_List_fromArray(
@@ -19425,8 +19482,8 @@ var $author$project$TreeWidth$drawGraphForTreeWidth = function (display) {
 		}
 	}();
 	var showBigPieceVertices = function () {
-		var _v18 = display.status;
-		if (_v18.$ === 'ShowLargePiece') {
+		var _v19 = display.status;
+		if (_v19.$ === 'ShowLargePiece') {
 			return A2(
 				$elm$core$List$filterMap,
 				function (name) {
@@ -19439,8 +19496,8 @@ var $author$project$TreeWidth$drawGraphForTreeWidth = function (display) {
 		}
 	}();
 	var showGrayEdges = function () {
-		var _v17 = display.status;
-		if (_v17.$ === 'AltTree') {
+		var _v18 = display.status;
+		if (_v18.$ === 'AltTree') {
 			return A2(
 				$author$project$Graph$makeEdgesWithTuples,
 				_List_fromArray(
@@ -19457,8 +19514,8 @@ var $author$project$TreeWidth$drawGraphForTreeWidth = function (display) {
 		}
 	}();
 	var showGrayVertices = function () {
-		var _v16 = display.status;
-		if (_v16.$ === 'AltTree') {
+		var _v17 = display.status;
+		if (_v17.$ === 'AltTree') {
 			return A2(
 				$elm$core$List$filterMap,
 				function (name) {
@@ -19471,8 +19528,8 @@ var $author$project$TreeWidth$drawGraphForTreeWidth = function (display) {
 		}
 	}();
 	var showPieceEdges = function () {
-		var _v15 = display.status;
-		if (_v15.$ === 'ShowOnePiece') {
+		var _v16 = display.status;
+		if (_v16.$ === 'ShowOnePiece') {
 			return A2(
 				$author$project$Graph$makeEdgesWithTuples,
 				_List_fromArray(
@@ -19487,8 +19544,8 @@ var $author$project$TreeWidth$drawGraphForTreeWidth = function (display) {
 		}
 	}();
 	var showPieceVertices = function () {
-		var _v14 = display.status;
-		if (_v14.$ === 'ShowOnePiece') {
+		var _v15 = display.status;
+		if (_v15.$ === 'ShowOnePiece') {
 			return A2(
 				$elm$core$List$filterMap,
 				function (name) {
@@ -19501,14 +19558,20 @@ var $author$project$TreeWidth$drawGraphForTreeWidth = function (display) {
 		}
 	}();
 	var treeLinesDrawn = function () {
-		var _v13 = display.status;
-		if (_v13.$ === 'TreeDrawnGraph') {
-			return A2(
-				$elm$core$List$filterMap,
-				$author$project$Graph$findTwoPositions(g.vertices),
-				display.treeLines);
-		} else {
-			return _List_Nil;
+		var _v14 = display.status;
+		switch (_v14.$) {
+			case 'TreeDrawnGraph':
+				return A2(
+					$elm$core$List$filterMap,
+					$author$project$Graph$findTwoPositions(g.vertices),
+					display.treeLines);
+			case 'FinalSlide':
+				return A2(
+					$elm$core$List$filterMap,
+					$author$project$Graph$findTwoPositions(g.vertices),
+					display.treeLines);
+			default:
+				return _List_Nil;
 		}
 	}();
 	var centersOftriples = function () {
@@ -19531,6 +19594,16 @@ var $author$project$TreeWidth$drawGraphForTreeWidth = function (display) {
 						var a = _v12.a;
 						var b = _v12.b;
 						var c = _v12.c;
+						return A4($author$project$Graph$findCenterOfTriple, a, b, c, g.vertices);
+					},
+					display.triples);
+			case 'FinalSlide':
+				return A2(
+					$elm$core$List$filterMap,
+					function (_v13) {
+						var a = _v13.a;
+						var b = _v13.b;
+						var c = _v13.c;
 						return A4($author$project$Graph$findCenterOfTriple, a, b, c, g.vertices);
 					},
 					display.triples);

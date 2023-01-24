@@ -155,7 +155,7 @@ storyTreeWidth deviceType status helpStatus =
                   """
                , ELE.text
                   """
-                  structure. Which is more like a 
+                  structure. Which is visually more like a 
                   """
                , emph CuteGreen
                   """
@@ -163,7 +163,7 @@ storyTreeWidth deviceType status helpStatus =
                   """
                , ELE.text
                   """
-                  structure visually.
+                  structure.
                   """
                ]
       showOnePieceComment =
@@ -228,7 +228,7 @@ storyTreeWidth deviceType status helpStatus =
                   """
                   The 
                   golden 
-                  line 
+                  lines 
                   """
                , ELE.text
                   """
@@ -240,7 +240,7 @@ storyTreeWidth deviceType status helpStatus =
                   """
                , ELE.text
                   """
-                  is a 
+                  form a 
                   """
                , emph Gold
                   """
@@ -248,7 +248,7 @@ storyTreeWidth deviceType status helpStatus =
                   """
                , ELE.text
                   """
-                  as it has 
+                  as this structure 
                   """
                , emph Pink
                   """
@@ -286,13 +286,21 @@ storyTreeWidth deviceType status helpStatus =
                [ ELE.text
                   """
                   Tree width of the graph is related to the maximum number of vertices
-                  associated with a piece. It is given by the formula:
+                  associated with a piece for a 
+                  """
+              , emph Pink
+                  """
+                  particular 
+                  """
+              ,  ELE.text
+                  """
+                  decomposition is given by the formula:
                   """
                ]
       treeWidthFormula =
                [ emph CuteGreen
                   """
-                  Tree Width 
+                  Possibe Tree Width 
                   """
                , emph CuteBlue
                   """
@@ -316,7 +324,15 @@ storyTreeWidth deviceType status helpStatus =
                   """
                   The number of vertices in all the pieces is equal to 3. Therefore the maximum
                   number of vertices in any piece in the present graph is also 3.
-                  Hence the tree width of the graph is 
+                  Hence the 
+                  """
+              , emph Pink
+                  """
+                  Possible
+                  """
+              , ELE.text
+                  """
+                  tree width for corresponding tree decomposition is
                   """
                , emph Pink
                   """
@@ -344,6 +360,14 @@ storyTreeWidth deviceType status helpStatus =
                   """
                ]
 
+      acrossDecompositions =
+               [ ELE.text
+                  """
+                  There can be multiple tree decompositions, for which the number of pieces in the
+                  larges piece is greater than 3.
+                  """
+               ]
+
       altTreeExplanation =
                [ ELE.text
                   """
@@ -358,18 +382,108 @@ storyTreeWidth deviceType status helpStatus =
                   """
                   It can even be decomposed by keeping the
                   whole graph in a single piece. For the graph shown
-                  in the figure The tree
+                  in the figure the candidate tree
                   width in that case would be equal to 12 - 1 = 11.
                   """
-               , emph CuteBlue
+               ]
+
+      treeWidthDefNew =
+               [
+                 emph CuteBlue
                   """
-                  Ideally,
+                  Tree Width,
                   """
                , ELE.text
                   """
-                  the pieces, should be derived from the
-                  graph such that the tree width is the minimum.
+                   should be derived from such a tree decomposition
+                  whose biggest piece is of the minimum size across all decompositions.
                   """
+               ]
+
+      finalJudgement =
+               [ emph CuteBlue
+                  """
+                  Therefore, 
+                  """
+              , ELE.text
+                  """
+                  the tree width of the graph, is the one corresponding to the
+                  """
+               , emph CuteGreen
+                  """
+                  first
+                  """
+               , ELE.text
+                  """
+                  decomposition which has the maximum size of the piece equal to 3.
+                  As it has the 
+                  """
+               , emph Pink
+                  """
+                  minimum 
+                  """
+               , ELE.text
+                  """
+                  size of the 
+                  """
+               , emph CuteGreen
+                  """
+                  biggest 
+                  """
+               , ELE.text
+                  """
+                  piece accross all tree
+                  decompositions. So tree width of a graph can finally be
+                  defined in the following way:
+                  """
+               ]
+
+      letSBe =
+               [ emph CuteBlue
+                  "Let"
+               , emph Pink
+                  " S "
+               , ELE.text
+                  "be the smallest of the biggest piece accross all the tree decompositions"
+               , emph CuteBlue
+                  " in: "
+               ]
+                  
+      
+      formulaFinal =
+               [ emph CuteGreen
+                  """
+                  Tree Width 
+                  """
+               , emph CuteBlue
+                  """
+                  = 
+                  """
+               , emph Pink
+                  """
+                  S
+                  """
+               , emph CuteBlue
+                  """
+                  - 
+                  """
+               , emph CuteGreen
+                  """
+                  1
+                  """
+               ]
+
+      concludingComment =
+               [ ELE.text
+                  """
+                  Hence, the tree width of the present graph =
+                  """
+               , emph CuteGreen "3 "
+               , emph CuteBlue  "-"
+               , emph CuteGreen " 1 "
+               , emph CuteBlue "="
+               , emph CuteGreen " 2 "
+               , ELE.text "."
                ]
       bigPieceExplanation =
                [ emph Pink
@@ -388,7 +502,15 @@ storyTreeWidth deviceType status helpStatus =
                , ELE.text
                   """
                   pieces like the one shown in
-                  the figure, then the tree-width would
+                  the figure, then the 
+                  """
+               , emph Pink
+                  """
+                  candidate 
+                  """
+               , ELE.text
+                  """
+                  tree-width would
                   have been equal to 
                   """
                , emph Pink
@@ -434,11 +556,14 @@ storyTreeWidth deviceType status helpStatus =
                , treeWidthDef
                , treeWidthFormula
                , finalComment 
+               --, acrossDecompositions
                ]
             ShowLargePiece ->
                [ bigPieceExplanation ]
             AltTree ->
-               [ bigPieceExplanation , altTreeExplanation ]
+               [ bigPieceExplanation , altTreeExplanation, treeWidthDefNew , finalJudgement]
+            FinalSlide ->
+               [ finalJudgement, letSBe, formulaFinal, concludingComment]
             
    in
    if helpStatus == False
@@ -553,6 +678,8 @@ goTree display msg =
                   ShowLargePiece ->
                      AltTree
                   AltTree ->
+                     FinalSlide
+                  FinalSlide ->
                      CircularGraph
 
            newGraph =
@@ -591,6 +718,8 @@ goTree display msg =
                      TreeDrawnGraph
                   AltTree ->
                      ShowLargePiece
+                  FinalSlide ->
+                     AltTree
 
            newGraph =
                case newStatus of
@@ -653,6 +782,10 @@ drawGraphForTreeWidth display =
                List.filterMap 
                   (  \(a, b, c) -> Graph.findCenterOfTriple a b c g.vertices ) 
                   display.triples
+            FinalSlide ->
+               List.filterMap 
+                  (  \(a, b, c) -> Graph.findCenterOfTriple a b c g.vertices ) 
+                  display.triples
             _ ->
                []
 
@@ -680,6 +813,9 @@ drawGraphForTreeWidth display =
       treeLinesDrawn =
          case display.status of
             TreeDrawnGraph ->
+               display.treeLines
+               |> List.filterMap (Graph.findTwoPositions g.vertices)
+            FinalSlide ->
                display.treeLines
                |> List.filterMap (Graph.findTwoPositions g.vertices)
             _ ->
@@ -848,3 +984,4 @@ type TreeWidthStatus =
    | TreeDrawnGraph
    | ShowLargePiece
    | AltTree
+   | FinalSlide
