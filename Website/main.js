@@ -7472,7 +7472,38 @@ var $author$project$TreeWidth$treeWidthDisplay = function () {
 			_Utils_Tuple2(11, 12)
 		]);
 	var circularStartAngle = 0;
+	var circularSizeSmall = A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 40, 40, 0);
 	var circularSize = A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 100, 100, 0);
+	var circularPositionSmall = A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 350, 50, 0);
+	var gridCircularInitialSmall = A4($author$project$Graph$parametricPolygon, 12, circularSizeSmall, circularPositionSmall, circularStartAngle);
+	var gridCircularSmall = A2(
+		$elm$core$List$map,
+		$elm$core$Tuple$second,
+		A2(
+			$elm$core$List$sortWith,
+			F2(
+				function (t1, t2) {
+					return A2($elm$core$Basics$compare, t1.a, t2.a);
+				}),
+			A3(
+				$elm$core$List$map2,
+				F2(
+					function (x, y) {
+						return _Utils_Tuple2(x, y);
+					}),
+				shuffleSet,
+				gridCircularInitialSmall)));
+	var verticesSmall = A4(
+		$elm$core$List$map3,
+		F3(
+			function (name, g, c) {
+				return A4($author$project$Graph$Vertex, name, g, c, false);
+			}),
+		A2($elm$core$List$range, 1, 12),
+		gridCircularSmall,
+		A2($author$project$Graph$listOfColors, $author$project$Graph$First, 12));
+	var edgesSmall = A2($author$project$Graph$makeEdgesWithTuples, edgeTuples, verticesSmall);
+	var graphSmall = A2($author$project$Graph$Graph, verticesSmall, edgesSmall);
 	var circularPosition = A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 200, 200, 0);
 	var gridCircularInitial = A4($author$project$Graph$parametricPolygon, 12, circularSize, circularPosition, circularStartAngle);
 	var gridCircular = A2(
@@ -7503,7 +7534,7 @@ var $author$project$TreeWidth$treeWidthDisplay = function () {
 		A2($author$project$Graph$listOfColors, $author$project$Graph$First, 12));
 	var edges = A2($author$project$Graph$makeEdgesWithTuples, edgeTuples, vertices);
 	var graph = A2($author$project$Graph$Graph, vertices, edges);
-	return {graph: graph, gridCircular: gridCircular, gridHoneyComb: gridHoneyComb, status: $author$project$TreeWidth$CircularGraph, time: 0.0, treeLines: treeLines, triples: triples};
+	return {graph: graph, graphSmall: graphSmall, gridCircular: gridCircular, gridHoneyComb: gridHoneyComb, status: $author$project$TreeWidth$CircularGraph, time: 0.0, treeLines: treeLines, triples: triples};
 }();
 var $author$project$VertexCover$First = {$: 'First'};
 var $author$project$VertexCover$VertexCoverDisplay = F3(
@@ -19539,6 +19570,9 @@ var $author$project$Graph$drawIntersectionPoint = F2(
 				]),
 			_List_Nil);
 	});
+var $author$project$Graph$drawSmallVertex = function (v) {
+	return A4($author$project$Graph$circle, 4, v.pos, v.color, v.name);
+};
 var $author$project$Graph$findCenterOfQuad = F5(
 	function (a, b, c, d, vs) {
 		var pos4 = function () {
@@ -19655,9 +19689,9 @@ var $author$project$TreeWidth$drawGraphForTreeWidth = function (display) {
 				return _List_Nil;
 			} else {
 				var x = xs.a;
-				var _v25 = xs.b;
-				var y = _v25.a;
-				var xss = _v25.b;
+				var _v27 = xs.b;
+				var y = _v27.a;
+				var xss = _v27.b;
 				return xss;
 			}
 		}
@@ -19671,6 +19705,29 @@ var $author$project$TreeWidth$drawGraphForTreeWidth = function (display) {
 			return A3($elm_explorations$linear_algebra$Math$Vector3$vec3, 0, 0, 0);
 		}
 	};
+	var gSmall = display.graphSmall;
+	var smallEdges = function () {
+		var _v24 = display.status;
+		switch (_v24.$) {
+			case 'CircularGraph':
+				return _List_Nil;
+			case 'MorphingIntoHoneyComb':
+				return _List_Nil;
+			default:
+				return gSmall.edges;
+		}
+	}();
+	var smallVertices = function () {
+		var _v23 = display.status;
+		switch (_v23.$) {
+			case 'CircularGraph':
+				return _List_Nil;
+			case 'MorphingIntoHoneyComb':
+				return _List_Nil;
+			default:
+				return gSmall.vertices;
+		}
+	}();
 	var g = display.graph;
 	var onePieceCenter = function () {
 		var _v21 = display.status;
@@ -19905,62 +19962,66 @@ var $author$project$TreeWidth$drawGraphForTreeWidth = function (display) {
 	return _Utils_ap(
 		A2($elm$core$List$map, $author$project$Graph$drawEdge, g.edges),
 		_Utils_ap(
-			A2(
-				$elm$core$List$map,
-				function (_v0) {
-					var p1 = _v0.a;
-					var p2 = _v0.b;
-					return A2($author$project$Graph$lline, p1, p2);
-				},
-				treeLinesDrawn),
+			A2($elm$core$List$map, $author$project$Graph$drawEdge, smallEdges),
 			_Utils_ap(
-				A2($elm$core$List$map, $author$project$Graph$drawGrayEdge, showGrayEdges),
+				A2(
+					$elm$core$List$map,
+					function (_v0) {
+						var p1 = _v0.a;
+						var p2 = _v0.b;
+						return A2($author$project$Graph$lline, p1, p2);
+					},
+					treeLinesDrawn),
 				_Utils_ap(
-					A2(
-						$elm$core$List$map,
-						function (_v1) {
-							var p1 = _v1.a;
-							var p2 = _v1.b;
-							return A2($author$project$Graph$lline, p1, p2);
-						},
-						altTreeLinesDrawn),
+					A2($elm$core$List$map, $author$project$Graph$drawGrayEdge, showGrayEdges),
 					_Utils_ap(
 						A2(
 							$elm$core$List$map,
-							function (_v2) {
-								var p1 = _v2.a;
-								var p2 = _v2.b;
+							function (_v1) {
+								var p1 = _v1.a;
+								var p2 = _v1.b;
 								return A2($author$project$Graph$lline, p1, p2);
 							},
-							firstBranchAltTree),
+							altTreeLinesDrawn),
 						_Utils_ap(
 							A2(
 								$elm$core$List$map,
-								$author$project$Graph$drawIntersectionPoint(6),
-								centersOftriples),
+								function (_v2) {
+									var p1 = _v2.a;
+									var p2 = _v2.b;
+									return A2($author$project$Graph$lline, p1, p2);
+								},
+								firstBranchAltTree),
 							_Utils_ap(
 								A2(
 									$elm$core$List$map,
 									$author$project$Graph$drawIntersectionPoint(6),
-									altTreeDots),
+									centersOftriples),
 								_Utils_ap(
-									A2($elm$core$List$map, $author$project$Graph$drawVertex, g.vertices),
+									A2(
+										$elm$core$List$map,
+										$author$project$Graph$drawIntersectionPoint(6),
+										altTreeDots),
 									_Utils_ap(
-										A2($elm$core$List$map, $author$project$Graph$drawSpecialEdge, showPieceEdges),
+										A2($elm$core$List$map, $author$project$Graph$drawVertex, g.vertices),
 										_Utils_ap(
-											A2($elm$core$List$map, $author$project$Graph$drawSpecialEdge, showBigPieceEdges),
+											A2($elm$core$List$map, $author$project$Graph$drawSmallVertex, smallVertices),
 											_Utils_ap(
-												A2($elm$core$List$map, $author$project$Graph$drawSelectedVertex, showPieceVertices),
+												A2($elm$core$List$map, $author$project$Graph$drawSpecialEdge, showPieceEdges),
 												_Utils_ap(
-													A2($elm$core$List$map, $author$project$Graph$drawSelectedVertex, showBigPieceVertices),
+													A2($elm$core$List$map, $author$project$Graph$drawSpecialEdge, showBigPieceEdges),
 													_Utils_ap(
-														A2($elm$core$List$map, $author$project$Graph$drawGrayVertex, showGrayVertices),
+														A2($elm$core$List$map, $author$project$Graph$drawSelectedVertex, showPieceVertices),
 														_Utils_ap(
-															A2(
-																$elm$core$List$map,
-																$author$project$Graph$drawIntersectionPoint(6),
-																bigPieceCenter),
-															A2($elm$core$List$map, $author$project$Graph$writeVertexName, g.vertices)))))))))))))));
+															A2($elm$core$List$map, $author$project$Graph$drawSelectedVertex, showBigPieceVertices),
+															_Utils_ap(
+																A2($elm$core$List$map, $author$project$Graph$drawGrayVertex, showGrayVertices),
+																_Utils_ap(
+																	A2(
+																		$elm$core$List$map,
+																		$author$project$Graph$drawIntersectionPoint(6),
+																		bigPieceCenter),
+																	A2($elm$core$List$map, $author$project$Graph$writeVertexName, g.vertices)))))))))))))))));
 };
 var $author$project$TreeWidth$paneTree = function (display) {
 	return $author$project$Graph$displaySvg(

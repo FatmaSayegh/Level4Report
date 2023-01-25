@@ -333,6 +333,10 @@ drawVertex : Vertex -> S.Svg Msg
 drawVertex v =
     circle 10 v.pos v.color v.name
 
+drawSmallVertex : Vertex -> S.Svg Msg
+drawSmallVertex v =
+    circle 4 v.pos v.color v.name
+
 
 drawGoldenCircle : Vertex -> S.Svg Msg
 drawGoldenCircle v =

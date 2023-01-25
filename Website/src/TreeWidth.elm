@@ -585,6 +585,8 @@ treeWidthDisplay =
    let
       circularSize = vec3 100 100 0
       circularPosition = vec3 200 200 0
+      circularSizeSmall = vec3 40 40 0
+      circularPositionSmall = vec3 350 50 0
       circularStartAngle = 0
       gridCircularInitial =
          parametricPolygon 
@@ -593,11 +595,24 @@ treeWidthDisplay =
             circularPosition
             circularStartAngle
 
+      gridCircularInitialSmall =
+         parametricPolygon 
+            12
+            circularSizeSmall
+            circularPositionSmall
+            circularStartAngle
+         
       shuffleSet =
          [ 9,8,11,12,10,7,3,1,2,4,5,6]
 
       gridCircular =
          gridCircularInitial
+         |> List.map2 (\x y -> (x,y)) shuffleSet
+         |> List.sortWith (\t1 t2 -> compare (Tuple.first t1) (Tuple.first t2))
+         |> List.map (Tuple.second)
+
+      gridCircularSmall =
+         gridCircularInitialSmall
          |> List.map2 (\x y -> (x,y)) shuffleSet
          |> List.sortWith (\t1 t2 -> compare (Tuple.first t1) (Tuple.first t2))
          |> List.map (Tuple.second)
@@ -623,8 +638,19 @@ treeWidthDisplay =
             (List.range 1 12)
             (gridCircular)
             (Graph.listOfColors First 12)
+
+      verticesSmall = 
+         List.map3
+            (\name g c -> Graph.Vertex name g c False)
+            (List.range 1 12)
+            (gridCircularSmall)
+            (Graph.listOfColors First 12)
+
       edges =
          Graph.makeEdgesWithTuples edgeTuples vertices
+
+      edgesSmall =
+         Graph.makeEdgesWithTuples edgeTuples verticesSmall
 
       triples = [ (1,2,3), (2,3,4)
                 , (3,4,7), (4,5,8), (4,7,8), (5,8,9), (5,6,9)
@@ -645,8 +671,11 @@ treeWidthDisplay =
 
       graph = Graph vertices edges
 
+      graphSmall = Graph verticesSmall edgesSmall
+
       in
       { graph = graph 
+      , graphSmall = graphSmall
       , gridHoneyComb = gridHoneyComb
       , gridCircular = gridCircular
       , triples = triples
@@ -771,6 +800,8 @@ morphIntoHoneyComb delta display =
 drawGraphForTreeWidth display =
    let
       g = display.graph
+
+      gSmall = display.graphSmall
 
       centersOftriples =
          case display.status of
@@ -921,10 +952,28 @@ drawGraphForTreeWidth display =
                _ ->
                   []
                
+      smallVertices =
+            case display.status of
+               CircularGraph ->
+                  []
+               MorphingIntoHoneyComb ->
+                  []
+               _ ->
+                  gSmall.vertices
+
+      smallEdges =
+            case display.status of
+               CircularGraph ->
+                  []
+               MorphingIntoHoneyComb ->
+                  []
+               _ ->
+                  gSmall.edges
 
    
    in
    List.map Graph.drawEdge g.edges
+        ++ List.map Graph.drawEdge smallEdges
         ++ List.map (\(p1, p2) -> Graph.lline p1 p2) treeLinesDrawn
         ++ List.map Graph.drawGrayEdge showGrayEdges
         ++ List.map (\(p1, p2) -> Graph.lline p1 p2) altTreeLinesDrawn
@@ -932,6 +981,7 @@ drawGraphForTreeWidth display =
         ++ List.map (Graph.drawIntersectionPoint 6) centersOftriples 
         ++ List.map (Graph.drawIntersectionPoint 6) altTreeDots 
         ++ List.map Graph.drawVertex g.vertices
+        ++ List.map Graph.drawSmallVertex smallVertices
         ++ List.map Graph.drawSpecialEdge showPieceEdges
         ++ List.map Graph.drawSpecialEdge showBigPieceEdges
         ++ List.map Graph.drawSelectedVertex showPieceVertices
@@ -967,6 +1017,7 @@ treeWidthGrid =
 
 type alias TreeWidthDisplay =
    { graph : Graph
+   , graphSmall: Graph
    , gridCircular : Grid
    , gridHoneyComb : Grid
    , triples : List (Int, Int, Int)
