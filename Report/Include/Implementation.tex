@@ -278,9 +278,11 @@ A list of Vertices, for example can be formed by combining together lists of
 names, colors and a grid.
 
 Grids are important in implementing animations. In the animations a graph moves
-towards a grid of positions. To aid this, there is a function, which which
-take two grids and output a grid which is geometrically in between the two
-grids.
+towards a grid of positions. To aid this, there is a function, which which take
+two grids and output a grid which is geometrically in between the two grids.
+The graph hops from one intermediate grid to the next to the next till it
+reaches the final grid. More detail on this is provided in \autoref{animation:
+morphing}.
 
 \subsection{Using Linear algebra to Initialize Grids}
 Linear algebra, in particular manipulation of vectors using Matrices has been
@@ -495,7 +497,7 @@ appearing out of the surface of the vertices.
 \section{Explanation Panel}
 
 The Explanation Panel is the right half of each page concerned with a topic. 
-It consist of the title of the topic and suggestions on how
+It consists of the title of the topic and suggestions on how
 to interpret and interact with the animations and user interactions.
 
 The content of this panel depends on the state of the animation or the user
@@ -521,25 +523,25 @@ in turn updates the model (state of the program). The updated model of the
 program is reflected on the screen by the view function.
 
 \subsection{Home Page}
-For the layout of the Home page, see it's design in \autoref{design :home}.
-The icons contain miniaturized version of the graphs for the corresponding
-topics. The miniaturized versions of the graph are borrowed from the
-implementation of the various animations and user interactive tasks in the app.
-The miniaturization is implemented by giving the SVGs small spaces to occupy on
-the page. As the graphics is scalable, it adopts the size of it's parent
-element.  Clicking on the Graph Isomorphism icon, for example triggers the
-$GoToIsomorphism$ message which is used by the $update$ function to change the
-state of the model to contain the $Isomorphim$ topic.
+See the design of home page in \autoref{design: home}.  The topic icons contain
+miniaturized version of the graphs for the corresponding topics. The
+miniaturized versions of the graph are borrowed from the implementation of the
+various animations and user interactive tasks in the app.  The miniaturization
+is implemented by spawning the SVGs in small spaces . As the graphics is
+scalable, it adopts the size of it's parent element.  Clicking on the Graph
+Isomorphism icon, for example, triggers the $GoToIsomorphism$ message which is
+used by the $update$ function to change the state of the model to contain the
+$Isomorphim$ topic.
 
 
 \subsection{URL Management}
 Although there is only one HTML page rendered (this application being a Single
 Page Application), when the user navigates from one topic to another he can see
 the URL path after the Website's name change to reflect the pseudo-page he is
-on. This change in the URL is brought by the function $pushUrl$ at
-appropriate situations.  The change in the URL is detected by the run-time to
-produce the message $UrlChanged$ which in turn is caught by the Update function
-to re-populate the page with new topic.
+on. This change in the URL is brought by the function $pushUrl$ at appropriate
+situations.  The change in the URL is detected by the run-time to produce the
+message $UrlChanged$ which in turn is caught by the Update function to
+re-populate the page with new topic.
 
 \subsection{Navigation Bar}
 The navigation bar consists of buttons to go to the previous and the next
@@ -587,8 +589,8 @@ page-layout, navigation and control.
 \subsection{Graph Isomorphism}
 \label{impl: isomporphism}
 
-This topic is elucidated by two user interactive animations. Refer to
-\autoref{story: isomorphism} for the details. 
+This topic is elucidated by a user interactive animation and an animated quiz.
+Refer to \autoref{story: isomorphism} for the details. 
 
 
 \subsubsection{Isomorphic Definition Animation}
@@ -689,12 +691,13 @@ library function was used for this task.
 \label{animationfigure: max3cut}
 \end{figure}
 In the case of Max 3 Cut (see \autoref{story: max3cut}), the animation begins
-with a tripartite graph. The graph is based upon a nonagon shaped grid. The
-destination grid, in this animation is shape of an equilateral triangle, with
-the grid points near the vertices of the said triangle. The graph consists of
-three sets of vertices which settle down at the vicinity of the three vertices
-of the equilateral triangle at the end of the animation. The kinematics of the
-motion of the vertices is explained in \autoref{animation: morphing}.
+with a tripartite graph. The graph is based upon a regular \emph{nonagon}
+shaped grid. The destination grid, in this animation is shape of an equilateral
+triangle, with the grid points near the vertices of the said triangle. The
+graph consists of three sets of vertices which settle down at the vicinity of
+the three vertices of the equilateral triangle at the end of the animation. The
+kinematics of the motion of the vertices is explained in \autoref{animation:
+morphing}.
 
 \subsection{Graph Coloring}
 This section has two user interactive tasks to color graphs in the way they
@@ -808,7 +811,7 @@ transitions see \autoref{animation: morphing}.
 \end{figure}
 
 The second part of the animation highlights one piece of the cellular structure
-(see \autoref{}). The piece is also marked by drawing a blue dot at the center
+. The piece is also marked by drawing a blue dot at the center
 of the it. The position of the blue dot is found by  taking the centroid of the
 constituent vertices of the piece.
 
@@ -824,7 +827,7 @@ to the various states of the program.
 
 The program is divided into ten modules.
 
-The $Main$ module is of the central utility. It's function is to be a
+The $Main$ module is of the central utility. It's function is to be the
 starting point for the program and also to act as a porter to load the
 functionality of individual graph theory topics to the state of the program
 whenever the navigation commands demand so. 
@@ -870,14 +873,14 @@ make the project of this size manageable and organized are explained.
 
 \subsection{Version Control}
 The program along with the documentation and the dissertation report were
-version controlled in a single GitHub repository. A git repository, gives the
-developer confidence for fearless refactoring and feature enhancement by the
-way of creating separate branches for separate issues. Therefore a different
-branch was created for editing documentation, and it was made sure that
-modification in code files was not done on this branch. Similarly, a branch for
-code refactoring didn't modify the documentation part hence separating
-concerns.  Furthermore a branch was conveniently discarded if an adventure in a
-radical change in code went wrong.
+version controlled in a single GitHub repository. See \autoref{links:
+repository}. A git repository, gives the developer confidence for fearless
+refactoring and feature enhancement by the way of creating separate branches
+for separate issues. Therefore a different branch was created for editing
+documentation, and it was made sure that modification in code files was not
+done on this branch. Similarly, a branch for code refactoring didn't modify the
+documentation part hence separating concerns.  Furthermore a branch was
+conveniently discarded if an adventure in a radical change in code went wrong.
 
 \subsection{Continuous Deployment}
 The web application concerning the project is deployed on the World Wide Web
