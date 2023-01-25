@@ -129,15 +129,16 @@ set of Minimum Vertex Cover to the minimum.
 
 \subsection{Tree Width}
 \label{explanation: treewidth}
-We will explain in two parts. First we will define what a tree decomposition of
-a graph is. Then we will define tree width of the graph.
+This topic will be discussed be explained in two parts. First a tree
+decomposition of a graph is described. Thereafter tree width of a
+graph will be defined.
 
 To decompose a Graph in a tree is to put nodes into sets called pieces, subject
 to certain conditions.  The first condition is that all the vertices of $G$
 should belong to at least one piece. Every edge of $G$, must be present in
 at least one piece which contains both ends of the edge.  And finally, in the
-tree decomposition, if there is a node $n$ present in a walk from a node $n1$
-to $n2$, and if both $n1$ and $n2$ have a vertex $v$ in common, then the node
+tree decomposition, if there is a node $n$ present in a walk from a node $n_1$
+to $n_2$, and if both $n_1$ and $n_2$ have a vertex $v$ in common, then the node
 $n$ also contains that vertex $v$. 
 
 Any graph can be decomposed into a tree. Trivially, a graph can be tree
