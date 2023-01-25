@@ -12,11 +12,12 @@ starts with defending the benefits of using a functional programming in general
 and also how Elm uses Model, View, Update architecture to implement a dynamic
 front end.
 
-Furthermore, it will be discussed how the Graph as a data-structure is defined.
-How it is drawn on screen as SVG (Scalable Vector Graphics). How a function
-generates a color palette for the coloring of the vertices. How vertices are
-laid out in various geometrical patterns. How animations are implemented and
-graph are made to change shape and translate in space among other things.
+Furthermore, it will be discussed how a Graph as a
+data-structure is defined.  How it is drawn on screen as SVG (Scalable Vector
+Graphics). How a function generates a color palette for the coloring of the
+vertices. How vertices are laid out in various geometrical patterns. How
+animations are implemented and graphs are made to change shape and translate in
+2D space among other things.
 
 
 \section{Front End Development with The Elm Programming Language}
@@ -120,7 +121,7 @@ definite alignment and spacing from each other.
 \end{figure}
 
 \subsubsection{Libraries and Community}
-Elm also has rich liblraries for linear algebra, graphics and Scalar Vector
+Elm also has rich libraries for linear algebra, graphics and Scalar Vector
 Graphics which can aid in creating a \emph{2D} graphics web app like this one.
 Elm also has a wonderful community help, advice and discussion on slack and
 discord.
@@ -524,9 +525,9 @@ For the layout of the Home page, see it's design in \autoref{design :home}.
 The icons contain miniaturized version of the graphs for the corresponding
 topics. The miniaturized versions of the graph are borrowed from the
 implementation of the various animations and user interactive tasks in the app.
-The miniatization is implemented by giving the SVGs small spaces to occupy on
-the page. As the graphics is scalable, it adopts the size of the parent.
-Clicking on the Graph Isomorphism icon, for example triggers the
+The miniaturization is implemented by giving the SVGs small spaces to occupy on
+the page. As the graphics is scalable, it adopts the size of it's parent
+element.  Clicking on the Graph Isomorphism icon, for example triggers the
 $GoToIsomorphism$ message which is used by the $update$ function to change the
 state of the model to contain the $Isomorphim$ topic.
 
@@ -567,7 +568,7 @@ navigation bar. Below is an example list of a few key-bindings.
 \end{itemize}
 
 
-\subsection{Screen Compatability}
+\subsection{Screen Compatibility}
 So that the various visual sections of the application occupy their appropriate
 place on screens of different sizes, such as screens of of various laptops and
 smart phones, the width and height of the screen is used to give the height and
@@ -600,7 +601,7 @@ graphs with same position and form. An empty grid is also provided as the
 target set of positions for the vertices of the second graph. 
 
 When the user presses the play button the message $AnimationToggle$ is
-generated. When the update function recieves this message, it cheks for the
+generated. When the update function receives this message, it checks for the
 state of the program which is set at $IsomorphicTransition$. It starts the
 animation if it is not already in progress.  
 
@@ -640,7 +641,7 @@ The second activity gives the user three graphs. The first graph is a reference
 graph. The user is asked to choose which one out of the two remaining graphs is
 isomorphic to the reference graph. The right answer is hard coded, and when the
 user selects his answer, the program checks if the answer chosen is right one
-and changes the appeartance of the display and the explanation panel.  The
+and changes the appearance of the display and the explanation panel.  The
 state of the game consists of two variables: $Choice$ and $CheckState$.  When
 the user has not made any choice yet $Choice$ is at $NoChoice$ state.  When the
 choice is made, $Choice$ is set to $FirstGraph$ or the $SecondGraph$.  When the
@@ -659,7 +660,7 @@ max2cut}). The target grid for the animation is made of the combination of the
 same polygons but set apart vertically. The kinematics of the animation is
 executed the same way as is done for Graph Isomorphism.
 
-The user can draw a predetermined line segment which seperates the two
+The user can draw a predetermined line segment which separates the two
 sets. The line segment is superimposed by intersection points of the
 line segments and the edges between the two sets. An intersection point
 is calculated by finding intersection of two line segments. A linear algebra
@@ -682,7 +683,7 @@ library function was used for this task.
 \caption{
         Arrangement of animation of Max 3 Cut. This animation transforms a graph
         into a shape such that the three sets of vertices of the graph making a Max 3 cut
-        are seperated from each other distinctively. The three sets move away from each
+        are separated from each other distinctively. The three sets move away from each
         other in directions which are $120^{\circ}$ apart.
         }
 \label{animationfigure: max3cut}
@@ -893,7 +894,7 @@ the output along with the boiler plate HTML to the publish directory.
 If it is needed to deploy the application anew instantaneously (something which
 is required to test the website for different screen sizes) a \emph{curl}
 command with a specific URL called a \emph{build hook} is executed on the local
-machine.  It deployes the website from the code in the master branch in the
+machine.  It deploys the website from the code in the master branch in the
 repository.
 
 

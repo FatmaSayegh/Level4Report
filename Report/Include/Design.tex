@@ -2,12 +2,12 @@
 \graphicspath{ {images/} }
 
 This document discusses the design choices made for the application and the
-guiding principles behind such choices. It progresses to how a graph are
-visually displayed and animated in the app without going in the technical
-details of implementation. Finally, I shall discuss the intended experience of
-the user while going through the various topics explained in the application.
-We will also discuss the learning impact of each topic on the user as it forms an essential
-aspect of overall design.
+guiding principles behind them. It progresses to show how a graph are visually
+displayed and animated in the app without going in the technical details of
+implementation. Finally, the intended effect on the user while going through
+the various topics explained in the application will be discussed.  We will
+also discuss the learning impact of each topic on the user as it forms an
+essential aspect of overall design.
 
 \section{Guiding Principles}
 
@@ -183,16 +183,16 @@ brilliant ideas, act as inspiration for future work due to constraints of time.
 \label{story: isomorphism}
 The user is presented with a graph on the left and textual explanation on the
 right of the page.  The textual explanation portion of the page also has some
-media buttons such as play/pause and reset to interact with the explanation.
-The text explanation briefly defines graph isomorphism and advises the user to
-press the play button.
+media buttons such as play/pause and reset to control the state of the
+animation. The text explanation briefly defines graph isomorphism and advises
+the user to press the play button.
 
 \subsubsection{Animation:}
 When the user presses the play button, a new graph emerges out of the old one
-while the keeping the edges between any two vertices conserved. While keeping
-the connectivity between the vertices intact, the graph transforms into a
-completely new shape, almost giving a visual proof that the two graphs on the
-screen are isomorphic to each other.
+while the keeping the edges between any two vertices conserved. 
+While keeping the connectivity between the vertices intact, the graph
+transforms into a completely new shape, almost giving a visual proof that the
+two graphs on the screen are isomorphic to each other.
 
 \subsubsection{User Interaction:}
 After the two isomorphic graphs have separated from each other, the user is
@@ -213,7 +213,7 @@ vertex of the graph has the same adjacent vertices in both the isomorphic
 counterparts.
 
 \subsubsection{Quiz:}
-The user can with a click of a button go to the quize page which resides within
+The user can with a click of a button go to the quiz page which resides within
 the topic of Isomporphism. The page asks her to select a graph (among more than
 one graphs) which she thinks is isomorphic to a given reference graph.  When
 she makes her choice, she is shown the right answer along with an animation on
@@ -269,10 +269,10 @@ points which tell the user the number of edges passing from one set to another.
 \centering
 \includegraphics[scale=0.2]{maxcutdes}
 \caption{
-         Initial design of Max 2 Cut. The inital graph is shown in the left. It
-         must go through a a transformation such that the two sets of the Max
-         Cut are seperated form each other as shown in the right. Preferably
-         there should be a line between the two sets for visual seperation.
+         Initial design of Max 2 Cut. The initial graph is shown in the left. It
+         must go through a transformation such that the two sets of the Max
+         Cut are separated form each other as shown in the right. Preferably
+         there should be a line between the two sets for visual separation.
         }
 \end{figure}
 
@@ -373,7 +373,7 @@ the background. At this point, the definition of the tree width is given in
 the explanation panel.
 
 The final part gives a different tree decomposition to the one mentioned
-earlier with size of a piece increaded to four. This shows that a graph can be
+earlier with size of a piece increased to four. This shows that a graph can be
 decomposed in more than one way. Hence the tree-width corresponding to this
 decomposition would be four. Ideally, though the tree decomposition of a graph
 should be performed in such way that the tree-width is kept at the minimum
