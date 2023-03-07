@@ -2,29 +2,25 @@
 \section{Summary}
 
 The application elucidates five graph theory problems by the help of animations
-and user interactive tasks. It does this by animations and interaction with the
-graph elements and input buttons. This app also has a dynamic explanation area
+and user interactive tasks. This app also has a dynamic explanation area
 which contains text appropriate to the state of the lesson at a particular
 time.
 
-Clearly, the end goal of the project was to have some effectiveness in learning
+The end goal of the project was to have some effectiveness in learning
 outcomes. Therefore to elucidate the chosen topics, explanation strategies
 were made carefully and animation friendly examples were chosen (and also designed). 
 
 It was decided that the layout of the web pages will be divided equally for
-display of animations and explanation text. The text on the \emph{explanation
-panel} was \emph{state dependent}, so that it is synchronized with the state of
-animation.
+display of animations and\emph{state dependent} on the \emph{explanation
+panel}.
 
-The program was written in Elm, which is a functional programming language.
-Functional type system was used to define graphs, vertices and edges.  Vector
+The program was written in a functional programming Elm and a functional type system was used to define graphs, vertices and edges.  Vector
 and linear algebra was used to draw and animate graphs on screen as SVG
 elements. The program was divided into modules for the main program, graphs and
 the various topics.
 
-The web application was hosted on the internet and tested on screens of various
-sizes. The application was subsequently modified to be adaptable to variable
-screen sizes. This was done by using the width and height of the screen, and
+The web application was hosted on the internet and tested to be adaptable to variable
+screen sizes by
 adjusting the size of the elements on the screen and font-size accordingly. 
 
 The application was evaluated by a survey among peers. This was useful in
@@ -95,13 +91,12 @@ graph motif to another or other explorations.
 
 \subsubsection{Virtual Reality Capability:}
 For a more enhanced 3D experience, libraries in Elm which render stereo images
-for Virtual reality (VR) devices can be employed for exploration of larger
-graphs. VR, if employed for right ends can be a game changer in the field of
+for Virtual Reality (VR) devices can be employed for exploration of larger
+graphs. VR, if employed for right, may be a game changer in the field of
 online education.
 
 \subsection{Addition of topics}
-To add a topic to the application, a contributor has to define a new page for
-the same and make use of core modules and integrate the module in the main
+To add a topic to the application, a contributor has to define a new page, make use of core modules and integrate the module in the main
 file. The link to the program can be found in \autoref{links: repository}.
 Although addition of advanced topics may demand enhancing core functionality as
 well.
@@ -109,14 +104,12 @@ well.
 \section{Reflections}
 
 The project was an important learning experience in design, implementation and
-evaluation of a project of the size. Here are some insights into this experience.
+evaluation of a project of the size. In this section I discuss some insights into this experience.
 
 \subsection{On Using Functional Programming} 
 \label{reflection: functional}
 
-A web app today is one of the primary means of human computer interaction
-(HCI). To model something as complex as a HCI a programming paradigm which can
-model this complexity efficiently is needed. 
+ To model something as complex as the graph problems in this project, a programming paradigm which can model this complexity efficiently is needed. 
 
 An imperative programming language, however \emph{high-level} it might be, is
 much closer to the Von Nuemann machine in terms of how a computer program is
@@ -125,15 +118,13 @@ step at a time. The programmer implements most of the logic in terms of control
 mechanisms and less in terms of logic itself. Therefore the program becomes far
 more complex than the actual complexity it has to represent. 
 
-Functional programming on the other hand was much more efficient in modeling
+Functional programming on the other hand felt much more efficient in modeling
 the domain. It implemented logic more in terms of logic and less in terms of
 control structures. Such that while reading the program one mostly saw logic
 and not boiler-plate code.
 
 \subsection{On Project Management}
 For a project of this size the adage \emph{well begun is half done} is true.
-The concluding days of the project should be preferably reserved for
-evaluation, and feedback and subsequent changes.
 
 During the development of the application it was observed that after acquiring
 basic drawing and animation techniques for implementing the first topic, the
@@ -151,26 +142,23 @@ Visualization of graph topics is limited to certain examples which lend
 themselves well for animation. Not all instances of graphs can do this.
 Therefore choosing the right examples was a crucial decision for each topic.
 
-Though, it should be mentioned that oversimplification of the topic sometimes
+I found that oversimplification of the topic sometimes
 hides more than it reveals. Using a particular example of a topic has the
-potential to harm it's generality. Therefore, one should be careful and give
+potential to harm its generality. Therefore, one should be careful and give
 emphasis to formal methods in mathematics equally if not more.
 
 \section{Concluding Thoughts}
 
 Web applications have become today the primary interface between humans and
 computation and communication. Front end programming is therefore responsible
-for the interface between most humans and computer services. Therefore a web
+for the interface between most humans and computer services. A web
 application can be an convenient tool for teaching visual concepts like maths
-and geometry.
+and geometry. A program (and the programming paradigm used to develop it) must be robust enough to
+handle such complexity efficiently and elegantly. 
 
-Teaching, is hard; it should be harder still when it is done in absence and let
-a program do it for you. And though a lesson should be simple, it should not
-be simpler than it ought to be. This can give rise to complexity and non-linear
-stories. A program (and the programming paradigm) must be robust enough to
-handle such complexity. 
+Teaching such abstract mathematical and computing concepts is hard, and it may be even more difficult when it is done in absence of a teacher, through written and drawn material. Though a lesson should be simple, it should not
+be simpler than it ought to be and I feel this can give rise to complexity and non-linear
+stories. 
 
 While designing and implementing this project the user's intuition was my
-primary client. It was stepping into her shoes, that directed me to choose the
-examples, design the functionalities and decide on the layout among other
-things.
+primary client. It was stepping into their shoes, that directed me to choose the material covered in the project and how it is presented. I am hoping that this project contributed to our understanding of the use of interactive learning environments for teaching graph theory, and that we see much more advancement in the field, leading us to more engaging and efficient teaching of science and technology.

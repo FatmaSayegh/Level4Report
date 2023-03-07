@@ -141,13 +141,13 @@ section above) is a trivial example of Max Cut there are no edges among
 the vertices of a set $A$ and no edges among the vertices of set B and
 all the edges are from the vertices in set $A$ to vertices in set $B$.
 
-Graph Coloring
+Graph Colouring
 --------------
 
 It is an optimization problem where the objective is to assign to the
-vertices of a graph a color such that no two adjacent vertices have the
-same color, while keeping the number of colors employed to a minimum.
-Here a color can be thought of just any symbol from a finite set of
+vertices of a graph a colour such that no two adjacent vertices have the
+same colour, while keeping the number of colours employed to a minimum.
+Here a colour can be thought of just any symbol from a finite set of
 symbols.
 
 Minimum Vertex Cover

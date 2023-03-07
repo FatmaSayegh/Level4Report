@@ -1,12 +1,12 @@
 % DESIGN
 \graphicspath{ {images/} }
 
-This document discusses the design choices made for the application and the
+In this section I design the design choices made for the application and the
 guiding principles behind them. It progresses to show how a graph are visually
 displayed and animated in the app without going in the technical details of
 implementation. Finally, the intended effect on the user while going through
-the various topics explained in the application will be discussed.  We will
-also discuss the learning impact of each topic on the user as it forms an
+the various topics explained in the application will be discussed.  I will
+also touch on the learning impact of each topic on the user as it forms an
 essential aspect of overall design.
 
 \section{Guiding Principles}
@@ -15,35 +15,35 @@ essential aspect of overall design.
 \label{design: simplicity}
 For the purpose of elucidation of Mathematical concepts, which requires an
 undivided attention of the learner, it was decided that the user interface must
-have the minimum amount of clutter possible, without giving away the minimum
+have the minimum amount of clutter possible, without sacrificing in terms of the minimum
 amount of functionality required. The learner should not get distracted by an
 overpopulated user interface. Simplicity and elegance would also lead the user
 to stay longer on the application without getting visually exhausted.
-Furthermore the users on the web today are extremely goal driven and don't want any
-obstruction between them and their goal. See \cite{Karvonen2000}.
+Furthermore the users on the web today are extremely goal driven and do not want any
+obstruction between them and their goal. \cite{Karvonen2000}
 
 \subsection{Intuitiveness}
 The layout of the user interface should be such that it not only has utility,
 but should also help communicate the intention of the designer about the usage
 of the application. For example a play button, just like it was found on media
 devices for decades, invites the user to kick-start an animation even without
-going through the text which tells him to do so explicitly. The size and
+going through the instruction which tells him to do so explicitly. The size and
 placement of the play button on the page, therefore becomes important. Right
 placement of user interactive elements guide the user through the story which
 is intended to be told.
 
 \subsection{Meaningfulness}
-For a substantial learning impact, the elucidation of the topics must reach at
-the heart of the topic. Furthermore they must have a story line which is
+For a substantial learning impact, the elucidation of the problems must reach at
+the heart of the topic. They must have a storyline which is
 meaningful and coherent. The learning outcomes of the animation or a
 user-interactive task must be well defined before an attempt is made to
 implement them.
 
 \section{Wire-frame and Navigation}
-The web application is a \textbf{Single Page Application}. Where the navigation
-from one topic to another occurs according to the user inputs. When the state
+The web application is implemented as a \textbf{Single Page Application}. The navigation
+from one topic to another occurs according to the user inputs, and when the state
 moves from one graph theory to another topic, the data on the screen, that is
-the graphics and the text, change on the same page without loading a new HTML
+the graphics and the text, change on the same page without loading a new HTML page
 each time. The user however will notice the url change with navigation from one
 topic to another. This will also give the user the ability to use forward and
 backward buttons in the browser to navigate through the history of URLs
@@ -51,36 +51,6 @@ visited. As a new HTML page is not loaded every time the user navigates from
 one topic to another the screen therefore does not turn briefly white and the
 transitions are imperceptible by default.
 
-There were several iterations made for the layout of the web page, one of the
-is shown in \autoref{wireframe: initial}. Finally, a layout was chosen, see
-\autoref{wireframe: final}, in which the page is vertical divided into two
-parts, the left part of the page contains an instance of an animation, the
-right contains explanation of the topic and advice on how to interpret the
-animation along with navigation and control buttons. 
-
-The text in the explanation part of the page is dynamic in nature, if the
-animation has facility of user interaction with it's elements, the
-corresponding text on the right responds with advises on the state of affairs
-and what the user should do next.
-
-There is a navigation bar at the bottom of the page, with left and right
-arrows, along with the names of the previous and the next topics, to hop from
-one topic to another.
-
-\subsection{Home Page, About Page and Header Bar}
-\label{design: home}
-The home page is the landing page of the application. It gives the user
-clickable icons for navigation to the topics. The icons must have the name of
-the topic and a miniature graph which best represents the topic. 
-
-The about page has a short description of the purpose of the application with a
-short write up introducing the developer and the supervisor of the project. It
-also has an acknowledgement section mentioning the people who have been important
-in the completion of the project.
-
-Every page has a header bar, which has buttons to navigate to home and about
-pages respectively. The bar stays at it's place even if the rest of this
-page is scrolled down for access to navigation.
 \begin{figure}[H]
     \centering
     \begin{minipage}{.5\textwidth}
@@ -97,6 +67,38 @@ page is scrolled down for access to navigation.
     \end{minipage}
 \end{figure}
 
+There were several iterations made for the layout of the web page, one of the
+is shown in \autoref{wireframe: initial}. Finally a more suitable and optically balanced design was selected, see
+\autoref{wireframe: final}. On this layout, the page is vertically divided into two
+parts, the left part of the page contains an instance of an animation, the
+right contains explanation of the topic and advice on how to interpret the
+animation along with navigation and control buttons. 
+
+The text in the explanation part of the page is dynamic in nature, if the
+animation has facility of user interaction with its elements, the
+corresponding text on the right responds with advises on the state of affairs
+and what the user should do next.
+
+There is a navigation bar at the bottom of the page, with left and right
+arrows, along with the names of the previous and the next topics, to jump from
+one topic to another.
+
+\subsection{Home Page, About Page and Header Bar}
+\label{design: home}
+
+The home page is the landing page of the application. It gives the user
+clickable icons for navigation to the topics. The icons must have the name of
+the topic and a miniature graph which best represents the topic. 
+
+The about page has a short description of the purpose of the application with a
+short write up introducing the developer and the supervisor of the project. It
+also has an acknowledgement section mentioning the people who have been important
+in the completion of the project.
+
+Every page has a header bar, which has buttons to navigate to home and about
+pages respectively. The bar stays at its place even if the rest of this
+page is scrolled down for access to navigation.
+
 \section{Animation Panel} 
 As mentioned in the preceding section, the left half of the page is for
 graphics, which contains an animation, a user-interaction session or a
@@ -108,46 +110,44 @@ transformations of appearance and annotation.
 The graphs are represented as vertices and edges joining those vertices.
 Although the geometrical placement of the vertices is of no consequence in the
 subject of graph theory, for the purpose of visualization, vertices are
-assigned a 2 dimensional position. The edges, don't contain attributes such as
+assigned a two-dimensional position. The edges do not contain attributes such as
 length or positions of endpoints of a line segment, they are rather defined as
 a relation between a pair of vertices.
 
 \subsubsection{Appearance of Vertices} 
 
-The vertices of graphs in the animations are color filled circles of the
-same size save for certain exceptions. The color of the vertices have been
+The vertices of graphs in the animations are colour filled circles of the
+same size save for certain exceptions. The colour of the vertices have been
 allotted by varying mostly the hue and keeping saturation and lightness
-relatively same in the \textbf{HSL} (Hue Saturation Lightness) color space. The
+relatively same in the \textbf{HSL} (Hue Saturation Lightness) colour space. The
 vertices contain a name inside the circle as an integer. The names of vertices
 were chosen as integers as it was assumed that such a representation would help
 the developer and also the user to keep a track of them as order of integers
-is understood better by humans.
+may be understood better by users.
 
 When a particular vertex is needed to be shown differently than the rest then
-it's size and color are displayed differently. For example, a user-selected
-vertex in some of the animations are shown bigger and it's color changed to
-golden. The gold color it was observed makes the vertex in consideration
-stand out differently from other colors in the animation.
+its size and colour are displayed differently. For example, a user-selected
+vertex in some of the animations are shown bigger and its colour changed to
+golden. The gold colour it was observed makes the vertex in consideration
+stand out differently from other colours in the animation.
 
 \subsubsection{Appearance of Edges}
-Edges, although are defined very algebraically as a relationship between a pair
-of vertices it gets drawn by referring to the positions of the related vertices
-as a straight line segment white in color.
+Edges are defined very algebraically as a relationship between a pair
+of vertices, but they are simply drawn by connecting the positions of the related vertices with a straight line segment white in colour.
 
-When an edge is supposed to shown differently than the rest of the edges, it's
-width is increased and color changed to the same value of golden as a selected vertex.
-Again it was found that this color and thickness, made the edge standout from the
+When an edge is supposed to be shown differently than the rest of the edges its
+width is increased and colour changed to the same value of golden as a selected vertex.
+Again it was found that this colour and thickness, made the edge standout from the
 rest of the edges and helped in showing it distinguished without being unpleasantly
 distracting.
 
 \section{Explanation Panel}
-Whereas, the animation panel on the left page contains all the graphical
-components of the topic elucidation.  The right half of the page is occupied by
-the Explanation Panel. It contains the title of the problem being explained,
-it's definition and instruction on how to go ahead with starting the animation
+The animation panel on the left page contains all the graphical
+components of the topic elucidation and the right half of the page is occupied by
+the Explanation Panel. It contains the title of the problem,
+its definition and instruction on how to go ahead with starting the animation
 or user-interactive tasks.  It also contains control buttons for starting,
-re-starting and pausing animations.  For user-interactive tasks it has buttons
-to reset the task.
+re-starting and pausing animations.  For user-interactive tasks it also shows a button to reset the task.
 
 As the animation or a user-interactive task progresses the explanation panel
 generates explanatory and instructive text.
@@ -162,19 +162,19 @@ interacting with the individual topics in the application with a special
 consideration towards learning impact and understandibility.
 
 When the user opens the web application on a browser of her choice, the first
-topic she sees is that of Graph Isomorphism. She may stay there to interact
+topic she sees is Graph Isomorphism. They may stay there to interact
 with the example of the topic or navigate to other topics using navigation
 buttons at the bottom to have a bird's eye view of other topics.
 
-Each graph theory problem has it's own character and require a different
+Each graph theory problem has its own character and require a different
 approach for elucidation. The following sections will explain these approaches
 with their intended experience on the user with learning outcomes which may be
 achieved.
 
-The survey mentioned in the \autoref{section: selectionCriteria}, also gave
+The survey mentioned in the \autoref{section: selectionCriteria} also gave
 quite a few suggestions on different ways to elucidate the short listed topics.
-The suggestions were very topic specific, and included various ideas such as
-animations and games and the ability to construct user defined graphs etc. Some
+The suggestions were very specific to topics, and included various ideas such as
+animations and games and the ability to construct user defined graphs. Some
 of the suggestions could be included in the project, some could not be
 accomodated as they did not fit the flow of narrative, while others while being
 brilliant ideas, act as inspiration for future work due to constraints of time.
@@ -197,40 +197,40 @@ two graphs on the screen are isomorphic to each other.
 \subsubsection{User Interaction:}
 After the two isomorphic graphs have separated from each other, the user is
 advised in a text panel to choose a vertex by either hovering over a vertex or
-pressing the corresponding number on the keyboard. Doing so, will change the
+pressing the corresponding number on the keyboard. Doing so will change the
 visual appearance of the selected vertex, the edges incident on the selected
 vertex and the adjacent vertices to the selected vertex in both graphs.  The
-selected vertex will be enlarged to a new radius and change its color from it's
-original color to golden color making it stand apart from the rest of the
-vertices.  The edges incident on the vertex will change their colors to the
-same gold color.  The adjacent vertices to the selected vertex will form a
-golden halo around them.  This color transformation will distinguish a kind of
-a subset in the two displayed graphs. At this point of time, in the text panel
-the user is pointed out that the selected vertex has the same number of edges
-connecting to the same adjacent vertices in both the graphs.  The user is also
-advised to inspect other vertices of the graphs and convince herself that each
+selected vertex will be enlarged to a new radius and change its colour from its
+original colour to golden colour making it stand apart from the rest of the
+vertices.  The edges incident on the vertex will change their colours to the
+same gold colour.  The adjacent vertices to the selected vertex will form a
+golden halo around them.  This colour transformation will distinguish a kind of
+a subset in the two displayed graphs. At this point, on the text panel
+the user is reminded that the selected vertex has the same number of edges
+connecting to the same adjacent vertices in both the graphs. The user is also
+advised to inspect other vertices of the graphs and note that each
 vertex of the graph has the same adjacent vertices in both the isomorphic
 counterparts.
 
 \subsubsection{Quiz:}
 The user can with a click of a button go to the quiz page which resides within
-the topic of Isomporphism. The page asks her to select a graph (among more than
-one graphs) which she thinks is isomorphic to a given reference graph.  When
-she makes her choice, she is shown the right answer along with an animation on
+the topic of Isomorphism. The application asks the user to select a graph (among more than
+one graphs) which the user thinks is isomorphic to a given reference graph.  When
+they make their choice, they are presented with the right answer along with an animation on
 how the correct answer is isomorphic to the reference graph.
 
 \subsubsection{Learning Impact:}
 The transformation of a graph into a radically different looking graph but
 being essentially the same as far as the connectivity between the vertices go
-acts as a visual proof that the graphs are isomorphic.  While individually
+acts as a visual proof that the graphs are isomorphic, and individually
 inspecting each vertex will re-confirm this idea to the user. After having
-experienced the concept of graph isomorphism in this way it is assumed that the
-concept and definition of the term would be clear to her.
+experienced the concept of graph isomorphism in this way, hopefully the
+concept and definition of the term would be clear to the user.
 
 
 \subsection{Max k Cut}
 \label{story: maxkcut}
-Max Cut has two animations one after the other.  The first animation is about
+Max Cut has two animations one after the other. The first animation is about
 Max 2 Cut and the second is about Max 3 Cut.  It is assumed that the user will
 extrapolate the concept of the general Max k Cut after understanding the first
 two cases ($k=2$, $k=3$) and extrapolating it over greater values of k.  The
@@ -246,13 +246,13 @@ both the max cut problems are more visual than unequal weights.
 
 \subsubsection{Max 2 Cut Animation:} 
 \label{story: max2cut}
-It starts with an Original graph on the left and definition of Max K Cut and
+This animation starts with an Original graph on the left and definition of Max K Cut and
 Max 2 Cut on the right of the web page. The right part of the page also
 contains media buttons to pause and play the animations. It also has a button
 for switching from Max 2 Cut example, to Max 3 Cut example.  The Max 2 Cut
 animation starts with a graph, which starts when the user presses the play
 button. As the animation progresses a new graph emerges out of the original
-one and translates towards right changing it's shape to segregate it's
+one and translates towards the right changing its shape to segregate its
 vertices into two sets forming a Maximum 2 Cut. The two sets move vertically up
 and down and increase the distance between themselves, revealing the
 number of edges passing from one set to another which the user can intuitively
@@ -292,72 +292,64 @@ the rest of the sets.
 \subsubsection{Learning Impact:}
 Although the examples in the Max 2 Cut and Max 3 Cut can be seen as simple ones
 as the first one was nearly a bipartite graph and the second one was a
-tripartite graph, they do a good job at defining the problem well. 
-Not just that such visualization explains the problem well it also may act
-as artwork especially in the case of Max 3 Cut, which may inspire an
+tripartite graph, I believe they will do a good job at defining the problem. 
+Beyond the visualization explaining the problem, they may also have some artistic value in their aesthetic and satisfying appearances, especially in the case of Max 3 Cut, which may inspire an
 imaginative student to want to investigate the subject further.
 
 
-\subsection{Graph Coloring}
+\subsection{Graph colouring}
 \label{story: coloring}
 \subsubsection{User Interaction:}
-User-interactive task was chosen for explaining Graph Coloring as the nature
-of the problem lends naturally for such. The user is presented with a graph
-which has all the vertices in color white. On the explanation panel to the
+User-interactive task was chosen for explaining Graph colouring as the nature
+of the problem lends naturally for this implementation. The user is presented with a graph
+which has all the vertices in colour white. On the explanation panel to the
 right he is given the definition of the problem and advice on how to complete
 the task.  
 
-The task is to choose colors from a color palette of three colors namely red,
-green and blue, and color vertices in the graph such that no two adjacent
-vertices have the same color. Whenever the user colors two or more adjacent
-vertices the same color the text panel warns them to make amends. There is a
-reset button in the explanation panel to un-color all the vertices to start all
-over again if the user wants to start from the beginning.
-
-There is another task alike the one above, albeit for 2 colors.
+The task is to choose colours from a colour palette of three colours namely red,
+green and blue, and colour vertices in the graph such that no two adjacent
+vertices have the same colour. Whenever the user colours two or more adjacent
+vertices the same colour the text panel warns them to make amends. There is a
+reset button in the explanation panel to un-colour all the vertices to start all
+over again if the user wants to start from the beginning. The user may also complete this task in another form where there are only two colours available.
 
 \subsubsection{Learning Impact:}
-The user interactive task will help the student retain the meaning of the Graph
-Coloring problem in their memory for a long period of time than just watching
-an animation as a spectator.
+I am hoping that introducing graph colouuring as an interactive task would help the user understand the concept in question faster and also gain a longer lasting memory than with the help of a non-interactive video or other less engaging formats.
 
 \subsection{Minimum Vertex Cover}
 \label{story: vertexcover}
 \subsubsection{User Interaction:}
 Minimum Vertex Cover, by the nature of the problem is chosen to be
 elucidated by the help of a user-interactive task. The user is given a graph
-along with explanation of he Minimum Vertex Cover problem. He is also explained
+along with explanation of the Minimum Vertex Cover problem. He is also explained
 how to complete the task. The task is to select vertices successively either by
 clicking them or pressing a number corresponding to the vertex of choice on the
-keyboard.  When he selects the vertex, the selected vertex and all the edges
-incident on it are displayed differently. He has to thus highlight all the
-edges by selecting the minimum number of vertices in the graph.  If he has done
-this task effectively then he would not choose more vertices than required to
+keyboard.  When the user selects the vertex, the selected vertex and all the edges
+incident on it are displayed differently. The user has to highlight all the
+edges by selecting the minimum number of vertices in the graph.  If they have done
+this task effectively then they will not choose more vertices than required to
 cover all the edges in the graph. When the user covers all the edges by only
-selecting four vertices, he is given a congratulatory message for having done
-the task right. If he covers the graph by selecting more than four vertices
-then he is advised to do the same in just four.
-
-There is another task alike the one above, albeit with greater
-number of vertices and edges to make the problem marginally harder.
+selecting four vertices, they are given a congratulatory message for having done
+the task right. If they cover the graph by selecting more than four vertices
+then they are advised to do the same in just four. The user also has the option to do this task with greater
+number of vertices and edges to make the problem slightly more difficult.
 
 \subsubsection{Learning Impact:}
-Just like Graph coloring, in the case of Minimum Vertex Cover too, it is
+Just like Graph colouring, in the case of Minimum Vertex Cover too, it is
 assumed that a user-interactive task is effective not just in explanation of a
-topic but also, retention of the concept for a long period of time.
+topic but also, retention of the concept for a longer period of time than a more static method of elucidation.
 
 \subsection{Tree Width}
 \subsubsection{Animation:}
 The topic Tree Width is explained in a multi-part animation. The first part
 begins with a graph in which the vertices are arranged in a circular pattern.
-The circular form conceals a tree like structure which can be abstracted out of
-the graph. 
+The circular form conceals a tree like structure in the graph. 
 
 The user while reading the explanation is instructed to press the 'forward`
 button to move to the first part. The user hops from one part of the animation
 to another by pressing this 'forward` button.  In the first part the graph
-which was hitherto arranged in a circular pattern transforms into a regular
-lattice like pattern. The tree-like pattern is more apparent in the new visual
+which was arranged in a circular pattern transforms into a regular
+lattice-like pattern. The tree-like pattern is more apparent in the new visual
 form of the graph.  This is also pointed out in the explanation panel.  
 
 The next part of the animation shows an example of a piece (a sub-graph)
@@ -365,10 +357,10 @@ containing three vertices against the backdrop of the graph. The significance
 of pieces in the tree-width concept is discussed in the background chapter.
 The piece is also represented by a blue dot at the centroid of the three
 vertices. In the next part of the animation the whole of the graph is marked by
-it's constituent pieces by blue dots. 
+its constituent pieces by blue dots. 
 
-In the second last part, the pieces form the nodes of a tree. The tree's edges
-(branches) are colored in golden color to make it stand out from the graph in
+In the third section of the animation, the pieces form the nodes of a tree. The tree's edges
+(branches) are coloured in golden colour to make them stand out from the graph in
 the background. At this point, the definition of the tree width is given in
 the explanation panel.
 
@@ -383,6 +375,6 @@ tree-width for the graph.
 
 \subsubsection{Learning Impact:}
 The user is expected to learn the concept of tree decomposition of a graph.
-Also, by the help of animations, he will be inspired to learn abstract
-thinking: how a \emph{form} of a tree can be derived out of an unassuming
+By the help of animations, they will be inspired to learn abstract
+thinking: how a \emph{form} of a tree can be derived from an unassuming,
 typical graph.

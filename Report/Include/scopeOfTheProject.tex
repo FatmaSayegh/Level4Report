@@ -1,55 +1,51 @@
 % Analysis and Requirements
 
-In this chapter, the scope of the project, the criterion of selection of the
+In this chapter I will cover the scope of the project, the criteria of selection of the
 problems in graph theory, the thinking behind choosing the methods of
-elucidation of the selected topics will be discussed. Finally to conclude the analysis
+elucidation of the selected topics will be discussed. Finally the analysis
 the requirements of the project are stated.
 
 
 \section{Scope of The Project}
 \label{requirements: scope}
-Understanding a problem in mathematics is a necessary first step in trying to solve it.
-It also enables a student to abstract out a formalized version of a
+Understanding a problem in mathematics is a necessary first step towards the solution.
+Abstraction enables a student to obtain a formalized version of a
 problem from a real life scenario present in the fields of science and engineering.
 
-This idea has guided this project to be restricted to one which helps a learner to
-understand the problems in graph theory. Whereas the solution or suggesting an
+This idea has guided this project to focus solely on aiding a learner to
+understand the problems in graph theory. The solution or suggesting an
 algorithm to solve the problem, if required, is the second important step which
 has been deliberately not touched upon to keep the scope of this project
-clear, precise and specific.
+clear and well defined.
 
 
 \section{Criteria for Selection of Problems}
 \label{section: selectionCriteria}
 One of the most important criteria for selection of the problems for the
-project was based upon the importance of the topic in the field of graph
-theory. There are several text books (see \cite{Newman10} and
-\cite{KleinbergTardos06}), in graph theory, which discuss various theorems and
-problems in the subject.  There are a few problems which occur commonly and
-frequently in them. The order of their inclusion in the text books is based
+project was their importance and relevance in the field of graph
+theory. There are several text books (\cite{Newman10}, 
+\cite{KleinbergTardos06}) which discuss various theorems and
+problems in the subject. A few problems occur frequently in them and the order of their inclusion in the text books is based
 logically.  Building the concepts from the basics to advanced. Therefore the
 problems included in the project should represent all levels of difficulty.
 
-Since imagining a graph theory problem is largely a visual exercise, there
-was no dearth of problems which could offer themselves as a subject of an
+Since imagining a graph theory problem is largely a visual exercise, there are plenty of problems which could offer themselves as a subject of an
 interesting visualization. The additional criteria therefore for filtering the
 candidate problems was based on whether they could be elucidated in the form of a
 simple and meaningful example, employed for animation and user
-interaction. The simplicity of the example doesn't in anyway imply
+interaction. The simplicity of the example does not in any way imply
 triviality of the problem. Indeed here the assumption is that a simple example
-problem can make a student reach to the heart of the concept in it's generality
-fairly quickly. From there on she can extrapolate the learning to more
-complicated examples.
+problem can make a student reach to the heart of the concept fairly quickly. From there on they can extrapolate what they learnt to more
+complex examples.
 
-It is important to mention here that a survey among
+A survey among my
 peers in the field of software engineering and computer science was conducted to 
 gather suggestions on the shortlisted topics and methods.
 The data from the survey had a role in determining topics and the methods chosen.
 
 
 \section{Methods of Elucidation}
-As it has been discussed in the previous section that feasible methods of
-elucidation/exposition played a prominent role in the selection of the problems
+Methods of elucidation and exposition played a prominent role in the selection of the problems
 in the first place. It was decided that for this project, such methods can be
 broadly classified as animations and user interactions or a combination of
 both.
@@ -57,32 +53,29 @@ both.
 
 \subsection{Animation}
 
-Humans are primarily visual learners from the days of hunting and gathering. We
-sometimes like to imagine even the most abstract concepts visually. Therefore
+Humans tend to prefer to imagine even the most abstract concepts visually.
 Computer animations have been increasingly adopted to elucidate complex
-concepts in mathematics and science.  Animations are used in this project to
+concepts in mathematics and science.  Animations will be used in this project to
 make problems like Graph Isomorphism, Max Cut, and Tree Width.  For instance,
 the example problem of Graph Isomorphism, was explained by morphing a graph to
-change it's shape to acquire another radically different shape. It will be
-explained later how it can be considered as a visual proof that the two graphs
+change its shape to take on a completely unrecognisable appearance. Later in this report I will cover the topic of how it can be considered as a visual proof that the two graphs
 in the scene are thus isomorphic.
 
 \subsection{User Interaction}
-Although animations go a long way in terms of having a user's mind involved in
-the learning process they only offer a linear narrative. On the other hand,
+Although animations go a long way in terms of having a user engaged and involved in
+the learning process they only offer a one-sided, linear narrative. On the other hand,
 user interaction with an animation not only makes the experience more
 immersive, it also leads to a natural multiplicity of stories from a single
 program. This happens as a human input results in a novel path from one state
-to another in the program just like a video game.
-
+to another in the program, not dissimilar to a video game.
 
 \section{Technical Scope of The Project}
 \label{requirements: techScope}
 
-To achieve the above mentioned features The program has data structures to hold
+To achieve the outlined features the program needs data structures to hold
 graphs and algorithms to visually and geometrically manipulate them. 
 
-It's important to note here the program does not contain algorithms to solve
+The program does not contain algorithms to solve
 the listed problems. As the scope of the program was limited to the purposes of
 visualization and not coding the algorithms which can solve instances of the
 mentioned problems.  Therefore in this project, although the data type of
@@ -95,22 +88,18 @@ information to the various animations and user interactions.
 \section{Requirements}
 \label{requirements: requirements}
 
-Based on synthesis of the above sections it is concluded that there must be a
-web application written for the desktop browser with user interactive
-animations.  
-
 The requirements for the application are categorized into priority
 levels in accordance with \emph{MoSCoW} analysis. This prioritization of
 requirements act a guidance for deciding which objectives are essential and
 make the minimum viable product and which ones should come in the category of
-extra desirable features. See \cite{Hudaib2018}.
+extra desirable features. \cite{Hudaib2018}
 
-The application must definitely have the features mentioned in the \emph{Must
+The application must have the features mentioned in the \emph{Must
 Have} section which is the minimum requirements necessary to have a functioning
-application without any bells and whistles. It should have the additional
+application without any extra decorative or convenience features. It should have the additional
 desirable features mentioned in the \emph{Should Have} section relating to
-visual aesthetics, wider use and code-extendability.  Finally to precisely
-define the boundries of the project there is section of \emph{Will Not Have
+visual aesthetics, wider use and code extensibility.  Finally to precisely
+define the boundries and discuss potential future development of the project there is section of \emph{Will Not Have
 This Time}.
 
 \subsection{Must Have}
@@ -158,13 +147,14 @@ Although not essential for the basic utility and functioning of
 the application, a few desirable features should be included for wider use and
 additionally ease of contribution by others. 
 \begin{enumerate}
-\item Pleasing Aesthetics
-\item Device Compatibility, the application must be friendly to most screen sizes.
+\item Pleasing, appropriate aesthetics
+\item Device compatibility --- the application must be usable on most common screen sizes.
 \item Contribution friendliness, in the way of good code organization and documentation.
+\item 
 \end{enumerate}
 
 
-\subsection{Will Not Have This Time}
+\subsection{Will Not Have}
 \label{requirements: willnothave}
 For the reasons elaborated in \autoref{requirements: scope} and
 \autoref{requirements: techScope} the project will not implement algoritmic

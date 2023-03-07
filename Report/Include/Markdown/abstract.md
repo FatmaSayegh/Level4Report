@@ -8,5 +8,5 @@ learning to other instances of the problem in general. In this project
 we have tried to elucidate some classical problems in Graph Theory by
 the way of visualization on a Web application. The method of
 visualization are animations and user interaction with animations. Such
-methods, it is belived can help young students and self-learners to get
+methods, it is belived can help students and self-learners to get
 the first brush with the subject of Graph theory.
