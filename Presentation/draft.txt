@@ -1,0 +1,186 @@
+Visualization of Classical Graph Theory Problems
+
+"""
+Hi, I am Fatma. I will talk about my project on visualization of classical
+graph theory problems.
+"""
+
+Intro
+    Motivation
+        Why Graph theory?
+            Examples:
+                """
+                Graph are found in natural world.
+                """
+                Social Networks, 
+                    """
+                    How humans are connected to each other by freindship and relations.
+                    """
+                Gene Expression N/w, 
+                    """
+                    How genes can effect expression of other genes, hence forming a network.
+                    """
+                ecology.
+                    """
+                    Food Web and relationship of symbiosis and parasitism in an ecology. 
+                    """
+
+            Abstraction of real world phenomenon to graphs.
+                    """
+                    The real world phenomenon like these, can be abstracted to graphs.
+                    """
+
+            Problems of graph theory, are hence applicable to any such graph.
+
+            Visualization is important because: Formalism (in notation of set theory) v/s Visualization
+                Formalism: It is 
+                    general, 
+                        """
+                        Can be applied to all graphs. 
+                        """
+                    abstract 
+                        """
+                        Mathematically defined.
+                        """
+                    and complete.
+
+                Visualization : 
+                    A particular example. 
+                        """
+                        To visualize a problem, we can only use a particular example. As a graph has to be "shown".
+                        """
+
+                    Nevertheless, can give insights to the beginner.
+                        """
+                        As a picture can say a thousand words.
+                        """
+    Aim
+        Create computer animation and tasks to explain graph theory problems
+        such as Graph Coloring, Graph Isomorphism, Max Cut.
+
+
+Background
+    Graph problems
+        Short description of the follwing topics:
+            Graph Isomorphism.
+            Max 2 Cut
+            Graph Coloring
+            Minimum Vertex Cover
+            Tree Width
+
+    Prior work
+            VisuAlgo (Vertex Cover) -- NSU
+                """
+                It has discussed Vertex Cover and Maximum flow but the
+                emphasis is on the solution of the two problems.
+                """
+
+            AlgMatch -- Liams Work
+                """
+                University of Glasgow MSc.
+                Matching algorithms.
+                Helped with the idea of how vertices and edges can be drawn.
+                """
+
+            Difference: Our job was to explain the problem and not give solutions (algorithms).
+
+Requirments
+    Scope:
+        Will not include algorithmic solutions.
+    Must have requirements :
+
+    The application must elucidate the Classical Graph Theory Problems by
+    employing user interactive animations of their respective examples and for that
+
+        1. Data structures which represent vertices, edges and graphs.
+        2. Display the above entities as Scalar Vector Graphics on screen.
+            """
+            SVG is the popular method of drawing vector graphics on html.
+            """
+
+        3. Translation and shape transformation of the graphs for animation.
+
+        4. Generation and handling of events triggered.
+            """
+            Press of a button and hovering etc.
+            """
+
+        5. Display appropriate text in synchronization with the animations and user interaction.
+            """
+            Textual explanation should go hand in hand with animations.
+            """
+
+Design (Fig 5.1)
+    Principles:
+        Simplicity
+            """
+            Less distractions, the user must only have the topic on his mind.
+            """
+        Intuitiveness
+            """
+            Working with the app must be intuitive, the user should be
+            able to think about the graph problems and not
+            navigation and how to work the app.
+            """
+
+        General Layout (Picture of the rows and columns in the dissertation) Fig 5.1
+            """
+            Left side for animations, and right for the textual explanation.
+            """
+
+
+Implementation
+    Functional Programming in Elm.
+        """
+        Functional programing functions are a first class citizens and programs
+        are written in functions which are pure and have no side effects.
+
+        Functional programming was chosen as,
+        the size of the project was quite substantial
+
+        Elm is a functional programming language (with syntax close to haskell) which compiles into javascript.
+
+        """
+        
+    Messages
+        Show Messages as ADT. (Algebraic Data Type).
+            """
+            One of the advantages of Functional programming is being able to define ADTs
+            Here is the ADT to describe the messages which are generated by various events
+            such as clicking or hovering over an element or a tick of a clock.
+            """
+            Show the code of the ADT.
+
+
+
+    Show vector diagrams and a few topics which have animation. Fig 5.4
+        """
+        Here you can see that the displacement vector is calcualated b/w the initial position
+        of the vertex and the final position of the vertex. It gives the direction of the displacement
+        of the vertex for the next time step.
+        """
+
+    Show the Graph isomorphism topic and max cut here.
+
+
+
+Evaluation
+    Concentrate on Tree width. How it's definition was not clear in
+    the first iteration of the app. It belong to a different league.
+    Praised that it could be explained at all.
+    Critisized because the exact definition of didn't come right through.
+        A few pages were added to show that a graph can be decomposed in more than one way.
+
+        Show, tree width here.
+
+Conclusion
+    Future Work
+        Capabities:
+            Algorithms and solutions
+            I/O: Define user instantiated graphs.
+            Visualisation: 3D, Zoom, VR.
+        Additon of Topics:
+            May require enhancement of core functionality of the program.
+
+
+    Reflections
