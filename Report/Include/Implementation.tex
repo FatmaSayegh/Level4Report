@@ -25,18 +25,22 @@ animations are implemented and graphs are made to change shape and translate in
 The project is developed using the Functional Programming paradigm. This is a
 paradigm which has been in development and practice since the days of infancy
 of computer science. Functional programming is based on a form of computation
-called lambda calculus proposed by Alonzo Church. \cite{Hudak2007}
+called lambda calculus proposed by Alonzo Church. \citep{Hudak2007}.
 
 For most of the history of computing, functional programming remained in the
 ivory towers of academic research for purposes of exploring theoretical computer
 science and language research.
 
-In the last decades however, programming languages such as Haskell and a few
-dialects of LISP have escaped the ivory towers to find application in the
-software industry.
+%In the last decades however, programming languages such as Haskell and a few
+%dialects of LISP have escaped the ivory towers to find application in the
+%software industry.
+%Simon Fowler
+Functional Programming, however, has recently found its way into the
+mainstream, for example through things like lambdas in C++ and streams in Java 8.
+
 
 In this section I will discuss, why functional programming was chosen as the
-programming paradigm of choice. How the functional programming language called
+programming paradigm. How the functional programming language called
 Elm is used to write a well structured, maintainable, intuitive and
 understandable code to produce a dynamic front end.
 
@@ -58,7 +62,7 @@ For such Lego like usage of functions they must be dependable, such that for a
 particular input a function will give a particular output just like
 mathematical functions and has no business outside its scope for side-effects.
 With such confidence in the functions, they can be fitted with each other to
-make them do complex computation. \cite{Hughes89}
+make them do complex computation \citep{Hughes89}.
 
 Since the functional paradigm is more reasonable and logical than imperative
 programming the runtime errors are substantially less frequent than imperative
@@ -66,12 +70,12 @@ programming and is easier to maintain.
 
 
 \subsubsection{Separation of Concerns}
-If functions do not have side effects, how do they print
-output on the terminal or read file from the hard disk or accept inputs from a
-user? Functional programming environments have a way of separating the pure
+If functions do not have side effects, how do they print output on the terminal
+or read file from the hard disk or accept inputs from a user? Purely functional
+programming languages such as Haskell and Elm have a way of separating the pure %Simon
 part of a program from the impure part, by introducing `actions'. These
-`actions' or side-effects are treated as a form of encapsulated data, which
-can be manipulated by pure functions, and the environment makes changes to the
+`actions' or side-effects are treated as a form of encapsulated data, which can
+be manipulated by pure functions, and the environment makes changes to the
 outside world by executing these actions.
 
 Therefore the programmer has to write a large part of the program where he
@@ -97,14 +101,15 @@ as the friendly compiler errors guide the programmer to each line of the code
 which need modification while refactoring.
 
 \subsubsection{Elm-Ui}
-The layout of the application on the screen can be done without writing HTML and CSS by using an Elm library called Elm-Ui. This package frees the
+The layout of the application on the screen can be done without writing HTML
+and CSS by using an Elm library called Elm-Ui. This package frees the
 programmer from using CSS styling and gives intuitive control of the page
 layout with the help of rows and columns (Pure functions). With Elm-Ui,
 multiple rows can be situated in a column and multiple columns can be situated
-in a row. When elements are put in a row they are stacked side
-by side horizontally. When the elements are put in a column they are stacked
-one below each other. The elements in such a row or a column can be put at a
-definite alignment and spacing from each other.
+in a row. When elements are put in a row they are stacked side by side
+horizontally. When the elements are put in a column they are stacked one below
+each other. The elements in such a row or a column can be put at a definite
+alignment and spacing from each other.
 
 \begin{figure}[!ht]
 \centering
@@ -163,6 +168,7 @@ application they are defined as an Algebraic Data Type as:
                               to change the $Model$, which carries the state of the
                               program.
                   }
+                  , label = {listing: Messages}
                   ]
 type Msg
     = TimeDelta Float                  -- Clock Ticks for Animation
@@ -175,7 +181,6 @@ type Msg
     | NextTopic                        -- Next Topic
     | PreviousTopic                    -- Previous Topic
 
-\label{listing: Messages}
 \end{lstlisting}
 
 The messages are not just generated by user interaction with this application,
@@ -192,6 +197,7 @@ the following way:
                             emanated outside the DOM. In this code, a system clock
                             and key presses are subscribed to by the program.
                             }
+                  , label = {listing: subsciption}
                   ]
 subscription : Model -> Sub Msg
 subscription _ =
@@ -199,7 +205,6 @@ subscription _ =
         [ E.onAnimationFrameDelta TimeDelta
         , E.onKeyPress keyDecoder
         ]
-\label{listing: subsciption}
 \end{lstlisting}
 
 % Block diagram
