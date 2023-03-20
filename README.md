@@ -1,13 +1,19 @@
-# Documentation for My Project
+# Visualization of Classical Graph Theory Problems
 
-## Technical
+The objective of this project is to create visualization, animation and user
+interaction to elucidate the following classical graph problems.
 
-- [Road map](Documentation/roadmap.md)
-- [How Graph change geometry with new grid](Documentation/grid_morphing.md)
-- [Managing Color](Documentation/color.md)
+1. Graph Isomorphism
+2. Max k-Cut
+3. Graph Coloring
+4. Finding of Vertex cover
+5. Tree Width
+
+## Installation
+- [Installation Manual](manual.md)
 
 ## Report Writing
 - [How to Compile Latex](Documentation/latexcompile.md)
 
 ## Project Management
-- [Calendar](Documentation/Readings/calendar.md)
+- [Calendar](https://github.com/FatmaSayegh/Level4Report/wiki/weeklyNotes)
