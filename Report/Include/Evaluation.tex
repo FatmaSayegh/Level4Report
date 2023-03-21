@@ -3,7 +3,7 @@
 \section{Evaluation}
 
 For an application such as this one, which aims to explain mathematical or
-scientific concepts based on primarily animations, I believe the two most important apects to be evaluated are learning effectiveness and user interaction and user
+scientific concepts based on primarily animations, I believe the two most important aspects to be evaluated are learning effectiveness and user interaction and user
 experience (UI/UX).
 
 
@@ -31,7 +31,7 @@ from the field of computer science and engineering.
 Among the eight PhDs in computer science, six mentioned that they have done
 research in the field of graph theory, while the remaining two mentioned that
 they had a course either exclusively on the subject or a wider field.
-Therefore the feedback on the application brought a substantive quantity and
+Therefore, the feedback on the application brought a substantive quantity and
 quality of opinions, criticism and even some praise.
 
 The feedback ranged from opinions on UI/UX to 
@@ -44,7 +44,7 @@ survey. See \autoref{links: supervised} for the summary of results. Unlike the
 former survey the web application was visited by the participants by sharing
 their computer screen. The participants  this time belonged
 to a variety of education backgrounds like humanities, sciences and other
-fields. Therefore the participants were frequently assisted while understanding
+fields. Therefore, the participants were frequently assisted while understanding
 the animations and attempting the quizzes and tasks.
 
 This gave the opportunity to see closely how the users navigate the app and
@@ -54,7 +54,7 @@ which aspects of the UI and the learning material they find confusing.
 \subsection{Evaluation of UI/UX}
 The survey was divided into two sections. The first part dealt with the user interface
 and experience aspect of the application. There was both praise and criticism
-from the participants. Both were taken into consideration and analyzed
+from the participants. Both were taken into consideration and analysed
 in this section.
 
 \subsubsection{Praise for UI/UX:}
@@ -91,7 +91,7 @@ constraints put by the requirement of the topics was not.
 
 \begin{quote}
 \emph{``One thing I found a bit frustrating was the varying levels and styles of
-interactivity between topics, such as clicking the cutline for max cut .. ''}
+interactivity between topics, such as clicking the cutting line for max cut... ''}
 \end{quote}
 
 \vspace{0.06 in}
@@ -108,8 +108,7 @@ interactivity between topics, such as clicking the cutline for max cut .. ''}
 
 The first criticism in the list above points out that the different topics had
 different styles for interactivity.  Although, it is agreed that all the pages
-should have consistency in the number and nature of interactive buttons
-but the different demands of each topic made it difficult. For example the max
+should have consistency in the number and nature of interactive buttons, but the different demands of each topic made it difficult. For example the max
 cut page has a cut-line button and others do not. This was unavoidable.
 However, there is no doubt that a variation in button layout and
 functionality is potentially quite distracting and in a future iteration
@@ -117,7 +116,7 @@ of the application a drawer of tools which slides in and out of view can be made
 each page, though it may have its own drawbacks in terms of visibility and
 accessibility.
 
-However most criticism of the UI/UX like clickable names on the navigation bar
+However, most criticism of the UI/UX like clickable names on the navigation bar
 were actionable.  For example, the users tend to click the words on the
 navigation bar. Change in the implementation was made for the same. For
 spelling errors in the explanation panel, they were combed out and corrected.
@@ -140,7 +139,7 @@ of the topics at least once. The two topics made to the top spot as they are
 two most difficult topics to understand.
 
 They were also asked about the least effective topic and the reason of their choice. 
-This revealed some of the weaknesses in topic explanation. Again Tree width
+This revealed some weaknesses in topic explanation. Again Tree width
 faced the most criticism for lack of clarity in the explanation panel. 
 
 \subsubsection{Graph Isomorphism:}
@@ -154,7 +153,7 @@ that it would be nice if do a similar ``hovering functionality'' over the
 vertices because the quiz was more difficult without it.
 
 \subsubsection{Max k Cut:}
-This was one of the most mentioned topic in the survey in a positive way,
+This was one of the most mentioned topic in the survey positively,
 perhaps because the difficulty in understanding its definition. The cut-line
 functionality has been praised by multiple respondents. Here are a few
 comments on that from the respondents.
@@ -203,7 +202,7 @@ Tree width due to identification of blocks
 \end{quote}
 \begin{quote}
 \emph{``
-I liked the pieces and decomposition .
+I liked the pieces and decomposition.
 I finally managed to start understanding Tree Width!''}
 \end{quote}
 
@@ -265,7 +264,7 @@ The examples used to explain the topics are simple. For instance, the example
 chosen to explain the Max 3 Cut problem was a tripartite graph.  Its solution
 is trivial. These examples were chosen to clarify the definitions of the
 problems, even though complicated examples could have given an uninitiated user
-a flavor of complexity and true difficulty of the problems.
+a flavour of complexity and true difficulty of the problems.
 
 \subsubsection{Absence of Custom User Graphs Functionality:}
 There are web applications on the internet, which allow the user to instantiate
@@ -273,7 +272,7 @@ their own graphs, with user instantiated vertices and edges. Although such
 functionality has been avoided as the application's objective is to clarify the
 definition of the problems. For this purpose in the application there are only
 concrete examples which lend themselves to easy explanation of the problem at
-the hand. However if in the future, algorithmic solutions to such problems, is
+the hand. However, if in the future, algorithmic solutions to such problems, is
 also included, then functionality of defining custom graphs can be added.
 
 \section{Testing}
@@ -286,7 +285,7 @@ output in terms of $Pass$ or $Fail$.
 
 \subsection{Property Based Testing}
 Testing of components of Graph module was done using Property Based Testing (PBT).
-This paradigm of testing was introduced for the first time for Haskell (a
+This paradigm of testing was introduced for Haskell (a
 functional programming language). It checks if the output of a function
 satisfies certain prescribed properties. These properties are specified as
 boolean predicates.
@@ -297,7 +296,7 @@ vertices, will form $n (n - 1) / 2$ edges. The number of edges of the output
 graph are matched up against this mathematical reality. The function passed
 the test against a vast number of auto generated inputs.
 
-Similarly, a cyclical graph i.e one in which the vertices are connected in a
+Similarly, a cyclical graph i.e. one in which the vertices are connected in a
 pattern such as this: A -- B -- C -- D -- A, with n vertices will have the
 number of edges equal to $n$. A function which constructs such a graph can be
 property based tested by comparing the number of edges it has with the number
@@ -313,9 +312,9 @@ and reference outputs. See \autoref{testing: results} for the results.
 The system was continuously tested manually during the development of the
 project. Towards the end of the development a planned scheme for
 interacting with the system for the black box testing of the application was
-executed to search for unexpected behavior. See \autoref{appendix:
+executed to search for unexpected behaviour. See \autoref{appendix:
 manualTesting} for the details of the test and results. The application's
-behavior against all the tests was as expected.
+behaviour against all the tests was as expected.
 
 \section{Verification of Satisfaction of Requirements}
 
@@ -350,12 +349,12 @@ fluid and unobstructive.
 \subsubsection{Verification of Should Have Requirements:}
 For satisfaction of \emph{Device Compatibility} requirement, the application has been
 tested on various screen sizes of desktop and laptop computers and mobile
-devices and it neatly fits those screen sizes by properly placing the display and
+devices, and it neatly fits those screen sizes by properly placing the display and
 explanation divisions.
 For satisfaction of requirements regarding \emph{Pleasing Aesthetics}, see \emph{Verification of the Quality of
 User Experience} in this section.
-For satifaction of the \emph{Contribution Friendliness} requirement, the code
+For satisfaction of the \emph{Contribution Friendliness} requirement, the code
 is published on GitHub and will invite public contribution
 after the completion of the dissertation. See \autoref{links: repository}.  The
-program is well modularized and new sections can be added to it by adding
+program is well modularized, and new sections can be added to it by adding
 another elm file for a new topic and making minor changes in $Main.elm$.
